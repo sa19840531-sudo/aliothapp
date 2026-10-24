@@ -1,0 +1,10 @@
+{
+  "scope": "S35.correct_response",
+  "initial_interpretation": "曾把原生 aria-expanded 与控制区可见性相反的两次稳定采样当作明确失败候选，初轮组件与静态DOM测试按该解释通过。",
+  "reason_for_correction": "既有 h5-probe-display-effect.v1 的 verified 只证明局部几何短期重复，未生产动画或过渡结束，也没有正式业务超时线；合法过渡可能产生相同表象。",
+  "corrected_verdict": "该候选收回 evidence_insufficient，保留缺少完整因果窗口；没有响应和超时也不推导 fail。",
+  "supported_positive_scope": "既有正式本地展开收起或回顶部动作，在原件和同对象因果闭合且冻结输入全部动作均可核验时，可形成 correct_response 的有限 pass；其他分项仍独立缺证。",
+  "fixture_boundary": "组件中的业务对象与PG原件均为受控夹具；Chromium只访问禁网静态DOM并调用既有生产采集函数，不代表实际产品或三端设备验收。",
+  "sampling_is_not_business_threshold": true,
+  "production_collectors_modified": false
+}

@@ -1,0 +1,13 @@
+{
+  "initial_combined_run": {
+    "passed": 478,
+    "failed": 0,
+    "skipped": 0,
+    "source_changed_during_run": [
+      "services/api/app/application/green_temporal_facts.py",
+      "services/api/tests/test_green_temporal_judge.py"
+    ],
+    "final_delivery_basis": false
+  },
+  "reason": "时序原件类型护栏及三个反例在首轮收集后落地，保留首轮记录，最终按固定源码重新完整验证"
+}

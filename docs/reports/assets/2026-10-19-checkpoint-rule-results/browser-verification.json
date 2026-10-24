@@ -1,0 +1,47 @@
+{
+  "scope": "真实服务读侧集成，非绿色规则业务验收",
+  "cases": [
+    {
+      "kind": "pass",
+      "taskId": "1c16b44c-d054-4b26-ba33-9ffb577f75cd",
+      "badges": [
+        "通过"
+      ],
+      "ruleText": "规则判定结果\n\n以下展示已关联的后端判定；观测完成和材料质量合格不代表规则通过。\n\nFacts gap rule\n通过\n\n冻结流程检查点全部满足\n\n检查点 ready\n通过\n定位检查点\n\n已关联的正式检查点判定通过\n\n暂停状态：符合\n观测完整：符合\n查看操作前原图\n查看操作后原图"
+    },
+    {
+      "kind": "evidence_insufficient",
+      "taskId": "ac99dbc6-decd-40a4-be1b-3bf3e41a1a1a",
+      "badges": [
+        "机器证据不足 · 待人工复核"
+      ],
+      "ruleText": "规则判定结果\n\n以下展示已关联的后端判定；观测完成和材料质量合格不代表规则通过。\n\nFacts gap rule\n机器证据不足 · 待人工复核\n\n聚合规则证据不足，无法形成自动结论\n\n流程存在未完成的检查点观测或证据义务\n\n人工复核：待处理 · 流程存在未完成的检查点观测或证据义务\n\n检查点 ready\n证据不足\n定位检查点\n\n正式判定仍有证据缺口，不能视为通过\n\n观测完整：符合\n缺少暂停状态的测量\n查看操作前原图\n查看操作后原图"
+    },
+    {
+      "kind": "missing_result",
+      "taskId": "b606b8b5-94a5-4a03-a6fd-dab29c47bc22",
+      "badges": [
+        "关联待核对"
+      ],
+      "ruleText": "规则判定结果\n\n以下展示已关联的后端判定；观测完成和材料质量合格不代表规则通过。\n\n尚无完整关联的规则判定；材料合格不等于规则通过\n\nFacts gap rule\n关联待核对\n\n证据输入已封存，尚无已关联的正式规则判定"
+    },
+    {
+      "kind": "no_contract",
+      "taskId": "5814a585-3f6a-4ec8-9ad6-45c551214659",
+      "badges": [],
+      "ruleText": "规则判定结果\n\n以下展示已关联的后端判定；观测完成和材料质量合格不代表规则通过。\n\n尚无完整关联的规则判定；材料合格不等于规则通过"
+    },
+    {
+      "kind": "fail",
+      "taskId": "a717afad-e11f-4ede-bab5-bdd501a53c69",
+      "badge": "未通过",
+      "checkpointFocusConfirmed": true,
+      "originalImageCount": 2,
+      "originalImageNaturalWidth": 360,
+      "mobileWidth": 390,
+      "mobileRuleCardWithinViewport": true,
+      "mobileDialogWithinViewport": true,
+      "notice": "受控展示夹具；独立服务真实登录、实际数据库和原图读取。顶部既有账号栏在390宽度仍有溢出，未计为本次组件修复范围。"
+    }
+  ]
+}

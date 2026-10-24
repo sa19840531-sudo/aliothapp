@@ -1,0 +1,5 @@
+
+> workstation@0.0.0 test
+> vitest run D:/xm/TYZX/alioth/app/workstation/src/composables/useEvidenceFileUrls.test.ts D:/xm/TYZX/alioth/app/workstation/src/modules/reports/components/reportAuditEvidence.test.ts D:/xm/TYZX/alioth/app/workstation/src/modules/reports/pages/greenReportResultDisplay.test.ts D:/xm/TYZX/alioth/app/workstation/src/modules/reports/pages/ReportCenterView.test.ts D:/xm/TYZX/alioth/app/workstation/src/modules/tasks/pages/greenTaskResultDisplay.test.ts D:/xm/TYZX/alioth/app/workstation/src/modules/tasks/components/GreenRuleResultDetails.test.ts D:/xm/TYZX/alioth/app/workstation/src/modules/tasks/components/H5CheckpointPanel.test.ts --reporter=json --outputFile=D:/xm/TYZX/alioth/docs/reports/assets/2026-10-21-green-full-judge/frontend-tests.json
+
+JSON report written to D:/xm/TYZX/alioth/docs/reports/assets/2026-10-21-green-full-judge/frontend-tests.json

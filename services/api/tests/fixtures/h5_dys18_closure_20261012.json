@@ -1,0 +1,251 @@
+{
+  "task_id": "49885e9c-a6f9-49c5-b68d-2f174dd17efa",
+  "run_id": "cc53fd5f-c61e-4535-95ff-c5e607bee4c5",
+  "consumer_run_id": "6113db1b-fcd9-5c75-97cc-da3dbc1ac0c3",
+  "task": {
+    "id": "49885e9c-a6f9-49c5-b68d-2f174dd17efa",
+    "status": "review",
+    "target_url": "https://dy.ft6g7b8pfiy.cc/",
+    "started_at": "2026-10-12 14:14:23.490325+00:00",
+    "finished_at": "2026-10-12 14:16:03.749007+00:00",
+    "finalization_state": "session_draining",
+    "finalization_retry_at": "9999-12-31 23:59:59.999999",
+    "finalization_agent_run_id": "cc53fd5f-c61e-4535-95ff-c5e607bee4c5"
+  },
+  "gate": {
+    "task_id": "49885e9c-a6f9-49c5-b68d-2f174dd17efa",
+    "created_at": "2026-10-12T14:16:03.749007+00:00",
+    "facts_hash": "bfb21be888db7c2fa7cadda14559a903fc10fd0e0f80f298e816fc2587bb7a90",
+    "gate_passed": false,
+    "evaluated_at": "2026-10-12T14:16:03.749007+00:00",
+    "block_reasons": [
+      "candidate_rule_coverage_nonterminal",
+      "review_policy_unsatisfied",
+      "h5_coverage_scope_incomplete"
+    ],
+    "gate_snapshot_id": "gate_1b3533cf3834c6023cdf5fe79e89463e8f24709f857074a7",
+    "protocol_version": "task-completion-gate.v1",
+    "no_pending_action": true,
+    "open_review_count": 4,
+    "review_generation": 4,
+    "finalization_epoch": 0,
+    "evaluation_sequence": 3,
+    "no_rules_applicable": false,
+    "candidate_rule_count": 73,
+    "exploration_terminal": true,
+    "pending_action_count": 0,
+    "h5_coverage_satisfied": false,
+    "app_coverage_satisfied": true,
+    "h5_coverage_snapshot_id": "h5-coverage:c432dc4e0520457e81e081f637bcaa81a85dc3736467596f7d8877ddc332efee",
+    "no_background_execution": true,
+    "review_policy_satisfied": false,
+    "h5_coverage_snapshot_hash": "de3a1af293248699354a5c850f2a4c8133e446771e72abfb1e9ba4deaa8bc0ae",
+    "no_active_session_request": true,
+    "no_pending_capture_commit": true,
+    "review_policy_decision_id": null,
+    "background_execution_count": 0,
+    "h5_coverage_snapshot_epoch": 0,
+    "active_session_request_count": 0,
+    "pending_capture_commit_count": 0,
+    "candidate_inventory_satisfied": true,
+    "terminal_candidate_rule_count": 4,
+    "candidate_rule_coverage_terminal": false,
+    "no_nonterminal_enforced_work_item": true,
+    "nonterminal_enforced_work_item_count": 0,
+    "require_nonempty_candidate_inventory": false
+  },
+  "actions": [
+    {
+      "intent_payload": {
+        "purpose": "打开任务锁定的 H5 目标 URL",
+        "task_id": "49885e9c-a6f9-49c5-b68d-2f174dd17efa",
+        "deadline": "2026-10-12T15:44:23.490325+00:00",
+        "intent_id": "h5-bootstrap:cc53fd5f-c61e-4535-95ff-c5e607bee4c5",
+        "parameters": {
+          "viewport_width": 390,
+          "destination_url": "https://dy.ft6g7b8pfiy.cc/",
+          "viewport_height": 844,
+          "initial_surface_action": true
+        },
+        "risk_level": "low",
+        "session_id": "h5:cc53fd5f-c61e-4535-95ff-c5e607bee4c5",
+        "action_type": "navigate",
+        "surface_kind": "web",
+        "capture_profile": {
+          "after": {
+            "role": "after_action",
+            "artifact_types": [
+              "screenshot",
+              "dom",
+              "visible_text",
+              "ui_snapshot",
+              "action_trace"
+            ],
+            "inherit_parent_semantics": false
+          },
+          "before": {
+            "role": "before_action",
+            "artifact_types": [
+              "screenshot",
+              "dom",
+              "visible_text",
+              "ui_snapshot"
+            ],
+            "inherit_parent_semantics": false
+          },
+          "profile_id": "h5-v2-state-transition.v1",
+          "protocol_version": "capture-profile.v1"
+        },
+        "idempotency_key": "h5-bootstrap:cc53fd5f-c61e-4535-95ff-c5e607bee4c5",
+        "semantic_target": "H5 任务锁定入口",
+        "protocol_version": "action-intent.v1",
+        "source_capture_id": "h5-entry:cc53fd5f-c61e-4535-95ff-c5e607bee4c5"
+      },
+      "result_payload": {
+        "status": "succeeded",
+        "task_id": "49885e9c-a6f9-49c5-b68d-2f174dd17efa",
+        "intent_id": "h5-bootstrap:cc53fd5f-c61e-4535-95ff-c5e607bee4c5",
+        "retryable": false,
+        "error_code": null,
+        "session_id": "h5:cc53fd5f-c61e-4535-95ff-c5e607bee4c5",
+        "state_diff": {
+          "after_location": null,
+          "new_page_count": null,
+          "before_location": null,
+          "transition_kind": null,
+          "location_changed": null
+        },
+        "error_message": null,
+        "state_summary": {
+          "title": "douyin",
+          "location": "https://dy.ft6g7b8pfiy.cc/",
+          "reachable": true,
+          "status_code": 200,
+          "page_settle_complete": false,
+          "page_inspection_ready": true
+        },
+        "protocol_version": "interaction-result.v1",
+        "execution_outcome": "succeeded",
+        "result_capture_id": "05cd27e6-c093-4440-9f82-7ee6cc76b690",
+        "source_capture_id": "e0ede778-d4d9-4830-8d34-81f412987255",
+        "action_execution_id": "action-execution:d56cac40864276d40ef537c295e01597f9183052c5a876d6cf1e92e70f8617bd",
+        "verification_outcome": "pending"
+      }
+    },
+    {
+      "intent_payload": {
+        "purpose": "能力合同未完整投影，等待页面稳定后在当前会话重新采集。",
+        "task_id": "49885e9c-a6f9-49c5-b68d-2f174dd17efa",
+        "deadline": "2026-10-12T15:44:23.490325+00:00",
+        "intent_id": "h5-platform-fallback:1ba6fc27782f3ec6eb5bf1049123d1c0b71aa453bdabe1361c17e0cd9901f7bb",
+        "parameters": {
+          "candidate_id": "h5-candidate:dce40edd26193801fb3f4aef79427b94a59b005675bb3d0a4ac985dc1a20c192",
+          "viewport_width": 390,
+          "viewport_height": 844,
+          "navigation_depth": 0,
+          "frontier_snapshot_id": "h5-task-frontier:82d4dab04b40f32753af2219bfe527249532f6e4da099feedee4fd7caa692d7c"
+        },
+        "risk_level": "low",
+        "session_id": "h5:cc53fd5f-c61e-4535-95ff-c5e607bee4c5",
+        "action_type": "observe",
+        "surface_kind": "web",
+        "capture_profile": {
+          "after": {
+            "role": "after_action",
+            "artifact_types": [
+              "screenshot",
+              "dom",
+              "visible_text",
+              "ui_snapshot",
+              "action_trace"
+            ],
+            "inherit_parent_semantics": false
+          },
+          "before": {
+            "role": "before_action",
+            "artifact_types": [
+              "screenshot",
+              "dom",
+              "visible_text",
+              "ui_snapshot"
+            ],
+            "inherit_parent_semantics": false
+          },
+          "profile_id": "web-observe-v1",
+          "protocol_version": "capture-profile.v1"
+        },
+        "idempotency_key": "h5-platform-fallback:1ba6fc27782f3ec6eb5bf1049123d1c0b71aa453bdabe1361c17e0cd9901f7bb",
+        "semantic_target": "重新观察能力投影失败页面",
+        "protocol_version": "action-intent.v1",
+        "source_capture_id": "05cd27e6-c093-4440-9f82-7ee6cc76b690"
+      },
+      "result_payload": {
+        "status": "succeeded",
+        "task_id": "49885e9c-a6f9-49c5-b68d-2f174dd17efa",
+        "intent_id": "h5-platform-fallback:1ba6fc27782f3ec6eb5bf1049123d1c0b71aa453bdabe1361c17e0cd9901f7bb",
+        "retryable": false,
+        "error_code": null,
+        "session_id": "h5:cc53fd5f-c61e-4535-95ff-c5e607bee4c5",
+        "state_diff": {
+          "after_location": "https://dy.ft6g7b8pfiy.cc/",
+          "new_page_count": 0,
+          "before_location": "https://dy.ft6g7b8pfiy.cc/",
+          "transition_kind": null,
+          "location_changed": false,
+          "logical_surface_transition": {
+            "reason_code": "flutter_web_identity_change_uncorroborated",
+            "transition_kind": "uncertain",
+            "protocol_version": "logical_surface_transition.v1",
+            "corroborating_signals": [
+              "visual_layout"
+            ],
+            "after_document_identity": "sha256:f448cb84f0196ac2b39a7f30bc9dd9e341b4f3f1387b0d772fea460e583789e9",
+            "after_state_fingerprint": "sha256:66969e0e51f8f1454c87a101fb7449d71aece0ee07d7bc7cf75ce65eea93edb8",
+            "before_document_identity": "sha256:f448cb84f0196ac2b39a7f30bc9dd9e341b4f3f1387b0d772fea460e583789e9",
+            "before_state_fingerprint": "sha256:fab39dcd5f5424d31a2826c3a72c3f52089bb0ed54b1df8ca575483f8d5bb60e",
+            "logical_transition_proof": "uncertain",
+            "after_identity_fingerprint": "sha256:bed360813c2e8f50315d0b9091b2ae43d52e78d0fd880011bea364b39cd90d03",
+            "before_identity_fingerprint": "sha256:9bce156822a87f1a7c31c89f3c819478a28973040373fd67af73eabc17b1f16c"
+          }
+        },
+        "error_message": null,
+        "state_summary": {
+          "title": "douyin",
+          "location": "https://dy.ft6g7b8pfiy.cc/",
+          "reachable": true,
+          "status_code": null,
+          "page_settle_complete": true,
+          "page_inspection_ready": true
+        },
+        "protocol_version": "interaction-result.v1",
+        "execution_outcome": "succeeded",
+        "result_capture_id": "11ed8095-44bc-49e1-b8da-7995e4768073",
+        "source_capture_id": "1877340d-134c-4efd-b920-3b355d3ceacc",
+        "action_execution_id": "action-execution:3a951492f7c505d4cb39c9290ca43055e3ea72654b663dadfc2a1206364f5d26",
+        "verification_outcome": "pending"
+      }
+    }
+  ],
+  "capture_ids": [
+    {
+      "id": "05cd27e6-c093-4440-9f82-7ee6cc76b690",
+      "captured_at": "2026-10-12T14:15:46.837236+00:00",
+      "capture_role": "after_action"
+    },
+    {
+      "id": "11ed8095-44bc-49e1-b8da-7995e4768073",
+      "captured_at": "2026-10-12T14:15:52.533803+00:00",
+      "capture_role": "after_action"
+    },
+    {
+      "id": "1877340d-134c-4efd-b920-3b355d3ceacc",
+      "captured_at": "2026-10-12T14:15:51.760739+00:00",
+      "capture_role": "before_action"
+    },
+    {
+      "id": "e0ede778-d4d9-4830-8d34-81f412987255",
+      "captured_at": "2026-10-12T14:14:41.641678+00:00",
+      "capture_role": "before_action"
+    }
+  ]
+}

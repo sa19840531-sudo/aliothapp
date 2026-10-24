@@ -1,0 +1,23 @@
+{
+  "test_container_removed": true,
+  "test_data_storage": "tmpfs; no Docker volume created",
+  "temporary_port_25421_released": true,
+  "existing_alioth_running_container_ids_unchanged": true,
+  "existing_database_volumes_untouched": true,
+  "unrelated_container_drift": {
+    "task_issued_mutations": false,
+    "current_id": "83f5392ca8e3",
+    "previous_id": "8e59eccf8bab",
+    "name": "tgbot"
+  },
+  "main_health": [
+    {
+      "endpoint": "/api/v1/health",
+      "status": 200
+    },
+    {
+      "endpoint": "/api/v1/readyz",
+      "status": 200
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "fixture_notice": "Read-only source compatibility inventory; not product acceptance or historical model equivalence.",
+  "base_commit": "9021bd9a3fc5128cd09013f734fbe4eac5fb6d5d",
+  "legacy_materials": [
+    {
+      "path": "docs/data/alioth_first_ruleset_qc_rule_seed.csv",
+      "working_sha256": "ed2075888122095ef7d69d777cf604ca150375e8021aa5f86b44f38c6d79483e",
+      "working_lf_sha256": "b4eee355a833269380298153f8d0a890d24a0f1f56d0101b9d63d35710854b77",
+      "head_lf_sha256": "b4eee355a833269380298153f8d0a890d24a0f1f56d0101b9d63d35710854b77",
+      "equal_to_HEAD_after_line_ending_normalization": true
+    },
+    {
+      "path": "services/api/app/agents/skills/rule/text-rule/SKILL.md",
+      "working_sha256": "d8865917bf3bdc41413cc21531ec9adf44350efd4abac8a5e56a192cb0786dc9",
+      "working_lf_sha256": "41ddf0f7c628a93378bb8b21cca1519afb8b7bed6fa61aeeadc6f46ec98a65e4",
+      "head_lf_sha256": "41ddf0f7c628a93378bb8b21cca1519afb8b7bed6fa61aeeadc6f46ec98a65e4",
+      "equal_to_HEAD_after_line_ending_normalization": true
+    },
+    {
+      "path": "services/api/app/agents/skills/rule/visual-rule/SKILL.md",
+      "working_sha256": "43f120ab74404520ff5116b23b3e4572c4e561f0b402fdaeffeea20ebf1e0441",
+      "working_lf_sha256": "bb8cd8ac75b014aa05a911da17baa042f03437a91a299ace77779ce39b531e85",
+      "head_lf_sha256": "bb8cd8ac75b014aa05a911da17baa042f03437a91a299ace77779ce39b531e85",
+      "equal_to_HEAD_after_line_ending_normalization": true
+    },
+    {
+      "path": "services/api/app/agents/skills/rule/interaction-rule/SKILL.md",
+      "working_sha256": "359f84b20ae18018e2e115f8bc1977492dbc2f0980945c71857519113c2a4384",
+      "working_lf_sha256": "fc928fe8a1264b1dd90abc2afa467e99fb31c905fa7049a10b3dec1ad3d09aa7",
+      "head_lf_sha256": "fc928fe8a1264b1dd90abc2afa467e99fb31c905fa7049a10b3dec1ad3d09aa7",
+      "equal_to_HEAD_after_line_ending_normalization": true
+    },
+    {
+      "path": "services/api/app/agents/skills/rule/ad-rule/SKILL.md",
+      "working_sha256": "0e8cfd17420a2fcd00ec2b201aece32f0e2f50e80dcd48d088372ac33f370238",
+      "working_lf_sha256": "98023ce3ca5ab6d07b792eea16c3a9691036939fa02ef6ac8cafd4eb985c11d1",
+      "head_lf_sha256": "98023ce3ca5ab6d07b792eea16c3a9691036939fa02ef6ac8cafd4eb985c11d1",
+      "equal_to_HEAD_after_line_ending_normalization": true
+    },
+    {
+      "path": "services/api/app/agents/skills/rule/payment-rule/SKILL.md",
+      "working_sha256": "efe53c003fb00263075bfee109f29994e262148f2d7fff05ec9390fe3bd783f2",
+      "working_lf_sha256": "6988ce330072e7c36125e922a62b660cb3565b4e04079c93437daa9d30e990d5",
+      "head_lf_sha256": "6988ce330072e7c36125e922a62b660cb3565b4e04079c93437daa9d30e990d5",
+      "equal_to_HEAD_after_line_ending_normalization": true
+    },
+    {
+      "path": "services/api/app/agents/skills/rule/input-risk-rule/SKILL.md",
+      "working_sha256": "bd083277b7b044df8605c80992cf5097fd478b315b6905bb4bdca60a082f36fe",
+      "working_lf_sha256": "1dff3d4148c11a1242c150f50bb88afb5c4772037ea894b12ec7765372405ec9",
+      "head_lf_sha256": "1dff3d4148c11a1242c150f50bb88afb5c4772037ea894b12ec7765372405ec9",
+      "equal_to_HEAD_after_line_ending_normalization": true
+    },
+    {
+      "path": "services/api/app/agents/skills/rule/player-rule/SKILL.md",
+      "working_sha256": "e8d882a9430dbc65226dce0249efb39a0e9fbdc31757481c870a3bc552c05d99",
+      "working_lf_sha256": "dd53c21c9cc8592f521a53b07766ae051655417d511affda1b278987e004b92d",
+      "head_lf_sha256": "dd53c21c9cc8592f521a53b07766ae051655417d511affda1b278987e004b92d",
+      "equal_to_HEAD_after_line_ending_normalization": true
+    }
+  ]
+}

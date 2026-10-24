@@ -1,0 +1,45 @@
+{
+  "batch": "20261012-103747",
+  "source_directory": "H5导航签名晚到结算与覆盖修复验收-20261012-103747",
+  "yc_profile": {
+    "dom_artifact_id": "15323b80-32c8-4fe5-97e3-1dfeafbcdcba",
+    "dom_sha256": "4902590af11d8bcbb17ffea643f1576c1ba05ac2e1a4c5f08bea336cf11deb2d",
+    "element": {
+      "selector": ".vip-section .button",
+      "tag": "div",
+      "text": "立即开通",
+      "class_tokens": ["button"],
+      "parent_class_tokens": ["vip-section"],
+      "ancestor_class_tokens": ["vip-section", "aspect-ratio-overlay", "header"],
+      "hit_test": {"center_hits_target": true}
+    }
+  },
+  "yc_sequence": {
+    "rule_code": "alioth_9",
+    "work_item_id": "9c4a3e85-9558-4031-a5f9-988d23d642f7",
+    "artifact_id": "2ded850e-2bab-4cab-b26b-18a283f71a4c",
+    "sha256": "b653e28cad0978faf55b47a7dee68186db73495e72396573d8e03476a2e22e82",
+    "payload": {
+      "schema_version": "ui-snapshot-sequence.v1",
+      "sequence": true,
+      "capture_role": "h5_vertical_scroll_collection",
+      "frames": []
+    }
+  },
+  "closed_active_work": {
+    "work_item_id": "f5376d11-7b53-49d5-8cb4-ec0acfe61c1e",
+    "producer_agent_run_id": "088c602f-a70a-4223-a060-2e8ac6b8212d",
+    "consumer_agent_run_id": "82244e53-f564-5486-808a-62ca54645577",
+    "session_id": "h5:088c602f-a70a-4223-a060-2e8ac6b8212d",
+    "session_status": "closed",
+    "deadline": "2026-10-12T05:53:44Z",
+    "attempt_count": 1,
+    "max_attempts": 3
+  },
+  "loading_capture": {
+    "page_capture_id": "e83c667e-8b55-4c96-a656-9f2f0ddbb861",
+    "diagnostic_outcome": "startup_obstruction_ready",
+    "duration_ms": 423.9,
+    "stable_sample_count": 0
+  }
+}

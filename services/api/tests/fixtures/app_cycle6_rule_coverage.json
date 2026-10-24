@@ -1,0 +1,3015 @@
+{
+  "inventory": {
+    "inventory_hash": "d4b6a37ec9c002bb9b8b3f0a54fcb5f1f0b4a685f9c4738d8654dbcdd07eddec",
+    "rules": [
+      {
+        "rule_id": "9d038146-10c0-4355-b3a6-832f6da85b4b",
+        "rule_code": "alioth_2",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "page_capture_tool",
+            "text_style_extractor_tool",
+            "typography_assertion_handler",
+            "semantic_rule_judge_tool"
+          ],
+          "thresholds": {},
+          "capability_config": {
+            "batch_group": "text-static",
+            "requires_journey": false,
+            "deterministic_tools": [
+              "text_style_extractor_tool",
+              "typography_assertion_handler"
+            ]
+          }
+        },
+        "applicability": "applicable",
+        "input_contract": {
+          "required_fields": [
+            "page.url",
+            "facts.ui_snapshot",
+            "facts.visible_text"
+          ],
+          "required_artifacts": [
+            "screenshot",
+            "ui_snapshot",
+            "dom",
+            "visible_text"
+          ]
+        },
+        "applicable_page_types": [
+          "content_list",
+          "video_list",
+          "video_detail"
+        ],
+        "category": "text",
+        "name": "文案语言规范检查",
+        "check_point": "文字应使用半角、无衬线字体、不混用简体繁体、符合中文语法、无方言； 除非产品负责人明确指定的位置允许特例，比如日文视频名称、特定运营活动等；"
+      },
+      {
+        "rule_id": "5829f17d-49bb-4d0f-a9d5-5d261c50d22f",
+        "rule_code": "alioth_3",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "page_capture_tool",
+            "media_element_extractor_tool",
+            "multi_frame_capture_tool",
+            "image_quality_analyzer_tool",
+            "visual_rule_judge_tool"
+          ],
+          "thresholds": {},
+          "capability_config": {
+            "batch_group": "visual-media",
+            "requires_journey": false,
+            "deterministic_tools": [
+              "media_element_extractor_tool",
+              "multi_frame_capture_tool",
+              "image_quality_analyzer_tool"
+            ]
+          }
+        },
+        "applicability": "applicable",
+        "input_contract": {
+          "required_fields": [
+            "page.url",
+            "facts.ui_snapshot"
+          ],
+          "required_artifacts": [
+            "screenshot",
+            "ui_snapshot",
+            "dom"
+          ]
+        },
+        "applicable_page_types": [
+          "content_list",
+          "content_detail",
+          "video_list",
+          "video_detail"
+        ],
+        "category": "visual",
+        "name": "图片展示质量检查",
+        "check_point": "图片(不含广告)应当高清、不模糊、不拉伸、非tab图片不越出屏幕边界、文字不贴图片边不越图片边、人物比例不失调；若有闪烁效果，闪烁频率应<1.5s/次；"
+      },
+      {
+        "rule_id": "811d2fd6-ee31-436a-9c6e-b4d6fc251d34",
+        "rule_code": "alioth_4",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "page_capture_tool",
+            "visible_text_extractor_tool",
+            "semantic_rule_judge_tool"
+          ],
+          "thresholds": {},
+          "capability_config": {
+            "batch_group": "text-static",
+            "requires_journey": false,
+            "deterministic_tools": [
+              "visible_text_extractor_tool"
+            ]
+          }
+        },
+        "applicability": "applicable",
+        "input_contract": {
+          "required_fields": [
+            "page.url",
+            "facts.ui_snapshot",
+            "facts.visible_text"
+          ],
+          "required_artifacts": [
+            "screenshot",
+            "ui_snapshot",
+            "dom",
+            "visible_text"
+          ]
+        },
+        "applicable_page_types": [
+          "content_list",
+          "video_list",
+          "video_detail"
+        ],
+        "category": "text",
+        "name": "错别字检查",
+        "check_point": "非特殊产品运营需求下，不应有任何原因的错别字，比如“登录”和“登陆”等；"
+      },
+      {
+        "rule_id": "5d44d3b6-ff91-417f-b3f2-3b034923445e",
+        "rule_code": "alioth_5",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "page_capture_tool",
+            "layout_region_extractor_tool",
+            "network_console_summary_tool",
+            "blank_module_detector_tool",
+            "visual_rule_judge_tool"
+          ],
+          "thresholds": {},
+          "capability_config": {
+            "batch_group": "visual-layout",
+            "requires_journey": false,
+            "deterministic_tools": [
+              "layout_region_extractor_tool",
+              "network_console_summary_tool",
+              "blank_module_detector_tool"
+            ]
+          }
+        },
+        "applicability": "applicable",
+        "input_contract": {
+          "required_fields": [
+            "page.url",
+            "facts.ui_snapshot"
+          ],
+          "required_artifacts": [
+            "screenshot",
+            "ui_snapshot",
+            "dom"
+          ]
+        },
+        "applicable_page_types": [
+          "home",
+          "video_list"
+        ],
+        "category": "visual",
+        "name": "页面模块空白兜底检查",
+        "check_point": "不应出现因内容未上传、数据缺失或 Bug 导致的模块空白，具体表现位某个模块突然无内容； 当未上传内容、配置失效或接口报错时，前端模块不建议直接展示一片死白或只剩残缺的标题/边框；建议无内容即隐藏或兜底策略(如显示美观的缺省图或自动替换为预设的推荐内容)，确保用户看到的界面始终是完整、饱满的，防止产生对产品的负面认知；"
+      },
+      {
+        "rule_id": "6286a947-323d-4b05-8c70-348f29bb201a",
+        "rule_code": "alioth_6",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "deterministic_assertion_tool"
+          ],
+          "thresholds": {},
+          "engine_config": {},
+          "capability_config": {}
+        },
+        "applicability": "applicable",
+        "input_contract": {
+          "required_fields": [],
+          "required_artifacts": [
+            "visible_text"
+          ],
+          "required_capture_roles": [
+            "primary"
+          ]
+        },
+        "applicable_page_types": [
+          "home",
+          "video_list"
+        ],
+        "category": "visual",
+        "name": "技术错误直出检查",
+        "check_point": "不应出现明显技术错误页/错误码直出(如 JSON Parse Error、Null、500)；"
+      },
+      {
+        "rule_id": "e14fad25-e674-4f78-8d52-c0cb32d7fd42",
+        "rule_code": "alioth_7",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "deterministic_assertion_tool"
+          ],
+          "thresholds": {},
+          "engine_config": {},
+          "capability_config": {}
+        },
+        "applicability": "applicable",
+        "input_contract": {
+          "required_fields": [],
+          "required_artifacts": [
+            "screenshot"
+          ],
+          "required_capture_roles": [
+            "before",
+            "primary"
+          ]
+        },
+        "applicable_page_types": [
+          "activity"
+        ],
+        "category": "interaction",
+        "name": "外部链接新窗口跳转检查",
+        "check_point": "外部链接操作前后可信截图不一致，即判定页面已发生跳转并通过；缺少前后截图时证据不足。"
+      },
+      {
+        "rule_id": "96269eae-a4a0-401b-b432-791412b9c350",
+        "rule_code": "alioth_8",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "page_capture_tool",
+            "semantic_rule_judge_tool"
+          ],
+          "thresholds": {},
+          "capability_config": {
+            "batch_group": "interaction-state",
+            "requires_journey": true,
+            "deterministic_tools": []
+          }
+        },
+        "applicability": "applicable",
+        "input_contract": {
+          "required_fields": [],
+          "auth_requirement": "authenticated",
+          "required_artifacts": [
+            "screenshot"
+          ],
+          "required_capture_roles": [
+            "before",
+            "primary",
+            "refreshed"
+          ]
+        },
+        "applicable_page_types": [
+          "content_detail",
+          "video_detail",
+          "profile",
+          "post_list"
+        ],
+        "category": "interaction",
+        "name": "互动状态即时反馈检查",
+        "check_point": "关注、收藏、点赞即时反馈： 点击关注应变“已关注”状态(及相应的颜色/文字变化)，不应无反应，数据一致： 再次进入或刷新页面，关注状态应保持同步，不应出现“点过又变回未关注”的灵异回滚；"
+      },
+      {
+        "rule_id": "6a9a0e85-852f-47d9-8d5a-7d761b9aff38",
+        "rule_code": "alioth_9",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "deterministic_assertion_tool"
+          ],
+          "thresholds": {},
+          "engine_config": {},
+          "capability_config": {}
+        },
+        "applicability": "applicable",
+        "input_contract": {
+          "required_fields": [],
+          "required_artifacts": [
+            "visible_text"
+          ],
+          "required_capture_roles": [
+            "primary"
+          ]
+        },
+        "applicable_page_types": [
+          "content_detail",
+          "video_detail",
+          "profile",
+          "post_list"
+        ],
+        "category": "interaction",
+        "name": "数据变更后刷新检查",
+        "check_point": "页面存在评论数、点赞数等可见数字指标即通过；未识别到数字指标时证据不足。"
+      },
+      {
+        "rule_id": "8361466a-f062-42c5-a9a5-ed8389939fdc",
+        "rule_code": "alioth_10",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "page_capture_tool",
+            "transient_message_capture_tool",
+            "semantic_rule_judge_tool"
+          ],
+          "thresholds": {},
+          "capability_config": {
+            "batch_group": "text-semantic",
+            "requires_journey": true,
+            "deterministic_tools": [
+              "transient_message_capture_tool"
+            ]
+          }
+        },
+        "applicability": "applicable",
+        "input_contract": {
+          "required_fields": [
+            "page.url",
+            "facts.ui_snapshot",
+            "facts.visible_text"
+          ],
+          "required_artifacts": [
+            "screenshot",
+            "ui_snapshot",
+            "dom",
+            "visible_text",
+            "action_trace"
+          ]
+        },
+        "applicable_page_types": [
+          "profile"
+        ],
+        "category": "text",
+        "name": "提示文案易懂性检查",
+        "check_point": "提示的文字应当柔顺，应当没有互联网任何岗位从业经验的人能够看懂和易于接受的描述； 举例：“仅注册用户才能关注”，“才”是一个不适合在短提示中出现的字和语法，应为“注册后即可关注”；"
+      },
+      {
+        "rule_id": "a64cc8c2-c0b3-4aa0-82be-16c57fe56be2",
+        "rule_code": "alioth_11",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "page_capture_tool",
+            "transient_message_capture_tool",
+            "semantic_rule_judge_tool"
+          ],
+          "thresholds": {},
+          "capability_config": {
+            "batch_group": "text-semantic",
+            "requires_journey": true,
+            "deterministic_tools": [
+              "transient_message_capture_tool"
+            ]
+          }
+        },
+        "applicability": "applicable",
+        "input_contract": {
+          "required_fields": [
+            "page.url",
+            "facts.ui_snapshot",
+            "facts.visible_text"
+          ],
+          "required_artifacts": [
+            "screenshot",
+            "ui_snapshot",
+            "dom",
+            "visible_text",
+            "action_trace"
+          ]
+        },
+        "applicable_page_types": [
+          "profile",
+          "payment"
+        ],
+        "category": "text",
+        "name": "提示文案正向表达检查",
+        "check_point": "提示文字使用正向提示语优于反向提示语，例如“您再赚够500积分即可兑换”优于“您的积分不够兑换该物品”；"
+      },
+      {
+        "rule_id": "681fd0bf-0f57-47ad-b179-4ed3e4af223f",
+        "rule_code": "alioth_12",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "page_capture_tool",
+            "transient_message_capture_tool",
+            "punctuation_assertion_handler",
+            "semantic_rule_judge_tool"
+          ],
+          "thresholds": {},
+          "capability_config": {
+            "batch_group": "text-semantic",
+            "requires_journey": true,
+            "deterministic_tools": [
+              "transient_message_capture_tool",
+              "punctuation_assertion_handler"
+            ]
+          }
+        },
+        "applicability": "applicable",
+        "input_contract": {
+          "required_fields": [
+            "page.url",
+            "facts.ui_snapshot",
+            "facts.visible_text"
+          ],
+          "required_artifacts": [
+            "screenshot",
+            "ui_snapshot",
+            "dom",
+            "visible_text"
+          ]
+        },
+        "applicable_page_types": [
+          "content_detail",
+          "video_detail",
+          "post_list"
+        ],
+        "category": "text",
+        "name": "提示文案叹号结尾检查",
+        "check_point": "提示文字不应使用叹号结尾；提示文字的叹号向表达了强烈的情感仿佛在指责用户，此时无需标点符号或可用句号结尾；喜悦气氛下叹号可保留；"
+      },
+      {
+        "rule_id": "b8c616bf-bfbb-401f-84ad-bbb9d5364e9d",
+        "rule_code": "alioth_13",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "deterministic_assertion_tool"
+          ],
+          "thresholds": {},
+          "engine_config": {},
+          "capability_config": {}
+        },
+        "applicability": "applicable",
+        "input_contract": {
+          "required_fields": [],
+          "required_artifacts": [
+            "visible_text"
+          ],
+          "required_capture_roles": [
+            "primary",
+            "location_1"
+          ]
+        },
+        "applicable_page_types": [
+          "content_detail",
+          "video_detail",
+          "payment"
+        ],
+        "category": "payment",
+        "name": "商品价格一致性检查",
+        "check_point": "同一商品的所有位置价格应一致；"
+      },
+      {
+        "rule_id": "c218b515-0746-4f68-a4c0-3592efbf4890",
+        "rule_code": "alioth_14",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "deterministic_assertion_tool",
+            "price_extractor_tool"
+          ],
+          "thresholds": {},
+          "engine_config": {},
+          "capability_config": {}
+        },
+        "applicability": "applicable",
+        "input_contract": {
+          "required_fields": [
+            "discount_price",
+            "original_price"
+          ],
+          "required_artifacts": [
+            "visible_text"
+          ],
+          "required_capture_roles": [
+            "primary"
+          ]
+        },
+        "applicable_page_types": [
+          "content_detail",
+          "video_detail",
+          "payment"
+        ],
+        "category": "payment",
+        "name": "优惠价低于原价检查",
+        "check_point": "会员充值等 payment 页面未展示优惠价时直接通过；展示优惠价时，优惠价应低于原价。"
+      },
+      {
+        "rule_id": "826a945e-b21d-49f2-ae42-7b9959d98dbb",
+        "rule_code": "alioth_15",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "page_capture_tool",
+            "visual_semantic_compare_tool",
+            "multi_frame_capture_tool",
+            "media_element_extractor_tool",
+            "visual_rule_judge_tool"
+          ],
+          "thresholds": {},
+          "capability_config": {
+            "batch_group": "cover-content",
+            "requires_journey": true,
+            "deterministic_tools": [
+              "visual_semantic_compare_tool",
+              "multi_frame_capture_tool",
+              "media_element_extractor_tool"
+            ]
+          }
+        },
+        "applicability": "applicable",
+        "input_contract": {
+          "required_fields": [
+            "page.url",
+            "facts.ui_snapshot"
+          ],
+          "required_artifacts": [
+            "screenshot",
+            "ui_snapshot",
+            "dom"
+          ]
+        },
+        "applicable_page_types": [
+          "content_list",
+          "content_detail",
+          "video_list",
+          "video_detail"
+        ],
+        "category": "visual",
+        "name": "封面与内容相符检查",
+        "check_point": "封面与内容需相符；"
+      },
+      {
+        "rule_id": "ec4256a0-eece-472a-9654-cfbeb3dea27c",
+        "rule_code": "alioth_16",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "page_capture_tool",
+            "ad_region_detector_tool",
+            "media_element_extractor_tool",
+            "image_geometry_tool",
+            "visual_rule_judge_tool"
+          ],
+          "thresholds": {},
+          "capability_config": {
+            "batch_group": "ad-visual",
+            "requires_journey": false,
+            "deterministic_tools": [
+              "ad_region_detector_tool",
+              "media_element_extractor_tool",
+              "image_geometry_tool"
+            ]
+          }
+        },
+        "applicability": "applicable",
+        "input_contract": {
+          "required_fields": [
+            "page.url",
+            "facts.ui_snapshot"
+          ],
+          "required_artifacts": [
+            "screenshot",
+            "ui_snapshot",
+            "dom"
+          ]
+        },
+        "applicable_page_types": [
+          "startup_ad"
+        ],
+        "category": "ad",
+        "name": "广告素材比例检查",
+        "check_point": "广告媒体在视觉上保持正确的长宽比例；"
+      },
+      {
+        "rule_id": "a750d2ab-618a-4dbd-9e97-3ff3d700393c",
+        "rule_code": "alioth_17",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "page_capture_tool",
+            "ad_region_detector_tool",
+            "safe_click_observer_tool",
+            "landing_page_probe_tool",
+            "visual_semantic_compare_tool",
+            "visual_rule_judge_tool"
+          ],
+          "thresholds": {},
+          "capability_config": {
+            "batch_group": "ad-landing",
+            "requires_journey": true,
+            "deterministic_tools": [
+              "ad_region_detector_tool",
+              "safe_click_observer_tool",
+              "landing_page_probe_tool",
+              "visual_semantic_compare_tool"
+            ]
+          }
+        },
+        "applicability": "applicable",
+        "input_contract": {
+          "required_fields": [
+            "page.url",
+            "facts.ui_snapshot"
+          ],
+          "required_artifacts": [
+            "screenshot",
+            "ui_snapshot",
+            "dom"
+          ]
+        },
+        "applicable_page_types": [
+          "startup_ad"
+        ],
+        "category": "ad",
+        "name": "广告内容与落地页一致性检查",
+        "check_point": "广告内容与广告落地页应内容一致；点击应前往广告落地页；"
+      },
+      {
+        "rule_id": "d1c33624-e8a8-40f3-b938-52873f44ec6c",
+        "rule_code": "alioth_18",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "deterministic_assertion_tool"
+          ],
+          "thresholds": {},
+          "engine_config": {},
+          "capability_config": {}
+        },
+        "applicability": "applicable",
+        "input_contract": {
+          "required_fields": [],
+          "required_artifacts": [
+            "visible_text"
+          ],
+          "required_capture_roles": [
+            "primary"
+          ]
+        },
+        "applicable_page_types": [
+          "content_detail",
+          "video_detail",
+          "startup_ad"
+        ],
+        "category": "ad",
+        "name": "广告倒计时准确性检查",
+        "check_point": "页面存在可识别的广告倒计时数字即通过；未识别到倒计时数字时证据不足。"
+      },
+      {
+        "rule_id": "975c9f5d-bf65-4797-84e9-1ce33b5a432d",
+        "rule_code": "alioth_19",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "safe_hit_test_tool"
+          ],
+          "thresholds": {},
+          "engine_config": {},
+          "capability_config": {}
+        },
+        "applicability": "applicable",
+        "input_contract": {
+          "required_fields": [],
+          "required_artifacts": [
+            "screenshot",
+            "ui_snapshot",
+            "dom"
+          ],
+          "required_capture_roles": [
+            "primary"
+          ]
+        },
+        "applicable_page_types": [
+          "content_detail",
+          "video_detail",
+          "startup_ad"
+        ],
+        "category": "ad",
+        "name": "跳过按钮可点击区域检查",
+        "check_point": "允许跳过时，跳过按钮应一次点中，可点击区域应覆盖全部可点击的区域，可点击区域>=UI线框圈定的区域；"
+      },
+      {
+        "rule_id": "3e056be5-663f-4e3d-b99f-75e89434f070",
+        "rule_code": "alioth_20",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "deterministic_assertion_tool"
+          ],
+          "thresholds": {},
+          "engine_config": {},
+          "capability_config": {}
+        },
+        "applicability": "applicable",
+        "input_contract": {
+          "required_fields": [],
+          "required_artifacts": [
+            "screenshot"
+          ],
+          "required_capture_roles": [
+            "before",
+            "primary"
+          ]
+        },
+        "applicable_page_types": [
+          "home",
+          "activity",
+          "video_list",
+          "video_detail"
+        ],
+        "category": "ad",
+        "name": "弹窗广告关闭行为检查",
+        "check_point": "弹窗广告操作前后可信截图不一致即通过；缺少前后截图时证据不足。"
+      },
+      {
+        "rule_id": "c6c27a02-32ac-4a17-9777-9fd26f0589a4",
+        "rule_code": "alioth_21",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "deterministic_assertion_tool"
+          ],
+          "thresholds": {},
+          "engine_config": {
+            "required_page_states": [
+              "popup",
+              "modal",
+              "overlay",
+              "dialog"
+            ]
+          },
+          "capability_config": {}
+        },
+        "applicability": "applicable",
+        "input_contract": {
+          "required_fields": [],
+          "required_artifacts": [
+            "screenshot"
+          ],
+          "required_capture_roles": [
+            "before",
+            "primary"
+          ]
+        },
+        "applicable_page_types": [
+          "home",
+          "video_list"
+        ],
+        "category": "ad",
+        "name": "首页弹窗蒙层点击行为检查",
+        "check_point": "首页弹窗蒙层操作前后可信截图不一致即通过；缺少前后截图时证据不足。"
+      },
+      {
+        "rule_id": "2011d1ea-c949-4dbb-8128-49a59833b9f4",
+        "rule_code": "alioth_22",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "page_capture_tool",
+            "ad_modal_detector_tool",
+            "monotonic_timer_tool",
+            "rule_judge_tool"
+          ],
+          "thresholds": {},
+          "engine_config": {},
+          "capability_config": {
+            "batch_group": "ad-popup",
+            "requires_journey": true,
+            "evidence_scope_key": "home_popup_sequence",
+            "deterministic_tools": [],
+            "evidence_input_scope": "task"
+          }
+        },
+        "applicability": "applicable",
+        "input_contract": {
+          "required_fields": [
+            "page.url",
+            "facts.ui_snapshot"
+          ],
+          "required_artifacts": [
+            "screenshot",
+            "ui_snapshot",
+            "dom"
+          ]
+        },
+        "applicable_page_types": [
+          "home",
+          "activity",
+          "video_list",
+          "content_list"
+        ],
+        "category": "ad",
+        "name": "首页弹窗连续展示流畅性检查",
+        "check_point": "关闭一个首页弹窗广告时，应立现下一个，不可卡顿、延迟、稍后载入等；"
+      },
+      {
+        "rule_id": "4cc2bba2-f32d-461e-bc94-a7498a23efa1",
+        "rule_code": "alioth_23",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "page_capture_tool",
+            "network_fault_injection_tool",
+            "ad_modal_detector_tool",
+            "fallback_state_assertion_tool",
+            "visual_rule_judge_tool"
+          ],
+          "thresholds": {},
+          "capability_config": {
+            "batch_group": "ad-fallback",
+            "requires_journey": true,
+            "deterministic_tools": [
+              "network_fault_injection_tool",
+              "ad_modal_detector_tool",
+              "fallback_state_assertion_tool"
+            ]
+          }
+        },
+        "applicability": "applicable",
+        "input_contract": {
+          "required_fields": [
+            "page.url",
+            "facts.ui_snapshot"
+          ],
+          "required_artifacts": [
+            "screenshot",
+            "ui_snapshot",
+            "dom"
+          ]
+        },
+        "applicable_page_types": [
+          "home",
+          "activity",
+          "video_list",
+          "video_detail"
+        ],
+        "category": "ad",
+        "name": "广告加载失败兜底检查",
+        "check_point": "加载失败时应自动关闭或跳过，不得出现空白蒙板阻挡用户操作；"
+      },
+      {
+        "rule_id": "fe0d8d22-f441-41bb-9288-111664a6822c",
+        "rule_code": "alioth_24",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "page_capture_tool",
+            "semantic_rule_judge_tool"
+          ],
+          "thresholds": {},
+          "capability_config": {
+            "batch_group": "startup-ad-skip",
+            "requires_journey": true,
+            "deterministic_tools": []
+          }
+        },
+        "applicability": "applicable",
+        "input_contract": {
+          "required_fields": [],
+          "required_artifacts": [
+            "screenshot"
+          ],
+          "required_capture_roles": [
+            "primary"
+          ]
+        },
+        "applicable_page_types": [
+          "home",
+          "startup_ad"
+        ],
+        "category": "ad",
+        "name": "启动广告虚假跳过按钮检查",
+        "check_point": "启动广告上的「跳过」按钮点了要真能跳过：点完应进入首页（或产品正常的下一个页面）；点完跳到广告落地页、应用商店、外部页面，或停在原广告不动，都算假跳过。"
+      },
+      {
+        "rule_id": "cfcfcf83-a32e-4286-8d84-941e106cf9b7",
+        "rule_code": "alioth_25",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "ad_region_detector_tool"
+          ],
+          "thresholds": {},
+          "engine_config": {},
+          "capability_config": {}
+        },
+        "applicability": "applicable",
+        "input_contract": {
+          "required_fields": [],
+          "required_artifacts": [],
+          "required_capture_roles": [
+            "primary"
+          ]
+        },
+        "applicable_page_types": [
+          "video_detail"
+        ],
+        "category": "ad",
+        "name": "播放前广告展示检查",
+        "check_point": "视频播放页截图或结构化快照存在广告特征即通过；未识别到广告特征时证据不足。"
+      },
+      {
+        "rule_id": "2803a707-e077-484a-9e14-f5ec9fe5129d",
+        "rule_code": "alioth_26",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "deterministic_assertion_tool"
+          ],
+          "thresholds": {},
+          "engine_config": {},
+          "capability_config": {}
+        },
+        "applicability": "applicable",
+        "input_contract": {
+          "required_fields": [],
+          "required_artifacts": [
+            "visible_text",
+            "action_trace",
+            "ui_snapshot"
+          ],
+          "required_capture_roles": [
+            "before",
+            "primary"
+          ]
+        },
+        "applicable_page_types": [
+          "video_detail"
+        ],
+        "category": "ad",
+        "name": "广告失败后正片播放检查",
+        "check_point": "若广告加载失败，应取消广告，播放视频正片；"
+      },
+      {
+        "rule_id": "5010a7f5-8b3a-45cf-ac38-ea5e222a7be2",
+        "rule_code": "alioth_27",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "page_capture_tool",
+            "ugc_link_extractor_tool",
+            "safe_url_reputation_tool",
+            "semantic_rule_judge_tool"
+          ],
+          "thresholds": {},
+          "capability_config": {
+            "batch_group": "input-link",
+            "requires_journey": false,
+            "deterministic_tools": [
+              "ugc_link_extractor_tool",
+              "safe_url_reputation_tool"
+            ]
+          }
+        },
+        "applicability": "applicable",
+        "input_contract": {
+          "required_fields": [
+            "page.url",
+            "facts.ui_snapshot",
+            "facts.visible_text"
+          ],
+          "required_artifacts": [
+            "screenshot",
+            "ui_snapshot",
+            "dom",
+            "visible_text"
+          ]
+        },
+        "applicable_page_types": [
+          "content_detail",
+          "video_detail",
+          "post_list"
+        ],
+        "category": "input_risk",
+        "name": "恶意链接与外跳诱导检查",
+        "check_point": "用户输入内容不应包含恶意链接、钓鱼链接或诱导用户跳转至第三方平台的内容；"
+      },
+      {
+        "rule_id": "cf5f301c-fec7-4e52-9457-a60bcb9073b5",
+        "rule_code": "alioth_28",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "page_capture_tool",
+            "ugc_content_extractor_tool",
+            "sensitive_word_detection_tool",
+            "content_safety_judge_tool"
+          ],
+          "thresholds": {},
+          "capability_config": {
+            "batch_group": "input-safety",
+            "requires_journey": false,
+            "deterministic_tools": [
+              "ugc_content_extractor_tool",
+              "sensitive_word_detection_tool"
+            ]
+          }
+        },
+        "applicability": "applicable",
+        "input_contract": {
+          "required_fields": [
+            "page.url",
+            "facts.ui_snapshot",
+            "facts.visible_text"
+          ],
+          "required_artifacts": [
+            "screenshot",
+            "ui_snapshot",
+            "dom",
+            "visible_text"
+          ]
+        },
+        "applicable_page_types": [
+          "post_list"
+        ],
+        "category": "input_risk",
+        "name": "政治恐怖与人身攻击内容检查",
+        "check_point": "用户输入内容不应涉及红线人、不应涉及政治、不应涉及恐怖行为；不应对任何主体、个体造成人身攻击；"
+      },
+      {
+        "rule_id": "b613ee0c-26b0-4a0e-b65f-566e54ad5a1e",
+        "rule_code": "alioth_29",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "deterministic_assertion_tool"
+          ],
+          "thresholds": {},
+          "engine_config": {},
+          "capability_config": {}
+        },
+        "applicability": "applicable",
+        "input_contract": {
+          "required_fields": [],
+          "auth_requirement": "authenticated",
+          "required_artifacts": [
+            "visible_text",
+            "action_trace",
+            "har"
+          ],
+          "required_capture_roles": [
+            "attempt_1",
+            "attempt_2",
+            "attempt_3",
+            "primary"
+          ]
+        },
+        "applicable_page_types": [
+          "content_detail",
+          "video_detail",
+          "post_list"
+        ],
+        "category": "input_risk",
+        "name": "用户输入防刷与刷屏检查",
+        "check_point": "用户输入行为需具备防刷机制，如短时间内连续发布评论、帖子或消息，应进行频率限制或验证码校验；用户输入内容不应出现3次(不含)以上的刷屏行为；"
+      },
+      {
+        "rule_id": "49a9915c-187b-444e-a084-3573471b4fa0",
+        "rule_code": "alioth_30",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "page_capture_tool",
+            "ugc_content_extractor_tool",
+            "sensitive_word_detection_tool",
+            "content_safety_judge_tool"
+          ],
+          "thresholds": {},
+          "capability_config": {
+            "batch_group": "input-safety",
+            "requires_journey": false,
+            "deterministic_tools": [
+              "ugc_content_extractor_tool",
+              "sensitive_word_detection_tool"
+            ]
+          }
+        },
+        "applicability": "applicable",
+        "input_contract": {
+          "required_fields": [
+            "page.url",
+            "facts.ui_snapshot",
+            "facts.visible_text"
+          ],
+          "required_artifacts": [
+            "screenshot",
+            "ui_snapshot",
+            "dom",
+            "visible_text"
+          ]
+        },
+        "applicable_page_types": [
+          "content_detail",
+          "video_detail",
+          "post_list",
+          "post_publish"
+        ],
+        "category": "input_risk",
+        "name": "成人赌博与私人广告内容检查",
+        "check_point": "用户输入内容不应出现裸聊、约炮、赌博、棋牌、成人及各种私人广告行为，除非该功能区允许；"
+      },
+      {
+        "rule_id": "ed81b7b9-d4ff-4ef3-b2c4-7de9d907ff7c",
+        "rule_code": "alioth_31",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "page_capture_tool",
+            "semantic_rule_judge_tool"
+          ],
+          "thresholds": {},
+          "capability_config": {
+            "batch_group": "interaction-state",
+            "requires_journey": true,
+            "deterministic_tools": []
+          }
+        },
+        "applicability": "applicable",
+        "input_contract": {
+          "required_fields": [],
+          "auth_requirement": "authenticated",
+          "required_artifacts": [
+            "screenshot"
+          ],
+          "required_capture_roles": [
+            "before",
+            "primary",
+            "refreshed"
+          ]
+        },
+        "applicable_page_types": [
+          "content_detail",
+          "video_detail",
+          "post_list"
+        ],
+        "category": "input_risk",
+        "name": "评论发布与计数同步检查",
+        "check_point": "用户发送评论后，界面在列表首位显示新评论，同时对应的计数(如评论数、观看数等)要实时更新，不应数据不增加或刷新后状态回滚等不合理逻辑；"
+      },
+      {
+        "rule_id": "f75d106a-0a54-4ea3-bcc0-f1f936eb904c",
+        "rule_code": "alioth_32",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "page_capture_tool",
+            "ugc_content_extractor_tool",
+            "sensitive_word_detection_tool",
+            "content_safety_judge_tool"
+          ],
+          "thresholds": {},
+          "capability_config": {
+            "batch_group": "input-safety",
+            "requires_journey": false,
+            "deterministic_tools": [
+              "ugc_content_extractor_tool",
+              "sensitive_word_detection_tool"
+            ]
+          }
+        },
+        "applicability": "applicable",
+        "input_contract": {
+          "required_fields": [
+            "page.url",
+            "facts.ui_snapshot",
+            "facts.visible_text"
+          ],
+          "required_artifacts": [
+            "screenshot",
+            "ui_snapshot",
+            "dom",
+            "visible_text"
+          ]
+        },
+        "applicable_page_types": [
+          "video_list",
+          "video_detail",
+          "post_list",
+          "post_publish"
+        ],
+        "category": "input_risk",
+        "name": "涉华战争政治民族内容检查",
+        "check_point": "用户输入内容不应出现1921年及以后明确提及中国的战争、政治、民族感情的内容，但中国大陆官方发布的新闻、通讯除外；"
+      },
+      {
+        "rule_id": "10690e36-bf8b-49db-9f86-91d3a158f6b9",
+        "rule_code": "alioth_33",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "page_capture_tool",
+            "ugc_content_extractor_tool",
+            "sensitive_word_detection_tool",
+            "content_safety_judge_tool"
+          ],
+          "thresholds": {},
+          "capability_config": {
+            "batch_group": "input-safety",
+            "requires_journey": false,
+            "deterministic_tools": [
+              "ugc_content_extractor_tool",
+              "sensitive_word_detection_tool"
+            ]
+          }
+        },
+        "applicability": "applicable",
+        "input_contract": {
+          "required_fields": [
+            "page.url",
+            "facts.ui_snapshot",
+            "facts.visible_text"
+          ],
+          "required_artifacts": [
+            "screenshot",
+            "ui_snapshot",
+            "dom",
+            "visible_text"
+          ]
+        },
+        "applicable_page_types": [
+          "video_list",
+          "video_detail",
+          "post_list",
+          "post_publish"
+        ],
+        "category": "input_risk",
+        "name": "英国政治内容检查",
+        "check_point": "用户输入内容不应出现提及英国的政治内容；"
+      },
+      {
+        "rule_id": "5184af46-b9e5-4304-8cd6-bb2cd3ce7f1d",
+        "rule_code": "alioth_34",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "page_capture_tool",
+            "ugc_content_extractor_tool",
+            "sensitive_word_detection_tool",
+            "content_safety_judge_tool"
+          ],
+          "thresholds": {},
+          "capability_config": {
+            "batch_group": "input-safety",
+            "requires_journey": false,
+            "deterministic_tools": [
+              "ugc_content_extractor_tool",
+              "sensitive_word_detection_tool"
+            ]
+          }
+        },
+        "applicability": "applicable",
+        "input_contract": {
+          "required_fields": [
+            "page.url",
+            "facts.ui_snapshot",
+            "facts.visible_text"
+          ],
+          "required_artifacts": [
+            "screenshot",
+            "ui_snapshot",
+            "dom",
+            "visible_text"
+          ]
+        },
+        "applicable_page_types": [
+          "content_list",
+          "content_detail",
+          "video_list",
+          "video_detail",
+          "profile",
+          "post_list",
+          "post_publish"
+        ],
+        "category": "input_risk",
+        "name": "恐怖行为支持内容检查",
+        "check_point": "用户输入内容不应出现任何支持、变相支持恐怖行为的内容；"
+      },
+      {
+        "rule_id": "e750350f-a7be-46f2-8588-c49109cb7df6",
+        "rule_code": "alioth_36",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "page_capture_tool",
+            "ugc_content_extractor_tool",
+            "media_element_extractor_tool",
+            "content_safety_judge_tool"
+          ],
+          "thresholds": {
+            "scan_viewport_screens": 2
+          },
+          "capability_config": {
+            "batch_group": "input-safety",
+            "requires_journey": false,
+            "deterministic_tools": [
+              "ugc_content_extractor_tool",
+              "media_element_extractor_tool"
+            ]
+          }
+        },
+        "applicability": "applicable",
+        "input_contract": {
+          "required_fields": [
+            "page.url",
+            "facts.ui_snapshot",
+            "facts.visible_text"
+          ],
+          "required_artifacts": [
+            "screenshot",
+            "ui_snapshot",
+            "dom",
+            "visible_text"
+          ]
+        },
+        "applicable_page_types": [
+          "home",
+          "content_list",
+          "video_list"
+        ],
+        "category": "input_risk",
+        "name": "未成年红线标记检查",
+        "check_point": "除用户主动触发的生成式AI内容外，符合以下任意条件之一的，标记红线内容，交由运营团队处置： (1)封面、图片、视频等视觉内容明确表达有18岁以下； (2)看起来像红线人；关键词已不作为未成年人的检测范围（2026-08-07 口径变更）。"
+      },
+      {
+        "rule_id": "68c805ea-0e07-4b44-8805-fc02266d8ee6",
+        "rule_code": "alioth_38",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "deterministic_assertion_tool"
+          ],
+          "thresholds": {},
+          "engine_config": {},
+          "capability_config": {}
+        },
+        "applicability": "applicable",
+        "input_contract": {
+          "required_fields": [
+            "labels"
+          ],
+          "required_artifacts": [
+            "visible_text"
+          ],
+          "required_capture_roles": [
+            "primary"
+          ]
+        },
+        "applicable_page_types": [
+          "content_list",
+          "video_list"
+        ],
+        "category": "text",
+        "name": "分类标签大小写一致性检查",
+        "check_point": "分类标签文案中的字母大小写应保持统一，不应出现同类标签中部分使用小写、部分使用大写，导致页面文案格式不一致的情况。"
+      },
+      {
+        "rule_id": "47eeb2d7-eb19-4ee3-9284-baa95fccc481",
+        "rule_code": "alioth_39",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "deterministic_assertion_tool"
+          ],
+          "thresholds": {},
+          "engine_config": {},
+          "capability_config": {}
+        },
+        "applicability": "applicable",
+        "input_contract": {
+          "required_fields": [
+            "ranking_items"
+          ],
+          "required_artifacts": [
+            "visible_text"
+          ],
+          "required_capture_roles": [
+            "primary"
+          ]
+        },
+        "applicable_page_types": [
+          "video_list"
+        ],
+        "category": "text",
+        "name": "榜单数据排序合理性检查",
+        "check_point": "视频榜单数据展示应保持合理、准确，并按播放量、热度等指定维度正确排序；不应出现数据差异过大、排序倒置或展示结果与榜单逻辑明显不符的情况。"
+      },
+      {
+        "rule_id": "dbaf6c0f-007f-400b-85b1-21af706d6225",
+        "rule_code": "alioth_40",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "page_capture_tool",
+            "semantic_rule_judge_tool"
+          ],
+          "thresholds": {},
+          "capability_config": {
+            "batch_group": "content-lifecycle",
+            "requires_journey": true,
+            "deterministic_tools": []
+          }
+        },
+        "applicability": "applicable",
+        "input_contract": {
+          "required_fields": [],
+          "required_artifacts": [
+            "screenshot"
+          ],
+          "required_capture_roles": [
+            "primary"
+          ]
+        },
+        "applicable_page_types": [
+          "content_list",
+          "video_list"
+        ],
+        "category": "text",
+        "name": "下架内容前置标识检查",
+        "check_point": "视频板块列表中已下架/不可下载的内容须在列表项前置标记\"已下架\"状态标签或直接隐藏该内容，不应存在在用户点击下载后才提示\"该作品已下架\"，避免无效操作。"
+      },
+      {
+        "rule_id": "f854a05c-9eb4-4835-92bc-8fe841dfc28f",
+        "rule_code": "alioth_41",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "qr_link_validation_tool"
+          ],
+          "thresholds": {},
+          "engine_config": {},
+          "capability_config": {}
+        },
+        "applicability": "applicable",
+        "input_contract": {
+          "required_fields": [],
+          "required_artifacts": [
+            "visible_text",
+            "ui_snapshot",
+            "screenshot"
+          ],
+          "required_capture_roles": [
+            "primary"
+          ]
+        },
+        "applicable_page_types": [
+          "content_list",
+          "home",
+          "post_list",
+          "profile",
+          "settings",
+          "video_list"
+        ],
+        "category": "interaction",
+        "name": "二维码与网址有效性检查",
+        "check_point": "我的页面/身份凭证卡模块/弹窗模块中展示的二维码和网址应真实有效，支持正常识别、复制，并确保在第三方浏览器中可成功访问，无失效或误导情况。"
+      },
+      {
+        "rule_id": "cab88e62-04f3-49ff-99a4-3e663767a15a",
+        "rule_code": "alioth_42",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "url_reachability_tool"
+          ],
+          "thresholds": {},
+          "engine_config": {},
+          "capability_config": {}
+        },
+        "applicability": "applicable",
+        "input_contract": {
+          "required_fields": [
+            "page.url"
+          ],
+          "required_artifacts": [],
+          "required_capture_roles": [
+            "primary"
+          ]
+        },
+        "applicable_page_types": [
+          "home",
+          "content_list",
+          "content_detail",
+          "video_list",
+          "video_detail",
+          "post_list",
+          "activity"
+        ],
+        "category": "text",
+        "name": "失效活动展示同步检查",
+        "check_point": "当前活动页面 URL 返回 HTTP 200 即通过；无法取得状态码时证据不足。"
+      },
+      {
+        "rule_id": "122f6047-3f92-4d42-8497-cafa36deef4c",
+        "rule_code": "alioth_43",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "page_capture_tool",
+            "semantic_rule_judge_tool"
+          ],
+          "thresholds": {},
+          "capability_config": {
+            "batch_group": "player-history",
+            "requires_journey": true,
+            "deterministic_tools": []
+          }
+        },
+        "applicability": "applicable",
+        "input_contract": {
+          "required_fields": [],
+          "auth_requirement": "authenticated",
+          "required_artifacts": [
+            "screenshot"
+          ],
+          "required_capture_roles": [
+            "primary"
+          ]
+        },
+        "applicable_page_types": [
+          "content_detail",
+          "video_detail"
+        ],
+        "category": "player",
+        "name": "播放历史进度恢复检查",
+        "check_point": "用户进入视频播放界面（短剧，小说等连续界面）播放页时，系统应自动定位至最近观看进度（最近播放集数及时间点）；新用户或无历史记录时默认从第1集起始播放，确保观看连续性。"
+      },
+      {
+        "rule_id": "32b341f0-cdab-4b2e-8344-7146967c17da",
+        "rule_code": "alioth_44",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "page_capture_tool",
+            "media_element_extractor_tool",
+            "control_behavior_assertion_tool",
+            "semantic_rule_judge_tool"
+          ],
+          "thresholds": {
+            "max_time_display_deviation_seconds": 1
+          },
+          "capability_config": {
+            "batch_group": "player-controls",
+            "requires_journey": true,
+            "deterministic_tools": [
+              "media_element_extractor_tool",
+              "control_behavior_assertion_tool"
+            ]
+          }
+        },
+        "applicability": "applicable",
+        "input_contract": {
+          "required_fields": [
+            "page.url",
+            "facts.ui_snapshot"
+          ],
+          "required_artifacts": [
+            "screenshot",
+            "ui_snapshot",
+            "dom"
+          ]
+        },
+        "applicable_page_types": [
+          "video_detail"
+        ],
+        "category": "player",
+        "name": "进度条时间显示检查",
+        "check_point": "短视频播放页面滑动进度条时应实时显示当前播放时间与总时长，方便用户准确定位视频播放位置。"
+      },
+      {
+        "rule_id": "a72b6518-9729-405e-9945-76bcb8bda96f",
+        "rule_code": "alioth_45",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "deterministic_assertion_tool"
+          ],
+          "thresholds": {},
+          "engine_config": {},
+          "capability_config": {}
+        },
+        "applicability": "applicable",
+        "input_contract": {
+          "required_fields": [
+            "observed_capabilities"
+          ],
+          "auth_requirement": "authenticated",
+          "required_artifacts": [
+            "visible_text"
+          ],
+          "required_capture_roles": [
+            "primary"
+          ]
+        },
+        "applicable_page_types": [
+          "post_publish"
+        ],
+        "category": "input_risk",
+        "name": "上传限制与多选规则展示检查",
+        "check_point": "发布帖文页面须展示图片/视频上传的最高限制（数量、大小）、支持格式及选择规则；进入相册后须支持多选操作，或明确告知\"仅支持单选\"，保证发布流程规则清晰。"
+      },
+      {
+        "rule_id": "6d2f3d05-316c-4975-a5f1-ba8b344ca20a",
+        "rule_code": "alioth_46",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "page_capture_tool",
+            "semantic_rule_judge_tool"
+          ],
+          "thresholds": {},
+          "capability_config": {
+            "batch_group": "interaction-state",
+            "requires_journey": true,
+            "deterministic_tools": []
+          }
+        },
+        "applicability": "applicable",
+        "input_contract": {
+          "required_fields": [],
+          "required_artifacts": [
+            "screenshot"
+          ],
+          "required_capture_roles": [
+            "before",
+            "primary"
+          ]
+        },
+        "applicable_page_types": [
+          "post_list"
+        ],
+        "category": "interaction",
+        "name": "帖子媒体全屏浏览检查",
+        "check_point": "帖子列表中的图片/视频内容须支持点击进入全屏浏览模式，不应仅支持缩略图预览而无法全屏查看。"
+      },
+      {
+        "rule_id": "c14b2cc0-ff75-4b7c-8890-7076f6d255bf",
+        "rule_code": "alioth_47",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "page_capture_tool",
+            "control_behavior_assertion_tool",
+            "network_event_summary_tool",
+            "semantic_rule_judge_tool"
+          ],
+          "thresholds": {},
+          "capability_config": {
+            "batch_group": "service-entry",
+            "requires_journey": true,
+            "deterministic_tools": [
+              "control_behavior_assertion_tool",
+              "network_event_summary_tool"
+            ]
+          }
+        },
+        "applicability": "applicable",
+        "input_contract": {
+          "required_fields": [
+            "page.url",
+            "facts.ui_snapshot"
+          ],
+          "required_artifacts": [
+            "screenshot",
+            "ui_snapshot",
+            "dom"
+          ]
+        },
+        "applicable_page_types": [
+          "profile",
+          "settings"
+        ],
+        "category": "interaction",
+        "name": "客服入口可用性检查",
+        "check_point": "客服功能入口应具备配置状态检测能力；当服务不可用时，应自动隐藏入口或展示友好提示，不应暴露内部配置状态。"
+      },
+      {
+        "rule_id": "f051f2e2-f54c-4d93-ae88-ec8b8f8d4f52",
+        "rule_code": "alioth_48",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "account_control_extractor_tool"
+          ],
+          "thresholds": {},
+          "engine_config": {},
+          "capability_config": {}
+        },
+        "applicability": "applicable",
+        "input_contract": {
+          "required_fields": [],
+          "auth_requirement": "authenticated",
+          "required_artifacts": [
+            "visible_text"
+          ],
+          "required_capture_roles": [
+            "primary"
+          ]
+        },
+        "applicable_page_types": [
+          "profile",
+          "settings"
+        ],
+        "category": "interaction",
+        "name": "退出登录入口检查",
+        "check_point": "个人中心或设置页面存在明确的退出登录、退出账号或登出入口即通过，不实际点击退出。"
+      },
+      {
+        "rule_id": "f9a18601-9113-4ca1-9ea7-a400378f2fa6",
+        "rule_code": "alioth_spec_17",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "page_capture_tool",
+            "layout_region_extractor_tool",
+            "layout_geometry_assertion_handler",
+            "visual_rule_judge_tool"
+          ],
+          "thresholds": {
+            "min_window_padding_px": 20
+          },
+          "capability_config": {
+            "batch_group": "env-matrix",
+            "requires_journey": false,
+            "deterministic_tools": [
+              "layout_region_extractor_tool",
+              "layout_geometry_assertion_handler"
+            ]
+          }
+        },
+        "applicability": "not_applicable",
+        "input_contract": {
+          "required_fields": [
+            "page.url",
+            "facts.ui_snapshot"
+          ],
+          "required_artifacts": [
+            "screenshot",
+            "ui_snapshot",
+            "dom"
+          ]
+        },
+        "applicable_page_types": [
+          "home",
+          "content_list",
+          "content_detail",
+          "video_list",
+          "video_detail",
+          "profile",
+          "settings",
+          "payment",
+          "post_list",
+          "post_publish",
+          "activity",
+          "startup_ad"
+        ],
+        "category": "visual",
+        "name": "分辨率兼容性检查",
+        "check_point": "Web产品在电脑网页端：应兼容1024*768分辨率至1920*1080分辨率，鼓励兼容2560*1440分辨率；除背景图外，所有内容应距离窗口留有不少于20px的安全内边距；不应出现非背景图外的内容显示不全，不应出现背景图中(如有)重要元素因为兼容不足导致无法展示；"
+      },
+      {
+        "rule_id": "3530ed03-32bd-47b8-9e8b-9b801daf778d",
+        "rule_code": "alioth_spec_18",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "page_capture_tool",
+            "layout_region_extractor_tool",
+            "visual_rule_judge_tool"
+          ],
+          "thresholds": {},
+          "capability_config": {
+            "batch_group": "env-matrix",
+            "requires_journey": false,
+            "deterministic_tools": [
+              "layout_region_extractor_tool"
+            ]
+          }
+        },
+        "applicability": "not_applicable",
+        "input_contract": {
+          "required_fields": [
+            "page.url",
+            "facts.ui_snapshot"
+          ],
+          "required_artifacts": [
+            "screenshot",
+            "ui_snapshot",
+            "dom"
+          ]
+        },
+        "applicable_page_types": [
+          "home",
+          "content_list",
+          "content_detail",
+          "video_list",
+          "video_detail",
+          "profile",
+          "settings",
+          "payment",
+          "post_list",
+          "post_publish",
+          "activity",
+          "startup_ad"
+        ],
+        "category": "visual",
+        "name": "浏览器兼容性检查",
+        "check_point": "产品应针对国内特殊的浏览器环境进行优化。覆盖范围： PC端： Google Chrome, Microsoft Edge, 360、QQ浏览器、夸克浏览器； 移动端： Google Chrome、Safari (iOS)、QQ浏览器、搜狗浏览器、UC浏览器、夸克浏览器； 应确保在 Chrome、Safari 及国内主流浏览器的极速模式下视觉与功能完全一致，不应出现浏览器不同导致的页面排版错位、按钮点击无效或加载报错；"
+      },
+      {
+        "rule_id": "fe2e1c74-0909-4a59-9923-96abd57104df",
+        "rule_code": "alioth_spec_24",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "page_capture_tool",
+            "text_style_extractor_tool",
+            "visual_rule_judge_tool"
+          ],
+          "thresholds": {},
+          "capability_config": {
+            "batch_group": "visual-text",
+            "requires_journey": false,
+            "deterministic_tools": [
+              "text_style_extractor_tool"
+            ]
+          }
+        },
+        "applicability": "applicable",
+        "input_contract": {
+          "required_fields": [
+            "page.url",
+            "facts.ui_snapshot"
+          ],
+          "required_artifacts": [
+            "screenshot",
+            "ui_snapshot",
+            "dom"
+          ]
+        },
+        "applicable_page_types": [
+          "home",
+          "content_list",
+          "video_list",
+          "profile"
+        ],
+        "category": "visual",
+        "name": "文字层次感检查",
+        "check_point": "界面内具备结构性的文字、目录性质的文字应要有明显的重点和层次感，比如字号有显著区别规避内容优先级混淆的问题；"
+      },
+      {
+        "rule_id": "624811a6-5ecd-4929-8a61-eba2f23193e3",
+        "rule_code": "alioth_spec_28",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "page_capture_tool",
+            "layout_region_extractor_tool",
+            "layout_geometry_assertion_handler",
+            "text_style_extractor_tool",
+            "visual_rule_judge_tool"
+          ],
+          "thresholds": {
+            "max_align_deviation_px": 2
+          },
+          "capability_config": {
+            "batch_group": "visual-layout",
+            "requires_journey": false,
+            "deterministic_tools": [
+              "layout_region_extractor_tool",
+              "layout_geometry_assertion_handler",
+              "text_style_extractor_tool"
+            ]
+          }
+        },
+        "applicability": "applicable",
+        "input_contract": {
+          "required_fields": [
+            "page.url",
+            "facts.ui_snapshot"
+          ],
+          "required_artifacts": [
+            "screenshot",
+            "ui_snapshot",
+            "dom"
+          ]
+        },
+        "applicable_page_types": [
+          "home",
+          "content_list",
+          "content_detail",
+          "video_list",
+          "video_detail",
+          "profile",
+          "activity"
+        ],
+        "category": "visual",
+        "name": "页面元素对齐与层次感检查",
+        "check_point": "页面结构中的各元素应保持规律对齐或层次感；"
+      },
+      {
+        "rule_id": "ec1b2f08-161d-4a1d-84a7-fd62a72298fb",
+        "rule_code": "alioth_spec_27",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "page_capture_tool",
+            "layout_region_extractor_tool",
+            "media_element_extractor_tool",
+            "layout_geometry_assertion_handler",
+            "visual_rule_judge_tool"
+          ],
+          "thresholds": {
+            "safe_margin_min_ratio": 0.1
+          },
+          "capability_config": {
+            "batch_group": "visual-layout",
+            "requires_journey": false,
+            "deterministic_tools": [
+              "layout_region_extractor_tool",
+              "media_element_extractor_tool",
+              "layout_geometry_assertion_handler"
+            ]
+          }
+        },
+        "applicability": "applicable",
+        "input_contract": {
+          "required_fields": [
+            "page.url",
+            "facts.ui_snapshot"
+          ],
+          "required_artifacts": [
+            "screenshot",
+            "ui_snapshot",
+            "dom"
+          ]
+        },
+        "applicable_page_types": [
+          "home",
+          "activity",
+          "video_list",
+          "video_detail"
+        ],
+        "category": "visual",
+        "name": "整屏图片安全边距检查",
+        "check_point": "非广告的整屏图片，预留四周不少于 10% 的安全边距，确保在不同屏幕下，画面即便因拉伸适配产生少量裁剪，核心营销内容依然完整、美观且居中，不应出现品牌名被切割等；"
+      },
+      {
+        "rule_id": "64ab9085-07f3-45b7-b8a0-75fa795524a0",
+        "rule_code": "alioth_spec_31",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "page_capture_tool",
+            "text_style_extractor_tool",
+            "state_snapshot_tool",
+            "interaction_state_diff_tool",
+            "visual_rule_judge_tool"
+          ],
+          "thresholds": {
+            "max_unexpected_shift_px": 0
+          },
+          "capability_config": {
+            "batch_group": "visual-nav",
+            "requires_journey": true,
+            "deterministic_tools": [
+              "text_style_extractor_tool",
+              "state_snapshot_tool",
+              "interaction_state_diff_tool"
+            ]
+          }
+        },
+        "applicability": "applicable",
+        "input_contract": {
+          "required_fields": [
+            "page.url",
+            "facts.ui_snapshot"
+          ],
+          "required_artifacts": [
+            "screenshot",
+            "ui_snapshot",
+            "dom"
+          ]
+        },
+        "applicable_page_types": [
+          "home",
+          "content_list",
+          "video_list"
+        ],
+        "category": "visual",
+        "name": "顶部目录一致性检查",
+        "check_point": "各个功能的顶部目录要有一致的字号、字体、字色、选中效果、加粗效果等(不含显性是运营需求有意识的改动的元素)以显示产品在顶部的稳定感； 切换时，不应造成目录或其他不应产生位移的元素发生位移变化；"
+      },
+      {
+        "rule_id": "a9cac93c-52ef-4935-88ab-806142d66d4a",
+        "rule_code": "alioth_spec_35",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "page_capture_tool",
+            "layout_region_extractor_tool",
+            "layout_geometry_assertion_handler",
+            "visual_rule_judge_tool"
+          ],
+          "thresholds": {
+            "max_bottom_blank_viewport_ratio": 0.15
+          },
+          "capability_config": {
+            "batch_group": "list-scroll",
+            "requires_journey": true,
+            "deterministic_tools": [
+              "layout_region_extractor_tool",
+              "layout_geometry_assertion_handler"
+            ]
+          }
+        },
+        "applicability": "applicable",
+        "input_contract": {
+          "required_fields": [
+            "page.url",
+            "facts.ui_snapshot"
+          ],
+          "required_artifacts": [
+            "screenshot",
+            "ui_snapshot",
+            "dom"
+          ]
+        },
+        "applicable_page_types": [
+          "home",
+          "content_list",
+          "video_list",
+          "post_list"
+        ],
+        "category": "visual",
+        "name": "页面底部空白检查",
+        "check_point": "界面内内容超过一定一屏高度时，界面拉到底部时不应有大面积空白；应当最后一个内容与底部有UI规范内恰当的距离即可；"
+      },
+      {
+        "rule_id": "790d90b7-6194-4a2f-875d-4a17ebc2f09c",
+        "rule_code": "alioth_spec_37",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "page_capture_tool",
+            "visual_rule_judge_tool"
+          ],
+          "thresholds": {},
+          "capability_config": {
+            "batch_group": "app-pending",
+            "requires_journey": false,
+            "deterministic_tools": []
+          }
+        },
+        "applicability": "applicable",
+        "input_contract": {
+          "required_fields": [
+            "page.url",
+            "facts.ui_snapshot"
+          ],
+          "required_artifacts": [
+            "screenshot",
+            "ui_snapshot",
+            "dom"
+          ]
+        },
+        "applicable_page_types": [
+          "home"
+        ],
+        "category": "visual",
+        "name": "弱网占位页检查",
+        "check_point": "App产品在弱网环境时加载页面速度不佳时应先使用静态的占位页面(模拟页面结构的示意图)，直至真实内容加载成功后展示真实内容；"
+      },
+      {
+        "rule_id": "1e393bde-8c13-4c93-817b-a6e88c9248ab",
+        "rule_code": "alioth_spec_38",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "page_capture_tool",
+            "layout_region_extractor_tool",
+            "media_element_extractor_tool",
+            "layout_geometry_assertion_handler",
+            "visual_rule_judge_tool"
+          ],
+          "thresholds": {
+            "max_column_align_deviation_px": 2
+          },
+          "capability_config": {
+            "batch_group": "visual-layout",
+            "requires_journey": false,
+            "deterministic_tools": [
+              "layout_region_extractor_tool",
+              "media_element_extractor_tool",
+              "layout_geometry_assertion_handler"
+            ]
+          }
+        },
+        "applicability": "applicable",
+        "input_contract": {
+          "required_fields": [
+            "page.url",
+            "facts.ui_snapshot"
+          ],
+          "required_artifacts": [
+            "screenshot",
+            "ui_snapshot",
+            "dom"
+          ]
+        },
+        "applicable_page_types": [
+          "content_list",
+          "video_list",
+          "post_list"
+        ],
+        "category": "visual",
+        "name": "列表排列整齐性检查",
+        "check_point": "视频列表和其他列表内，内容应当排列整齐，图片统一高宽比，不应发生包括但不限于： (1)因为若干处标题显示行数不同，造成视频封面排列高度不一致； (2)基于(1)，造成列表外显功能按钮出现不同的高度；"
+      },
+      {
+        "rule_id": "3b3194b5-01de-49de-beb0-7401a512b537",
+        "rule_code": "alioth_spec_48",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "page_capture_tool",
+            "transient_message_capture_tool",
+            "cross_page_state_assertion_tool",
+            "semantic_rule_judge_tool"
+          ],
+          "thresholds": {},
+          "capability_config": {
+            "batch_group": "toast-aggregate",
+            "requires_journey": false,
+            "evidence_scope_key": "toast_style",
+            "deterministic_tools": [
+              "transient_message_capture_tool",
+              "cross_page_state_assertion_tool"
+            ],
+            "evidence_input_scope": "task"
+          }
+        },
+        "applicability": "applicable",
+        "input_contract": {
+          "required_fields": [
+            "page.url",
+            "facts.ui_snapshot",
+            "facts.visible_text"
+          ],
+          "required_artifacts": [
+            "screenshot",
+            "ui_snapshot",
+            "dom",
+            "visible_text"
+          ]
+        },
+        "applicable_page_types": [
+          "content_detail",
+          "video_detail",
+          "post_list",
+          "post_publish",
+          "profile"
+        ],
+        "category": "interaction",
+        "name": "Toast样式统一性检查",
+        "check_point": "Toast等提示应保持在全产品统一高度，通常为中下部分，其字号、颜色、背景透明度、背景颜色等应全产品内统一；"
+      },
+      {
+        "rule_id": "a5074e30-6550-42e0-82c4-00e0531ee36c",
+        "rule_code": "alioth_spec_72",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "page_capture_tool",
+            "ad_control_inventory_tool",
+            "safe_hit_test_tool",
+            "visual_rule_judge_tool"
+          ],
+          "thresholds": {
+            "min_hit_area_coverage_ratio": 1.0
+          },
+          "capability_config": {
+            "batch_group": "ad-popup",
+            "requires_journey": true,
+            "deterministic_tools": [
+              "ad_control_inventory_tool",
+              "safe_hit_test_tool"
+            ]
+          }
+        },
+        "applicability": "applicable",
+        "input_contract": {
+          "required_fields": [
+            "page.url",
+            "facts.ui_snapshot"
+          ],
+          "required_artifacts": [
+            "screenshot",
+            "ui_snapshot",
+            "dom"
+          ]
+        },
+        "applicable_page_types": [
+          "home",
+          "activity",
+          "video_list",
+          "video_detail"
+        ],
+        "category": "ad",
+        "name": "关闭按钮可点性检查",
+        "check_point": "关闭按钮足够大和易于点击；"
+      },
+      {
+        "rule_id": "c23d9a8b-cf27-4022-9892-82bf9103f6ff",
+        "rule_code": "alioth_spec_new_4",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "page_capture_tool",
+            "interaction_state_diff_tool",
+            "network_event_summary_tool",
+            "semantic_rule_judge_tool"
+          ],
+          "thresholds": {},
+          "capability_config": {
+            "batch_group": "list-scroll",
+            "requires_journey": true,
+            "deterministic_tools": [
+              "interaction_state_diff_tool",
+              "network_event_summary_tool"
+            ]
+          }
+        },
+        "applicability": "applicable",
+        "input_contract": {
+          "required_fields": [
+            "page.url",
+            "facts.ui_snapshot"
+          ],
+          "required_artifacts": [
+            "screenshot",
+            "ui_snapshot",
+            "dom"
+          ]
+        },
+        "applicable_page_types": [
+          "home",
+          "content_list",
+          "video_list",
+          "post_list"
+        ],
+        "category": "interaction",
+        "name": "页面滑动可操作性检查",
+        "check_point": "在网络正常环境下，页面滑动过程中应保持基本可浏览、可操作状态，不应出现无响应、假死或导致用户无法正常完成浏览与交互的异常情况；可交互按钮点击后应正常触发对应操作或反馈。"
+      },
+      {
+        "rule_id": "d188dd9d-a81b-4592-9650-4f557c9c8d6f",
+        "rule_code": "alioth_spec_new_20",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "page_capture_tool",
+            "control_behavior_assertion_tool",
+            "semantic_rule_judge_tool"
+          ],
+          "thresholds": {
+            "back_to_top_min_scroll_viewports": 1
+          },
+          "capability_config": {
+            "batch_group": "list-scroll",
+            "requires_journey": true,
+            "deterministic_tools": [
+              "control_behavior_assertion_tool"
+            ]
+          }
+        },
+        "applicability": "applicable",
+        "input_contract": {
+          "required_fields": [
+            "page.url",
+            "facts.ui_snapshot"
+          ],
+          "required_artifacts": [
+            "screenshot",
+            "ui_snapshot",
+            "dom"
+          ]
+        },
+        "applicable_page_types": [
+          "video_list",
+          "content_list",
+          "post_list"
+        ],
+        "category": "interaction",
+        "name": "列表触底反馈检查",
+        "check_point": "视频列表应具备触底反馈，不应无限制无提示下拉；并在滚动超过一屏后展示一键返回顶部按钮，提升长列表浏览效率。"
+      },
+      {
+        "rule_id": "d791e0aa-c125-4e6b-b795-f3e52f7e845f",
+        "rule_code": "alioth_spec_new_24",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "page_capture_tool",
+            "layout_region_extractor_tool",
+            "layout_geometry_assertion_handler",
+            "visual_rule_judge_tool"
+          ],
+          "thresholds": {
+            "max_overlap_pairs": 0
+          },
+          "capability_config": {
+            "batch_group": "visual-layout",
+            "requires_journey": false,
+            "deterministic_tools": [
+              "layout_region_extractor_tool",
+              "layout_geometry_assertion_handler"
+            ]
+          }
+        },
+        "applicability": "applicable",
+        "input_contract": {
+          "required_fields": [
+            "page.url",
+            "facts.ui_snapshot"
+          ],
+          "required_artifacts": [
+            "screenshot",
+            "ui_snapshot",
+            "dom"
+          ]
+        },
+        "applicable_page_types": [
+          "payment"
+        ],
+        "category": "visual",
+        "name": "充值页控件间距检查",
+        "check_point": "充值页面内文字与按钮、图标等交互控件应保持合理间距，不应出现重叠、混排、遮挡或挤压，确保界面清晰可用。"
+      },
+      {
+        "rule_id": "45157991-7082-4d5f-870e-b3e049c8dd3e",
+        "rule_code": "alioth_spec_new_25",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "page_capture_tool",
+            "visual_rule_judge_tool"
+          ],
+          "thresholds": {},
+          "capability_config": {
+            "batch_group": "multi-client-pending",
+            "requires_journey": false,
+            "deterministic_tools": []
+          }
+        },
+        "applicability": "applicable",
+        "input_contract": {
+          "required_fields": [
+            "page.url",
+            "facts.ui_snapshot"
+          ],
+          "required_artifacts": [
+            "screenshot",
+            "ui_snapshot",
+            "dom"
+          ]
+        },
+        "applicable_page_types": [
+          "home"
+        ],
+        "category": "visual",
+        "name": "多端一致性检查",
+        "check_point": "产品有多个端时，多端的体验应当统一，包括但不限于文案、文字排版、图标、数量等；同款产品在不同系统平台的相同版本中，内容展示、功能配置及导航命名也应保持一致，不应出现功能缺失或命名不统一的情况。"
+      },
+      {
+        "rule_id": "a1019270-7bc0-460f-9ee8-d7e07a2bf55d",
+        "rule_code": "alioth_spec_new_27",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "page_capture_tool",
+            "text_style_extractor_tool",
+            "text_truncation_detector_tool",
+            "visual_rule_judge_tool"
+          ],
+          "thresholds": {},
+          "capability_config": {
+            "batch_group": "visual-text",
+            "requires_journey": false,
+            "deterministic_tools": [
+              "text_style_extractor_tool",
+              "text_truncation_detector_tool"
+            ]
+          }
+        },
+        "applicability": "applicable",
+        "input_contract": {
+          "required_fields": [
+            "page.url",
+            "facts.ui_snapshot"
+          ],
+          "required_artifacts": [
+            "screenshot",
+            "ui_snapshot",
+            "dom"
+          ]
+        },
+        "applicable_page_types": [
+          "content_list",
+          "video_list",
+          "post_list"
+        ],
+        "category": "visual",
+        "name": "标题截断规范检查",
+        "check_point": "内容卡片或封面下方的标题展示区域应保证核心信息可直接识别；若需截断，应合理规划展示区域，确保省略号使用规范且不影响关键信息识别。"
+      },
+      {
+        "rule_id": "ab0295d8-e60f-4a54-a6a1-42af2d6f365e",
+        "rule_code": "alioth_spec_new_29",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "page_capture_tool",
+            "text_style_extractor_tool",
+            "text_truncation_detector_tool",
+            "visual_rule_judge_tool"
+          ],
+          "thresholds": {},
+          "capability_config": {
+            "batch_group": "visual-text",
+            "requires_journey": false,
+            "deterministic_tools": [
+              "text_style_extractor_tool",
+              "text_truncation_detector_tool"
+            ]
+          }
+        },
+        "applicability": "applicable",
+        "input_contract": {
+          "required_fields": [
+            "page.url",
+            "facts.ui_snapshot"
+          ],
+          "required_artifacts": [
+            "screenshot",
+            "ui_snapshot",
+            "dom"
+          ]
+        },
+        "applicable_page_types": [
+          "content_list",
+          "video_list"
+        ],
+        "category": "visual",
+        "name": "封面标题布局检查",
+        "check_point": "封面标题展示须前置规划布局策略，避免仅以视觉美观为导向。针对双列/三列等紧凑版位，应预设标题自适应换行、智能截断或动态缩放规则，禁止因空间限制导致单行截断或核心信息缺失，确保用户在不同排版下均能完整获取内容。"
+      },
+      {
+        "rule_id": "5e1159a8-2ab9-458e-983a-51b7386ff943",
+        "rule_code": "alioth_ops_1",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "page_capture_tool",
+            "network_console_summary_tool",
+            "visible_text_extractor_tool",
+            "layout_region_extractor_tool",
+            "semantic_rule_judge_tool"
+          ],
+          "thresholds": {},
+          "capability_config": {
+            "batch_group": "product-launch",
+            "requires_journey": false,
+            "deterministic_tools": [
+              "network_console_summary_tool",
+              "visible_text_extractor_tool",
+              "layout_region_extractor_tool"
+            ]
+          }
+        },
+        "applicability": "applicable",
+        "input_contract": {
+          "required_fields": [
+            "page.url",
+            "facts.ui_snapshot"
+          ],
+          "required_artifacts": [
+            "screenshot",
+            "ui_snapshot",
+            "dom",
+            "visible_text"
+          ]
+        },
+        "applicable_page_types": [
+          "home",
+          "video_list"
+        ],
+        "category": "interaction",
+        "name": "产品域名可访问检查",
+        "check_point": "产品的落地页域名、H5 域名及各线路域名应可正常解析和访问：证书有效、不被浏览器或安全软件拦截提示、不被劫持跳转到无关站点；域名失效或更换时应及时同步到落地页、官方群和分享链接，避免用户无法进入产品。"
+      },
+      {
+        "rule_id": "3d2dec6d-d1f4-4918-a7a8-86fa773d75c8",
+        "rule_code": "alioth_ops_2",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "page_capture_tool",
+            "layout_region_extractor_tool",
+            "blank_module_detector_tool",
+            "network_console_summary_tool",
+            "visible_text_extractor_tool",
+            "visual_rule_judge_tool"
+          ],
+          "thresholds": {},
+          "capability_config": {
+            "batch_group": "product-launch",
+            "requires_journey": false,
+            "deterministic_tools": [
+              "layout_region_extractor_tool",
+              "blank_module_detector_tool",
+              "network_console_summary_tool",
+              "visible_text_extractor_tool"
+            ]
+          }
+        },
+        "applicability": "applicable",
+        "input_contract": {
+          "required_fields": [
+            "page.url",
+            "facts.ui_snapshot"
+          ],
+          "required_artifacts": [
+            "screenshot",
+            "ui_snapshot",
+            "dom"
+          ]
+        },
+        "applicable_page_types": [
+          "home",
+          "video_list"
+        ],
+        "category": "visual",
+        "name": "产品双端可打开检查",
+        "check_point": "产品在 H5 和 App（安卓）双端均应能正常打开：H5 输入地址后应在合理时间内完成首页渲染，App 安装后应能正常启动进入首页；不应出现白屏、长时间加载不出、报错页、闪退或停留在空白页；打开后首页核心模块（导航、内容列表）应正常展示。"
+      },
+      {
+        "rule_id": "63742c58-7dcd-4b32-a358-77409719e1d3",
+        "rule_code": "alioth_ops_3",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "page_capture_tool",
+            "media_element_extractor_tool",
+            "multi_frame_capture_tool",
+            "network_event_summary_tool",
+            "visual_rule_judge_tool"
+          ],
+          "thresholds": {
+            "min_ready_state": 2
+          },
+          "capability_config": {
+            "batch_group": "player-playback",
+            "requires_journey": true,
+            "deterministic_tools": [
+              "media_element_extractor_tool",
+              "multi_frame_capture_tool",
+              "network_event_summary_tool"
+            ]
+          }
+        },
+        "applicability": "applicable",
+        "input_contract": {
+          "required_fields": [
+            "page.url",
+            "facts.ui_snapshot"
+          ],
+          "required_artifacts": [
+            "screenshot",
+            "ui_snapshot",
+            "dom",
+            "media_state"
+          ]
+        },
+        "applicable_page_types": [
+          "video_detail",
+          "content_detail"
+        ],
+        "category": "player",
+        "name": "视频与短视频播放检查",
+        "check_point": "长视频与短视频进入播放页后应正常起播：画面正常、声音正常、播放进度往前走；短视频上滑到下一条后下一条应自动起播、上一条应停止；不应出现无法播放、黑屏、一直加载或加载失败无提示等情况。"
+      },
+      {
+        "rule_id": "38a56fe1-bbc3-4e40-9b8b-12d237465e48",
+        "rule_code": "alioth_ops_4",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "page_capture_tool",
+            "interaction_state_diff_tool",
+            "layout_region_extractor_tool",
+            "network_console_summary_tool",
+            "visible_text_extractor_tool",
+            "semantic_rule_judge_tool"
+          ],
+          "thresholds": {},
+          "capability_config": {
+            "batch_group": "payment-entry",
+            "requires_journey": true,
+            "deterministic_tools": [
+              "interaction_state_diff_tool",
+              "layout_region_extractor_tool",
+              "network_console_summary_tool",
+              "visible_text_extractor_tool"
+            ]
+          }
+        },
+        "applicability": "applicable",
+        "input_contract": {
+          "required_fields": [
+            "page.url",
+            "facts.ui_snapshot"
+          ],
+          "required_artifacts": [
+            "screenshot",
+            "ui_snapshot",
+            "dom",
+            "visible_text",
+            "action_trace"
+          ]
+        },
+        "applicable_page_types": [
+          "payment",
+          "profile",
+          "content_detail",
+          "video_detail"
+        ],
+        "category": "payment",
+        "name": "充值入口进入充值页检查",
+        "check_point": "从任意充值、开通会员、金币不足等入口点击后，应正常进入充值页或会员中心页面，页面应完整展示充值档位、价格与支付方式；充值页销售多种会员卡时，每一种都应能正常选中并展示对应价格；不应出现白屏、报错、无响应或跳转到错误页面。"
+      },
+      {
+        "rule_id": "c34222be-d9f4-4e55-b6ff-403ef6d0825e",
+        "rule_code": "alioth_ops_5",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "page_capture_tool",
+            "interaction_state_diff_tool",
+            "network_event_summary_tool",
+            "state_snapshot_tool",
+            "semantic_rule_judge_tool"
+          ],
+          "thresholds": {
+            "order_pull_card_count": 1
+          },
+          "capability_config": {
+            "batch_group": "payment-order",
+            "requires_journey": true,
+            "deterministic_tools": [
+              "interaction_state_diff_tool",
+              "network_event_summary_tool",
+              "state_snapshot_tool"
+            ]
+          }
+        },
+        "applicability": "applicable",
+        "input_contract": {
+          "required_fields": [
+            "page.url",
+            "facts.ui_snapshot"
+          ],
+          "auth_requirement": "authenticated",
+          "required_artifacts": [
+            "screenshot",
+            "ui_snapshot",
+            "dom",
+            "action_trace"
+          ]
+        },
+        "applicable_page_types": [
+          "payment"
+        ],
+        "category": "payment",
+        "name": "充值拉起支付检查",
+        "check_point": "在充值页选择微信或支付宝并确认支付后，应正常创建订单并拉起对应支付方式（跳转收银台、展示支付二维码或唤起第三方支付）；不应出现无响应、报错、订单创建失败或收银台打不开；检测只验证到成功拉起支付为止，不实际完成付款。"
+      },
+      {
+        "rule_id": "07bb0e5c-2bf5-46d4-8edf-cfb4d70b8471",
+        "rule_code": "alioth_ops_6",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "page_capture_tool",
+            "interaction_state_diff_tool",
+            "landing_page_probe_tool",
+            "network_event_summary_tool",
+            "semantic_rule_judge_tool"
+          ],
+          "thresholds": {},
+          "capability_config": {
+            "batch_group": "share-link",
+            "requires_journey": true,
+            "deterministic_tools": [
+              "interaction_state_diff_tool",
+              "landing_page_probe_tool",
+              "network_event_summary_tool"
+            ]
+          }
+        },
+        "applicability": "applicable",
+        "input_contract": {
+          "required_fields": [
+            "page.url",
+            "facts.ui_snapshot"
+          ],
+          "required_artifacts": [
+            "screenshot",
+            "ui_snapshot",
+            "dom",
+            "action_trace"
+          ]
+        },
+        "applicable_page_types": [
+          "content_detail",
+          "video_detail",
+          "profile",
+          "activity"
+        ],
+        "category": "interaction",
+        "name": "分享链接有效性检查",
+        "check_point": "用户分享功能生成的链接应真实有效：在第三方浏览器打开后应正常展示分享落地页，内容与分享来源一致，页面内的下载或打开产品入口可用；不应出现链接失效、报错、空白页或跳转到无关站点。"
+      },
+      {
+        "rule_id": "e7627184-286a-4a02-9dac-4d8a2ec2af3c",
+        "rule_code": "alioth_ops_7",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "page_capture_tool",
+            "interaction_state_diff_tool",
+            "landing_page_probe_tool",
+            "network_event_summary_tool",
+            "semantic_rule_judge_tool"
+          ],
+          "thresholds": {},
+          "capability_config": {
+            "batch_group": "official-group-entry",
+            "requires_journey": true,
+            "evidence_scope_key": "official_group_entry",
+            "deterministic_tools": [
+              "interaction_state_diff_tool",
+              "landing_page_probe_tool",
+              "network_event_summary_tool"
+            ],
+            "evidence_input_scope": "task"
+          }
+        },
+        "applicability": "applicable",
+        "input_contract": {
+          "required_fields": [
+            "page.url",
+            "facts.ui_snapshot"
+          ],
+          "required_artifacts": [
+            "screenshot",
+            "ui_snapshot",
+            "dom",
+            "action_trace"
+          ]
+        },
+        "applicable_page_types": [
+          "home",
+          "profile",
+          "settings",
+          "activity"
+        ],
+        "category": "interaction",
+        "name": "官方群入口跳转检查",
+        "check_point": "落地页与 App（安卓）内的官方群入口点击后应正常跳转到目标群或展示有效的加群方式（如群链接、二维码）；不应出现链接失效、跳转空白页、群已解散或提示未安装；入口不可用时应隐藏或给出友好提示。"
+      },
+      {
+        "rule_id": "06b7625b-996a-4dcd-9cb1-8fae53722c9d",
+        "rule_code": "alioth_ops_8",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "page_capture_tool",
+            "media_element_extractor_tool",
+            "multi_frame_capture_tool",
+            "image_quality_analyzer_tool",
+            "network_console_summary_tool",
+            "visual_rule_judge_tool"
+          ],
+          "thresholds": {},
+          "capability_config": {
+            "batch_group": "visual-media",
+            "requires_journey": false,
+            "deterministic_tools": [
+              "media_element_extractor_tool",
+              "multi_frame_capture_tool",
+              "image_quality_analyzer_tool",
+              "network_console_summary_tool"
+            ]
+          }
+        },
+        "applicability": "applicable",
+        "input_contract": {
+          "required_fields": [
+            "page.url",
+            "facts.ui_snapshot"
+          ],
+          "required_artifacts": [
+            "screenshot",
+            "ui_snapshot",
+            "dom"
+          ]
+        },
+        "applicable_page_types": [
+          "home",
+          "content_list",
+          "video_list",
+          "post_list",
+          "content_detail",
+          "video_detail"
+        ],
+        "category": "visual",
+        "name": "封面加载完整性检查",
+        "check_point": "列表与详情中的内容封面图应正常加载并完整展示，不应出现破图、空白封面、占位图长时间不消失或加载失败无兜底；封面加载失败时应展示缺省图，不应留下空白格。"
+      },
+      {
+        "rule_id": "362efe8e-a7da-40d1-967c-29b12166a3af",
+        "rule_code": "alioth_ops_9",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "page_capture_tool",
+            "media_element_extractor_tool",
+            "multi_frame_capture_tool",
+            "interaction_state_diff_tool",
+            "network_event_summary_tool",
+            "visual_rule_judge_tool"
+          ],
+          "thresholds": {
+            "min_ready_state": 2
+          },
+          "capability_config": {
+            "batch_group": "player-playback",
+            "requires_journey": true,
+            "deterministic_tools": [
+              "media_element_extractor_tool",
+              "multi_frame_capture_tool",
+              "interaction_state_diff_tool",
+              "network_event_summary_tool"
+            ]
+          }
+        },
+        "applicability": "applicable",
+        "input_contract": {
+          "required_fields": [
+            "page.url",
+            "facts.ui_snapshot"
+          ],
+          "required_artifacts": [
+            "screenshot",
+            "ui_snapshot",
+            "dom",
+            "media_state",
+            "action_trace"
+          ]
+        },
+        "applicable_page_types": [
+          "video_detail",
+          "content_detail"
+        ],
+        "category": "player",
+        "name": "短剧与动漫分集播放检查",
+        "check_point": "短剧、动漫等分集内容应能正常播放并正常切集：第 1 集应能正常起播，点第 2 集后播放器应切到第 2 集、内容确实更换并能正常起播；不应出现切集没反应、切了内容没变、某一集播不出来等情况。"
+      },
+      {
+        "rule_id": "dd5c7233-ae51-4ad2-9fd9-c5b59ada3aad",
+        "rule_code": "alioth_ops_10",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "page_capture_tool",
+            "image_quality_analyzer_tool",
+            "multi_frame_capture_tool",
+            "interaction_state_diff_tool",
+            "network_console_summary_tool",
+            "visual_rule_judge_tool"
+          ],
+          "thresholds": {},
+          "capability_config": {
+            "batch_group": "content-reading",
+            "requires_journey": true,
+            "deterministic_tools": [
+              "image_quality_analyzer_tool",
+              "multi_frame_capture_tool",
+              "interaction_state_diff_tool",
+              "network_console_summary_tool"
+            ]
+          }
+        },
+        "applicability": "applicable",
+        "input_contract": {
+          "required_fields": [
+            "page.url",
+            "facts.ui_snapshot"
+          ],
+          "required_artifacts": [
+            "screenshot",
+            "ui_snapshot",
+            "dom",
+            "action_trace"
+          ]
+        },
+        "applicable_page_types": [
+          "content_detail"
+        ],
+        "category": "player",
+        "name": "漫画与图文阅读检查",
+        "check_point": "漫画、图文等阅读内容进入阅读页后应按顺序完整加载并可翻页：正文图片应依次加载完成、不缺页、不破图，能翻到下一页或继续向下阅读；不应出现破图、缺页、占位图长时间不消失或加载失败无提示等情况。"
+      },
+      {
+        "rule_id": "4570ded0-878d-4cbf-9a1f-f6c5cf40d96f",
+        "rule_code": "alioth_ops_11",
+        "url_pattern": null,
+        "judge_config": {
+          "tool_refs": [
+            "page_capture_tool",
+            "visible_text_extractor_tool",
+            "network_event_summary_tool",
+            "interaction_state_diff_tool",
+            "state_snapshot_tool",
+            "semantic_rule_judge_tool"
+          ],
+          "thresholds": {
+            "order_pull_card_count": 1
+          },
+          "capability_config": {
+            "batch_group": "payment-order",
+            "requires_journey": true,
+            "deterministic_tools": [
+              "visible_text_extractor_tool",
+              "network_event_summary_tool",
+              "interaction_state_diff_tool",
+              "state_snapshot_tool"
+            ]
+          }
+        },
+        "applicability": "applicable",
+        "input_contract": {
+          "required_fields": [
+            "page.url",
+            "facts.ui_snapshot"
+          ],
+          "auth_requirement": "authenticated",
+          "required_artifacts": [
+            "screenshot",
+            "ui_snapshot",
+            "dom",
+            "visible_text",
+            "action_trace",
+            "har"
+          ]
+        },
+        "applicable_page_types": [
+          "payment"
+        ],
+        "category": "payment",
+        "name": "拉单金额一致性检查",
+        "check_point": "充值页上标的金额与实际拉起支付的金额应一致：选中某一档会员卡或充值档位后，收银台显示的金额、下单请求里的金额应与页面标价相同；有优惠或折扣时页面应说明清楚且最终金额对得上；不应出现页面标一个价、实际拉单却是另一个价。"
+      }
+    ]
+  },
+  "target": {
+    "completion_mode": "dynamic_discovery",
+    "required_milestones": [
+      "surface:stable_business_page"
+    ],
+    "required_page_types": [
+      "home",
+      "content_list",
+      "content_detail",
+      "profile",
+      "settings",
+      "payment",
+      "post_list",
+      "post_publish",
+      "activity",
+      "video_list",
+      "video_detail"
+    ],
+    "requires_real_visual": true,
+    "minimum_business_pages": 1
+  },
+  "source": "来自第六轮任务85e63e97-60d6-4ac2-b0f9-10dc77c7147d的冻结73规则，仅保留覆盖投影实际读取的配置；不是正式可发布规则快照。"
+}

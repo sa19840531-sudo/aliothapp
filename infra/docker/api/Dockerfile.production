@@ -1,0 +1,45 @@
+FROM python:3.12-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    PLAYWRIGHT_BROWSERS_PATH=/ms-playwright \
+    PYTHONPATH=/workspace \
+    HOME=/home/alioth \
+    ANDROID_HOME=/opt/android-sdk \
+    ANDROID_SDK_ROOT=/opt/android-sdk \
+    PATH="/opt/android-sdk/platform-tools:${PATH}"
+
+WORKDIR /workspace
+
+COPY pyproject.toml README.md ./
+COPY services ./services
+COPY infra/env/web-login-auth-origins.json ./infra/env/web-login-auth-origins.json
+COPY scripts ./scripts
+COPY docs/data ./docs/data
+COPY infra/playwright-cli/package.json infra/playwright-cli/package-lock.json /opt/alioth-cli/
+COPY infra/playwright-cli/patch-cdp-context.mjs /opt/alioth-cli/
+ENV ALIOTH_PLAYWRIGHT_CLI_SCRIPT=/opt/alioth-cli/node_modules/@playwright/cli/playwright-cli.js
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends curl unzip ca-certificates nodejs npm tesseract-ocr tesseract-ocr-chi-sim \
+    && node -e 'if (Number(process.versions.node.split(".")[0]) < 20) process.exit(1)' \
+    && npm ci --prefix /opt/alioth-cli --ignore-scripts --no-audit --no-fund \
+    && node /opt/alioth-cli/patch-cdp-context.mjs \
+    && mkdir -p /opt/android-sdk \
+    && curl -fsSL https://dl.google.com/android/repository/platform-tools-latest-linux.zip \
+        -o /tmp/platform-tools.zip \
+    && unzip -q /tmp/platform-tools.zip -d /opt/android-sdk \
+    && rm /tmp/platform-tools.zip \
+    && test -x /opt/android-sdk/platform-tools/adb \
+    && pip install --no-cache-dir . \
+    && python -m playwright install --with-deps chromium \
+    && rm -rf /var/lib/apt/lists/* \
+    && useradd --system --create-home --uid 10001 alioth \
+    && chown -R alioth:alioth /workspace /ms-playwright /opt/android-sdk
+
+USER 10001
+
+EXPOSE 8000
+
+CMD ["uvicorn", "services.api.app.main:app", "--host", "0.0.0.0", "--port", "8000"]

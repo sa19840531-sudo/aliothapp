@@ -1,0 +1,107 @@
+[
+  {
+    "schema_version": "journey-dsl.v2",
+    "definition_id": "app-player-pause-resume",
+    "version": 1,
+    "name": "App 播放器暂停与恢复观测",
+    "description": "F01：播放页只读暂停→连续帧→恢复；不替代完整 seek/切集旅程。",
+    "surface_kinds": ["android", "ios"],
+    "checkpoints": [
+      {
+        "id": "pause",
+        "entry_condition": {"player_visible": true, "media_ready": true},
+        "expected": {"paused": true, "media_time_stopped": true},
+        "evidence_requirements": [
+          {
+            "role": "baseline",
+            "artifact_types": ["screenshot"],
+            "capture_phase": "before_action"
+          },
+          {
+            "role": "pause_receipt",
+            "artifact_types": ["screenshot", "action_receipt"]
+          },
+          {
+            "role": "presented_frames",
+            "artifact_types": ["screenshot", "media_state"],
+            "minimum_count": 2
+          }
+        ],
+        "depends_on": [],
+        "exit_condition": {"observation_complete": true},
+        "recovery_policy": "same_session",
+        "side_effect_policy": "read_only"
+      },
+      {
+        "id": "resume",
+        "entry_condition": {"paused": true},
+        "expected": {"playing": true},
+        "evidence_requirements": [
+          {
+            "role": "baseline",
+            "artifact_types": ["screenshot"],
+            "capture_phase": "before_action"
+          },
+          {
+            "role": "resume_receipt",
+            "artifact_types": ["screenshot", "action_receipt"]
+          }
+        ],
+        "depends_on": ["pause"],
+        "exit_condition": {"observation_complete": true},
+        "recovery_policy": "same_session",
+        "side_effect_policy": "read_only"
+      }
+    ]
+  },
+  {
+    "schema_version": "journey-dsl.v2",
+    "definition_id": "app-payment-display-return",
+    "version": 1,
+    "name": "App 支付档位只读展示并返回来源",
+    "description": "F01：进入支付展示、选档留证、返回来源；禁止确认付款／下单。",
+    "surface_kinds": ["android", "ios"],
+    "checkpoints": [
+      {
+        "id": "select_plan",
+        "entry_condition": {"payment_display_visible": true},
+        "expected": {"payment_plan_selected": true},
+        "evidence_requirements": [
+          {
+            "role": "baseline",
+            "artifact_types": ["screenshot"],
+            "capture_phase": "before_action"
+          },
+          {
+            "role": "selected_plan",
+            "artifact_types": ["screenshot", "action_receipt"]
+          }
+        ],
+        "depends_on": [],
+        "exit_condition": {"observation_complete": true},
+        "recovery_policy": "same_session",
+        "side_effect_policy": "read_only"
+      },
+      {
+        "id": "return_source",
+        "entry_condition": {"payment_plan_selected": true},
+        "expected": {"returned_to_source": true},
+        "evidence_requirements": [
+          {
+            "role": "baseline",
+            "artifact_types": ["screenshot"],
+            "capture_phase": "before_action"
+          },
+          {
+            "role": "source_return",
+            "artifact_types": ["screenshot", "action_receipt"]
+          }
+        ],
+        "depends_on": ["select_plan"],
+        "exit_condition": {"observation_complete": true},
+        "recovery_policy": "same_session",
+        "side_effect_policy": "read_only"
+      }
+    ]
+  }
+]

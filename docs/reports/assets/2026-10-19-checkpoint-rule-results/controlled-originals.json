@@ -1,0 +1,162 @@
+[
+  {
+    "outcome": "pass",
+    "task_id": "1c16b44c-d054-4b26-ba33-9ffb577f75cd",
+    "file": "105e7a5e-2ea6-4ec7-9834-982b7a4488fe.json",
+    "size_bytes": 384,
+    "sha256": "5a428f1650d85e4f751e97eedd12c04efc3793ed942ca7d7e8558c636203af59",
+    "origin": "受控生成展示夹具"
+  },
+  {
+    "outcome": "pass",
+    "task_id": "1c16b44c-d054-4b26-ba33-9ffb577f75cd",
+    "file": "288ac848-aef4-4f87-ae27-d30be04586b2.png",
+    "size_bytes": 5801,
+    "sha256": "8d00581104ffa640bd8744f89ac626d8d9bc09e0a6c804adc7bc7ab06cd697ee",
+    "origin": "受控生成展示夹具"
+  },
+  {
+    "outcome": "pass",
+    "task_id": "1c16b44c-d054-4b26-ba33-9ffb577f75cd",
+    "file": "73b56303-990e-4229-9a1e-a902d08f81eb.png",
+    "size_bytes": 5835,
+    "sha256": "4e0445e2db706c14be96bbc1942ac172646c285278cc211fde93afbae881bc34",
+    "origin": "受控生成展示夹具"
+  },
+  {
+    "outcome": "pass",
+    "task_id": "1c16b44c-d054-4b26-ba33-9ffb577f75cd",
+    "file": "fa7f9a28-07d6-467e-8541-5f0ac371b3a1.json",
+    "size_bytes": 383,
+    "sha256": "0eecc957a1ed24ab04e9981dfd77887d79340018bc34a9eb414411d5e5db303e",
+    "origin": "受控生成展示夹具"
+  },
+  {
+    "outcome": "fail",
+    "task_id": "a717afad-e11f-4ede-bab5-bdd501a53c69",
+    "file": "0a195236-bc5a-4a3b-8ecc-b1fb5f3c4f57.png",
+    "size_bytes": 5666,
+    "sha256": "fc715363dec6c4557d852fbb208388b94ff6fdb8498347e703f535facb0fd310",
+    "origin": "受控生成展示夹具"
+  },
+  {
+    "outcome": "fail",
+    "task_id": "a717afad-e11f-4ede-bab5-bdd501a53c69",
+    "file": "1920724c-8ae2-4a78-922f-c649e36392e7.json",
+    "size_bytes": 384,
+    "sha256": "5a428f1650d85e4f751e97eedd12c04efc3793ed942ca7d7e8558c636203af59",
+    "origin": "受控生成展示夹具"
+  },
+  {
+    "outcome": "fail",
+    "task_id": "a717afad-e11f-4ede-bab5-bdd501a53c69",
+    "file": "21504a79-d8c3-4323-92ae-fe4ddee539c5.json",
+    "size_bytes": 384,
+    "sha256": "5a428f1650d85e4f751e97eedd12c04efc3793ed942ca7d7e8558c636203af59",
+    "origin": "受控生成展示夹具"
+  },
+  {
+    "outcome": "fail",
+    "task_id": "a717afad-e11f-4ede-bab5-bdd501a53c69",
+    "file": "f677fac8-c609-41fd-b23e-1e0a1475e058.png",
+    "size_bytes": 5649,
+    "sha256": "1f7a09d61222790b7dc0925d80f6dc6cf52254ab2bd63813bfc5484ab760f360",
+    "origin": "受控生成展示夹具"
+  },
+  {
+    "outcome": "evidence_insufficient",
+    "task_id": "ac99dbc6-decd-40a4-be1b-3bf3e41a1a1a",
+    "file": "4f254ee8-dd87-415e-adec-f00092eb5637.json",
+    "size_bytes": 367,
+    "sha256": "3ff4d1f998702c2c259d0b5e5b0e8b2ee8afeb2bcbd2828eaeb19e90a589a716",
+    "origin": "受控生成展示夹具"
+  },
+  {
+    "outcome": "evidence_insufficient",
+    "task_id": "ac99dbc6-decd-40a4-be1b-3bf3e41a1a1a",
+    "file": "f80ea644-1c87-4127-83a2-9e672978a894.png",
+    "size_bytes": 6242,
+    "sha256": "362485fd39fe5e1a8abf34c37c1cb4823fc4bc3ba8c69aca41bafbb2625fad81",
+    "origin": "受控生成展示夹具"
+  },
+  {
+    "outcome": "evidence_insufficient",
+    "task_id": "ac99dbc6-decd-40a4-be1b-3bf3e41a1a1a",
+    "file": "8172ba2e-d4ab-4aef-b2bc-581f8bfdc05b.json",
+    "size_bytes": 384,
+    "sha256": "5a428f1650d85e4f751e97eedd12c04efc3793ed942ca7d7e8558c636203af59",
+    "origin": "受控生成展示夹具"
+  },
+  {
+    "outcome": "evidence_insufficient",
+    "task_id": "ac99dbc6-decd-40a4-be1b-3bf3e41a1a1a",
+    "file": "85ae1ff1-9c51-4b0e-84f6-6f7842f1efc6.png",
+    "size_bytes": 6275,
+    "sha256": "0949bcb5136861ce8a60e8e45e62282ecd5f75e32af27d31b4755ebe22c08d21",
+    "origin": "受控生成展示夹具"
+  },
+  {
+    "outcome": "missing_result",
+    "task_id": "b606b8b5-94a5-4a03-a6fd-dab29c47bc22",
+    "file": "8f37e2be-3ba3-47a2-b7e4-4914d8c446f5.png",
+    "size_bytes": 6163,
+    "sha256": "e777f8cf35b2cc135472c141c19381419c90131669c296b92a45c8d029121432",
+    "origin": "受控生成展示夹具"
+  },
+  {
+    "outcome": "missing_result",
+    "task_id": "b606b8b5-94a5-4a03-a6fd-dab29c47bc22",
+    "file": "d677ae68-1475-40f4-bdcb-e792605e2249.json",
+    "size_bytes": 383,
+    "sha256": "0eecc957a1ed24ab04e9981dfd77887d79340018bc34a9eb414411d5e5db303e",
+    "origin": "受控生成展示夹具"
+  },
+  {
+    "outcome": "missing_result",
+    "task_id": "b606b8b5-94a5-4a03-a6fd-dab29c47bc22",
+    "file": "5af55fec-2b88-4cd4-9485-7d4f6ed50195.png",
+    "size_bytes": 6200,
+    "sha256": "26edc846453821af5072a28eccece4cd32e6776641cac0b889362b2159de23be",
+    "origin": "受控生成展示夹具"
+  },
+  {
+    "outcome": "missing_result",
+    "task_id": "b606b8b5-94a5-4a03-a6fd-dab29c47bc22",
+    "file": "ca151428-a004-4260-9a82-a139e1ade0b4.json",
+    "size_bytes": 384,
+    "sha256": "5a428f1650d85e4f751e97eedd12c04efc3793ed942ca7d7e8558c636203af59",
+    "origin": "受控生成展示夹具"
+  },
+  {
+    "outcome": "no_contract",
+    "task_id": "5814a585-3f6a-4ec8-9ad6-45c551214659",
+    "file": "3db3300f-5609-486e-b4a1-a45bb9e6212a.png",
+    "size_bytes": 5752,
+    "sha256": "0b486e6ba75049f4463a4c83a2c11e5ad94e34da7de4551321ea5c40d6834dd7",
+    "origin": "受控生成展示夹具"
+  },
+  {
+    "outcome": "no_contract",
+    "task_id": "5814a585-3f6a-4ec8-9ad6-45c551214659",
+    "file": "a069cbf8-f93e-444e-b00f-20cb992e7bc5.json",
+    "size_bytes": 384,
+    "sha256": "5a428f1650d85e4f751e97eedd12c04efc3793ed942ca7d7e8558c636203af59",
+    "origin": "受控生成展示夹具"
+  },
+  {
+    "outcome": "no_contract",
+    "task_id": "5814a585-3f6a-4ec8-9ad6-45c551214659",
+    "file": "b6eb15dd-a8a9-422e-8d4a-ec7f919dfd62.json",
+    "size_bytes": 383,
+    "sha256": "0eecc957a1ed24ab04e9981dfd77887d79340018bc34a9eb414411d5e5db303e",
+    "origin": "受控生成展示夹具"
+  },
+  {
+    "outcome": "no_contract",
+    "task_id": "5814a585-3f6a-4ec8-9ad6-45c551214659",
+    "file": "fbaec801-395e-4efc-b56a-83cd2e18090e.png",
+    "size_bytes": 5732,
+    "sha256": "889da70f35a88fb164edb033c61ddaac266873e3835658b75d44f9f5fe6979c0",
+    "origin": "受控生成展示夹具"
+  }
+]

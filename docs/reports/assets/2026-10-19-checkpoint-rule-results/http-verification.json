@@ -1,0 +1,74 @@
+{
+  "notice": "受控展示夹具；动作账本、JSON观测和PNG均由本脚本生成，未采集真实产品。",
+  "database_identity": {
+    "database": "alioth_checkpoint_results_test",
+    "role": "checkpoint_results_test",
+    "system_identifier": "7698286980384509990"
+  },
+  "checks": [
+    {
+      "outcome": "pass",
+      "task_id": "1c16b44c-d054-4b26-ba33-9ffb577f75cd",
+      "plan_status": "available",
+      "screenshot_sha256": "sha256:8d00581104ffa640bd8744f89ac626d8d9bc09e0a6c804adc7bc7ab06cd697ee",
+      "archive_entries": 5,
+      "anonymous": 401,
+      "cross_tenant": 404
+    },
+    {
+      "outcome": "fail",
+      "task_id": "a717afad-e11f-4ede-bab5-bdd501a53c69",
+      "plan_status": "available",
+      "screenshot_sha256": "sha256:fc715363dec6c4557d852fbb208388b94ff6fdb8498347e703f535facb0fd310",
+      "archive_entries": 5,
+      "anonymous": 401,
+      "cross_tenant": 404
+    },
+    {
+      "outcome": "evidence_insufficient",
+      "task_id": "ac99dbc6-decd-40a4-be1b-3bf3e41a1a1a",
+      "plan_status": "available",
+      "screenshot_sha256": "sha256:0949bcb5136861ce8a60e8e45e62282ecd5f75e32af27d31b4755ebe22c08d21",
+      "archive_entries": 5,
+      "anonymous": 401,
+      "cross_tenant": 404
+    },
+    {
+      "outcome": "missing_result",
+      "task_id": "b606b8b5-94a5-4a03-a6fd-dab29c47bc22",
+      "plan_status": "unavailable",
+      "screenshot_sha256": "sha256:26edc846453821af5072a28eccece4cd32e6776641cac0b889362b2159de23be",
+      "archive_entries": 5,
+      "anonymous": 401,
+      "cross_tenant": 404
+    },
+    {
+      "outcome": "no_contract",
+      "task_id": "5814a585-3f6a-4ec8-9ad6-45c551214659",
+      "plan_status": "unavailable",
+      "screenshot_sha256": "sha256:0b486e6ba75049f4463a4c83a2c11e5ad94e34da7de4551321ea5c40d6834dd7",
+      "archive_entries": 5,
+      "anonymous": 401,
+      "cross_tenant": 404
+    }
+  ],
+  "business_counts_before": {
+    "qc_task": 5,
+    "qc_rule_execution": 3,
+    "qc_action_execution": 5,
+    "qc_evidence_input_set": 4,
+    "qc_journey_checkpoint_attempt": 5,
+    "qc_v2_work_item": 5
+  },
+  "business_counts_after": {
+    "qc_task": 5,
+    "qc_rule_execution": 3,
+    "qc_action_execution": 5,
+    "qc_evidence_input_set": 4,
+    "qc_journey_checkpoint_attempt": 5,
+    "qc_v2_work_item": 5
+  },
+  "http_login": "真实独立API登录；测试账号来自展示种子，未覆盖生产登录依赖",
+  "workstation_role": "规则配置员",
+  "capture_acceptance": "未验证；业务记录、动作、观测与图片均为明确夹具"
+}

@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="4" skipped="0" tests="78" time="20.323" timestamp="2026-10-19T18:32:04.280231+08:00" hostname="WIN-SU30AJQE7E9"><testcase classname="services.api.tests.test_green_rule_result_projection" name="test_actual_page_preflight_missing_subitems_are_linked_without_business_promotion[102]" time="0.009" /><testcase classname="services.api.tests.test_green_rule_result_projection" name="test_actual_page_preflight_missing_subitems_are_linked_without_business_promotion[41]" time="0.003" /><testcase classname="services.api.tests.test_green_rule_result_projection" name="test_app_external_handoff_never_borrows_another_platform_execution[web]" time="0.003" /><testcase classname="services.api.tests.test_green_rule_result_projection" name="test_app_external_handoff_never_borrows_another_platform_execution[h5]" time="0.003" /><testcase classname="services.api.tests.test_green_rule_result_projection" name="test_all_eight_explicit_contracts_are_selected_but_unexecuted_candidates_are_untagged[102]" time="0.001" /><testcase classname="services.api.tests.test_green_rule_result_projection" name="test_all_eight_explicit_contracts_are_selected_but_unexecuted_candidates_are_untagged[s72]" time="0.001" /><testcase classname="services.api.tests.test_green_rule_result_projection" name="test_all_eight_explicit_contracts_are_selected_but_unexecuted_candidates_are_untagged[41]" time="0.001" /><testcase classname="services.api.tests.test_green_rule_result_projection" name="test_all_eight_explicit_contracts_are_selected_but_unexecuted_candidates_are_untagged[62]" time="0.002" /><testcase classname="services.api.tests.test_green_rule_result_projection" name="test_all_eight_explicit_contracts_are_selected_but_unexecuted_candidates_are_untagged[s35]" time="0.001" /><testcase classname="services.api.tests.test_green_rule_result_projection" name="test_all_eight_explicit_contracts_are_selected_but_unexecuted_candidates_are_untagged[s49]" time="0.001" /><testcase classname="services.api.tests.test_green_rule_result_projection" name="test_all_eight_explicit_contracts_are_selected_but_unexecuted_candidates_are_untagged[s73]" time="0.001" /><testcase classname="services.api.tests.test_green_rule_result_projection" name="test_all_eight_explicit_contracts_are_selected_but_unexecuted_candidates_are_untagged[32]" time="0.001" /><testcase classname="services.api.tests.test_green_rule_result_projection" name="test_legacy_ruleset_versions_are_never_selected_as_new_green_results[1]" time="0.001" /><testcase classname="services.api.tests.test_green_rule_result_projection" name="test_legacy_ruleset_versions_are_never_selected_as_new_green_results[2]" time="0.001" /><testcase classname="services.api.tests.test_green_rule_result_projection" name="test_legacy_ruleset_versions_are_never_selected_as_new_green_results[3]" time="0.001" /><testcase classname="services.api.tests.test_green_rule_result_projection" name="test_real_32_subresults_are_allowlisted_without_inventing_a_png" time="0.004" /><testcase classname="services.api.tests.test_green_rule_result_projection" name="test_wrong_lineage_or_changed_attempt_does_not_expose_a_subitem[task]" time="0.003" /><testcase classname="services.api.tests.test_green_rule_result_projection" name="test_wrong_lineage_or_changed_attempt_does_not_expose_a_subitem[run]" time="0.003" /><testcase classname="services.api.tests.test_green_rule_result_projection" name="test_wrong_lineage_or_changed_attempt_does_not_expose_a_subitem[consumer]" time="0.003" /><testcase classname="services.api.tests.test_green_rule_result_projection" name="test_wrong_lineage_or_changed_attempt_does_not_expose_a_subitem[epoch]" time="0.003" /><testcase classname="services.api.tests.test_green_rule_result_projection" name="test_wrong_lineage_or_changed_attempt_does_not_expose_a_subitem[contract]" time="0.004" /><testcase classname="services.api.tests.test_green_rule_result_projection" name="test_wrong_lineage_or_changed_attempt_does_not_expose_a_subitem[packet]" time="0.005" /><testcase classname="services.api.tests.test_green_rule_result_projection" name="test_wrong_lineage_or_changed_attempt_does_not_expose_a_subitem[attempt]" time="0.004" /><testcase classname="services.api.tests.test_green_rule_result_projection" name="test_wrong_lineage_or_changed_attempt_does_not_expose_a_subitem[attempt_subitem]" time="0.004" /><testcase classname="services.api.tests.test_green_rule_result_projection" name="test_wrong_lineage_or_changed_attempt_does_not_expose_a_subitem[attempt_evidence]" time="0.003" /><testcase classname="services.api.tests.test_green_rule_result_projection" name="test_wrong_lineage_or_changed_attempt_does_not_expose_a_subitem[subitem_capture]" time="0.004" /><testcase classname="services.api.tests.test_green_rule_result_projection" name="test_wrong_lineage_or_changed_attempt_does_not_expose_a_subitem[subitem_evidence]" time="0.004" /><testcase classname="services.api.tests.test_green_rule_result_projection" name="test_current_review_status_never_rewrites_machine_subitems[pending]" time="0.004" /><testcase classname="services.api.tests.test_green_rule_result_projection" name="test_current_review_status_never_rewrites_machine_subitems[approved]" time="0.003" /><testcase classname="services.api.tests.test_green_rule_result_projection" name="test_current_review_status_never_rewrites_machine_subitems[rejected]" time="0.003" /><testcase classname="services.api.tests.test_green_rule_result_projection" name="test_current_review_status_never_rewrites_machine_subitems[needs_recheck]" time="0.004" /><testcase classname="services.api.tests.test_green_rule_result_projection" name="test_unlinked_green_public_summary_is_unfinished_and_keeps_machine_audit[input_mismatch]" time="0.001" /><testcase classname="services.api.tests.test_green_rule_result_projection" name="test_unlinked_green_public_summary_is_unfinished_and_keeps_machine_audit[evidence_changed]" time="0.001" /><testcase classname="services.api.tests.test_green_rule_result_projection" name="test_unlinked_green_public_summary_is_unfinished_and_keeps_machine_audit[missing_result]" time="0.001" /><testcase classname="services.api.tests.test_green_rule_result_projection" name="test_linked_review_uses_existing_display_rules_without_business_promotion[fail-pending-failed]" time="0.001" /><testcase classname="services.api.tests.test_green_rule_result_projection" name="test_linked_review_uses_existing_display_rules_without_business_promotion[pass-pending-manual_review]" time="0.001" /><testcase classname="services.api.tests.test_green_rule_result_projection" name="test_linked_review_uses_existing_display_rules_without_business_promotion[fail-approved-failed]" time="0.001" /><testcase classname="services.api.tests.test_green_rule_result_projection" name="test_linked_review_uses_existing_display_rules_without_business_promotion[evidence_insufficient-approved-evidence_insufficient]" time="0.001" /><testcase classname="services.api.tests.test_green_rule_result_projection" name="test_frozen_old_rule_with_green_looking_output_is_not_tagged" time="0.003" /><testcase classname="services.api.tests.test_green_rule_result_projection" name="test_service_public_filter_and_counts_do_not_count_unlinked_green_as_passed[input_mismatch]" time="0.004" /><testcase classname="services.api.tests.test_green_rule_result_projection" name="test_service_public_filter_and_counts_do_not_count_unlinked_green_as_passed[evidence_changed]" time="0.004" /><testcase classname="services.api.tests.test_green_rule_result_projection" name="test_service_public_filter_and_counts_do_not_count_unlinked_green_as_passed[missing_result]" time="0.004" /><testcase classname="services.api.tests.test_green_rule_result_projection" name="test_service_public_filter_and_counts_do_not_count_unlinked_green_as_passed[missing_projection]" time="0.004" /><testcase classname="services.api.tests.test_green_rule_result_projection" name="test_malformed_old_web_configuration_never_breaks_extra_green_selection[config0]" time="0.001" /><testcase classname="services.api.tests.test_green_rule_result_projection" name="test_malformed_old_web_configuration_never_breaks_extra_green_selection[config1]" time="0.001" /><testcase classname="services.api.tests.test_green_rule_result_projection" name="test_malformed_old_web_configuration_never_breaks_extra_green_selection[config2]" time="0.001" /><testcase classname="services.api.tests.test_green_rule_result_projection" name="test_malformed_old_web_configuration_never_breaks_extra_green_selection[config3]" time="0.001" /><testcase classname="services.api.tests.test_green_rule_result_projection" name="test_malformed_old_web_configuration_never_breaks_extra_green_selection[config4]" time="0.001" /><testcase classname="services.api.tests.test_green_rule_result_projection" name="test_malformed_old_web_configuration_never_breaks_extra_green_selection[config5]" time="0.001" /><testcase classname="services.api.tests.test_green_rule_result_projection" name="test_page_declaring_an_input_set_cannot_fallback_when_payload_is_missing[None]" time="0.004" /><testcase classname="services.api.tests.test_green_rule_result_projection" name="test_page_declaring_an_input_set_cannot_fallback_when_payload_is_missing[payload1]" time="0.003" /><testcase classname="services.api.tests.test_green_rule_result_projection" name="test_orphaned_pending_execution_does_not_look_as_if_review_was_unnecessary" time="0.003" /><testcase classname="services.api.tests.test_green_rule_result_projection" name="test_duplicate_formal_execution_clears_previously_linked_verdict_and_review" time="0.008" /><testcase classname="services.api.tests.test_green_rule_results_postgres" name="test_formal_green_result_projection_is_readonly_and_rejects_stale_linkage[none-linked]" time="0.800" /><testcase classname="services.api.tests.test_green_rule_results_postgres" name="test_formal_green_result_projection_is_readonly_and_rejects_stale_linkage[approved-linked]" time="0.851" /><testcase classname="services.api.tests.test_green_rule_results_postgres" name="test_formal_green_result_projection_is_readonly_and_rejects_stale_linkage[latest_quality-evidence_changed]" time="0.721" /><testcase classname="services.api.tests.test_green_rule_results_postgres" name="test_formal_green_result_projection_is_readonly_and_rejects_stale_linkage[foreign_session-evidence_changed]" time="0.515" /><testcase classname="services.api.tests.test_green_rule_results_postgres" name="test_formal_green_result_projection_is_readonly_and_rejects_stale_linkage[old_epoch_without_gate-input_mismatch]" time="0.513" /><testcase classname="services.api.tests.test_green_rule_results_postgres" name="test_formal_green_result_projection_is_readonly_and_rejects_stale_linkage[attempt_output-input_mismatch]" time="0.538" /><testcase classname="services.api.tests.test_green_rule_results_postgres" name="test_formal_green_result_projection_is_readonly_and_rejects_stale_linkage[foreign_scope-None]" time="0.828" /><testcase classname="services.api.tests.test_green_rule_results_postgres" name="test_formal_green_result_projection_is_readonly_and_rejects_stale_linkage[missing_png-evidence_changed]" time="0.687" /><testcase classname="services.api.tests.test_green_rule_results_postgres" name="test_formal_green_result_projection_is_readonly_and_rejects_stale_linkage[action_intent-evidence_changed]" time="0.619" /><testcase classname="services.api.tests.test_green_rule_results_postgres" name="test_formal_green_result_projection_is_readonly_and_rejects_stale_linkage[action_status-evidence_changed]" time="0.637" /><testcase classname="services.api.tests.test_green_rule_results_postgres" name="test_formal_green_result_projection_is_readonly_and_rejects_stale_linkage[action_sequence-evidence_changed]" time="1.226" /><testcase classname="services.api.tests.test_green_rule_results_postgres" name="test_formal_green_result_projection_is_readonly_and_rejects_stale_linkage[action_time-evidence_changed]" time="0.951" /><testcase classname="services.api.tests.test_green_rule_results_postgres" name="test_formal_green_result_projection_is_readonly_and_rejects_stale_linkage[action_pair-evidence_changed]" time="1.233" /><testcase classname="services.api.tests.test_green_rule_results_postgres" name="test_actual_temporal_missing_results_use_frozen_scope_and_original_fingerprint[none-s72]" time="1.209"><failure message="assert False&#10; +  where False = all(&lt;generator object test_actual_temporal_missing_results_use_frozen_scope_and_original_fingerprint.&lt;locals&gt;.&lt;genexpr&gt; at 0x000001E5E3B90EE0&gt;)">tmp_path = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-233/test_actual_temporal_missing_r0')
+key = 's72', fault = 'none'
+
+    @pytest.mark.parametrize("key", ["s72", "62", "s49", "s73"])
+    @pytest.mark.parametrize("fault", ["none", "wrong_scope", "action_intent"])
+    async def test_actual_temporal_missing_results_use_frozen_scope_and_original_fingerprint(
+        tmp_path, key, fault
+    ):
+        async with green_case(tmp_path, key, transactional=False) as (
+            connection,
+            pool,
+            ids,
+            work,
+            writer,
+            _input,
+            frozen,
+            _manifests,
+            _intent,
+            _artifacts,
+        ):
+            judgement = await _write_actual(
+                writer, work, ids, expected_first="evidence_insufficient"
+            )
+            execution_id = str(
+                await connection.fetchval(
+                    "SELECT id FROM qc_rule_execution WHERE task_id=$1::uuid", ids["task"]
+                )
+            )
+            if fault == "wrong_scope":
+                await connection.execute(
+                    "UPDATE qc_rule_execution SET judge_input=jsonb_set(judge_input,'{scope_key}',"
+                    "'\"green_interaction_stability.v1\"'::jsonb) WHERE id=$1::uuid",
+                    execution_id,
+                )
+            elif fault == "action_intent":
+                await connection.execute(
+                    "UPDATE qc_action_execution SET intent_payload=jsonb_set(intent_payload,"
+                    "'{purpose}','\"判后动作台账漂移\"'::jsonb) WHERE task_id=$1::uuid",
+                    ids["task"],
+                )
+            reader = PostgresTaskInsightRepository(
+                pool=pool,
+                artifact_store=LocalEvidenceArtifactStore(root=tmp_path / "controlled-originals"),
+            )
+            result = (
+                await reader.read_green_rule_results(
+                    task_id=ids["task"],
+                    execution_ids=[execution_id],
+                    access_scope=AccessScope(
+                        actor_user_id=ids["user"],
+                        tenant_id=ids["tenant"],
+                        permissions=frozenset(),
+                    ),
+                )
+            )[execution_id]
+            assert result["rule_key"] == key
+            expected = {
+                "none": "linked",
+                "wrong_scope": "input_mismatch",
+                "action_intent": "evidence_changed",
+            }[fault]
+            assert result["linkage_status"] == expected
+            if fault != "none":
+                assert result["subitems"] == [] and result["execution_status"] is None
+                return
+            assert result["execution_status"] == "evidence_insufficient"
+            assert result["review_status"] == "pending"
+            assert result["missing_evidence"] == judgement.wrapper_payload["green"]["missing_evidence"]
+            assert [item["key"] for item in result["subitems"]] == (
+                frozen["judge_config"]["green_rule_contract"]["subchecks"]
+            )
+&gt;           assert all(
+                item["status"] == "evidence_insufficient"
+                and item["evaluated"] is False
+                and item["confidence"] is None
+                and item["missing_evidence"]
+                and item["evidence_artifact_ids"] == []
+                and item["screenshot_artifact_ids"] == []
+                for item in result["subitems"]
+            )
+E           assert False
+E            +  where False = all(&lt;generator object test_actual_temporal_missing_results_use_frozen_scope_and_original_fingerprint.&lt;locals&gt;.&lt;genexpr&gt; at 0x000001E5E3B90EE0&gt;)
+
+services\api\tests\test_green_rule_results_postgres.py:264: AssertionError</failure></testcase><testcase classname="services.api.tests.test_green_rule_results_postgres" name="test_actual_temporal_missing_results_use_frozen_scope_and_original_fingerprint[none-62]" time="1.567"><failure message="assert False&#10; +  where False = all(&lt;generator object test_actual_temporal_missing_results_use_frozen_scope_and_original_fingerprint.&lt;locals&gt;.&lt;genexpr&gt; at 0x000001E5E3B92B50&gt;)">tmp_path = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-233/test_actual_temporal_missing_r1')
+key = '62', fault = 'none'
+
+    @pytest.mark.parametrize("key", ["s72", "62", "s49", "s73"])
+    @pytest.mark.parametrize("fault", ["none", "wrong_scope", "action_intent"])
+    async def test_actual_temporal_missing_results_use_frozen_scope_and_original_fingerprint(
+        tmp_path, key, fault
+    ):
+        async with green_case(tmp_path, key, transactional=False) as (
+            connection,
+            pool,
+            ids,
+            work,
+            writer,
+            _input,
+            frozen,
+            _manifests,
+            _intent,
+            _artifacts,
+        ):
+            judgement = await _write_actual(
+                writer, work, ids, expected_first="evidence_insufficient"
+            )
+            execution_id = str(
+                await connection.fetchval(
+                    "SELECT id FROM qc_rule_execution WHERE task_id=$1::uuid", ids["task"]
+                )
+            )
+            if fault == "wrong_scope":
+                await connection.execute(
+                    "UPDATE qc_rule_execution SET judge_input=jsonb_set(judge_input,'{scope_key}',"
+                    "'\"green_interaction_stability.v1\"'::jsonb) WHERE id=$1::uuid",
+                    execution_id,
+                )
+            elif fault == "action_intent":
+                await connection.execute(
+                    "UPDATE qc_action_execution SET intent_payload=jsonb_set(intent_payload,"
+                    "'{purpose}','\"判后动作台账漂移\"'::jsonb) WHERE task_id=$1::uuid",
+                    ids["task"],
+                )
+            reader = PostgresTaskInsightRepository(
+                pool=pool,
+                artifact_store=LocalEvidenceArtifactStore(root=tmp_path / "controlled-originals"),
+            )
+            result = (
+                await reader.read_green_rule_results(
+                    task_id=ids["task"],
+                    execution_ids=[execution_id],
+                    access_scope=AccessScope(
+                        actor_user_id=ids["user"],
+                        tenant_id=ids["tenant"],
+                        permissions=frozenset(),
+                    ),
+                )
+            )[execution_id]
+            assert result["rule_key"] == key
+            expected = {
+                "none": "linked",
+                "wrong_scope": "input_mismatch",
+                "action_intent": "evidence_changed",
+            }[fault]
+            assert result["linkage_status"] == expected
+            if fault != "none":
+                assert result["subitems"] == [] and result["execution_status"] is None
+                return
+            assert result["execution_status"] == "evidence_insufficient"
+            assert result["review_status"] == "pending"
+            assert result["missing_evidence"] == judgement.wrapper_payload["green"]["missing_evidence"]
+            assert [item["key"] for item in result["subitems"]] == (
+                frozen["judge_config"]["green_rule_contract"]["subchecks"]
+            )
+&gt;           assert all(
+                item["status"] == "evidence_insufficient"
+                and item["evaluated"] is False
+                and item["confidence"] is None
+                and item["missing_evidence"]
+                and item["evidence_artifact_ids"] == []
+                and item["screenshot_artifact_ids"] == []
+                for item in result["subitems"]
+            )
+E           assert False
+E            +  where False = all(&lt;generator object test_actual_temporal_missing_results_use_frozen_scope_and_original_fingerprint.&lt;locals&gt;.&lt;genexpr&gt; at 0x000001E5E3B92B50&gt;)
+
+services\api\tests\test_green_rule_results_postgres.py:264: AssertionError</failure></testcase><testcase classname="services.api.tests.test_green_rule_results_postgres" name="test_actual_temporal_missing_results_use_frozen_scope_and_original_fingerprint[none-s49]" time="1.144"><failure message="assert False&#10; +  where False = all(&lt;generator object test_actual_temporal_missing_results_use_frozen_scope_and_original_fingerprint.&lt;locals&gt;.&lt;genexpr&gt; at 0x000001E5E4DF64D0&gt;)">tmp_path = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-233/test_actual_temporal_missing_r2')
+key = 's49', fault = 'none'
+
+    @pytest.mark.parametrize("key", ["s72", "62", "s49", "s73"])
+    @pytest.mark.parametrize("fault", ["none", "wrong_scope", "action_intent"])
+    async def test_actual_temporal_missing_results_use_frozen_scope_and_original_fingerprint(
+        tmp_path, key, fault
+    ):
+        async with green_case(tmp_path, key, transactional=False) as (
+            connection,
+            pool,
+            ids,
+            work,
+            writer,
+            _input,
+            frozen,
+            _manifests,
+            _intent,
+            _artifacts,
+        ):
+            judgement = await _write_actual(
+                writer, work, ids, expected_first="evidence_insufficient"
+            )
+            execution_id = str(
+                await connection.fetchval(
+                    "SELECT id FROM qc_rule_execution WHERE task_id=$1::uuid", ids["task"]
+                )
+            )
+            if fault == "wrong_scope":
+                await connection.execute(
+                    "UPDATE qc_rule_execution SET judge_input=jsonb_set(judge_input,'{scope_key}',"
+                    "'\"green_interaction_stability.v1\"'::jsonb) WHERE id=$1::uuid",
+                    execution_id,
+                )
+            elif fault == "action_intent":
+                await connection.execute(
+                    "UPDATE qc_action_execution SET intent_payload=jsonb_set(intent_payload,"
+                    "'{purpose}','\"判后动作台账漂移\"'::jsonb) WHERE task_id=$1::uuid",
+                    ids["task"],
+                )
+            reader = PostgresTaskInsightRepository(
+                pool=pool,
+                artifact_store=LocalEvidenceArtifactStore(root=tmp_path / "controlled-originals"),
+            )
+            result = (
+                await reader.read_green_rule_results(
+                    task_id=ids["task"],
+                    execution_ids=[execution_id],
+                    access_scope=AccessScope(
+                        actor_user_id=ids["user"],
+                        tenant_id=ids["tenant"],
+                        permissions=frozenset(),
+                    ),
+                )
+            )[execution_id]
+            assert result["rule_key"] == key
+            expected = {
+                "none": "linked",
+                "wrong_scope": "input_mismatch",
+                "action_intent": "evidence_changed",
+            }[fault]
+            assert result["linkage_status"] == expected
+            if fault != "none":
+                assert result["subitems"] == [] and result["execution_status"] is None
+                return
+            assert result["execution_status"] == "evidence_insufficient"
+            assert result["review_status"] == "pending"
+            assert result["missing_evidence"] == judgement.wrapper_payload["green"]["missing_evidence"]
+            assert [item["key"] for item in result["subitems"]] == (
+                frozen["judge_config"]["green_rule_contract"]["subchecks"]
+            )
+&gt;           assert all(
+                item["status"] == "evidence_insufficient"
+                and item["evaluated"] is False
+                and item["confidence"] is None
+                and item["missing_evidence"]
+                and item["evidence_artifact_ids"] == []
+                and item["screenshot_artifact_ids"] == []
+                for item in result["subitems"]
+            )
+E           assert False
+E            +  where False = all(&lt;generator object test_actual_temporal_missing_results_use_frozen_scope_and_original_fingerprint.&lt;locals&gt;.&lt;genexpr&gt; at 0x000001E5E4DF64D0&gt;)
+
+services\api\tests\test_green_rule_results_postgres.py:264: AssertionError</failure></testcase><testcase classname="services.api.tests.test_green_rule_results_postgres" name="test_actual_temporal_missing_results_use_frozen_scope_and_original_fingerprint[none-s73]" time="0.790"><failure message="assert False&#10; +  where False = all(&lt;generator object test_actual_temporal_missing_results_use_frozen_scope_and_original_fingerprint.&lt;locals&gt;.&lt;genexpr&gt; at 0x000001E5E3798860&gt;)">tmp_path = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-233/test_actual_temporal_missing_r3')
+key = 's73', fault = 'none'
+
+    @pytest.mark.parametrize("key", ["s72", "62", "s49", "s73"])
+    @pytest.mark.parametrize("fault", ["none", "wrong_scope", "action_intent"])
+    async def test_actual_temporal_missing_results_use_frozen_scope_and_original_fingerprint(
+        tmp_path, key, fault
+    ):
+        async with green_case(tmp_path, key, transactional=False) as (
+            connection,
+            pool,
+            ids,
+            work,
+            writer,
+            _input,
+            frozen,
+            _manifests,
+            _intent,
+            _artifacts,
+        ):
+            judgement = await _write_actual(
+                writer, work, ids, expected_first="evidence_insufficient"
+            )
+            execution_id = str(
+                await connection.fetchval(
+                    "SELECT id FROM qc_rule_execution WHERE task_id=$1::uuid", ids["task"]
+                )
+            )
+            if fault == "wrong_scope":
+                await connection.execute(
+                    "UPDATE qc_rule_execution SET judge_input=jsonb_set(judge_input,'{scope_key}',"
+                    "'\"green_interaction_stability.v1\"'::jsonb) WHERE id=$1::uuid",
+                    execution_id,
+                )
+            elif fault == "action_intent":
+                await connection.execute(
+                    "UPDATE qc_action_execution SET intent_payload=jsonb_set(intent_payload,"
+                    "'{purpose}','\"判后动作台账漂移\"'::jsonb) WHERE task_id=$1::uuid",
+                    ids["task"],
+                )
+            reader = PostgresTaskInsightRepository(
+                pool=pool,
+                artifact_store=LocalEvidenceArtifactStore(root=tmp_path / "controlled-originals"),
+            )
+            result = (
+                await reader.read_green_rule_results(
+                    task_id=ids["task"],
+                    execution_ids=[execution_id],
+                    access_scope=AccessScope(
+                        actor_user_id=ids["user"],
+                        tenant_id=ids["tenant"],
+                        permissions=frozenset(),
+                    ),
+                )
+            )[execution_id]
+            assert result["rule_key"] == key
+            expected = {
+                "none": "linked",
+                "wrong_scope": "input_mismatch",
+                "action_intent": "evidence_changed",
+            }[fault]
+            assert result["linkage_status"] == expected
+            if fault != "none":
+                assert result["subitems"] == [] and result["execution_status"] is None
+                return
+            assert result["execution_status"] == "evidence_insufficient"
+            assert result["review_status"] == "pending"
+            assert result["missing_evidence"] == judgement.wrapper_payload["green"]["missing_evidence"]
+            assert [item["key"] for item in result["subitems"]] == (
+                frozen["judge_config"]["green_rule_contract"]["subchecks"]
+            )
+&gt;           assert all(
+                item["status"] == "evidence_insufficient"
+                and item["evaluated"] is False
+                and item["confidence"] is None
+                and item["missing_evidence"]
+                and item["evidence_artifact_ids"] == []
+                and item["screenshot_artifact_ids"] == []
+                for item in result["subitems"]
+            )
+E           assert False
+E            +  where False = all(&lt;generator object test_actual_temporal_missing_results_use_frozen_scope_and_original_fingerprint.&lt;locals&gt;.&lt;genexpr&gt; at 0x000001E5E3798860&gt;)
+
+services\api\tests\test_green_rule_results_postgres.py:264: AssertionError</failure></testcase><testcase classname="services.api.tests.test_green_rule_results_postgres" name="test_actual_temporal_missing_results_use_frozen_scope_and_original_fingerprint[wrong_scope-s72]" time="0.486" /><testcase classname="services.api.tests.test_green_rule_results_postgres" name="test_actual_temporal_missing_results_use_frozen_scope_and_original_fingerprint[wrong_scope-62]" time="0.485" /><testcase classname="services.api.tests.test_green_rule_results_postgres" name="test_actual_temporal_missing_results_use_frozen_scope_and_original_fingerprint[wrong_scope-s49]" time="0.459" /><testcase classname="services.api.tests.test_green_rule_results_postgres" name="test_actual_temporal_missing_results_use_frozen_scope_and_original_fingerprint[wrong_scope-s73]" time="0.458" /><testcase classname="services.api.tests.test_green_rule_results_postgres" name="test_actual_temporal_missing_results_use_frozen_scope_and_original_fingerprint[action_intent-s72]" time="0.462" /><testcase classname="services.api.tests.test_green_rule_results_postgres" name="test_actual_temporal_missing_results_use_frozen_scope_and_original_fingerprint[action_intent-62]" time="0.547" /><testcase classname="services.api.tests.test_green_rule_results_postgres" name="test_actual_temporal_missing_results_use_frozen_scope_and_original_fingerprint[action_intent-s49]" time="0.476" /><testcase classname="services.api.tests.test_green_rule_results_postgres" name="test_actual_temporal_missing_results_use_frozen_scope_and_original_fingerprint[action_intent-s73]" time="0.473" /></testsuite></testsuites>

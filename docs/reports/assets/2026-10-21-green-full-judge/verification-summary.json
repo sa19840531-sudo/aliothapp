@@ -1,0 +1,56 @@
+{
+  "branch": "dev_2.0",
+  "baseline_commit": "2f34cd0874993eae84509fc201284a9941e8ceb1",
+  "committed": false,
+  "pushed": false,
+  "ruleset_published": false,
+  "database_migration_added": false,
+  "frontend_menu_or_route_changed": false,
+  "backend": {
+    "tests": 846,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "isolated_pg_cases": 58,
+    "controlled_browser_cases": 35,
+    "duration_seconds": 66.892
+  },
+  "backend_test_files": 45,
+  "frontend": {
+    "test_files": 7,
+    "tests": 114,
+    "passed": 114,
+    "failures": 0,
+    "skipped": 0
+  },
+  "verified_source_files": 67,
+  "source_unchanged_during_final_run": true,
+  "ruff": "passed",
+  "git_diff_check": "passed",
+  "ci_pg_job_includes_green_suite": true,
+  "ci_config_sha256": "9d5961f1ef83141e774532daea89911a41dc9417d2ebb149d13debc23b02c3c5",
+  "acceptance_boundary": "Controlled browser, verified originals, formal dispatch and isolated PostgreSQL; real end-side collection and product policies remain external prerequisites.",
+  "cleanup": {
+    "test_container_removed": true,
+    "test_data_storage": "tmpfs; no Docker volume created",
+    "temporary_port_25421_released": true,
+    "existing_alioth_running_container_ids_unchanged": true,
+    "existing_database_volumes_untouched": true,
+    "unrelated_container_drift": {
+      "task_issued_mutations": false,
+      "current_id": "83f5392ca8e3",
+      "previous_id": "8e59eccf8bab",
+      "name": "tgbot"
+    },
+    "main_health": [
+      {
+        "endpoint": "/api/v1/health",
+        "status": 200
+      },
+      {
+        "endpoint": "/api/v1/readyz",
+        "status": 200
+      }
+    ]
+  }
+}

@@ -1,0 +1,334 @@
+H5 自动质检 V2 Explorer Workflow
+版本：2026-08-12
+状态：V2 API 业务闭环实施后审核稿
+
+一、最终架构结论
+
+H5 V2 必须经过独立的 H5 V2 Explorer Agent。
+完整质检与仅页面探索共用同一套 Explorer Runtime、双采证据、页面类型判定、探索谱系和数据库事实，只在探索结束后的收口阶段分流。
+
+自动探索策略是：有界深度优先 + 覆盖缺口驱动的广度补齐。
+它不是固定页面清单，也不是无界穷举：优先处理遮挡、游客入口和高信息增益入口；在当前分支下钻后，通过返回、页签、列表项和全局导航补齐未覆盖状态；达到动作、深度、时间、安全或 no_progress 边界时停止。
+
+Explorer 只读取 Observation、Frontier、覆盖缺口、预算和安全边界，只能输出 ActionIntent、TimedObservationIntent 或局部终态。
+浏览器 Driver、Playwright、数据库、Rule Judge、正式规则结果和报告写回均不暴露给 Explorer。
+
+二、V2 API 与部署门禁
+
+完整质检：
+  POST /api/v2/tasks
+  -> 只接受明确的 target.platform
+  -> H5 锁定 target_url、workflow_version=v2、execution_mode=full_inspection
+  -> 创建真实 qc_task 与 qc_agent_run
+  -> 写入 Redis 队列
+
+仅页面探索：
+  POST /api/v2/exploration-tasks
+  -> 本版本只接受 H5
+  -> 锁定 target_url、workflow_version=v2、execution_mode=exploration_only
+  -> 创建真实 qc_task 与 qc_agent_run
+  -> 写入同一 Redis 队列
+
+独立规则测试：
+  POST /api/v2/tasks/{task_id}/rule-evaluation-runs
+  -> 只读取任务已经留存的证据
+  -> 结果只写 qc_rule_evaluation_run
+  -> 不覆盖 qc_rule_execution
+  -> 不参与正式 Completion Gate 和正式报告
+
+平台边界：
+  - H5 完整质检：已接入；
+  - H5 仅页面探索：已接入；
+  - App 完整质检：保持现有 V2 链路；
+  - App 仅页面探索：当前返回结构化 501；
+  - Web 完整质检/仅探索：当前返回结构化 501，前端禁止选择；
+  - H5 V2 新任务只有 ALIOTH_H5_V2_MODE=on 才接受；off/shadow 在入库前返回 409，禁止提交成功后回退 V1 或只运行 Shadow。
+
+历史路由仍保持：
+  workflow_version=v1
+    -> H5 V1 Main Agent
+
+  已存在的 workflow_version=v2 + off
+    -> 由既有路由策略处理历史兼容
+
+  已存在的 workflow_version=v2 + shadow
+    -> V1 是唯一动作源
+    -> V2 只读取不可变审计快照并记录决策差异
+    -> 不产生第二次动作，不污染正式规则或报告
+
+  新提交的 workflow_version=v2 + on
+    -> 在构建通用 Main Agent 之前进入 H5WorkflowHandler
+    -> Handler 或证据交接服务缺失时 fail closed
+
+三、共同探索主链
+
+1. Worker 读取已锁定任务配置。
+2. Workflow Router 根据 target.platform=h5、workflow_version=v2、部署模式 on 选择 H5_V2。
+3. Worker 使用唯一 H5 V2 组合根：
+   Web Capture Runtime
+   + PostgreSQL Surface Session
+   + Session Command Gate
+   + Capture Coordinator
+   + H5 Page Detection
+   + H5 Authentication Bootstrap
+   + H5 Secret Input Runtime
+   + Surface Phase Auth Audit
+   + QcOrchestrator
+   + Exploration/Probe Work Repository
+   + 独立 H5 V2 Explorer Agent
+   + Evidence Exit Gate
+4. Runtime 创建 Web Surface Session，绑定 task_id、agent_run_id、session_id、目标 URL、Session Owner、允许域名、只读操作、动作预算、深度预算和 deadline。
+5. Runtime 执行受信任的初始 NAVIGATE，Explorer 不直接操作浏览器。
+6. 若 ALIOTH_H5_AUTH_ENABLED=true，Runtime 在正式根 Frontier 前主动判断登录态，并按受控状态机完成一次密码登录或游客降级。
+7. 认证阶段始终返回任务原始 URL；只有返回后的安全 Capture 才创建正式根 Frontier，认证中间 Capture 不进入正式规则质检证据集合。
+
+四、操作前后证据原子边界
+
+初始导航和每个状态变更动作固定执行：
+
+  before Capture
+    -> screenshot
+    -> DOM
+    -> visible_text
+    -> ui_snapshot
+    -> 操作前 URL 写入 qc_page_capture.url
+
+  Web Action
+    -> CLICK / SCROLL / BACK / OBSERVE / NAVIGATE 中的受控低风险动作
+    -> 写 Action Execution 与 action_trace
+
+  after Capture
+    -> screenshot
+    -> DOM
+    -> visible_text
+    -> ui_snapshot
+    -> action_trace
+    -> 操作后 URL 写入 qc_page_capture.url
+
+  审计关联
+    -> 同一 task_id
+    -> 同一 agent_run_id
+    -> 同一 surface_session_id
+    -> 同一 action_execution_id
+    -> after.parent_capture_id = before.id
+    -> before.capture_role=before_action
+    -> after.capture_role=after_action
+
+公共 qc_capture 与 qc_page_capture 必须同步真实角色。数据库迁移 20260812_0047 负责扩展公共角色约束、回填历史 Web Capture 角色，并让插入/更新触发器持续同步；禁止再把所有 Web Capture 归一为 observation。
+
+动作成功但 after 证据失败，不得写成普通成功。动作失败后即使 after Capture 成功，动作事实仍保持失败；后采只证明失败后的可见状态。
+
+五、页面类型判定与探索谱系
+
+每轮只对已经持久化的 after Capture 执行 H5 Page Detection：
+
+  after Capture
+    -> 读取不可变 screenshot / DOM / visible_text / ui_snapshot
+    -> 判定 detection_status、page_type、page_state、confidence、risk_flags、matched_signals、candidate_actions
+    -> 按当前 task_id + agent_run_id + page_capture_id 写回
+    -> 适配为 Page Type Assessment
+    -> 构建 SurfaceObservation 与 FrontierSnapshot
+
+约束：
+  - detection_status 必须为 recognized，才可成为规则质检主页面；
+  - URL 只是页面事实元数据，不能代替 Capture 或稳定状态指纹；
+  - state_version 由页面类型、状态、关键结构和风险信号稳定计算；
+  - candidate_id 绑定来源 state_version、动作语义、目标语义和预期页面类型；
+  - navigation_depth 是候选目标绝对层级，动作后禁止再次加一；
+  - visited_state_ids 与 executed_candidate_ids 随后继 Work 传播；
+  - 父 Work、父 Capture、before Capture、action_execution_id 构成可回放探索谱系。
+
+六、自动深度/广度探索循环
+
+  PostgreSQL Explorer Work Queue
+    -> H5 Runner 领取一条 WEB Exploration Work 并持有可续租 lease
+    -> Explorer 从当前 Frontier 选择一个未执行安全候选
+    -> Policy / Risk / Evidence Exit Gate 校验
+    -> before Capture
+    -> 单个 Web Action
+    -> after Capture
+    -> Page Detection 与 Page Type Assessment 入库
+    -> 在父 Work 活 lease 下原子提交后继 Work
+    -> 继续当前分支下钻，或返回父层补齐其他候选
+
+停止条件：
+  completed
+  bounded
+  budget_exhausted
+  blocked
+  no_progress
+  requires_auth
+  retry_wait / failed
+
+只有页面识别成功、根层无剩余安全候选且不需要认证时，才形成 completed。
+Explorer 局部终态不等于 Task 已完成；Runtime 仍需排空可处理 Probe、关闭 Surface Session，再进入证据交接。
+
+七、Session 关闭后的统一证据交接门禁
+
+H5 Runtime 无论成功或失败都必须尝试有序关闭 Surface Session。
+Worker 只有在 Runtime 返回 completed 或 incomplete 可收口结果后才执行 H5 Evidence Handoff；Runtime error/canceled 直接保留原始根因并结束，禁止用二次证据错误覆盖。
+
+证据门禁查询必须精确限定：
+  - 当前 task_id；
+  - 当前 agent_run_id；
+  - surface_kind=web；
+  - capture_status=captured；
+  - 未 superseded / abandoned；
+  - 主页面 Capture 的真实角色为 after_action；
+  - after Capture 已 recognized 且 page_type 非空；
+  - after Capture 同时存在 screenshot + DOM；
+  - before Capture 与 after Capture 属于同一 action_execution_id；
+  - after.parent_capture_id 指向 before Capture；
+  - before Capture 的真实角色为 before_action；
+  - before Capture 同时存在 screenshot + DOM；
+  - 操作前 URL 与操作后 URL 均非空。
+
+门禁失败：
+  -> Run 失败关闭或保持人工复核语义
+  -> 不发布 Inspection Work Item
+  -> 不执行 Rule Judge
+  -> 不写正式规则结果
+  -> 不生成报告
+
+门禁摘要只写 evidence_ready、可判定 Capture 数、页面类型数和发布工作项数；Redis 不保存截图、DOM 或页面原文。
+
+八、execution_mode 分流
+
+A. full_inspection 完整质检
+
+  共同探索主链
+    -> Runtime 排空可处理 Probe
+    -> Surface Session draining / closing / closed 或 lost
+    -> H5 Evidence Handoff Gate
+    -> 按 after Capture 的 page_type + page_state 匹配任务锁定规则集
+    -> 只发布 snapshot_only=true 的正式 Inspection Work Item
+    -> 统计并过滤必须依赖活动 Session 的规则，禁止 Session 关闭后伪造覆盖
+    -> 排空 Snapshot Inspection Work
+    -> Rule Judge 只消费不可变 Capture / Observation Packet
+    -> 正式结果写入 qc_rule_execution
+    -> 缺失或非终态结果按证据不足/人工复核规则收口
+    -> Completion Gate
+    -> Gate 通过后生成并绑定 sealed Report
+
+注意：若规则必须在活动 Session 内补采，而当前流程已经关闭 Session，该规则不能假装已执行；被过滤规则数写入 Run usage，完整质检明确转为 needs_review/incomplete，再由 Completion Gate 保持人工复核语义。
+
+B. exploration_only 仅页面探索
+
+  共同探索主链
+    -> Runtime 排空可处理 Probe
+    -> Surface Session 有序关闭
+    -> H5 Evidence Handoff Gate
+    -> evidence_ready=true
+    -> 记录可判定 Capture 数和页面类型数
+    -> 不发布 Inspection Work Item
+    -> 不调用 Rule Judge
+    -> 不写 qc_rule_execution
+    -> 不运行 Completion Gate
+    -> 不生成 preview/final/sealed Report
+    -> 直接持久化 Agent Run 与 Task 终态
+
+仅探索完成后，可调用独立规则测试接口重复判定既有证据。独立结果与正式结果物理隔离，不能成为正式报告数据源。
+
+九、自动登录能力边界
+
+H5 V2 支持可配置、受控的主动密码登录；App、Web 桌面端和 H5 V1 不在本能力范围内。默认开关关闭，关闭时保持原流程。
+
+启用配置：
+  ALIOTH_H5_AUTH_ENABLED=true
+  ALIOTH_H5_AUTH_CONFIG_PATH=<Worker 可读的 JSON 文件>
+
+配置文件使用 h5-auth-config.v1：
+  - global 保存全局通用手机号和密码；
+  - domains 按规范化后的精确 H5 hostname 保存覆盖账号；
+  - 同一任务先匹配精确域名，未命中再使用 global；
+  - 配置文件中的账号密码为明文，但不得提交 Git，且只能由 Worker 进程账号读取；
+  - 任务创建接口、task_config、Redis 和数据库均不接收或保存账号密码正文。
+
+主动登录状态机发生在初始导航之后、正式根 Frontier 之前：
+
+  初始安全 Capture
+    -> 分析当前页是否已经是登录页
+    -> 否则识别“我的 / Profile / 账户”入口并受控点击
+    -> Profile 已登录：already_authenticated，不重复提交
+    -> Profile 未登录：识别登录按钮并进入登录页
+    -> 验证码页存在“密码登录 / 账号登录”：受控切换密码模式
+    -> 唯一手机号框 + 唯一密码框 + 唯一登录按钮
+    -> Secret Runtime 自动填写手机号、密码并点击登录
+    -> 清空残留输入字段后重新观察
+    -> 回到 Profile 验证稳定已登录标记
+    -> 返回任务原始 URL
+    -> 创建正式根 Frontier
+
+秘密边界：
+  - LLM、Explorer、ActionIntent、普通 INPUT Tool 和 Surface Phase 账本只能看到页面语义与脱敏原因码，不能看到手机号或密码；
+  - Secret Runtime 只在同一 Session Gate 和浏览器锁内短暂解开配置值；
+  - 从填写开始到字段清理结束不得进行 Screenshot、DOM、visible_text、ui_snapshot、HAR、console 或 action_trace 持久化；
+  - 秘密窗口会静默并清空浏览器 console/network 内存缓冲；执行过秘密输入的 Session 在剩余生命周期内持续静默这两类观察器，避免延迟事件泄露；字段无法确认清空时立即终止当前会话，禁止后续 Capture；
+  - 登录页面、表单提交请求和提交后页面 hostname 必须与任务原始 hostname 完全一致；global 不是跨域授权；
+  - 自动读取、发送或识别短信、邮件、图形验证码，以及 MFA、扫码、OAuth、设备确认和人工授权仍然禁止。
+
+结果边界：
+  - already_authenticated / authenticated：按登录后的根页面继续正式探索；
+  - guest_only / failed：返回根页面后仅探索游客可达范围，Run 固定为 incomplete/needs_review；
+  - needs_review 不进入 Evidence Handoff、Rule Judge、Completion Gate 或 sealed Report；
+  - 认证中间 before/after Capture 仅由 h5_auth_bootstrap Surface Phase 引用，Evidence Handoff 必须排除；只有 return_to_task_root 的安全 after Capture 可成为正式根页面证据；
+  - 每个任务最多提交一次密码；恢复时发现 credential_submit_planned/result 后禁止盲目重提。
+
+十、最终业务 Workflow
+
+POST /api/v2/tasks
+  -> execution_mode=full_inspection
+  -> H5 V2 Explorer Runtime
+  -> 可选 H5 Authentication Bootstrap（主动检查并自动密码登录）
+  -> 返回任务原始 URL，生成正式根 Capture
+  -> before/action/after 双采
+  -> 截图 + DOM + 操作前后 URL 入库
+  -> 每轮 after Capture 页面类型判定入库
+  -> 有界深度优先 + 覆盖缺口广度补齐
+  -> Explorer 局部终态
+  -> Session 关闭
+  -> 前后双采 Evidence Handoff Gate
+  -> Snapshot Inspection Work Item
+  -> Rule Judge
+  -> qc_rule_execution
+  -> Completion Gate
+  -> sealed Report
+
+POST /api/v2/exploration-tasks
+  -> execution_mode=exploration_only
+  -> 同一 H5 V2 Explorer Runtime
+  -> 同一可选 H5 Authentication Bootstrap
+  -> 同一认证结果与游客降级门禁
+  -> 同一 before/action/after 双采
+  -> 同一截图 + DOM + 操作前后 URL 入库
+  -> 同一页面类型判定与探索谱系入库
+  -> Explorer 局部终态
+  -> Session 关闭
+  -> 同一前后双采 Evidence Handoff Gate
+  -> evidence_ready
+  -> Task/Run 结束
+  -> 不执行规则、不生成报告
+
+POST /api/v2/tasks/{task_id}/rule-evaluation-runs
+  -> 读取上述既有证据
+  -> 独立 Rule Judge
+  -> qc_rule_evaluation_run
+  -> 不覆盖正式 qc_rule_execution
+  -> 不影响 Completion Gate / sealed Report
+
+十一、部署验收
+
+代码级验收：API 模式锁定、Worker 分流、前后双采门禁、页面判定、正式结果隔离和前端调用必须有自动化测试。
+
+集成验收：在隔离 PostgreSQL + Redis + Playwright + 证据存储环境执行：
+  1. alembic upgrade head，确认 head=20260812_0047；
+  2. 设置 ALIOTH_H5_V2_MODE=on；
+  3. 提交一条 H5 仅探索任务，确认有 before/after screenshot、DOM、URL 和 page_type，且没有 qc_rule_execution/报告；
+  4. 提交一条 H5 完整质检任务，确认生成正式工作项、qc_rule_execution，并由 Completion Gate 决定是否 sealed；
+  5. 对仅探索任务发起独立规则测试，确认只新增 qc_rule_evaluation_run；
+  6. 保持 ALIOTH_H5_AUTH_ENABLED=false，确认原有 H5 V2 行为不变；
+  7. 启用 H5 Auth 配置，分别验证已登录 Session 不重提、Profile 未登录可自动进入密码页、精确域名覆盖 global、密码登录成功后回到根 URL；
+  8. 使用纯验证码/MFA/扫码页面确认不处理挑战、游客范围可继续探索且 Run 为 incomplete/needs_review；
+  9. 检查数据库、Redis、日志、Capture artifacts、console/network/action trace 均不存在配置中的手机号和密码，并确认认证中间 Capture 不进入 Evidence Handoff。
+
+未完成真实依赖冒烟时，只能宣称代码和自动化测试闭环，不能宣称生产环境已经闭环。

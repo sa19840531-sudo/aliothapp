@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>玉衡规则终态验收页</title>
+    <style>
+      body {
+        margin: 0;
+        background: #f5f7fb;
+        color: #172033;
+        font-family: Arial, "Microsoft YaHei", sans-serif;
+      }
+      main { max-width: 760px; margin: auto; padding: 40px 24px; }
+      .card {
+        padding: 24px;
+        border: 1px solid #d8deea;
+        border-radius: 12px;
+        background: white;
+      }
+      .overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 100;
+        display: grid;
+        place-items: center;
+        background: rgb(8 15 28 / 70%);
+      }
+      .dialog {
+        position: relative;
+        width: min(420px, calc(100vw - 40px));
+        padding: 28px;
+        border-radius: 14px;
+        background: white;
+      }
+      .dialog-close {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: 44px;
+        height: 44px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>推荐内容</h1>
+      <section class="card">
+        <h2>终态验收内容</h2>
+        <p>页面加载正常，内容完整展示，无需继续导航。</p>
+        <p>优惠价 ¥8.8，原价 ¥10。</p>
+      </section>
+    </main>
+    <div class="overlay" id="ad-overlay">
+      <section class="dialog" role="dialog" aria-modal="true" aria-label="广告弹窗测试">
+        <button class="dialog-close" id="ad-close" type="button" aria-label="关闭广告">×</button>
+        <h2>广告弹窗测试</h2>
+        <p>这是用于真实浏览器终态验收的安全弹窗。</p>
+      </section>
+    </div>
+    <script>
+      document.querySelector('#ad-close')?.addEventListener('click', () => {
+        document.querySelector('#ad-overlay')?.remove()
+      })
+    </script>
+  </body>
+</html>

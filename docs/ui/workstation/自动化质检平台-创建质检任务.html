@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>自动化质检平台 - 任务创建</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Noto Sans SC', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            surface: {
+              900: '#0B0F19',
+              800: '#111827',
+              700: '#1A2234',
+              600: '#243044',
+              500: '#2D3E56',
+            },
+            accent: {
+              400: '#38BDF8',
+              500: '#0EA5E9',
+              600: '#0284C7',
+            },
+            risk: {
+              high: '#EF4444',
+              medium: '#F59E0B',
+              low: '#22C55E',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Noto Sans SC', system-ui, sans-serif;
+      background-color: #0B0F19;
+      color: #E2E8F0;
+    }
+    .glass-panel {
+      background: rgba(17, 24, 39, 0.85);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(56, 189, 248, 0.08);
+    }
+    .glass-panel-hover:hover {
+      border-color: rgba(56, 189, 248, 0.2);
+      box-shadow: 0 0 30px rgba(56, 189, 248, 0.06);
+    }
+    .glow-text {
+      text-shadow: 0 0 20px rgba(56, 189, 248, 0.3);
+    }
+    .risk-high { color: #EF4444; }
+    .risk-medium { color: #F59E0B; }
+    .risk-low { color: #22C55E; }
+    .bg-risk-high { background-color: rgba(239, 68, 68, 0.12); }
+    .bg-risk-medium { background-color: rgba(245, 158, 11, 0.12); }
+    .bg-risk-low { background-color: rgba(34, 197, 94, 0.12); }
+    .scrollbar-hide::-webkit-scrollbar { display: none; }
+    .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+    .timeline-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      position: relative;
+      z-index: 2;
+    }
+    .timeline-line {
+      position: absolute;
+      left: 4px;
+      top: 14px;
+      width: 2px;
+      height: calc(100% - 10px);
+      background: linear-gradient(to bottom, rgba(56, 189, 248, 0.4), rgba(56, 189, 248, 0.05));
+    }
+    .input-field {
+      background: rgba(26, 34, 52, 0.8);
+      border: 1px solid rgba(56, 189, 248, 0.12);
+      transition: all 0.2s ease;
+    }
+    .input-field:focus {
+      border-color: rgba(56, 189, 248, 0.4);
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.08);
+      outline: none;
+    }
+    .radio-card {
+      border: 1px solid rgba(56, 189, 248, 0.1);
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+    .radio-card:hover {
+      border-color: rgba(56, 189, 248, 0.25);
+    }
+    .radio-card.active {
+      border-color: rgba(56, 189, 248, 0.5);
+      background: rgba(56, 189, 248, 0.06);
+    }
+    .preview-item {
+      position: relative;
+      padding-left: 24px;
+    }
+    .preview-item::before {
+      content: '';
+      position: absolute;
+      left: 6px;
+      top: 8px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #38BDF8;
+    }
+    .preview-item:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      left: 9px;
+      top: 20px;
+      width: 2px;
+      height: calc(100% - 4px);
+      background: linear-gradient(to bottom, rgba(56, 189, 248, 0.3), transparent);
+    }
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+    .animate-pulse-slow {
+      animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-surface-900">
+  <!-- 顶部导航栏 -->
+  <header class="fixed top-0 left-0 right-0 z-50 glass-panel border-b border-accent-400/10">
+    <div class="flex items-center justify-between h-14 px-6">
+      <!-- Logo -->
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-accent-500 to-accent-600 flex items-center justify-center">
+          <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+        </div>
+        <span class="text-base font-bold text-white tracking-wide">AQC自动化质检平台</span>
+      </div>
+
+      <!-- 导航 -->
+      <nav class="flex items-center gap-1">
+        <a href="#" class="px-4 py-2 text-sm font-medium text-slate-400 hover:text-white rounded-lg hover:bg-white/5 transition-colors">工作台</a>
+        <a href="#" class="px-4 py-2 text-sm font-medium text-slate-400 hover:text-white rounded-lg hover:bg-white/5 transition-colors">任务中心</a>
+        <a href="#" class="px-4 py-2 text-sm font-medium text-slate-400 hover:text-white rounded-lg hover:bg-white/5 transition-colors">页面识别</a>
+        <a href="#" class="px-4 py-2 text-sm font-medium text-accent-400 bg-accent-400/10 rounded-lg">配置中心</a>
+        <a href="#" class="px-4 py-2 text-sm font-medium text-slate-400 hover:text-white rounded-lg hover:bg-white/5 transition-colors">报告中心</a>
+      </nav>
+
+      <!-- 用户信息 -->
+      <div class="flex items-center gap-4">
+        <button class="relative p-2 text-slate-400 hover:text-white rounded-lg hover:bg-white/5 transition-colors">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+          </svg>
+          <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-risk-high rounded-full"></span>
+        </button>
+        <div class="flex items-center gap-3">
+          <div class="text-right">
+            <div class="text-sm font-medium text-white">张经理</div>
+            <div class="text-xs text-slate-500">产品经理</div>
+          </div>
+          <div class="w-9 h-9 rounded-full bg-gradient-to-br from-accent-500 to-accent-600 flex items-center justify-center text-sm font-bold text-white">张</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- 主体内容 -->
+  <main class="pt-14 min-h-screen">
+    <div class="max-w-[1440px] mx-auto px-6 py-8">
+      <!-- 页面标题 -->
+      <div class="mb-8">
+        <div class="flex items-center gap-3 mb-2">
+          <a href="#" class="text-sm text-slate-500 hover:text-accent-400 transition-colors">任务中心</a>
+          <svg class="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+          </svg>
+          <span class="text-sm text-slate-400">创建质检任务</span>
+        </div>
+        <h1 class="text-3xl font-bold text-white glow-text">创建质检任务</h1>
+        <p class="text-slate-400 mt-2 text-sm">配置任务参数，预览执行范围，一键发起自动化质检</p>
+      </div>
+
+      <!-- 左右分栏布局 -->
+      <div class="flex gap-6">
+        <!-- 左侧：创建表单区 (2/3) -->
+        <div class="flex-[2] space-y-6">
+          <!-- 基本信息卡片 -->
+          <div class="glass-panel rounded-2xl p-6 glass-panel-hover transition-all">
+            <div class="flex items-center gap-3 mb-6">
+              <div class="w-8 h-8 rounded-lg bg-accent-500/15 flex items-center justify-center">
+                <svg class="w-4 h-4 text-accent-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+              </div>
+              <h2 class="text-lg font-bold text-white">基本信息</h2>
+            </div>
+
+            <div class="space-y-5">
+              <!-- 任务名称 -->
+              <div>
+                <label class="block text-sm font-medium text-slate-300 mb-2">任务名称 <span class="text-risk-high">*</span></label>
+                <input type="text" placeholder="请输入任务名称，如：电商大促页面质检" 
+                  class="input-field w-full px-4 py-3 rounded-xl text-sm text-white placeholder-slate-500" value="电商大促H5页面全链路质检">
+              </div>
+
+              <!-- 目标链接 -->
+              <div>
+                <label class="block text-sm font-medium text-slate-300 mb-2">目标链接 <span class="text-risk-high">*</span></label>
+                <div class="relative">
+                  <input type="text" placeholder="https://example.com" 
+                    class="input-field w-full px-4 py-3 pl-11 rounded-xl text-sm text-white placeholder-slate-500" value="https://m.shop.example.com/home">
+                  <svg class="absolute left-3.5 top-3.5 w-4 h-4 text-accent-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
+                  </svg>
+                </div>
+                <div class="flex items-center gap-2 mt-2">
+                  <svg class="w-3.5 h-3.5 text-risk-low" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                  </svg>
+                  <span class="text-xs text-risk-low">URL格式正确，可正常访问</span>
+                </div>
+              </div>
+
+              <!-- 用户旅程 -->
+              <div>
+                <label class="block text-sm font-medium text-slate-300 mb-2">用户旅程 <span class="text-risk-high">*</span></label>
+                <div class="relative">
+                  <select class="input-field w-full px-4 py-3 rounded-xl text-sm text-white appearance-none cursor-pointer">
+                    <option>电商购物流程 - 首页→搜索→商品详情→购物车→结算</option>
+                    <option>用户注册流程 - 首页→注册页→验证→完成</option>
+                    <option>内容浏览流程 - 首页→频道→文章→评论</option>
+                    <option>订单售后流程 - 我的→订单→申请售后→填写→提交</option>
+                  </select>
+                  <svg class="absolute right-3.5 top-3.5 w-4 h-4 text-slate-500 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                  </svg>
+                </div>
+                <div class="flex items-center gap-2 mt-2">
+                  <span class="text-xs text-slate-500">已选择：</span>
+                  <span class="tag bg-accent-400/10 text-accent-400">电商购物流程</span>
+                  <span class="text-xs text-slate-500">包含 5 个页面节点</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 质检模式卡片 -->
+          <div class="glass-panel rounded-2xl p-6 glass-panel-hover transition-all">
+            <div class="flex items-center gap-3 mb-6">
+              <div class="w-8 h-8 rounded-lg bg-accent-500/15 flex items-center justify-center">
+                <svg class="w-4 h-4 text-accent-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
+                </svg>
+              </div>
+              <h2 class="text-lg font-bold text-white">质检模式</h2>
+            </div>
+
+            <div class="grid grid-cols-3 gap-4">
+              <!-- 完整巡检 -->
+              <div class="radio-card active rounded-xl p-4">
+                <div class="flex items-start gap-3">
+                  <div class="w-5 h-5 rounded-full border-2 border-accent-400 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <div class="w-2.5 h-2.5 rounded-full bg-accent-400"></div>
+                  </div>
+                  <div>
+                    <div class="text-sm font-semibold text-white mb-1">完整巡检</div>
+                    <div class="text-xs text-slate-400 leading-relaxed">执行全部规则，覆盖所有页面类型，生成完整报告</div>
+                    <div class="flex items-center gap-2 mt-3">
+                      <span class="tag bg-surface-600 text-slate-300">预计 15-20 分钟</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 快速扫描 -->
+              <div class="radio-card rounded-xl p-4">
+                <div class="flex items-start gap-3">
+                  <div class="w-5 h-5 rounded-full border-2 border-slate-600 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  </div>
+                  <div>
+                    <div class="text-sm font-semibold text-white mb-1">快速扫描</div>
+                    <div class="text-xs text-slate-400 leading-relaxed">仅执行核心规则，快速发现高风险问题</div>
+                    <div class="flex items-center gap-2 mt-3">
+                      <span class="tag bg-surface-600 text-slate-300">预计 3-5 分钟</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 自定义规则 -->
+              <div class="radio-card rounded-xl p-4">
+                <div class="flex items-start gap-3">
+                  <div class="w-5 h-5 rounded-full border-2 border-slate-600 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  </div>
+                  <div>
+                    <div class="text-sm font-semibold text-white mb-1">自定义规则</div>
+                    <div class="text-xs text-slate-400 leading-relaxed">手动选择要执行的规则组合</div>
+                    <div class="flex items-center gap-2 mt-3">
+                      <span class="tag bg-surface-600 text-slate-300">自定义时长</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 备注 -->
+          <div class="glass-panel rounded-2xl p-6 glass-panel-hover transition-all">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="w-8 h-8 rounded-lg bg-accent-500/15 flex items-center justify-center">
+                <svg class="w-4 h-4 text-accent-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                </svg>
+              </div>
+              <h2 class="text-lg font-bold text-white">备注说明</h2>
+            </div>
+            <textarea placeholder="添加任务备注，如：重点关注支付流程的异常处理、优惠券弹窗的展示逻辑..." 
+              class="input-field w-full px-4 py-3 rounded-xl text-sm text-white placeholder-slate-500 resize-none h-24">重点关注大促期间优惠券弹窗的展示逻辑和倒计时准确性，以及支付流程中异常状态的页面反馈。</textarea>
+          </div>
+
+          <!-- 操作按钮 -->
+          <div class="flex items-center gap-4 pt-2">
+            <button class="flex-1 bg-gradient-to-r from-accent-500 to-accent-600 hover:from-accent-400 hover:to-accent-500 text-white font-semibold py-3.5 px-6 rounded-xl transition-all shadow-lg shadow-accent-500/20 flex items-center justify-center gap-2">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+              </svg>
+              创建任务
+            </button>
+            <button class="px-6 py-3.5 rounded-xl border border-slate-600 text-slate-300 font-medium hover:border-slate-500 hover:text-white transition-all">
+              保存草稿
+            </button>
+          </div>
+        </div>
+
+        <!-- 右侧：执行范围预览区 (1/3) -->
+        <div class="flex-1 space-y-6">
+          <!-- 预览卡片 -->
+          <div class="glass-panel rounded-2xl p-6 sticky top-20">
+            <div class="flex items-center justify-between mb-6">
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-accent-500/15 flex items-center justify-center">
+                  <svg class="w-4 h-4 text-accent-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                  </svg>
+                </div>
+                <h2 class="text-lg font-bold text-white">执行范围预览</h2>
+              </div>
+              <span class="tag bg-accent-400/10 text-accent-400 text-xs">实时更新</span>
+            </div>
+
+            <!-- 页面访问路径 -->
+            <div class="mb-6">
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="text-sm font-semibold text-slate-300">页面访问路径</h3>
+                <span class="text-xs text-slate-500">5 个页面</span>
+              </div>
+              <div class="space-y-0">
+                <div class="preview-item py-3">
+                  <div class="flex items-center justify-between">
+                    <div>
+                      <div class="text-sm font-medium text-white">首页</div>
+                      <div class="text-xs text-slate-500 mt-0.5">/home</div>
+                    </div>
+                    <span class="tag bg-surface-600 text-slate-400 text-xs">入口页</span>
+                  </div>
+                </div>
+                <div class="preview-item py-3">
+                  <div class="flex items-center justify-between">
+                    <div>
+                      <div class="text-sm font-medium text-white">搜索页</div>
+                      <div class="text-xs text-slate-500 mt-0.5">/search?q=...</div>
+                    </div>
+                    <span class="tag bg-surface-600 text-slate-400 text-xs">交互页</span>
+                  </div>
+                </div>
+                <div class="preview-item py-3">
+                  <div class="flex items-center justify-between">
+                    <div>
+                      <div class="text-sm font-medium text-white">商品详情</div>
+                      <div class="text-xs text-slate-500 mt-0.5">/product/:id</div>
+                    </div>
+                    <span class="tag bg-surface-600 text-slate-400 text-xs">核心页</span>
+                  </div>
+                </div>
+                <div class="preview-item py-3">
+                  <div class="flex items-center justify-between">
+                    <div>
+                      <div class="text-sm font-medium text-white">购物车</div>
+                      <div class="text-xs text-slate-500 mt-0.5">/cart</div>
+                    </div>
+                    <span class="tag bg-surface-600 text-slate-400 text-xs">转化页</span>
+                  </div>
+                </div>
+                <div class="preview-item py-3">
+                  <div class="flex items-center justify-between">
+                    <div>
+                      <div class="text-sm font-medium text-white">订单确认</div>
+                      <div class="text-xs text-slate-500 mt-0.5">/checkout</div>
+                    </div>
+                    <span class="tag bg-risk-high/20 text-risk-high text-xs">关键页</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 分割线 -->
+            <div class="h-px bg-gradient-to-r from-transparent via-slate-700 to-transparent my-6"></div>
+
+            <!-- 质检项清单 -->
+            <div>
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="text-sm font-semibold text-slate-300">质检项清单</h3>
+                <span class="text-xs text-slate-500">12 项规则</span>
+              </div>
+              <div class="space-y-2">
+                <div class="flex items-center gap-3 p-2.5 rounded-lg bg-surface-700/50">
+                  <div class="w-6 h-6 rounded-md bg-accent-400/15 flex items-center justify-center flex-shrink-0">
+                    <svg class="w-3.5 h-3.5 text-accent-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                    </svg>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div class="text-sm text-white truncate">页面加载性能</div>
+                    <div class="text-xs text-slate-500">加载时间 &lt; 3s</div>
+                  </div>
+                  <span class="tag bg-risk-low/15 text-risk-low text-xs">通过</span>
+                </div>
+                <div class="flex items-center gap-3 p-2.5 rounded-lg bg-surface-700/50">
+                  <div class="w-6 h-6 rounded-md bg-accent-400/15 flex items-center justify-center flex-shrink-0">
+                    <svg class="w-3.5 h-3.5 text-accent-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+                    </svg>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div class="text-sm text-white truncate">元素完整性检查</div>
+                    <div class="text-xs text-slate-500">关键元素存在性</div>
+                  </div>
+                  <span class="tag bg-risk-low/15 text-risk-low text-xs">通过</span>
+                </div>
+                <div class="flex items-center gap-3 p-2.5 rounded-lg bg-surface-700/50">
+                  <div class="w-6 h-6 rounded-md bg-accent-400/15 flex items-center justify-center flex-shrink-0">
+                    <svg class="w-3.5 h-3.5 text-accent-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
+                    </svg>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div class="text-sm text-white truncate">链接可用性检测</div>
+                    <div class="text-xs text-slate-500">死链 & 跳转异常</div>
+                  </div>
+                  <span class="tag bg-risk-low/15 text-risk-low text-xs">通过</span>
+                </div>
+                <div class="flex items-center gap-3 p-2.5 rounded-lg bg-surface-700/50">
+                  <div class="w-6 h-6 rounded-md bg-accent-400/15 flex items-center justify-center flex-shrink-0">
+                    <svg class="w-3.5 h-3.5 text-accent-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div class="text-sm text-white truncate">倒计时准确性</div>
+                    <div class="text-xs text-slate-500">时间同步校验</div>
+                  </div>
+                  <span class="tag bg-risk-medium/15 text-risk-medium text-xs">关注</span>
+                </div>
+                <div class="flex items-center gap-3 p-2.5 rounded-lg bg-surface-700/50">
+                  <div class="w-6 h-6 rounded-md bg-accent-400/15 flex items-center justify-center flex-shrink-0">
+                    <svg class="w-3.5 h-3.5 text-accent-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                    </svg>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div class="text-sm text-white truncate">支付安全校验</div>
+                    <div class="text-xs text-slate-500">SSL & 加密检测</div>
+                  </div>
+                  <span class="tag bg-risk-high/15 text-risk-high text-xs">关键</span>
+                </div>
+              </div>
+              <button class="w-full mt-3 py-2 text-xs text-accent-400 hover:text-accent-300 transition-colors flex items-center justify-center gap-1">
+                查看全部 12 项规则
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                </svg>
+              </button>
+            </div>
+
+            <!-- 预估信息 -->
+            <div class="mt-6 p-4 rounded-xl bg-surface-700/30 border border-slate-700/50">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs text-slate-400">预计执行时间</span>
+                <span class="text-sm font-semibold text-white">15-20 分钟</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-xs text-slate-400">预计生成报告</span>
+                <span class="text-sm font-semibold text-white">完整报告</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

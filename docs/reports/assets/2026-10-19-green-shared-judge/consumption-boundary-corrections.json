@@ -1,0 +1,16 @@
+{
+  "first_combined": {
+    "passed": 1031,
+    "failed": 1,
+    "skipped": 3,
+    "reason": "旧聚合单测只查SQL字面量；复核原因改为参数后须断言实际绑定值，未改变旧规则复核行为",
+    "log": "consumption-combined-first.log"
+  },
+  "navigation_correction": {
+    "rejected_inference": "element scrollWidth overflow proves text clipping",
+    "counterexample": "CSS pseudo decoration can overflow while all actual text fits",
+    "remaining_gap": "actual text bounds",
+    "test": "test_pseudo_decoration_overflow_does_not_prove_navigation_text_is_clipped",
+    "fixture_adjustment": "首次回归HTML未使容器进入原采集快照；改用既有可采节点形式，不改生产器"
+  }
+}

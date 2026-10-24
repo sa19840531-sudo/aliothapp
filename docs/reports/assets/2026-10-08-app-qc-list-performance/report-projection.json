@@ -1,0 +1,253 @@
+{
+  "task_id": "97ae1d9c-ebb3-46cb-80f0-491f449c05bc",
+  "checked_at": "2026-10-08",
+  "mode": "线上数据库只读，修复共享分类与原因SQL仅在独立诊断进程加载，未替换服务",
+  "before": {
+    "summary": {
+      "task_name": "黑料网app",
+      "task_id": "97ae1d9c-ebb3-46cb-80f0-491f449c05bc",
+      "target_url": null,
+      "task_status": "review",
+      "target_platform": "app",
+      "started_at": "2026-10-07 01:45:22.163902+00:00",
+      "finished_at": "2026-10-07 03:42:11.022116+00:00",
+      "created_at": "2026-10-07 01:45:22.040146+00:00",
+      "generated_at": "2026-10-07 03:42:11.022116+00:00",
+      "report_stage": "final_review",
+      "page_recognized_count": 40,
+      "total_rules": 343,
+      "evaluated_rules": 343,
+      "candidate_rule_count": 343,
+      "completed_candidate_rules": 343,
+      "full_rule_pass_rate": 17.8,
+      "qc_success_rate": 100.0,
+      "pass_rate": 100.0,
+      "candidate_execution_coverage": 100.0,
+      "ruleset_candidate_coverage": 100.0,
+      "confirmed_not_applicable_rules": 282,
+      "coverage_gap_rules": 0,
+      "run_id": "232220a5-716e-486a-96b8-6e7553cfef93",
+      "ruleset_code": "alioth_combo_26e316d6c5615043",
+      "ruleset_version": 1,
+      "ruleset_name": "1期质检规则集 + 2期质检规则集 + 3期瑞升质检规则集",
+      "ruleset_rule_total": 73
+    },
+    "rule_execution_count": 343,
+    "execution_status_counts": {
+      "passed": 61,
+      "not_applicable": 282
+    },
+    "unique_rule_count": 20,
+    "unique_rule_status_counts": {
+      "passed": 11,
+      "not_applicable": 9
+    },
+    "unique_rules": [
+      {
+        "rule_code": "alioth_spec_31",
+        "display_status": "passed"
+      },
+      {
+        "rule_code": "alioth_15",
+        "display_status": "not_applicable"
+      },
+      {
+        "rule_code": "alioth_spec_35",
+        "display_status": "passed"
+      },
+      {
+        "rule_code": "alioth_40",
+        "display_status": "not_applicable"
+      },
+      {
+        "rule_code": "alioth_spec_new_4",
+        "display_status": "passed"
+      },
+      {
+        "rule_code": "alioth_spec_new_20",
+        "display_status": "not_applicable"
+      },
+      {
+        "rule_code": "alioth_12",
+        "display_status": "passed"
+      },
+      {
+        "rule_code": "alioth_13",
+        "display_status": "not_applicable"
+      },
+      {
+        "rule_code": "alioth_ops_3",
+        "display_status": "not_applicable"
+      },
+      {
+        "rule_code": "alioth_ops_9",
+        "display_status": "passed"
+      },
+      {
+        "rule_code": "alioth_ops_10",
+        "display_status": "passed"
+      },
+      {
+        "rule_code": "alioth_ops_4",
+        "display_status": "not_applicable"
+      },
+      {
+        "rule_code": "alioth_ops_6",
+        "display_status": "not_applicable"
+      },
+      {
+        "rule_code": "alioth_20",
+        "display_status": "passed"
+      },
+      {
+        "rule_code": "alioth_24",
+        "display_status": "passed"
+      },
+      {
+        "rule_code": "alioth_23",
+        "display_status": "not_applicable"
+      },
+      {
+        "rule_code": "alioth_spec_72",
+        "display_status": "passed"
+      },
+      {
+        "rule_code": "alioth_26",
+        "display_status": "not_applicable"
+      },
+      {
+        "rule_code": "alioth_44",
+        "display_status": "passed"
+      },
+      {
+        "rule_code": "alioth_21",
+        "display_status": "passed"
+      }
+    ]
+  },
+  "after": {
+    "summary": {
+      "task_name": "黑料网app",
+      "task_id": "97ae1d9c-ebb3-46cb-80f0-491f449c05bc",
+      "target_url": null,
+      "task_status": "review",
+      "target_platform": "app",
+      "started_at": "2026-10-07 01:45:22.163902+00:00",
+      "finished_at": "2026-10-07 03:42:11.022116+00:00",
+      "created_at": "2026-10-07 01:45:22.040146+00:00",
+      "generated_at": "2026-10-07 03:42:11.022116+00:00",
+      "report_stage": "final_review",
+      "page_recognized_count": 40,
+      "total_rules": 343,
+      "evaluated_rules": 80,
+      "candidate_rule_count": 343,
+      "completed_candidate_rules": 80,
+      "full_rule_pass_rate": 17.8,
+      "qc_success_rate": 23.3,
+      "pass_rate": 100.0,
+      "candidate_execution_coverage": 23.3,
+      "ruleset_candidate_coverage": 100.0,
+      "confirmed_not_applicable_rules": 19,
+      "coverage_gap_rules": 0,
+      "run_id": "232220a5-716e-486a-96b8-6e7553cfef93",
+      "ruleset_code": "alioth_combo_26e316d6c5615043",
+      "ruleset_version": 1,
+      "ruleset_name": "1期质检规则集 + 2期质检规则集 + 3期瑞升质检规则集",
+      "ruleset_rule_total": 73
+    },
+    "rule_execution_count": 343,
+    "execution_status_counts": {
+      "passed": 61,
+      "other": 263,
+      "not_applicable": 19
+    },
+    "unique_rule_count": 20,
+    "unique_rule_status_counts": {
+      "other": 16,
+      "not_applicable": 1,
+      "passed": 3
+    },
+    "unique_rules": [
+      {
+        "rule_code": "alioth_spec_31",
+        "display_status": "other"
+      },
+      {
+        "rule_code": "alioth_15",
+        "display_status": "other"
+      },
+      {
+        "rule_code": "alioth_spec_35",
+        "display_status": "other"
+      },
+      {
+        "rule_code": "alioth_40",
+        "display_status": "not_applicable"
+      },
+      {
+        "rule_code": "alioth_spec_new_4",
+        "display_status": "other"
+      },
+      {
+        "rule_code": "alioth_spec_new_20",
+        "display_status": "other"
+      },
+      {
+        "rule_code": "alioth_12",
+        "display_status": "passed"
+      },
+      {
+        "rule_code": "alioth_13",
+        "display_status": "other"
+      },
+      {
+        "rule_code": "alioth_ops_3",
+        "display_status": "other"
+      },
+      {
+        "rule_code": "alioth_ops_9",
+        "display_status": "other"
+      },
+      {
+        "rule_code": "alioth_ops_10",
+        "display_status": "other"
+      },
+      {
+        "rule_code": "alioth_ops_4",
+        "display_status": "other"
+      },
+      {
+        "rule_code": "alioth_ops_6",
+        "display_status": "other"
+      },
+      {
+        "rule_code": "alioth_20",
+        "display_status": "other"
+      },
+      {
+        "rule_code": "alioth_24",
+        "display_status": "passed"
+      },
+      {
+        "rule_code": "alioth_23",
+        "display_status": "other"
+      },
+      {
+        "rule_code": "alioth_spec_72",
+        "display_status": "other"
+      },
+      {
+        "rule_code": "alioth_26",
+        "display_status": "other"
+      },
+      {
+        "rule_code": "alioth_44",
+        "display_status": "other"
+      },
+      {
+        "rule_code": "alioth_21",
+        "display_status": "passed"
+      }
+    ]
+  }
+}

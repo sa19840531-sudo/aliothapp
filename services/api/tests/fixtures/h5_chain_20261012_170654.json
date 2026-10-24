@@ -1,0 +1,34 @@
+{
+  "batch": "20261012-170654",
+  "provenance": "本批只读证据与最近三轮根因对照；不是新验收结果",
+  "jha128": {
+    "source_capture_prefix": "284bb1a3",
+    "restored_capture_prefix": "b4a9d4eb",
+    "source_page_type": "home",
+    "restored_page_type": "video_list",
+    "logical_page_key": "logical:sha256:36ef8ad79eda8fd2eec91789de149738ec2995eed790c047a6e3f47534e1282e",
+    "transition_reason": "trusted_obstruction_clearance",
+    "source_document_identity": "sha256:6715f637fe41cf3e981106cc1454c5d8d9e165dbef28275737288ff90058dd13",
+    "restored_document_identity": "sha256:2e3c60ff83d302408bca3ca7f1662da77980d83db9bba0f216b3b0a3777e8af4",
+    "source_state_fingerprint": "sha256:ffad6fc11d96c05ef94638665ecd5add535d10c6bd0ffccc5929fbadb0b016df",
+    "restored_state_fingerprint": "sha256:58d89b9c8ded1ed9da46c9e73ecb91d11454579066d094f24218c6a3328282f5"
+  },
+  "jha204": {
+    "source_capture_prefix": "41a8c3ee",
+    "source_page_type": "content_list",
+    "restored_page_type": "content_detail",
+    "logical_page_key": "logical:sha256:5609b669ecb14d20e40b42201464d8a223497227f06bdcba867f382019d98466",
+    "unchanged_facts": ["document_identity", "logical_state_fingerprint", "dom", "visible_text"],
+    "document_identity": "sha256:8dbe5dc65d45a0ee5a81e94bf32f5928a20bdcaec6ef314cc680cd8e00e031db",
+    "state_fingerprint": "sha256:23647b3cbba6f3840a2601ae17c3934c1ba206e810d169216e390caf7fcea9b9",
+    "restored_capture_prefix": "c9fb6eff"
+  },
+  "yc003": {
+    "capture_prefix": "b4758a75",
+    "payment_selector": ".vip-section .button",
+    "snapshot_elements_retained": 150,
+    "snapshot_elements_removed": 133,
+    "http_402_calls": 57,
+    "physical_calls": 200
+  }
+}

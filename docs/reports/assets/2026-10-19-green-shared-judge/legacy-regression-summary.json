@@ -1,0 +1,37 @@
+{
+  "base_commit": "9021bd9a3fc5128cd09013f734fbe4eac5fb6d5d",
+  "fixture_boundary": "Controlled PNG and action records exercise real PostgreSQL repositories. No real device/browser/model/product run is claimed.",
+  "unit_regression": {
+    "log": "legacy-regression-final.log",
+    "passed": 579,
+    "skipped": 3,
+    "skip_reason": "Retired Mobile Demo scenarios only",
+    "test_files": 30
+  },
+  "postgres_combined_regression": {
+    "log": "legacy-postgres-regression-final.log",
+    "passed": 51,
+    "skipped": 0,
+    "test_files": 6,
+    "scope": "Existing five database groups plus new green TASK aggregate group"
+  },
+  "postgres_selector_regression": {
+    "log": "green-publication-postgres-second.log",
+    "passed": 1,
+    "skipped": 0,
+    "scope": "Formal prepare selection of all three members plus missing-Index disposition in a separate fresh Task"
+  },
+  "new_behavior_cases": {
+    "legacy_compatibility": 17,
+    "web_freeze": 6,
+    "formal_green_aggregate": 5,
+    "formal_green_selector": 1
+  },
+  "test_source_sha256": {
+    "services/api/tests/test_green_legacy_rule_compatibility.py": "d194bce1c8b5e8050b034f0c06d5d0bb83b8b4fda883b975080ce41b09932dbc",
+    "services/api/tests/test_green_web_inventory_freeze.py": "8bc65c80fc9c24b7aeb9d1f12e690ffbd51588524a7d137d52abc0fa425f864a",
+    "services/api/tests/test_green_aggregate_execution_postgres.py": "01d0c42bfb13feba3f588b09afd5ff84388a701486a31594acec2a61ec896d5a",
+    "services/api/tests/test_green_aggregate_publication_postgres.py": "2d9638f680f40c2feb131dc92e38bcdc40db2bd955a03083adc473fd166f7f30",
+    "services/api/tests/test_rule_judge.py": "8fdcd65e75f074c4d411f108e4e4364f94eb11505e4d0206952c500a5401064b"
+  }
+}

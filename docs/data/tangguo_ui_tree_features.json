@@ -1,0 +1,323 @@
+{
+  "schema_version": "app-ui-tree-features.v1",
+  "product_name": "糖果短剧",
+  "product_aliases": [
+    "糖果",
+    "糖果短剧",
+    "tangguo"
+  ],
+  "playbook_id": "tangguo",
+  "package_name": "com.alz7xm2.drama",
+  "package_hints": [
+    "com.alz7xm2.drama",
+    "tangguo",
+    "糖果",
+    "糖果短剧"
+  ],
+  "flow_order": [
+    "startup_ad",
+    "popup_ads",
+    "home_content_entry",
+    "home_top_category_tabs",
+    "comic_read",
+    "bottom_tabs",
+    "profile_wallet",
+    "payment_alipay"
+  ],
+  "note": "清障→影片→上方分类→（条件）漫画→底栏→钱包→支付宝 inspect_only；无专属编排；禁止绝对 px 主路径。",
+  "tangguo_flow": {
+    "enabled": true,
+    "payment_mode": "inspect_only",
+    "allow_pending_order_creation": false,
+    "payment_method": "alipay",
+    "budgets": {
+      "splash_dismiss_max": 3,
+      "popup_dismiss_max": 2,
+      "video_candidates_max": 2,
+      "back_home_max": 2,
+      "profile_scroll_max": 2,
+      "top_tab_visit_limit": 3,
+      "top_tab_scroll_max": 2,
+      "comic_candidates_max": 2,
+      "comic_read_swipes": 3,
+      "comic_swipe_ratio": 0.6,
+      "comic_back_home_max": 4,
+      "device_actions_max": 100,
+      "ai_calls_max": 50,
+      "recoveries_max": 4,
+      "retries_max": 3,
+      "wall_clock_timeout_sec": 3600,
+      "tab_device_actions_max": 40,
+      "tab_actions_per_tab": 4,
+      "final_home_back_max": 4,
+      "top_tab_device_actions_max": 18,
+      "comic_device_actions_max": 20,
+      "payment_device_actions_max": 15,
+      "payment_ai_calls_max": 12
+    },
+    "wallet_keywords": [
+      "钱包",
+      "錢包",
+      "我的钱包",
+      "我的錢包",
+      "余额",
+      "餘額",
+      "储值",
+      "儲值",
+      "充值",
+      "支付"
+    ],
+    "alipay_markers": ["支付宝", "支付寶", "Alipay", "alipay"],
+    "note": "指定支付宝不代表允许真实付款；漫画整任务最多一轮；默认不建待支付订单"
+  },
+  "home_top_category_tabs": {
+    "phase": "home_top_category_tabs",
+    "policy": "semantic_left_to_right",
+    "visit_limit": 3,
+    "scroll_max": 2,
+    "skip_labels": ["搜索", "签到", "余额", "金币", "广告"],
+    "ordered_tabs": [
+      {"label": "推荐", "aliases": ["推荐", "推薦"], "click": true, "slot_index": 0},
+      {"label": "原创", "aliases": ["原创", "原創"], "click": true, "slot_index": 1},
+      {"label": "短剧", "aliases": ["短剧", "短劇"], "click": true, "slot_index": 2},
+      {"label": "漫画", "aliases": ["漫画", "漫畫", "comic"], "click": true, "slot_index": 3}
+    ],
+    "note": "影片后先巡上方分类再底栏；完成后恢复原分类"
+  },
+  "comic_read": {
+    "phase": "comic_read",
+    "markers": ["漫画", "漫畫"],
+    "candidates_max": 2,
+    "read_swipes": 3,
+    "swipe_ratio": 0.6,
+    "back_home_max": 4,
+    "once_per_task": true,
+    "note": "详情介绍页滑不算阅读；整任务最多一轮"
+  },
+  "home_content_entry": {
+    "phase": "home_content_entry",
+    "policy": "semantic_watch_or_first_card",
+    "prefer_markers": [
+      "立即看",
+      "立即觀看",
+      "今日新剧",
+      "今日新劇"
+    ],
+    "forbid_markers": [
+      "签到",
+      "追剧",
+      "搜索",
+      "会员",
+      "金币",
+      "上方分类",
+      "上方分類",
+      "推荐",
+      "推薦",
+      "原创",
+      "原創",
+      "糖果魔改",
+      "成人短剧",
+      "国产必看"
+    ],
+    "first_card": {
+      "normalized_bounds": {
+        "left": 0.03,
+        "top": 0.56,
+        "right": 0.32,
+        "bottom": 0.78
+      },
+      "note": "今日新剧左卡相对区；避开顶栏／分类豆／底栏与飘条"
+    },
+    "evidence_page_types": [
+      "video_detail",
+      "content_detail",
+      "payment"
+    ],
+    "after_evidence": "back",
+    "after_entry": "bottom_tabs",
+    "note": "首页有影片入口先点进取证；完成后再底栏语意相对巡检"
+  },
+  "bottom_navigation": {
+    "phase": "bottom_tabs",
+    "policy": "semantic_icon_relative",
+    "layout": {
+      "slot_count": 5,
+      "clickable_slot_indexes": [0, 1, 2, 3, 4],
+      "forbidden_slot_indexes": [],
+      "y_normalized_fallback": 0.92,
+      "note": "五格等分；槽心约 x=0.1/0.3/0.5/0.7/0.9",
+      "slot_centers_norm": [0.1, 0.3, 0.5, 0.7, 0.9]
+    },
+    "match_fields": [
+      "semantic_target",
+      "metadata.content_desc",
+      "metadata.text",
+      "metadata.label",
+      "metadata.resource_id",
+      "metadata.ui_tree_text",
+      "metadata.accessibility_text"
+    ],
+    "bounds": {
+      "min_top": 0.84,
+      "max_bottom": 0.98
+    },
+    "visual_band": {
+      "min_top": 0.86,
+      "max_bottom": 0.955,
+      "note": "业务底栏触控带；不含系统手势条"
+    },
+    "discovery_sources": [
+      "ui_tree",
+      "accessibility",
+      "vision",
+      "promoted_coverage",
+      "promoted_bottom_nav"
+    ],
+    "visual_pixel_priority": true,
+    "ordered_tabs": [
+      {
+        "label": "首页",
+        "aliases": ["首页", "首頁", "主页", "主頁", "home"],
+        "slot_index": 0,
+        "icon_kind": "home",
+        "semantic_markers": ["首页", "主页", "home"],
+        "action": "tap_then_screenshot",
+        "click": true,
+        "page_types": ["home"],
+        "relative_slot": {"left": 0.0, "right": 0.2},
+        "tap_bounds": {
+          "left": 0.04,
+          "top": 0.88,
+          "right": 0.16,
+          "bottom": 0.945
+        }
+      },
+      {
+        "label": "剧库",
+        "aliases": ["剧库", "劇庫", "剧场", "劇場", "library"],
+        "slot_index": 1,
+        "icon_kind": "drama_library",
+        "semantic_markers": ["剧库", "剧场", "library"],
+        "action": "tap_then_screenshot",
+        "click": true,
+        "page_types": ["content_list", "video_list"],
+        "relative_slot": {"left": 0.2, "right": 0.4},
+        "tap_bounds": {
+          "left": 0.24,
+          "top": 0.88,
+          "right": 0.36,
+          "bottom": 0.945
+        }
+      },
+      {
+        "label": "投票",
+        "aliases": ["投票", "vote", "voting"],
+        "slot_index": 2,
+        "icon_kind": "vote_ballot",
+        "semantic_markers": ["投票", "vote"],
+        "action": "tap_then_screenshot",
+        "click": true,
+        "page_types": ["activity", "vote"],
+        "relative_slot": {"left": 0.4, "right": 0.6},
+        "tap_bounds": {
+          "left": 0.44,
+          "top": 0.88,
+          "right": 0.56,
+          "bottom": 0.945
+        }
+      },
+      {
+        "label": "专题",
+        "aliases": ["专题", "專題", "topic", "topics"],
+        "slot_index": 3,
+        "icon_kind": "topic_star",
+        "semantic_markers": ["专题", "topic"],
+        "action": "tap_then_screenshot",
+        "click": true,
+        "page_types": ["activity", "topic"],
+        "relative_slot": {"left": 0.6, "right": 0.8},
+        "tap_bounds": {
+          "left": 0.64,
+          "top": 0.88,
+          "right": 0.76,
+          "bottom": 0.945
+        }
+      },
+      {
+        "label": "我的",
+        "aliases": ["我的", "我", "mine", "profile", "me"],
+        "slot_index": 4,
+        "icon_kind": "person",
+        "semantic_markers": ["我的", "我", "mine", "me"],
+        "action": "tap_then_screenshot",
+        "click": true,
+        "page_types": ["profile"],
+        "relative_slot": {"left": 0.8, "right": 1.0},
+        "tap_bounds": {
+          "left": 0.84,
+          "top": 0.88,
+          "right": 0.96,
+          "bottom": 0.945
+        },
+        "note": "选中时常为黄实心人形"
+      }
+    ],
+    "forbid": [
+      "absolute_px_as_primary",
+      "system_gesture_bar",
+      "cloud_back_chevron_as_business_tab",
+      "hjll_default_labels",
+      "jinguo_six_slot_labels"
+    ]
+  },
+  "payment_channels": {
+    "phase": "payment_alipay",
+    "policy": "semantic_icon_relative",
+    "layout": {
+      "slot_count": 2,
+      "note": "钱包／充值页：微信｜支付宝 并排语意图标；左微信右支付宝；禁止只靠 OCR 绝对框"
+    },
+    "visual_band": {
+      "min_top": 0.70,
+      "max_bottom": 0.82,
+      "note": "渠道行相对带；避开方案卡与底部确认支付栏"
+    },
+    "ordered_channels": [
+      {
+        "label": "微信",
+        "aliases": ["微信", "微信支付", "WeChat", "wechat", "Weixin"],
+        "slot_index": 0,
+        "icon_kind": "wechat",
+        "semantic_markers": ["微信", "微信支付", "WeChat"],
+        "relative_slot": {"left": 0.05, "right": 0.48},
+        "action": "observe_default"
+      },
+      {
+        "label": "支付宝",
+        "aliases": ["支付宝", "支付寶", "Alipay", "alipay"],
+        "slot_index": 1,
+        "icon_kind": "alipay",
+        "semantic_markers": ["支付宝", "支付寶", "Alipay"],
+        "relative_slot": {"left": 0.52, "right": 0.95},
+        "action": "tap_then_verify_selected",
+        "note": "inspect_only：点选后验证已选，不点确认支付"
+      }
+    ],
+    "forbid": [
+      "confirm_pay",
+      "submit_order",
+      "absolute_px_as_primary",
+      "ocr_text_only_when_icon_row_present"
+    ]
+  },
+  "startup_ad": {
+    "phase": "startup_ad",
+    "policy": "semantic_skip_relative_top_right",
+    "note": "开屏：语义进入/跳过 + 右上相对区；禁止 ENTRY_TAP / cloud_back"
+  },
+  "popup_ads": {
+    "phase": "popup_ads",
+    "policy": "watcher_cascade",
+    "note": "Watcher→A文案→B几何安全X→C蒙层→D cloud_back_twice"
+  }
+}

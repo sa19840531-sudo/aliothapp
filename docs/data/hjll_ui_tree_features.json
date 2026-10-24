@@ -1,0 +1,688 @@
+{
+  "schema_version": "app-ui-tree-features.v1",
+  "source_video": "C:\\\\Users\\\\show\\\\Videos\\\\螢幕錄製內容\\\\螢幕錄製 2026-09-10 172817.mp4",
+  "playbook_id": "hjll",
+  "package_name": "com.hj.ttthree",
+  "package_hints": [
+    "com.hj.ttthree"
+  ],
+  "flow_order": [
+    "age_gate",
+    "startup_ad",
+    "popup_ads",
+    "home_screenshot_only",
+    "home_top_category_tabs",
+    "bottom_tabs"
+  ],
+  "age_gate": {
+    "phase": "age_gate",
+    "must_screenshot_before_action": true,
+    "context_markers": [
+      "海角影视",
+      "未满18岁禁止进入",
+      "警告！内有成人内容！未成年禁止观看！",
+      "内有成人内容",
+      "未成年禁止观看",
+      "V3.3.1"
+    ],
+    "enter_button_texts": [
+      "我已满18岁",
+      "我年满18岁",
+      "我已满18岁-进入",
+      "我年满18岁-进入",
+      "我已满18岁进入",
+      "确认已满18",
+      "确认年满18"
+    ],
+    "leave_button_texts": [
+      "未满18",
+      "未满十八",
+      "未成年",
+      "离开",
+      "under 18",
+      "under18",
+      "exit",
+      "leave"
+    ],
+    "match_fields": [
+      "semantic_target",
+      "metadata.content_desc",
+      "metadata.text",
+      "metadata.label",
+      "metadata.ui_tree_text",
+      "metadata.accessibility_text",
+      "metadata.purpose",
+      "metadata.expected_state_hint"
+    ],
+    "action": "tap",
+    "priority": "before_startup_ad_and_popup_ads",
+    "note": "先截图再点蓝色「我已满18岁」；禁止点离开／未满18。"
+  },
+  "startup_ad": {
+    "phase": "startup_ad",
+    "must_screenshot_before_action": true,
+    "page_types": [
+      "startup_ad"
+    ],
+    "page_states": [
+      "popup",
+      "overlay"
+    ],
+    "context_markers": [
+      "开屏",
+      "跳过",
+      "跳過",
+      "skip",
+      "广告"
+    ],
+    "close_button_texts": [
+      "跳过",
+      "跳過",
+      "关闭",
+      "關閉",
+      "skip",
+      "close",
+      "×",
+      "X",
+      "x"
+    ],
+    "close_zones": [
+      {
+        "name": "top_right_close_label",
+        "normalized_bounds": {
+          "left": 0.72,
+          "top": 0.02,
+          "right": 0.98,
+          "bottom": 0.12
+        },
+        "note": "录屏：开屏全屏广告右上半透明暗色胶囊「关闭」；视觉像素优先"
+      },
+      {
+        "name": "top_right_skip",
+        "normalized_bounds": {
+          "left": 0.72,
+          "top": 0.02,
+          "right": 0.98,
+          "bottom": 0.14
+        }
+      },
+      {
+        "name": "top_left_skip",
+        "normalized_bounds": {
+          "left": 0.02,
+          "top": 0.02,
+          "right": 0.28,
+          "bottom": 0.14
+        }
+      }
+    ],
+    "visual_close_priority": [
+      "pixel_top_right_close_label",
+      "pixel_circular_x",
+      "ui_tree_close_zones"
+    ],
+    "forbid": [
+      "点广告本体",
+      "点下载",
+      "点安装",
+      "点立即打开"
+    ],
+    "action": "tap_close_or_skip",
+    "note": "首屏／开屏广告：先截图，再点关闭／跳过（优先视觉右上「关闭」，兜底 JSON 区）。"
+  },
+  "popup_ads": {
+    "phase": "popup_ads",
+    "must_screenshot_before_each_close": true,
+    "repeat_until_clear": true,
+    "page_states": [
+      "popup",
+      "overlay",
+      "modal",
+      "dialog"
+    ],
+    "context_markers": [
+      "弹窗",
+      "广告",
+      "关闭",
+      "活動",
+      "活动"
+    ],
+    "close_button_texts": [
+      "关闭",
+      "關閉",
+      "×",
+      "X",
+      "x",
+      "close",
+      "dismiss"
+    ],
+    "close_zones": [
+      {
+        "name": "bottom_banner_x",
+        "normalized_bounds": {
+          "left": 0.42,
+          "top": 0.7,
+          "right": 0.58,
+          "bottom": 0.86
+        },
+        "note": "录屏／实机：4x4网格下方正中圆形白底黑X（中心约y=0.80）；视觉像素优先，本框仅兜底"
+      },
+      {
+        "name": "bottom_center_x",
+        "normalized_bounds": {
+          "left": 0.44,
+          "top": 0.74,
+          "right": 0.56,
+          "bottom": 0.84
+        }
+      }
+    ],
+    "visual_close_priority": [
+      "pixel_circular_bottom_x",
+      "pixel_top_right_close_label",
+      "ui_tree_close_zones"
+    ],
+    "forbid_zones": [
+      {
+        "name": "mid_screen_fake_x",
+        "normalized_bounds": {
+          "left": 0.0,
+          "top": 0.28,
+          "right": 1.0,
+          "bottom": 0.68
+        },
+        "note": "禁止中部假 X／点穿广告本体"
+      }
+    ],
+    "action": "tap_bottom_x",
+    "after_all_closed": "home_screenshot_only",
+    "note": "弹窗广告每个都要先截图，再用下方 X 关掉；关完才进入主页只截。"
+  },
+  "home_screenshot_only": {
+    "phase": "home",
+    "tab_label": "主页",
+    "aliases": [
+      "主页",
+      "首页",
+      "首頁"
+    ],
+    "must_screenshot": true,
+    "click_tab": false,
+    "mark_visited_on_screenshot": true,
+    "then": "home_top_category_tabs",
+    "note": "弹窗关完后当前就是主页／首页：只截图，禁止再点底栏「主页」；先巡上方分类，再跳底栏短剧。"
+  },
+  "home_top_category_tabs": {
+    "phase": "home",
+    "page_types": [
+      "home"
+    ],
+    "must_screenshot_before_action": true,
+    "bounds": {
+      "min_top": 0.11,
+      "max_bottom": 0.165,
+      "note": "搜索栏／状态栏下方横向文字分类；禁止点到搜索框（y过小）或圆图标行（y过大）"
+    },
+    "layout": {
+      "slot_count": 7,
+      "y_center": 0.135,
+      "slot_height": 0.04,
+      "horizontal_pad": 0.015,
+      "usable_right": 0.995,
+      "click_width_ratio": 0.55,
+      "note": "现窗七格：最新／精选短剧／推荐／国产／乱伦综／动漫／漫画。精选短剧是产品新增栏，只占槽位，不是课纲。点击只用槽位中心，避免点缝。"
+    },
+    "ordered_tabs": [
+      {
+        "label": "最新",
+        "aliases": [
+          "最新"
+        ],
+        "slot_index": 0,
+        "click": true,
+        "tap_bounds": {
+          "left": 0.04,
+          "top": 0.12,
+          "right": 0.10,
+          "bottom": 0.148
+        },
+        "sample_target_bounds": {
+          "left": 0.20,
+          "top": 0.25,
+          "right": 0.30,
+          "bottom": 0.35
+        }
+      },
+      {
+        "label": "精选短剧",
+        "aliases": [
+          "精选短剧",
+          "精選短劇"
+        ],
+        "slot_index": 1,
+        "click": false,
+        "note": "产品新增栏，视觉会与旧课纲截图不一致；课纲不点、不取证"
+      },
+      {
+        "label": "推荐",
+        "aliases": [
+          "推荐",
+          "推薦"
+        ],
+        "slot_index": 2,
+        "click": true,
+        "tap_bounds": {
+          "left": 0.40,
+          "top": 0.12,
+          "right": 0.464,
+          "bottom": 0.148
+        },
+        "sample_target_bounds": {
+          "left": 0.20,
+          "top": 0.57,
+          "right": 0.30,
+          "bottom": 0.67
+        },
+        "note": "Airtest 实测：推荐页有分类豆，第一部影片在 y≈0.62。"
+      },
+      {
+        "label": "国产",
+        "aliases": [
+          "国产",
+          "國產"
+        ],
+        "slot_index": 3,
+        "click": true,
+        "tap_bounds": {
+          "left": 0.537,
+          "top": 0.12,
+          "right": 0.601,
+          "bottom": 0.148
+        },
+        "sample_target_bounds": {
+          "left": 0.20,
+          "top": 0.67,
+          "right": 0.30,
+          "bottom": 0.77
+        }
+      },
+      {
+        "label": "动漫",
+        "aliases": [
+          "动漫",
+          "動漫"
+        ],
+        "slot_index": 5,
+        "click": true,
+        "tap_bounds": {
+          "left": 0.688,
+          "top": 0.12,
+          "right": 0.752,
+          "bottom": 0.148
+        },
+        "sample_target_bounds": {
+          "left": 0.13,
+          "top": 0.73,
+          "right": 0.23,
+          "bottom": 0.83
+        }
+      },
+      {
+        "label": "漫画",
+        "aliases": [
+          "漫画",
+          "漫畫"
+        ],
+        "slot_index": 6,
+        "click": true,
+        "tap_bounds": {
+          "left": 0.618,
+          "top": 0.12,
+          "right": 0.682,
+          "bottom": 0.148
+        },
+        "sample_target_bounds": {
+          "left": 0.13,
+          "top": 0.73,
+          "right": 0.23,
+          "bottom": 0.83
+        },
+        "sample_note": "Airtest 在当前选中栏右侧一格重新量测漫画；无量测时使用 x≈0.65。点底部左侧第一部影片后返回。"
+      }
+    ],
+    "skip_labels": [
+      "精选短剧",
+      "精選短劇",
+      "乱伦",
+      "亂倫",
+      "乱伦综",
+      "亂倫綜",
+      "日本AV",
+      "日本av",
+      "欧美",
+      "歐美",
+      "制服",
+      "OnlyFans",
+      "onlyfans",
+      "Only Fans",
+      "华语原创",
+      "華語原創",
+      "三级片",
+      "三級片"
+    ],
+    "sample_first_entry": true,
+    "first_card": {
+      "normalized_bounds": {
+        "left": 0.03,
+        "top": 0.52,
+        "right": 0.48,
+        "bottom": 0.74
+      },
+      "note": "推荐／乱伦综现窗多了分类豆，视频卡在热门推荐下方；避开上方栏、分类豆、热门筛与底栏"
+    },
+    "evidence_page_types": [
+      "payment",
+      "video_detail",
+      "content_detail"
+    ],
+    "after_evidence": "back",
+    "mark_visited_after": "sample_back_home",
+    "action": "tap_tab_then_first_card_evidence_then_back",
+    "after_all_visited": "bottom_tabs",
+    "note": "按 Airtest 实测顺序：最新→推荐→国产→动漫→漫画；精选短剧、乱伦综、日本AV 都不是课纲。每栏使用该栏的第一部影片安全点，取证后返回主页才记已访。漫画优先按当前画面向右一格视觉量测，量测缺失时才用 x≈0.65。"
+  },
+  "bottom_navigation": {
+    "phase": "bottom_tabs",
+    "match_fields": [
+      "semantic_target",
+      "metadata.content_desc",
+      "metadata.text",
+      "metadata.label",
+      "metadata.resource_id",
+      "metadata.ui_tree_text",
+      "metadata.accessibility_text"
+    ],
+    "bounds": {
+      "min_top": 0.78,
+      "max_bottom": 1.02
+    },
+    "discovery_sources": [
+      "ui_tree",
+      "accessibility",
+      "vision",
+      "promoted_coverage",
+      "promoted_bottom_nav"
+    ],
+    "visual_pixel_priority": true,
+    "visual_band": {
+      "min_top": 0.84,
+      "max_bottom": 0.955,
+      "note": "同帧像素槽优先于 a11y／Vision；触控中心勿落入手势带"
+    },
+    "ordered_tabs": [
+      {
+        "label": "主页",
+        "aliases": [
+          "主页",
+          "首页",
+          "首頁",
+          "顶部",
+          "頂部"
+        ],
+        "action": "screenshot_only",
+        "click": false,
+        "note": "落地只截不点；UI 文案偶发「顶部」"
+      },
+      {
+        "label": "短剧",
+        "aliases": [
+          "短剧",
+          "短劇",
+          "视频",
+          "視頻"
+        ],
+        "action": "tap_then_playback_then_top_left_exit",
+        "click": true,
+        "tap_bounds": {
+          "left": 0.237,
+          "top": 0.88,
+          "right": 0.297,
+          "bottom": 0.92
+        },
+        "note": "Airtest 以 y≈0.90 点击短剧；约等4分钟（或见解锁层/结束态）后点左上角 CLICK 返回（禁止点广告格）；满3次仍停播放器则切下一栏暗网。",
+        "playback": {
+          "ref": "ui_tree_features.short_drama"
+        }
+      },
+      {
+        "label": "暗网",
+        "aliases": [
+          "暗网",
+          "暗網"
+        ],
+        "action": "tap_then_screenshot",
+        "click": true,
+        "tap_bounds": {"left": 0.391, "top": 0.88, "right": 0.451, "bottom": 0.92},
+        "note": "点击暗网并截图后立刻下一栏"
+      },
+      {
+        "label": "AI",
+        "aliases": [
+          "AI",
+          "ai",
+          "Ai"
+        ],
+        "action": "tap_then_screenshot",
+        "click": true,
+        "tap_bounds": {"left": 0.547, "top": 0.88, "right": 0.607, "bottom": 0.92},
+        "note": "点击 AI 并截图后立刻下一栏"
+      },
+      {
+        "label": "社区",
+        "aliases": [
+          "社区",
+          "社區"
+        ],
+        "action": "tap_then_screenshot",
+        "click": true,
+        "tap_bounds": {"left": 0.705, "top": 0.88, "right": 0.765, "bottom": 0.92},
+        "note": "点击社区并截图后立刻下一栏"
+      },
+      {
+        "label": "我的",
+        "aliases": [
+          "我的",
+          "个人中心",
+          "個人中心"
+        ],
+        "action": "tap_then_screenshot",
+        "click": true,
+        "tap_bounds": {"left": 0.86, "top": 0.88, "right": 0.92, "bottom": 0.92},
+        "note": "点击我的并截图；若出账号凭证弹层须先点蓝色「保存凭证」再留证；六栏终点"
+      }
+    ],
+    "rules": [
+      "每帧只提升课纲下一未访栏，禁止一次塞满导致先点我的",
+      "主页只截不点",
+      "落点优先级：同帧视觉像素底栏 → a11y → Vision（抬升出手势带）→ 源水平槽安全合成",
+      "下一栏本帧未见：OBSERVE 等真实像素／UI Tree／a11y，禁止无截图证据的插值猜点／跳点后续可见栏",
+      "禁止未关完弹窗就切底栏",
+      "禁止点内容卡进详情"
+    ],
+    "note": "录屏底栏顺序：主页(只截)→短剧→暗网→AI→社区→我的；匹配只走 _filter_tabs_to_next_playbook_only；点栏须视觉像素优先。"
+  },
+  "forbid_global": [
+    "点广告本体",
+    "充值提交",
+    "下载",
+    "安装",
+    "登录提交",
+    "发帖提交",
+    "弹窗关完后仍点主页栏",
+    "几何插值补栏"
+  ],
+  "product_name": "海角乱伦",
+  "product_aliases": [
+    "海角乱伦",
+    "海角亂倫",
+    "hjll",
+    "海角"
+  ],
+  "profile_credential": {
+    "phase": "profile_credential",
+    "must_screenshot_before_action": true,
+    "page_types": [
+      "profile"
+    ],
+    "page_states": [
+      "popup",
+      "modal",
+      "overlay",
+      "dialog"
+    ],
+    "context_markers": [
+      "账号凭证",
+      "帳號憑證",
+      "保存凭证",
+      "保存憑證",
+      "我已保存",
+      "可通过官方客服找回账号",
+      "可通过官方客服找回帳號",
+      "请勿删除此凭证",
+      "請勿刪除此憑證",
+      "永久官方地址",
+      "haijiao3",
+      "会员账号掉线",
+      "會員帳號掉線",
+      "永久有效的登陆",
+      "永久有效的登录",
+      "永久有效的登陸"
+    ],
+    "save_button_texts": [
+      "保存凭证",
+      "保存憑證",
+      "立即保存"
+    ],
+    "skip_button_texts": [
+      "我已保存"
+    ],
+    "save_success_markers": [
+      "保存成功",
+      "保存成功！"
+    ],
+    "match_fields": [
+      "semantic_target",
+      "metadata.content_desc",
+      "metadata.text",
+      "metadata.label",
+      "metadata.ui_tree_text",
+      "metadata.accessibility_text",
+      "metadata.purpose",
+      "metadata.expected_state_hint"
+    ],
+    "save_button_zone": {
+      "name": "profile_credential_save",
+      "normalized_bounds": {
+        "left": 0.50,
+        "top": 0.85,
+        "right": 0.88,
+        "bottom": 0.92
+      },
+      "note": "账号凭证弹层右侧蓝色「保存凭证」；257b4aaa UIA 实测 y≈0.855～0.911（中心≈0.88），旧框 0.76～0.825／0.70～0.80 会点空"
+    },
+    "skip_button_zone": {
+      "name": "profile_credential_already_saved",
+      "normalized_bounds": {
+        "left": 0.10,
+        "top": 0.85,
+        "right": 0.49,
+        "bottom": 0.92
+      },
+      "note": "账号凭证弹层左侧灰色「我已保存」；点此即可关层，禁止再点下方 X；须先保存凭证／见保存成功后再点；与保存钮同排"
+    },
+    "action": "tap_save_then_already_saved",
+    "priority": "on_profile_before_other_dismiss",
+    "note": "我的页账号凭证弹层：先截图→点蓝色「保存凭证」→再点灰色「我已保存」关闭；禁止下方 X／角 X。"
+  },
+  "note": "海角乱伦（hjll）录屏 UI Tree 特征：年龄门→开屏广告→弹窗下方X→主页只截→短剧(播约4分钟后左上角CLICK退出)→暗网→AI→社区→我的（账号凭证点保存凭证）；禁止系统BACK退出播放器。",
+  "short_drama": {
+    "phase": "short_drama_playback",
+    "tab_label": "短剧",
+    "tab_aliases": [
+      "短剧",
+      "短劇",
+      "短视频",
+      "视频",
+      "視頻"
+    ],
+    "enter_page_types": [
+      "video_detail",
+      "content_detail",
+      "payment"
+    ],
+    "must_screenshot_on_enter": true,
+    "playback_wait_ms": 240000,
+    "playback_wait_chunk_ms": 60000,
+    "exit_pending_key": "short_drama_exit_pending",
+    "exit_action": "top_left_click",
+    "exit_forbid": [
+      "system_back",
+      "InteractionOperation.BACK"
+    ],
+    "top_left_back": {
+      "candidate_id_prefix": "forced-short-drama-top-left-back",
+      "normalized_bounds": {
+        "left": 0.0,
+        "top": 0.0,
+        "right": 0.18,
+        "bottom": 0.12
+      },
+      "bound_slots": [
+        {
+          "left": 0.0,
+          "top": 0.0,
+          "right": 0.18,
+          "bottom": 0.12
+        },
+        {
+          "left": 0.02,
+          "top": 0.02,
+          "right": 0.22,
+          "bottom": 0.14
+        },
+        {
+          "left": 0.0,
+          "top": 0.04,
+          "right": 0.2,
+          "bottom": 0.16
+        }
+      ],
+      "max_attempts_before_tab_advance": 3,
+      "note": "播放器常吞系统BACK；仅点左上角CLICK，满3次仍停播放器则切课纲下一栏"
+    },
+    "playback_end_markers": [
+      "重播",
+      "再看一遍",
+      "重新播放",
+      "播放完成",
+      "已播完",
+      "已结束",
+      "完结",
+      "下一集",
+      "立即解锁",
+      "金币解锁",
+      "开通短剧卡"
+    ],
+    "after_exit": "bottom_tabs_next",
+    "note": "点短剧进播放器后约等4分钟（或见解锁/结束态）→左上角CLICK→再切暗网等；禁止未退出就跳栏。"
+  },
+  "flow_phases_detail": [
+    "age_gate",
+    "startup_ad",
+    "popup_ads",
+    "home_screenshot_only",
+    "home_top_category_tabs",
+    "short_drama",
+    "bottom_tabs_remainder"
+  ]
+}

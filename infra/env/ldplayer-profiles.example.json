@@ -1,0 +1,16 @@
+[
+  {
+    "id": "phone_1080",
+    "index": 0,
+    "label": "手機 1080x1920",
+    "width": 1080,
+    "height": 1920
+  },
+  {
+    "id": "tablet_1600",
+    "index": 1,
+    "label": "平板 1600x2560",
+    "width": 1600,
+    "height": 2560
+  }
+]

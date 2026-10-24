@@ -1,0 +1,1507 @@
+{
+  "version": "2026-09-11.v15",
+  "source": {
+    "workbook_name": "质检平台_综合方案表 (3).html",
+    "sheets": ["四、page_type 词表（17 值 · 贯穿全表的 tag 键）", "用户调整：移除 global/general，新增 home", "用户调整：新增 line_loading 线路加载页", "用户调整：移除 toast/comment/pre_roll_ad 非页面类型", "用户调整：移除 ad_popup 非页面类型", "用户调整：player 改为 video_detail 并新增 video_list", "用户调整：移除 ranking 榜单页", "用户调整：新增 guide_page 引导页", "用户调整：H5 根路由、post/朋友圈与首页视频标题映射", "用户调整：post_list 同时增加朋友圈辅助信号", "2026-09-11 H5 页面类型判别指南"],
+    "extraction_method": "html-page-type-vocabulary-with-user-override-v2"
+  },
+  "page_types": [
+    {
+      "code": "line_loading",
+      "name": "线路加载页",
+      "status": "supported",
+      "aliases": [
+        "line_loading",
+        "line-loading",
+        "线路加载页",
+        "获取线路页",
+        "启动加载页"
+      ],
+      "signals": {
+        "ocr_keywords": [
+          "正在获取线路",
+          "正在读取最快路线",
+          "线路读取中",
+          "线路读取完成，请稍后"
+        ],
+        "dom_hints": [
+          "loading",
+          "splash",
+          "route",
+          "line"
+        ],
+        "layout_hints": [
+          "产品启动图、Logo 或口号区域，并显示线路获取、读取或加载进度文案"
+        ]
+      },
+      "entry_hints": [
+        {
+          "from_page_type": "external",
+          "action_intent": "打开产品入口",
+          "target_keywords": [
+            "产品链接"
+          ]
+        }
+      ],
+      "exit_hints": [
+        "线路加载完成后自动离开"
+      ],
+      "next_page_candidates": [],
+      "risk_actions": [],
+      "related_rules": [],
+      "rule_matchable": false,
+      "source": "用户调整：新增 line_loading 线路加载页",
+      "remark": "产品入口的瞬态加载页面，完成线路选择后进入首页或后续页面；该页面可被识别但不进入规则匹配。",
+      "category": "lifecycle",
+      "coverage_required": false,
+      "runtime_traits": [
+        "transient"
+      ],
+      "route_prefixes": [],
+      "navigation_aliases": [],
+      "default_detail_page_type": null,
+      "purpose": "产品入口的线路探测或资源加载瞬态，只记录启动状态，不作为业务页面覆盖。",
+      "required_positive_signals": [
+        "当前可见主体明确表达线路探测、选线、资源加载或启动进度",
+        "当前视图尚未出现可稳定交互的业务主体"
+      ],
+      "supporting_signals": [
+        "出现线路读取、最快路线、加载进度或自动跳转提示",
+        "通常在同一会话中等待后自动进入开屏广告或业务页面"
+      ],
+      "strong_negative_signals": [
+        "已经出现稳定业务导航和可交互内容主体",
+        "当前主体是带跳过控件的推广素材",
+        "当前主体是下载、安装或版本更新引导"
+      ],
+      "confusable_with": [
+        "startup_ad",
+        "guide_page"
+      ],
+      "missing_evidence_actions": [
+        "在同一会话内按有界等待策略重新采集",
+        "记录加载文案、进度变化和动作后落地页面"
+      ]
+    },
+    {
+      "code": "home",
+      "name": "首页",
+      "status": "supported",
+      "aliases": [
+        "home",
+        "首页",
+        "二次元",
+        "导航站",
+        "91娱乐"
+      ],
+      "signals": {
+        "ocr_keywords": [
+          "首页",
+          "二次元",
+          "推荐",
+          "热门",
+          "导航站",
+          "91娱乐"
+        ],
+        "dom_hints": [
+          "home",
+          "homepage",
+          "index",
+          "tabbar"
+        ],
+        "layout_hints": [
+          "产品主入口页面，通常包含顶部导航、内容推荐区和底部导航"
+        ]
+      },
+      "entry_hints": [
+        {
+          "from_page_type": "startup_ad",
+          "action_intent": "关闭或跳过开屏广告",
+          "target_keywords": [
+            "跳过",
+            "关闭",
+            "进入",
+            "立即进入"
+          ]
+        },
+        {
+          "from_page_type": "home",
+          "action_intent": "点击首页或推荐类底部导航",
+          "target_keywords": [
+            "首页",
+            "二次元",
+            "推荐",
+            "热门",
+            "导航站",
+            "91娱乐"
+          ]
+        }
+      ],
+      "exit_hints": [
+        "关闭公告、二维码或广告弹窗后继续浏览",
+        "切换可见底部导航"
+      ],
+      "next_page_candidates": [
+        {
+          "page_type": "video_list",
+          "probability": "medium",
+          "action_intent": "切换视频类底部导航",
+          "target_keywords": [
+            "视频",
+            "热播",
+            "影视",
+            "片库",
+            "91看片"
+          ],
+          "risk_level": "low"
+        },
+        {
+          "page_type": "post_list",
+          "probability": "medium",
+          "action_intent": "切换社区类底部导航",
+          "target_keywords": [
+            "社区",
+            "星球",
+            "资源",
+            "广场",
+            "吃瓜",
+            "论坛"
+          ],
+          "risk_level": "low"
+        },
+        {
+          "page_type": "profile",
+          "probability": "medium",
+          "action_intent": "切换个人中心类底部导航",
+          "target_keywords": [
+            "我的",
+            "会员中心"
+          ],
+          "risk_level": "low"
+        },
+        {
+          "page_type": "activity",
+          "probability": "low",
+          "action_intent": "进入任务或活动页",
+          "target_keywords": [
+            "任务",
+            "金币",
+            "奖励"
+          ],
+          "risk_level": "low"
+        },
+        {
+          "page_type": "payment",
+          "probability": "low",
+          "action_intent": "进入充值或购买页但不提交",
+          "target_keywords": [
+            "充值",
+            "VIP",
+            "购买"
+          ],
+          "risk_level": "high"
+        }
+      ],
+      "risk_actions": [],
+      "related_rules": [],
+      "source": "质检平台_综合方案表 (3).html / page_type 词表 + 用户调整",
+      "remark": "用户调整：移除 global、general，新增 home 首页。",
+      "category": "business",
+      "coverage_required": true,
+      "runtime_traits": [],
+      "route_prefixes": [
+        "main_page"
+      ],
+      "navigation_aliases": [
+        {
+          "subtype": "app_navigation",
+          "terms": [
+            "home",
+            "首页",
+            "主页",
+            "二次元",
+            "热门",
+            "推荐",
+            "导航站",
+            "应用",
+            "应用中心",
+            "应用推荐",
+            "app大全",
+            "91娱乐",
+            "导航"
+          ],
+          "source_category": "应用/广告/导航",
+          "confidence": 0.95
+        }
+      ],
+      "default_detail_page_type": null,
+      "purpose": "产品稳定业务主入口，用于汇聚一级导航、业务入口和内容推荐。",
+      "required_positive_signals": [
+        "当前可见层是稳定业务页面而不是加载、开屏广告或引导层",
+        "页面提供一个以上可继续进入业务分支的一级导航或内容入口"
+      ],
+      "supporting_signals": [
+        "可见顶部分类、底部导航、功能入口或推荐内容中的一种或多种",
+        "导航选中态与当前主体内容一致",
+        "动作后能够进入列表、详情、个人中心或活动等业务分支"
+      ],
+      "strong_negative_signals": [
+        "主体只聚焦单条内容或单个播放器",
+        "当前可见层完全由加载、广告或引导内容占据",
+        "页面只提供下载或外部跳转而没有站内业务入口"
+      ],
+      "confusable_with": [
+        "content_list",
+        "video_list",
+        "activity",
+        "profile"
+      ],
+      "missing_evidence_actions": [
+        "先按安全策略关闭当前阻挡层并重新采集",
+        "采集可见一级导航及其选中状态",
+        "滚动一个受控视口确认是否存在多个业务区域"
+      ]
+    },
+    {
+      "code": "content_list",
+      "name": "内容列表页",
+      "status": "supported",
+      "aliases": [
+        "content_list",
+        "内容列表",
+        "朋友圈"
+      ],
+      "signals": {
+        "ocr_keywords": [
+          "内容列表",
+          "朋友圈"
+        ],
+        "dom_hints": [
+          "list",
+          "feed",
+          "card",
+          "post"
+        ],
+        "layout_hints": [
+          "多个内容卡片、封面或条目的列表区域"
+        ]
+      },
+      "entry_hints": [
+        {
+          "from_page_type": "home",
+          "action_intent": "点击内容、推荐或分类导航",
+          "target_keywords": [
+            "内容",
+            "推荐",
+            "分类",
+            "朋友圈"
+          ]
+        }
+      ],
+      "exit_hints": [
+        "切换其他导航",
+        "点击首个低风险内容卡片进入详情"
+      ],
+      "next_page_candidates": [
+        {
+          "page_type": "content_detail",
+          "probability": "medium",
+          "action_intent": "点击首个低风险内容卡片",
+          "target_keywords": [
+            "内容卡片"
+          ],
+          "risk_level": "low"
+        }
+      ],
+      "risk_actions": [],
+      "related_rules": [],
+      "source": "质检平台_综合方案表 (3).html / 四、page_type 词表",
+      "remark": "附件 17 值 page_type 词表。",
+      "category": "business",
+      "coverage_required": true,
+      "runtime_traits": [],
+      "route_prefixes": [
+        "aiundress",
+        "aiundress2",
+        "comic",
+        "comics",
+        "content",
+        "contents",
+        "post",
+        "product",
+        "products"
+      ],
+      "navigation_aliases": [
+        {
+          "subtype": "comic_anime",
+          "terms": [
+            "comic",
+            "次元",
+            "萝莉岛",
+            "acg",
+            "漫画",
+            "动漫",
+            "禁漫",
+            "污漫",
+            "有声漫",
+            "色漫"
+          ],
+          "source_category": "漫画/动漫",
+          "confidence": 0.95
+        },
+        {
+          "subtype": "ai_feature_alias",
+          "terms": [
+            "ai",
+            "ai科技",
+            "ai专区",
+            "AI女友",
+            "ai脱衣",
+            "ai换妆",
+            "ai换脸",
+            "人工智能",
+            "情色ai",
+            "情涩AI",
+            "图生视频"
+          ],
+          "source_category": "AI能力",
+          "confidence": 0.95
+        },
+        {
+          "subtype": "generic_content",
+          "terms": [
+            "小说",
+            "福利列表",
+            "朋友圈"
+          ],
+          "source_category": "其他内容列表",
+          "confidence": 0.9
+        },
+        {
+          "subtype": "hlapp_featured_tab",
+          "terms": [
+            "精选",
+            "精選"
+          ],
+          "source_category": "黑料/精选列表",
+          "confidence": 0.95
+        },
+        {
+          "subtype": "pc51_teahouse_tab",
+          "terms": [
+            "茶馆",
+            "茶館",
+            "品茶"
+          ],
+          "source_category": "51品茶/茶馆列表",
+          "confidence": 0.95
+        }
+      ],
+      "default_detail_page_type": "content_detail",
+      "purpose": "展示多条文字或图文业务内容，供用户浏览并进入单条详情。",
+      "required_positive_signals": [
+        "当前主体包含多条重复的文字或图文内容单元",
+        "列表单元具有可区分的标题、摘要、标签、作者或热度等内容语义"
+      ],
+      "supporting_signals": [
+        "存在分类、筛选、排序、分页或继续加载能力",
+        "受控进入一个列表单元后落到单条内容详情",
+        "图文或文本语义强于播放器和视频时长语义"
+      ],
+      "strong_negative_signals": [
+        "当前主体只展示单条完整内容",
+        "重复单元主要由视频封面、时长或播放量构成",
+        "页面主要用于聚合多个不同业务分支而不是同类内容"
+      ],
+      "confusable_with": [
+        "home",
+        "video_list",
+        "post_list"
+      ],
+      "missing_evidence_actions": [
+        "滚动一个受控视口确认重复内容单元结构",
+        "仅从当前可见的低风险内容单元进入详情并采集转场结果",
+        "存在阻挡层时先完成安全清障再重新判断"
+      ]
+    },
+    {
+      "code": "content_detail",
+      "name": "内容详情页",
+      "status": "supported",
+      "aliases": [
+        "content_detail",
+        "内容详情",
+        "社区详情页",
+        "帖子详情"
+      ],
+      "signals": {
+        "ocr_keywords": [
+          "详情",
+          "评论",
+          "点赞",
+          "输入",
+          "返回"
+        ],
+        "dom_hints": [
+          "detail",
+          "content",
+          "comment",
+          "input"
+        ],
+        "layout_hints": [
+          "单个内容主体及其标题、评论区、底部输入框、互动或推荐区域"
+        ]
+      },
+      "entry_hints": [
+        {
+          "from_page_type": "content_list",
+          "action_intent": "点击首个低风险内容卡片",
+          "target_keywords": [
+            "内容卡片"
+          ]
+        },
+        {
+          "from_page_type": "post_list",
+          "action_intent": "点击首个低风险帖子卡片",
+          "target_keywords": [
+            "帖子卡片"
+          ]
+        }
+      ],
+      "exit_hints": [
+        "点击页面返回按钮或浏览器后退"
+      ],
+      "next_page_candidates": [],
+      "risk_actions": [],
+      "related_rules": [],
+      "source": "质检平台_综合方案表 (3).html / 四、page_type 词表",
+      "remark": "附件 17 值 page_type 词表。",
+      "category": "business",
+      "coverage_required": true,
+      "runtime_traits": [],
+      "route_prefixes": [
+        "anchordetail",
+        "squaredetail"
+      ],
+      "navigation_aliases": [],
+      "default_detail_page_type": null,
+      "purpose": "展示一条完整文字或图文内容及其关联信息。",
+      "required_positive_signals": [
+        "当前主体聚焦一条可独立理解的内容对象",
+        "可见标题、正文、图文主体、来源或发布时间中的两类以上语义"
+      ],
+      "supporting_signals": [
+        "存在返回、评论、点赞或相关推荐等详情页能力",
+        "来源动作是从内容列表或帖子列表进入",
+        "文本或图文主体明显强于播放器区域"
+      ],
+      "strong_negative_signals": [
+        "当前主体包含多条同级内容单元",
+        "核心可见区域是单个视频播放器",
+        "当前仅为广告、加载或下载引导"
+      ],
+      "confusable_with": [
+        "video_detail",
+        "post_list"
+      ],
+      "missing_evidence_actions": [
+        "采集正文主体、标题和来源区域",
+        "确认是否存在占主导地位的播放器",
+        "存在遮挡时先完成安全清障再重新采集"
+      ]
+    },
+    {
+      "code": "profile",
+      "name": "我的 / 个人主页（身份凭证卡）",
+      "status": "supported",
+      "aliases": [
+        "profile",
+        "我的",
+        "个人主页",
+        "身份凭证卡"
+      ],
+      "signals": {
+        "ocr_keywords": [
+          "我的",
+          "个人主页",
+          "身份凭证卡"
+        ],
+        "dom_hints": [
+          "profile",
+          "mine",
+          "account"
+        ],
+        "layout_hints": [
+          "用户身份、资产、权益或个人入口聚合区域"
+        ]
+      },
+      "entry_hints": [
+        {
+          "from_page_type": "home",
+          "action_intent": "点击我的、会员中心或身份卡类导航",
+          "target_keywords": [
+            "我的",
+            "会员中心",
+            "身份卡"
+          ]
+        }
+      ],
+      "exit_hints": [
+        "点击返回或切换底部导航"
+      ],
+      "next_page_candidates": [
+        {
+          "page_type": "activity",
+          "probability": "medium",
+          "action_intent": "进入任务或活动页",
+          "target_keywords": [
+            "任务",
+            "金币",
+            "奖励"
+          ],
+          "risk_level": "low"
+        },
+        {
+          "page_type": "payment",
+          "probability": "medium",
+          "action_intent": "进入充值或购买页但不提交",
+          "target_keywords": [
+            "充值",
+            "VIP",
+            "购买"
+          ],
+          "risk_level": "high"
+        },
+        {
+          "page_type": "settings",
+          "probability": "low",
+          "action_intent": "进入设置页",
+          "target_keywords": [
+            "设置"
+          ],
+          "risk_level": "low"
+        }
+      ],
+      "risk_actions": [],
+      "related_rules": [],
+      "source": "质检平台_综合方案表 (3).html / 四、page_type 词表",
+      "remark": "附件 17 值 page_type 词表。",
+      "category": "business",
+      "coverage_required": true,
+      "runtime_traits": [],
+      "route_prefixes": [],
+      "navigation_aliases": [
+        {
+          "subtype": "account_center",
+          "terms": [
+            "profile",
+            "我的",
+            "我的窝",
+            "个人",
+            "个人中心",
+            "会员中心",
+            "身份凭证卡",
+            "91私库"
+          ],
+          "source_category": "个人中心",
+          "confidence": 0.95
+        }
+      ],
+      "default_detail_page_type": null,
+      "purpose": "展示当前用户身份、资产、权益和个人功能入口。",
+      "required_positive_signals": [
+        "当前主体围绕用户身份、账号状态或个人资产展开",
+        "可见个人功能入口、权益、历史、收藏、钱包或设置中的一种以上"
+      ],
+      "supporting_signals": [
+        "来源是我的、个人中心、会员中心或身份卡入口",
+        "可见头像、昵称、用户标识或登录状态",
+        "页面可继续进入设置、活动或价格页面"
+      ],
+      "strong_negative_signals": [
+        "主体是公共内容列表或单条内容详情",
+        "只展示价格档位且没有个人信息主体",
+        "当前仅为登录阻断层而未显示个人主页"
+      ],
+      "confusable_with": [
+        "home",
+        "settings",
+        "payment",
+        "activity"
+      ],
+      "missing_evidence_actions": [
+        "从已验证的低风险个人入口导航并重新采集",
+        "采集身份区域和个人功能入口",
+        "遇到登录要求时记录阻断，不代替用户登录"
+      ]
+    },
+    {
+      "code": "settings",
+      "name": "设置页",
+      "status": "supported",
+      "aliases": [
+        "settings",
+        "设置",
+        "系统设置"
+      ],
+      "signals": {
+        "ocr_keywords": [
+          "设置",
+          "系统设置"
+        ],
+        "dom_hints": [
+          "settings",
+          "setting",
+          "preferences"
+        ],
+        "layout_hints": [
+          "配置项、开关或账号设置列表"
+        ]
+      },
+      "entry_hints": [],
+      "exit_hints": [],
+      "next_page_candidates": [],
+      "risk_actions": [],
+      "related_rules": [],
+      "source": "质检平台_综合方案表 (3).html / 四、page_type 词表",
+      "remark": "附件 17 值 page_type 词表。",
+      "category": "business",
+      "coverage_required": true,
+      "runtime_traits": [],
+      "route_prefixes": [],
+      "navigation_aliases": [
+        {
+          "subtype": "settings_entry",
+          "terms": [
+            "settings",
+            "设置",
+            "系统设置",
+            "账号设置",
+            "偏好设置"
+          ],
+          "source_category": "个人中心",
+          "confidence": 0.95
+        }
+      ],
+      "default_detail_page_type": null,
+      "purpose": "展示账号、偏好、隐私或应用配置项。",
+      "required_positive_signals": [
+        "当前主体是设置项、配置入口、开关或版本信息列表",
+        "页面语义聚焦配置管理而不是内容消费或交易"
+      ],
+      "supporting_signals": [
+        "来源通常是个人中心中的设置入口",
+        "可见账号设置、通知、隐私、缓存、关于或版本等语义"
+      ],
+      "strong_negative_signals": [
+        "主体是价格套餐或支付方式",
+        "主体是个人身份和资产聚合",
+        "主体是业务内容列表或详情"
+      ],
+      "confusable_with": [
+        "profile",
+        "payment",
+        "post_publish"
+      ],
+      "missing_evidence_actions": [
+        "从个人中心的已验证设置入口导航并重新采集",
+        "采集配置列表、开关和版本信息区域"
+      ]
+    },
+    {
+      "code": "payment",
+      "name": "支付 / 价格页",
+      "status": "supported",
+      "aliases": [
+        "payment",
+        "支付",
+        "价格",
+        "充值",
+        "购买"
+      ],
+      "signals": {
+        "ocr_keywords": [
+          "开通VIP",
+          "支付",
+          "价格",
+          "充值",
+          "购买"
+        ],
+        "dom_hints": [
+          "开通VIP",
+          "vip",
+          "payment",
+          "pay",
+          "price",
+          "recharge"
+        ],
+        "layout_hints": [
+          "商品价格、支付方式、充值或购买确认区域"
+        ]
+      },
+      "entry_hints": [
+        {
+          "from_page_type": "profile",
+          "action_intent": "优先点击立即开通，其次会员中心",
+          "target_keywords": [
+            "立即开通",
+            "会员中心"
+          ]
+        }
+      ],
+      "exit_hints": [
+        "点击返回或切换底部导航；禁止确认支付或提交购买"
+      ],
+      "next_page_candidates": [],
+      "risk_actions": [
+        "立即开通",
+        "确认开通",
+        "立即支付",
+        "点击支付",
+        "确认购买",
+        "提交订单",
+        "提交充值"
+      ],
+      "related_rules": [],
+      "source": "质检平台_综合方案表 (3).html / 四、page_type 词表",
+      "remark": "附件 17 值 page_type 词表。",
+      "category": "business",
+      "coverage_required": true,
+      "runtime_traits": [],
+      "route_prefixes": [],
+      "navigation_aliases": [
+        {
+          "subtype": "payment_entry",
+          "terms": [
+            "payment",
+            "支付",
+            "充值",
+            "vip",
+            "会员",
+            "金币",
+            "钱包"
+          ],
+          "source_category": "会员",
+          "confidence": 0.95
+        }
+      ],
+      "default_detail_page_type": null,
+      "purpose": "展示价格、套餐、充值或支付方式，供规则进行只读质检。",
+      "required_positive_signals": [
+        "当前主体包含价格、套餐、充值金额或支付方式中的一种以上",
+        "页面存在明确交易语义但尚未执行确认支付或订单提交"
+      ],
+      "supporting_signals": [
+        "来源是会员、钱包、充值、购买或立即开通入口",
+        "可见币种、单位、优惠关系或套餐选中状态"
+      ],
+      "strong_negative_signals": [
+        "主体是个人资产聚合但没有价格或交易选项",
+        "主体是活动奖励说明而没有购买或充值语义",
+        "当前仅为外部支付应用或跨域支付落地"
+      ],
+      "confusable_with": [
+        "profile",
+        "settings",
+        "activity"
+      ],
+      "missing_evidence_actions": [
+        "从已验证的会员或充值入口导航到价格展示层，仅观察不提交",
+        "采集价格、单位、套餐和支付方式区域",
+        "到达支付确认或外部支付边界时立即停止推进"
+      ]
+    },
+    {
+      "code": "post_list",
+      "name": "帖子列表页",
+      "status": "supported",
+      "aliases": [
+        "post_list",
+        "帖子列表",
+        "社区列表",
+        "朋友圈",
+        "星球",
+        "资源"
+      ],
+      "signals": {
+        "ocr_keywords": [
+          "帖子",
+          "社区",
+          "朋友圈",
+          "星球",
+          "资源",
+          "广场",
+          "吃瓜",
+          "论坛"
+        ],
+        "dom_hints": [
+          "post-list",
+          "community",
+          "feed"
+        ],
+        "layout_hints": [
+          "帖子卡片或社区内容流"
+        ]
+      },
+      "entry_hints": [
+        {
+          "from_page_type": "home",
+          "action_intent": "点击社区、广场、吃瓜或论坛类导航",
+          "target_keywords": [
+            "社区",
+            "朋友圈",
+            "星球",
+            "资源",
+            "广场",
+            "吃瓜",
+            "论坛"
+          ]
+        }
+      ],
+      "exit_hints": [
+        "切换其他导航",
+        "点击首个低风险帖子卡片进入详情"
+      ],
+      "next_page_candidates": [
+        {
+          "page_type": "content_detail",
+          "probability": "medium",
+          "action_intent": "点击首个低风险帖子卡片",
+          "target_keywords": [
+            "帖子卡片"
+          ],
+          "risk_level": "low"
+        }
+      ],
+      "risk_actions": [],
+      "related_rules": [],
+      "source": "质检平台_综合方案表 (3).html / 四、page_type 词表",
+      "remark": "附件 17 值 page_type 词表。",
+      "category": "business",
+      "coverage_required": true,
+      "runtime_traits": [],
+      "route_prefixes": [
+        "category",
+        "community",
+        "forum",
+        "forums"
+      ],
+      "navigation_aliases": [
+        {
+          "subtype": "community_feed",
+          "terms": [
+            "community",
+            "社区",
+            "社区列表",
+            "星球",
+            "资源",
+            "广场",
+            "海角",
+            "圈子",
+            "私密圈",
+            "私密社交",
+            "同城",
+            "同城交友",
+            "交友",
+            "社区交友",
+            "论坛",
+            "帖子",
+            "吃瓜"
+          ],
+          "source_category": "社区/帖子",
+          "confidence": 0.95
+        }
+      ],
+      "default_detail_page_type": "content_detail",
+      "purpose": "展示多个社区帖子或用户动态，供用户浏览并进入单帖内容。",
+      "required_positive_signals": [
+        "当前主体包含多条重复的帖子或动态单元",
+        "列表单元同时具有用户身份和文本、图片或互动语义"
+      ],
+      "supporting_signals": [
+        "可见社区、动态、广场、论坛或朋友圈导航语义",
+        "单元包含头像、昵称、发布时间、评论或点赞中的一种以上",
+        "受控进入单元后落到帖子或内容详情"
+      ],
+      "strong_negative_signals": [
+        "列表单元主要是视频封面和播放信息",
+        "列表单元没有用户或互动语义且更像普通资讯列表",
+        "当前主体只展示单条帖子内容"
+      ],
+      "confusable_with": [
+        "content_list",
+        "content_detail",
+        "video_list"
+      ],
+      "missing_evidence_actions": [
+        "采集两个以上帖子单元的用户和互动结构",
+        "仅从当前可见的低风险帖子单元进入详情并采集转场结果"
+      ]
+    },
+    {
+      "code": "post_publish",
+      "name": "发帖 / 发布页",
+      "status": "supported",
+      "aliases": [
+        "post_publish",
+        "发帖",
+        "发布",
+        "提交帖子"
+      ],
+      "signals": {
+        "ocr_keywords": [
+          "发帖",
+          "发布",
+          "提交"
+        ],
+        "dom_hints": [
+          "publish",
+          "post-editor",
+          "composer"
+        ],
+        "layout_hints": [
+          "标题、正文、图片等内容编辑与发布区域"
+        ]
+      },
+      "entry_hints": [],
+      "exit_hints": [],
+      "next_page_candidates": [],
+      "risk_actions": [
+        "输入内容",
+        "提交发布"
+      ],
+      "related_rules": [],
+      "source": "质检平台_综合方案表 (3).html / 四、page_type 词表",
+      "remark": "附件 17 值 page_type 词表。",
+      "category": "business",
+      "coverage_required": true,
+      "runtime_traits": [],
+      "route_prefixes": [],
+      "navigation_aliases": [
+        {
+          "subtype": "publish_entry",
+          "terms": [
+            "publish",
+            "发布",
+            "发布作品",
+            "发帖",
+            "投稿",
+            "上传作品",
+            "创作中心"
+          ],
+          "source_category": "社区/帖子",
+          "confidence": 0.95
+        }
+      ],
+      "default_detail_page_type": null,
+      "purpose": "提供帖子、作品或媒体内容的编辑界面；自动质检只观察，不提交。",
+      "required_positive_signals": [
+        "当前主体包含文本编辑、媒体选择或内容编排区域",
+        "可见发布、提交、投稿或上传等创作完成语义"
+      ],
+      "supporting_signals": [
+        "来源是社区、个人中心或内容列表中的创作入口",
+        "可见标题、正文、图片、视频或分类选择能力"
+      ],
+      "strong_negative_signals": [
+        "主体是普通设置表单但没有内容创作语义",
+        "主体是已发布内容的只读详情",
+        "当前只是登录或权限阻断层"
+      ],
+      "confusable_with": [
+        "settings",
+        "content_detail"
+      ],
+      "missing_evidence_actions": [
+        "从已验证的低风险创作入口导航至编辑页，不输入或发布内容",
+        "采集编辑区域和发布控件的只读证据",
+        "遇到登录、实名或权限要求时记录阻断并停止推进"
+      ]
+    },
+    {
+      "code": "activity",
+      "name": "活动页",
+      "status": "supported",
+      "aliases": [
+        "activity",
+        "活动",
+        "运营活动"
+      ],
+      "signals": {
+        "ocr_keywords": [
+          "活动",
+          "任务",
+          "奖励"
+        ],
+        "dom_hints": [
+          "activity",
+          "campaign",
+          "promotion"
+        ],
+        "layout_hints": [
+          "活动主题、任务、奖励或运营配置页面"
+        ]
+      },
+      "entry_hints": [
+        {
+          "from_page_type": "profile",
+          "action_intent": "点击任务、金币、奖励或活动类入口",
+          "target_keywords": [
+            "任务",
+            "金币",
+            "奖励",
+            "活动"
+          ]
+        }
+      ],
+      "exit_hints": [
+        "点击返回或切换底部导航"
+      ],
+      "next_page_candidates": [],
+      "risk_actions": [],
+      "related_rules": [],
+      "source": "质检平台_综合方案表 (3).html / 四、page_type 词表",
+      "remark": "附件 17 值 page_type 词表。",
+      "category": "business",
+      "coverage_required": true,
+      "runtime_traits": [],
+      "route_prefixes": [],
+      "navigation_aliases": [
+        {
+          "subtype": "activity_entry",
+          "terms": [
+            "任务",
+            "福利",
+            "签到",
+            "活动",
+            "直播"
+          ],
+          "source_category": "活动/赛事",
+          "confidence": 0.95
+        }
+      ],
+      "default_detail_page_type": null,
+      "purpose": "展示运营活动、任务、奖励、促销或参与规则。",
+      "required_positive_signals": [
+        "当前主体围绕活动规则、任务、奖励或促销主题展开",
+        "可见活动时间、参与条件、奖励说明或活动操作中的一种以上"
+      ],
+      "supporting_signals": [
+        "来源是首页活动入口、运营弹层或个人中心任务入口",
+        "具有时效性、专题视觉或领取、参与、跳转等活动语义"
+      ],
+      "strong_negative_signals": [
+        "主体是常规首页推荐或内容列表",
+        "主体是明确价格套餐或支付方式",
+        "当前仅为开屏广告或下载引导"
+      ],
+      "confusable_with": [
+        "home",
+        "profile",
+        "payment",
+        "startup_ad",
+        "guide_page"
+      ],
+      "missing_evidence_actions": [
+        "从已验证的低风险活动入口导航并采集活动主体",
+        "采集活动规则、时间、奖励和参与条件",
+        "领取、提交、下载或支付动作只记录候选，不实际执行"
+      ]
+    },
+    {
+      "code": "startup_ad",
+      "name": "启动 / 开屏广告",
+      "status": "supported",
+      "aliases": [
+        "startup_ad",
+        "启动广告",
+        "开屏广告"
+      ],
+      "signals": {
+        "ocr_keywords": [
+          "跳过广告",
+          "跳过",
+          "倒计时",
+          "秒后跳过",
+          "开屏广告",
+          "s后关闭"
+        ],
+        "dom_hints": [
+          "startup-ad",
+          "splash-ad",
+          "skip"
+        ],
+        "layout_hints": [
+          "产品启动阶段全屏展示的广告，通常带跳过入口或倒计时"
+        ]
+      },
+      "entry_hints": [
+        {
+          "from_page_type": "line_loading",
+          "action_intent": "等待线路加载完成后自动进入",
+          "target_keywords": [
+            "获取线路",
+            "加载中"
+          ]
+        }
+      ],
+      "exit_hints": [
+        "点击跳过、关闭、进入或立即进入类按钮"
+      ],
+      "next_page_candidates": [],
+      "risk_actions": [
+        "点击广告主体",
+        "打开外部链接"
+      ],
+      "related_rules": [],
+      "rule_matchable": true,
+      "source": "质检平台_综合方案表 (3).html / 四、page_type 词表",
+      "remark": "附件 17 值 page_type 词表；当开屏广告、跳过或倒计时证据与线路加载文案同屏出现时，优先判定为 startup_ad。",
+      "category": "lifecycle",
+      "coverage_required": false,
+      "runtime_traits": [],
+      "route_prefixes": [],
+      "navigation_aliases": [],
+      "default_detail_page_type": null,
+      "purpose": "产品启动阶段覆盖当前视图的推广展示层，完成后进入真实业务页面。",
+      "required_positive_signals": [
+        "当前可见层由全屏或近全屏推广素材主导",
+        "可见跳过、关闭、进入或倒计时中的一种可验证退场信号"
+      ],
+      "supporting_signals": [
+        "出现于产品入口或线路加载之后",
+        "退场前遮挡底层业务内容",
+        "安全退场后进入稳定业务页面"
+      ],
+      "strong_negative_signals": [
+        "没有推广主体且当前页面是稳定业务首页",
+        "只存在页面内普通广告位而未遮挡主要内容",
+        "当前主体是线路加载或下载引导"
+      ],
+      "confusable_with": [
+        "line_loading",
+        "activity",
+        "guide_page"
+      ],
+      "missing_evidence_actions": [
+        "按受信控件和动作策略执行跳过或关闭并记录前后证据",
+        "倒计时尚未结束时在同一会话内有界重新观察",
+        "采集退场后的真实落地页面类型"
+      ]
+    },
+    {
+      "code": "guide_page",
+      "name": "引导页",
+      "status": "supported",
+      "aliases": [
+        "guide_page",
+        "引导页",
+        "下载引导页",
+        "落地引导页"
+      ],
+      "signals": {
+        "ocr_keywords": [
+          "安卓下载",
+          "苹果下载",
+          "安卓手机下载",
+          "苹果手机下载",
+          "安卓版下载",
+          "苹果版下载",
+          "IOS下载",
+          "Macos下载",
+          "Windows下载"
+        ],
+        "dom_hints": [
+          "download",
+          "download-guide",
+          "app-download",
+          "landing"
+        ],
+        "layout_hints": [
+          "下载或安装引导入口聚合页，出现安卓、苹果、iOS、MacOS 或 Windows 下载按钮"
+        ]
+      },
+      "entry_hints": [
+        {
+          "from_page_type": "external",
+          "action_intent": "打开产品入口后命中下载引导页",
+          "target_keywords": [
+            "下载",
+            "安卓下载",
+            "苹果下载"
+          ]
+        }
+      ],
+      "exit_hints": [
+        "引导页只记录页面类型并终止当前探索分支，不点击下载或安装入口"
+      ],
+      "next_page_candidates": [],
+      "risk_actions": [
+        "安卓下载",
+        "苹果下载",
+        "安卓手机下载",
+        "苹果手机下载",
+        "安卓版下载",
+        "苹果版下载",
+        "IOS下载",
+        "Macos下载",
+        "Windows下载"
+      ],
+      "related_rules": [],
+      "rule_matchable": false,
+      "source": "用户调整：新增 guide_page 引导页",
+      "remark": "H5 下载/安装引导页只做页面类型记录，不进入业务覆盖、规则匹配或后续探索。",
+      "category": "lifecycle",
+      "coverage_required": false,
+      "runtime_traits": [],
+      "route_prefixes": [],
+      "navigation_aliases": [],
+      "default_detail_page_type": null,
+      "purpose": "展示首次使用、版本更新、功能介绍或下载安装引导。",
+      "required_positive_signals": [
+        "当前主体是功能介绍、版本说明、使用引导或下载安装引导",
+        "页面提供确认、继续体验或下载入口，但没有稳定业务内容主体"
+      ],
+      "supporting_signals": [
+        "出现新功能、更新公告、操作步骤、永久地址或多平台下载说明",
+        "完成低风险确认后可能进入业务首页"
+      ],
+      "strong_negative_signals": [
+        "当前主体是稳定业务首页、列表或详情",
+        "当前主体是可反复访问的运营活动",
+        "当前主体是带倒计时退场的推广素材"
+      ],
+      "confusable_with": [
+        "line_loading",
+        "startup_ad",
+        "activity"
+      ],
+      "missing_evidence_actions": [
+        "采集引导主题、确认控件和可能的下载入口",
+        "下载或安装入口只记录，不点击",
+        "仅在动作策略允许时执行低风险确认并采集落地页面"
+      ]
+    },
+    {
+      "code": "video_list",
+      "name": "视频列表页",
+      "status": "supported",
+      "aliases": [
+        "video_list",
+        "视频列表页",
+        "视频列表",
+        "91看片"
+      ],
+      "signals": {
+        "ocr_keywords": [
+          "视频",
+          "推荐",
+          "最新",
+          "热门",
+          "热播",
+          "影视",
+          "片库",
+          "91看片"
+        ],
+        "dom_hints": [
+          "video-list",
+          "video",
+          "feed",
+          "card"
+        ],
+        "layout_hints": [
+          "多个视频封面、标题或内容卡片组成的列表页面"
+        ]
+      },
+      "entry_hints": [
+        {
+          "from_page_type": "home",
+          "action_intent": "点击视频、热播、影视或片库类导航",
+          "target_keywords": [
+            "视频",
+            "热播",
+            "影视",
+            "片库",
+            "91看片"
+          ]
+        }
+      ],
+      "exit_hints": [
+        "切换其他导航",
+        "点击首个低风险视频卡片进入详情"
+      ],
+      "next_page_candidates": [
+        {
+          "page_type": "video_detail",
+          "probability": "medium",
+          "action_intent": "点击首个低风险视频卡片",
+          "target_keywords": [
+            "视频卡片",
+            "封面"
+          ],
+          "risk_level": "low"
+        }
+      ],
+      "risk_actions": [],
+      "related_rules": [],
+      "source": "用户调整：新增 video_list 视频列表页",
+      "remark": "视频内容的列表与推荐流页面。",
+      "category": "business",
+      "coverage_required": true,
+      "runtime_traits": [],
+      "route_prefixes": [
+        "home-video",
+        "movie",
+        "movies",
+        "shortvideo",
+        "twodimensional",
+        "video",
+        "videos"
+      ],
+      "navigation_aliases": [
+        {
+          "subtype": "long_video",
+          "terms": [
+            "movie",
+            "video",
+            "影片",
+            "视频",
+            "影视",
+            "片库",
+            "电影",
+            "长视频",
+            "看片",
+            "51看片",
+            "91看片",
+            "禁区",
+            "精选影片"
+          ],
+          "source_category": "视频内容",
+          "confidence": 0.95
+        },
+        {
+          "subtype": "short_video",
+          "terms": [
+            "短视频",
+            "小视频",
+            "短片",
+            "抖音",
+            "抖阴"
+          ],
+          "source_category": "短视频",
+          "confidence": 0.95
+        }
+      ],
+      "default_detail_page_type": "video_detail",
+      "purpose": "展示多个视频或短剧条目，供用户浏览并进入单视频详情。",
+      "required_positive_signals": [
+        "当前主体包含多条重复的视频内容单元",
+        "列表单元以封面、时长、播放量、剧集或播放语义为主要特征"
+      ],
+      "supporting_signals": [
+        "存在视频分类、排序、分页或继续加载能力",
+        "受控进入一个视频单元后落到播放器或单视频详情",
+        "可见视频、影视、短剧、片库或热播等导航语义"
+      ],
+      "strong_negative_signals": [
+        "当前主体只聚焦单个播放器",
+        "重复单元以文字正文、用户动态或普通资讯为主",
+        "页面主要用于聚合多个不同业务分支"
+      ],
+      "confusable_with": [
+        "home",
+        "content_list",
+        "post_list",
+        "video_detail"
+      ],
+      "missing_evidence_actions": [
+        "滚动一个受控视口确认视频单元结构",
+        "仅从当前可见的低风险视频单元进入详情并采集转场结果",
+        "存在阻挡层时先完成安全清障再重新判断"
+      ]
+    },
+    {
+      "code": "video_detail",
+      "name": "视频详情页",
+      "status": "supported",
+      "aliases": [
+        "video_detail",
+        "视频详情页",
+        "视频详情",
+        "播放页",
+        "播放器"
+      ],
+      "signals": {
+        "ocr_keywords": [
+          "播放",
+          "暂停",
+          "全屏",
+          "评论",
+          "点赞",
+          "VIP跳过",
+          "推荐"
+        ],
+        "dom_hints": [
+          "video-detail",
+          "video",
+          "player",
+          "detail"
+        ],
+        "layout_hints": [
+          "视频播放器、标题、互动信息及相关推荐组成的详情页面"
+        ]
+      },
+      "entry_hints": [
+        {
+          "from_page_type": "video_list",
+          "action_intent": "点击首个低风险视频卡片",
+          "target_keywords": [
+            "视频卡片",
+            "封面"
+          ]
+        }
+      ],
+      "exit_hints": [
+        "点击页面返回按钮或浏览器后退"
+      ],
+      "next_page_candidates": [],
+      "risk_actions": [],
+      "related_rules": [],
+      "source": "用户调整：player 改为 video_detail 视频详情页",
+      "remark": "视频播放能力归入视频详情页面，不再使用 player 作为页面类型。",
+      "category": "business",
+      "coverage_required": true,
+      "runtime_traits": [],
+      "route_prefixes": [
+        "moviedetails"
+      ],
+      "navigation_aliases": [],
+      "default_detail_page_type": null,
+      "purpose": "展示单个视频或短剧的播放器、标题和关联信息。",
+      "required_positive_signals": [
+        "当前主体聚焦一个视频对象或剧集播放对象",
+        "存在可信播放器、媒体控制、播放状态或等效媒体结构"
+      ],
+      "supporting_signals": [
+        "可见标题、剧集、播放进度、评论、点赞或相关推荐",
+        "来源动作是从视频列表进入",
+        "播放器和当前业务内容具有一致的标题或上下文"
+      ],
+      "strong_negative_signals": [
+        "当前主体包含多个同级视频条目",
+        "主体是文字或图文详情且播放器不占主导",
+        "当前可见视频属于开屏或页面广告而非业务内容"
+      ],
+      "confusable_with": [
+        "content_detail",
+        "video_list"
+      ],
+      "missing_evidence_actions": [
+        "采集播放器区域、标题和媒体控制证据",
+        "确认播放器属于当前业务内容而不是广告",
+        "存在遮挡时先完成安全清障再重新采集"
+      ]
+    }
+  ],
+  "schema_version": "page-type-catalog.v2"
+}

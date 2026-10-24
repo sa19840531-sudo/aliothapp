@@ -1,0 +1,148 @@
+{
+  "yc003": {
+    "batch": "20261011-232739",
+    "task_id": "f5d4b1d6-ec55-46e6-86a2-b5dc9baa4c29",
+    "run_id": "c65b5158-5fd3-4cfb-875d-54895ca09538",
+    "failed_work": {
+      "work_id": "exploration-work:da2e4e2e848bdbed954fe7c72c224657770b2657d68f2b6b7806974124df527a",
+      "last_error_message": "H5 Explorer 单轮执行失败: ValueError: H5 交互模式签名必须为 64 位十六进制摘要",
+      "created_at": "2026-10-11T18:47:47.129648+00:00"
+    },
+    "candidate": {
+      "metadata": {
+        "purpose": "探索当前页面现场识别出的底部导航业务分支",
+        "target_keywords": [
+          "bottom_navigation",
+          "我的",
+          "adaptive_bottom_navigation",
+          "interaction_pattern:quarantined",
+          "profile"
+        ],
+        "source_page_type": "video_list",
+        "action_parameters": {
+          "target_mode": "bottom_navigation",
+          "navigation_index": 6,
+          "navigation_label": "我的",
+          "navigation_family": "adaptive_snapshot",
+          "interaction_pattern_signature": "6cf01e506c18be8e704217e8691dfa8485fc0e55f05031f485ac8bc930e65537"
+        },
+        "source_page_state": "popup",
+        "source_branch_context": "f9dace605b22f09bc092c7c405990479fcd4a4499737c5b7164710c4ed76df57",
+        "expected_next_page_type": "profile",
+        "logical_target_required": true,
+        "source_state_fingerprint": "sha256:07232b4a6351ebd4a67e76540b6050033ab3629ea81172c3c74ef9385c1aad8b",
+        "interaction_pattern_status": "quarantined",
+        "navigation_knowledge_source": "static",
+        "source_identity_fingerprint": "sha256:066549cab3c0c68085259f20533fb94e92f577934d143f97c628f16fdb2fea5d",
+        "source_refresh_attempt_count": 0,
+        "independent_bottom_navigation": true,
+        "interaction_pattern_signature": "6cf01e506c18be8e704217e8691dfa8485fc0e55f05031f485ac8bc930e65537",
+        "navigation_knowledge_confidence": 0.95
+      },
+      "risk_level": "low",
+      "action_type": "click",
+      "candidate_id": "h5-candidate:2dc9fcca13b2942da30980c7eec31e326addf4d6bee89bf1023aba12b0dfd332",
+      "semantic_target": "internal:adaptive_bottom_navigation:nth-of-type(6)",
+      "navigation_depth": 1,
+      "protocol_version": "candidate-action.v1",
+      "exploration_value": 25,
+      "prior_failure_count": 0,
+      "expected_surface_kind": "web"
+    }
+  },
+  "jha031": {
+    "batch": "20261011-232739",
+    "task_id": "1cd920ee-6d0d-4eb5-bf23-6186059f424f",
+    "run_id": "a52cd0fc-41bc-4ee0-9b31-40107b79143c",
+    "last_work": {
+      "work_id": "exploration-work:b1e986177af40895f0f611ef851338e9cb34d6d3814fe783d4acca0c11c32007",
+      "started_at": "2026-10-11T16:39:12.592756+00:00"
+    },
+    "profile": {
+      "metadata": {
+        "purpose": "探索稳定页面中可见的底部导航业务分支",
+        "target_keywords": [
+          "bottom_navigation",
+          "我的",
+          "profile"
+        ],
+        "source_page_type": "home",
+        "action_parameters": {
+          "target_mode": "bottom_navigation",
+          "navigation_index": 6,
+          "navigation_label": "我的"
+        },
+        "source_page_state": "stable",
+        "source_branch_context": "c39f5faf725b21cac7da23f390a2b1b2edb8ee472d412d82b093c836b8d213e3",
+        "expected_next_page_type": "profile",
+        "logical_target_required": true,
+        "source_state_fingerprint": "sha256:927b2629de4d44e455b908cecced83df05251f57f50757cdb6791656879746a1",
+        "navigation_knowledge_source": "static",
+        "source_identity_fingerprint": "sha256:62af862170439b918f8e4418ccb4d1477f1b8376a9ea08b81c11f6b7ae64722c",
+        "source_refresh_attempt_count": 0,
+        "navigation_knowledge_confidence": 0.95
+      },
+      "risk_level": "low",
+      "action_type": "click",
+      "candidate_id": "h5-candidate:ef8bba3ba4b2307f2d2db3a98430cbac3bcc61eec0af3ef04ba44ac89dadd365",
+      "semantic_target": "div.van-tabbar:visible > div.van-tabbar-item:nth-of-type(6):visible",
+      "navigation_depth": 1,
+      "protocol_version": "candidate-action.v1",
+      "exploration_value": 93,
+      "prior_failure_count": 0,
+      "expected_surface_kind": "web"
+    },
+    "local_detail": {
+      "metadata": {
+        "purpose": "从首页内容区进入首个低风险剧集/内容详情，避开广告容器",
+        "target_keywords": [
+          "异世界性爱社团",
+          "内容卡片"
+        ],
+        "source_page_type": "home",
+        "source_page_state": "stable",
+        "source_branch_context": "c39f5faf725b21cac7da23f390a2b1b2edb8ee472d412d82b093c836b8d213e3",
+        "expected_next_page_type": "content_detail",
+        "logical_target_required": true,
+        "source_state_fingerprint": "sha256:927b2629de4d44e455b908cecced83df05251f57f50757cdb6791656879746a1",
+        "source_identity_fingerprint": "sha256:62af862170439b918f8e4418ccb4d1477f1b8376a9ea08b81c11f6b7ae64722c"
+      },
+      "risk_level": "low",
+      "action_type": "click",
+      "candidate_id": "h5-candidate:6cdfa6a24e132cac3b1fc474f9cdd7d045e6a2b0faafa100165b772ad3b327b6",
+      "semantic_target": "异世界性爱社团",
+      "navigation_depth": 1,
+      "protocol_version": "candidate-action.v1",
+      "exploration_value": 93,
+      "prior_failure_count": 0,
+      "expected_surface_kind": "web"
+    }
+  },
+  "jha128": {
+    "batch": "20261011-232739",
+    "task_id": "6b5b0f5b-e238-4e4c-ae4e-b5f589905328",
+    "run_id": "cb09d2a4-3a3c-4780-b96d-bfe2035f705c",
+    "timeline_utc": {
+      "main_finished": "2026-10-11T17:20:09.020287+00:00",
+      "publication": "2026-10-11T17:20:18.827856+00:00",
+      "request": "2026-10-11T17:20:23.311632+00:00",
+      "consumer_finished": "2026-10-11T17:20:26.481615+00:00",
+      "gates": [
+        "2026-10-11T17:20:27.086716+00:00",
+        "2026-10-11T17:20:28.292228+00:00"
+      ]
+    },
+    "first_gate": {
+      "nonterminal_enforced_work_item_count": 4,
+      "candidate_rule_count": 293,
+      "terminal_candidate_rule_count": 237,
+      "open_review_count": 97
+    },
+    "last_gate": {
+      "nonterminal_enforced_work_item_count": 0,
+      "candidate_rule_count": 292,
+      "terminal_candidate_rule_count": 239,
+      "open_review_count": 98
+    }
+  }
+}

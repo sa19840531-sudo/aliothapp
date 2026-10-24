@@ -1,0 +1,23 @@
+{
+  "changed_from_previous_delivery": [
+    "services/api/app/application/green_rule_result_projection.py",
+    "services/api/app/infrastructure/db/task_insight_repository.py",
+    "services/api/tests/test_green_rule_result_projection.py"
+  ],
+  "additional_tracked_files": [
+    "app/workstation/src/modules/reports/components/RuleUsageDialog.vue",
+    "app/workstation/src/modules/reports/components/reportDisplay.test.ts",
+    "app/workstation/src/modules/reports/components/reportDisplay.ts",
+    "app/workstation/src/modules/reports/components/ruleGroups.ts",
+    "app/workstation/src/modules/reports/pages/ReportCenterView.vue",
+    "app/workstation/src/modules/reports/pages/greenReportResultDisplay.test.ts",
+    "app/workstation/src/types/report-insight.ts",
+    "services/api/app/application/green_report_result_projection.py",
+    "services/api/app/application/report_insight.py",
+    "services/api/tests/test_report_green_results.py",
+    "services/api/tests/test_report_green_results_postgres.py",
+    "tests/frontend-e2e/specs/workstation/green-report-consistency.spec.ts"
+  ],
+  "specification_sha256": "a22697624ee8e35ffafb968e60c6d7e6158e703efb46ed040b0ad987b057da1f",
+  "collection_exploration_or_judging_changed": false
+}

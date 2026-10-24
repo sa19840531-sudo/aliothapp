@@ -1,0 +1,692 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Alioth 跨产品自适应短流程探索方案：业务检查点与证据合同、动态路径、流程规则匹配、播放器及支付案例、迁移与验收。">
+  <title>Alioth 短流程探索与流程证据质检方案</title>
+  <style>
+    :root{--bg:#f4f6f8;--paper:#fff;--ink:#1d2c3e;--muted:#526478;--line:#dce3e9;--accent:#14675e;--soft:#e9f4f1;--blue:#245683;--blue-soft:#edf3f9;--amber:#815100;--amber-soft:#fff5df;--red:#9b3838;--red-soft:#faeeee;--nav:#102c39}
+    *{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:24px}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.8 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}
+    a{color:var(--blue);text-decoration:none}a:hover{text-decoration:underline}a:focus-visible,button:focus-visible,select:focus-visible{outline:3px solid #b27717;outline-offset:3px}
+    .sidebar{position:fixed;inset:0 auto 0 0;width:240px;overflow:auto;padding:30px 22px;background:var(--nav);color:#eaf1f4}.brand{font-size:22px;font-weight:700;letter-spacing:2px}.side-sub{color:#aec4cd;font-size:13px;margin:8px 0 20px}.sidebar nav a{display:block;color:#d8e5eb;font-size:13px;padding:6px 10px;border-radius:5px;margin:2px 0}.sidebar nav a:hover,.sidebar nav a.active{background:#244753;color:#fff;text-decoration:none}.sidebar .side-foot{font-size:12px;color:#aec4cd;margin-top:24px}
+    main{max-width:1430px;margin-left:240px;padding:40px 48px 80px}.hero{padding:40px;background:var(--paper);border:1px solid var(--line);border-top:5px solid var(--accent);border-radius:10px;margin-bottom:24px}.eyebrow{color:var(--accent);font-size:13px;font-weight:700;letter-spacing:2px}.hero h1{font-size:34px;line-height:1.35;margin:16px 0}.lead{font-size:18px;max-width:940px}.meta{display:flex;gap:10px 22px;flex-wrap:wrap;color:var(--muted);font-size:13px;margin-top:24px}.toolbar{display:flex;gap:10px;margin-top:22px;flex-wrap:wrap}
+    section{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:30px 34px;margin-bottom:22px;scroll-margin-top:22px}h2{font-size:25px;line-height:1.45;margin:0 0 20px}h2 .num{font-size:13px;color:var(--accent);display:block;letter-spacing:2px;margin-bottom:4px}h3{font-size:18px;margin:26px 0 10px}h4{font-size:15px;margin:16px 0 6px}p{margin:10px 0}li{margin:5px 0}ul,ol{padding-left:23px}strong{font-weight:650}.muted{color:var(--muted)}.small{font-size:13px}.tag{display:inline-block;font-size:12px;padding:2px 8px;border-radius:4px;background:var(--blue-soft);color:var(--blue);white-space:nowrap}.tag.good{background:var(--soft);color:var(--accent)}.tag.gap{background:var(--amber-soft);color:var(--amber)}
+    .callout{border-left:4px solid var(--accent);background:var(--soft);padding:16px 20px;margin:18px 0;border-radius:0 6px 6px 0}.callout.amber{border-color:var(--amber);background:var(--amber-soft)}.callout.blue{border-color:var(--blue);background:var(--blue-soft)}.callout.red{border-color:var(--red);background:var(--red-soft)}
+    .grid2,.grid3{display:grid;gap:16px;margin:18px 0}.grid2{grid-template-columns:repeat(2,minmax(0,1fr))}.grid3{grid-template-columns:repeat(3,minmax(0,1fr))}.box{border:1px solid var(--line);border-radius:7px;padding:18px 20px;min-width:0}.box h3{margin:0 0 8px}.box p{margin:8px 0}.box .big{font-size:23px;font-weight:650;color:var(--accent)}
+    .table-wrap{overflow:auto;margin:16px 0;border:1px solid var(--line);border-radius:6px}table{border-collapse:collapse;width:100%;font-size:14px}th,td{padding:12px 14px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}th{background:#eff3f6;font-weight:650}tr:last-child td{border-bottom:0}td code{overflow-wrap:anywhere}code{font:12.5px/1.65 ui-monospace,SFMono-Regular,Consolas,monospace;background:#edf1f5;border-radius:3px;padding:2px 5px;overflow-wrap:anywhere}pre{background:#152e3b;color:#e3eff2;border-radius:7px;padding:20px;overflow:auto;font:12.5px/1.75 ui-monospace,SFMono-Regular,Consolas,monospace;tab-size:2}pre code{background:none;color:inherit;padding:0;overflow-wrap:normal}
+    .pipeline{list-style:none;padding:0;counter-reset:stage;margin:18px 0}.pipeline li{position:relative;counter-increment:stage;padding:16px 18px 16px 66px;margin:0 0 10px;background:#f6f9fa;border:1px solid var(--line);border-radius:7px}.pipeline li:before{content:counter(stage);position:absolute;left:18px;top:19px;background:var(--accent);color:white;border-radius:50%;width:28px;height:28px;display:grid;place-items:center;font-weight:700}.pipeline h3{margin:0 0 4px;font-size:16px}.pipeline p{margin:0}
+    button,select{font:inherit}button{border:1px solid var(--line);background:#fff;color:var(--ink);padding:8px 15px;border-radius:6px;cursor:pointer}button:hover{background:#edf3f5}button.primary,button[aria-pressed="true"]{background:var(--accent);color:#fff;border-color:var(--accent)}select{padding:8px 12px;max-width:100%;border:1px solid #aab9c5;border-radius:5px;background:#fff;color:var(--ink)}.controls{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
+    .demo{padding:22px;background:#f6f9fa;border:1px solid var(--line);border-radius:8px;margin:18px 0}.timeline{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;list-style:none;padding:0}.timeline li{margin:0;padding:14px;border:1px solid var(--line);border-radius:6px;background:#fff;min-width:0}.timeline b{display:block;color:var(--accent);font-size:13px}.timeline span{display:block;font-size:13px;color:var(--muted);margin-top:5px}.decision{background:#fff;border:1px solid var(--line);border-radius:6px;padding:18px;margin-top:14px}.decision h4{margin:0 0 6px;color:var(--accent)}
+    .entity{border:1px solid var(--line);border-radius:7px;padding:18px;margin:18px 0;overflow:auto}.entity svg{width:100%;min-width:760px;height:auto;display:block}.entity .node{fill:#edf3f7;stroke:#ccd8e0}.entity .node.target{fill:#e5f3ee;stroke:#9cc9b8}.entity text{font-family:inherit;fill:#233e50;font-size:14px}.entity .line{stroke:#7893a4;stroke-width:1.5;fill:none}.source-list{font-size:13px}.source-list li{overflow-wrap:anywhere;margin:12px 0}.footer{font-size:13px;color:var(--muted);margin:24px 4px}.rule-example{border:1px solid var(--line);padding:16px;border-radius:6px;margin:12px 0}
+    @media(min-width:1700px){main{margin-right:auto}.hero h1{font-size:38px}}
+    @media(max-width:1100px){.sidebar{width:210px;padding:24px 15px}main{margin-left:210px;padding:26px 24px}.grid3{grid-template-columns:1fr}.hero{padding:28px}.hero h1{font-size:29px}section{padding:24px}}
+    @media(max-width:760px){.sidebar{position:static;width:auto;padding:18px 20px}.sidebar nav{display:flex;flex-wrap:wrap;gap:4px}.sidebar nav a{font-size:12px;padding:4px 7px}.side-sub{margin:5px 0 10px}.side-foot{display:none}main{margin:0;padding:16px 12px 40px}.hero{padding:23px 20px}.hero h1{font-size:26px}.lead{font-size:16px}section{padding:24px 18px}h2{font-size:22px}.grid2{grid-template-columns:1fr}.timeline{grid-template-columns:1fr}.table-wrap table{min-width:600px}.entity{padding:8px}.meta{gap:4px 14px}.callout{padding:13px 15px}pre{padding:14px}.pipeline li{padding-left:55px}.pipeline li:before{left:14px}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+    @page{size:A4;margin:16mm 13mm}
+    @media print{body{background:#fff;color:#111;font-size:10pt;line-height:1.55}.sidebar,.toolbar,.controls{display:none}main{margin:0;padding:0;max-width:none}.hero,section{border:0;border-radius:0;padding:0;margin:0 0 8mm}.hero{border-bottom:1px solid #ccc;padding-bottom:5mm}.hero h1{font-size:24pt}.lead{font-size:12pt}.meta{font-size:9pt}h2{font-size:17pt;padding-top:3mm;break-after:avoid}h3{font-size:12pt;break-after:avoid}h4{break-after:avoid}.grid2,.grid3{display:block}.box{margin:3mm 0;padding:3mm;break-inside:avoid}.table-wrap{overflow:visible;border-radius:0}table{font-size:9pt;table-layout:fixed;min-width:0!important}th,td{padding:2.3mm;overflow-wrap:anywhere}thead{display:table-header-group}tr{break-inside:avoid}pre{background:#f1f3f5;color:#111;white-space:pre-wrap;overflow:visible;font-size:8pt;overflow-wrap:anywhere}pre code{color:#111}code{font-size:8pt}.callout{break-inside:avoid;padding:3mm}.timeline{grid-template-columns:repeat(3,minmax(0,1fr))}.timeline li{break-inside:avoid;font-size:9pt}.demo{padding:3mm}.entity{break-inside:avoid}.pipeline li{break-inside:avoid;padding:3mm 3mm 3mm 15mm}.pipeline li:before{top:3mm;left:4mm;width:7mm;height:7mm}.source-list{font-size:8pt}a{color:inherit}.footer{font-size:8pt}.small,.tag{font-size:8pt}section{break-before:auto}}
+    @media print{.entity{overflow:visible}.entity svg{min-width:0}h2,h3,h4{break-inside:avoid}}
+  </style>
+</head>
+<body>
+  <aside class="sidebar" aria-label="方案目录">
+    <div class="brand">ALIOTH · 玉衡</div>
+    <div class="side-sub">短流程探索与流程证据质检<br>设计方案 · v1.1 · 自适应探索</div>
+    <nav>
+      <a href="#assessment">01 结论与方案取舍</a><a href="#baseline">02 当前能力与真实缺口</a>
+      <a href="#domain">03 领域模型与边界</a><a href="#architecture">04 整体执行链</a>
+      <a href="#skills">05 检查点合同与产品适配</a><a href="#scheduling">06 自适应调度与恢复</a>
+      <a href="#evidence">07 流程证据与目录规范</a><a href="#matching">08 规则匹配模型</a>
+      <a href="#judging">09 成组证据判定</a><a href="#player">10 播放器流程</a>
+      <a href="#payment">11 支付链路</a><a href="#supplement">12 补采、重判与门禁</a>
+      <a href="#product">13 工作台、权限与接口</a><a href="#migration">14 兼容迁移与工程拆分</a>
+      <a href="#delivery">15 交付阶段与验收</a><a href="#decision-lab">16 判定场景推演</a>
+      <a href="#references">17 代码及外部依据</a>
+    </nav>
+    <div class="side-foot">离线阅读 · 响应式排版 · 可打印<br>代码核对日期：2026-10-09</div>
+  </aside>
+  <main>
+    <header class="hero">
+      <div class="eyebrow">探索能力专项设计 / PROPOSED</div>
+      <h1>短流程探索与<br>流程证据质检方案</h1>
+      <p class="lead">以 Journey 作为短流程的统一领域对象，用业务检查点和证据合同定义要验证的行为，让 Explorer 根据不同产品的入口、页面与当前状态动态选择路径，封存真实过程并完成流程性质检。</p>
+      <div class="callout"><strong>推荐路线：</strong>业务检查点 + 证据义务 + Workflow Skill 策略指引 + 自适应探索。冻结业务标准、证据关系和权限边界；运行中允许更换入口、插入导航与清障、重规划后续动作。复用现有 Journey、Capture、Manifest、EvidenceInputSet 和 RuleJudge，按实际动作留痕。</div>
+      <div class="meta"><span>版本：v1.1 · 自适应探索提案</span><span>日期：2026-10-09</span><span>源码核对基线：dev_2.0 / b45162d5 + 首次核对工作区</span><span>范围：Web / H5 / App</span></div>
+      <div class="toolbar"><button id="print-button" class="primary" type="button">打印 / 保存为 PDF</button><a href="#delivery">查看交付与验收</a><a href="../plans/2026-10-alioth-iteration-plan.html">关联：10 月迭代方案</a></div>
+      <p class="small muted">本方案依据当前源码只读核对；“现有”表示存在代码或合同，“提案”表示待实施。未运行真实站点、设备或支付链路，本文件不代表生产能力验收。</p>
+    </header>
+
+    <section id="assessment">
+      <h2><span class="num">01 / ASSESSMENT</span>结论与方案取舍</h2>
+      <p>四项思路均合理、可实施，且能沿现有架构增量建设。短流程应定义业务目标、可观测检查点、必须满足的因果关系和退出条件；实际入口、页面数量、按钮形式及中间操作可以变化。证据、规则适用性与结果仍需严格核验，缺证、业务缺陷与技术失败分别处理。</p>
+      <div class="table-wrap"><table><thead><tr><th>方向</th><th>判断</th><th>建议补充</th></tr></thead><tbody>
+        <tr><td>增加短流程 Workflow Skills</td><td>合理。可以提高探索目标性与取证一致性。</td><td>Skill 提供多种入口、交互策略和取证方法；Journey 合同描述业务检查点与证据义务；Explorer 自适应规划路径，工具与策略校验每次动作。</td></tr>
+        <tr><td>流程证据同目录、编号命名</td><td>合理，利于审查、对照与下载。</td><td>以 Journey Execution 为证据组边界；目录从 Manifest 和证据关联记录生成。保存步骤、尝试、动作、采集、时间、制品哈希，禁止仅凭文件名还原流程。</td></tr>
+        <tr><td>规则由页面类型扩展到短流程</td><td>必要。页面类型无法表达跨页动作和结果。</td><td>新增页面 / 流程 / 任务三类匹配目标；将“匹配对象”和“证据输入范围”拆开。流程规则按稳定流程类型及场景匹配，页面类型可辅助找入口。</td></tr>
+        <tr><td>使用一系列流程证据判定</td><td>必要，但不能把图集数量或预设动作数量作为完整性标准。</td><td>把真实动作、采样和检查点形成 Observation，按规则的证据义务、角色、因果关系及业务不变量选择输入。截图、DOM、UI Tree 继续作为原始依据。</td></tr>
+      </tbody></table></div>
+      <div class="grid3">
+        <div class="box"><h3>执行完整性</h3><p>目标检查点是否采证或明确记录阻断，必需场景是否处理，真实动作与终态是否可追溯，探索上下文是否恢复。</p></div>
+        <div class="box"><h3>证据充分性</h3><p>是否保存规则所需的前后态、时序观察和同源身份，能否从原始制品复核。</p></div>
+        <div class="box"><h3>产品合格性</h3><p>暂停、拖动、支付取消等行为是否符合规则。操作成功完成取证也可能得到产品不合格结论。</p></div>
+      </div>
+      <h3>范围控制</h3>
+      <p>“完整播放器流程”应解释为<strong>所选业务检查点及适用场景的证据完整覆盖</strong>。产品自动播放、先选择剧集、先关闭广告或进入全屏后显示控件，均可以形成有效路径。首期明确必需目标和探索预算，不承诺穷举所有组合。支付首期覆盖允许的只读展示与安全导航；沙箱结果和权益核对作为后续独立能力。</p>
+      <p>推荐通用探索采用目标驱动与动态路径；经验证的产品脚本可以作为可选快捷策略，运行前核对条件，失配后回到通用探索。新产品不以编写专属脚本为默认前置条件；平台能力不足或高风险动作仍需要明确适配与授权。</p>
+    </section>
+
+    <section id="baseline">
+      <h2><span class="num">02 / BASELINE</span>当前能力与真实缺口</h2>
+      <div class="table-wrap"><table><thead><tr><th>能力</th><th>源码确认现状</th><th>本次改造要补什么</th></tr></thead><tbody>
+        <tr><td>探索技能</td><td><span class="tag good">已有</span> App/H5/Web 探索工作流；player-rule、payment-rule 为判定指导。App Skill 已描述收银台逐步取证、拖动前中后多帧。[S1]</td><td>独立短流程探索 Skill、加载路由及适用场景；沿用通用端侧 Skill。</td></tr>
+        <tr><td>Journey 领域与种子</td><td><span class="tag good">已有</span> Definition / Version / ExecutionPlan / Execution / StepAttempt；播放器与支付流程种子。[S2]</td><td>扩展业务检查点、证据义务、必要依赖与动态动作映射；任务内多个流程计划。</td></tr>
+        <tr><td>生产执行接线</td><td><span class="tag gap">缺口</span> JourneyRunner 有顺序执行实现与测试，生产源未找到实例化调用。App 当前只在首页到达、弹层满足后锁计划并写元数据。[S3]</td><td>增加自适应执行模式，复用现有 Explorer 决策、正式动作、证据提交、租约与恢复；不能直接照搬线性游标。</td></tr>
+        <tr><td>多流程计划</td><td><span class="tag gap">限制</span> 当前计划表 UNIQUE(task_id)；App bridge 首个成功锁定后 break。种子默认播放器在前，同次默认锁定不会同时覆盖支付。[S4]</td><td>同 Run 可冻结多个必要流程计划；不得“第一个种子”代替按规则需求选择。</td></tr>
+        <tr><td>证据聚合</td><td><span class="tag good">已有基础</span> InputSet 有成员序号、Manifest、附件及 Journey Execution ID；Journey 至少两个 Capture 且同 Execution，尚不保证步骤对应及实际时间顺序。[S5]</td><td>加入 StepAttempt / ActionExecution 精确绑定、步骤覆盖、连续性与分支完整性。</td></tr>
+        <tr><td>Web 时序证据</td><td><span class="tag good">特化实现</span> failure_sequence / interaction_sequence 接入 RuleJudge，支持帧角色、样本数、时长及动作前后关系。[S6]</td><td>复用验证与读取能力；保留 Web 特化链，逐步对齐通用 Journey 契约。</td></tr>
+        <tr><td>App 证据角色</td><td><span class="tag gap">合同未闭环</span> checkout_chain_step / player_scrub_series 有应用层证据角色合同；未找到非测试生产构造调用。Android media_state 为 PARTIAL，未声明 seek_media。[S7]</td><td>动作和采集适配、可信进度来源及真实前中后采样；能力不足要明确标记。</td></tr>
+        <tr><td>流程规则匹配</td><td><span class="tag gap">仍依赖页型</span> 启用规则及候选筛选主要依赖 applicable_page_types；聚合证据也先按页型过滤。[S8]</td><td>流程目标、流程适用性台账、候选发布、执行去重和规则清单覆盖。</td></tr>
+        <tr><td>通用流程判定</td><td><span class="tag gap">未实现</span> journey_observation 被允许配置；聚合执行器仅实现三种固定策略，其他策略返回 evidence_insufficient。[S9]</td><td>实际流程观察投影与判定 Handler；发布时验证策略真正可执行。</td></tr>
+        <tr><td>补采与展示</td><td><span class="tag gap">需扩展</span> 当前通用补采重封未提供 Journey Execution ID；已有旅程步骤概览及页面时间线，尚无按执行实例和步骤证据组织的流程查看器。“整体检查”也不承担此职责。[S10]</td><td>步骤级补证、整段重跑及新 InputSet 版本；独立流程时间线与证据包入口。</td></tr>
+      </tbody></table></div>
+      <div class="callout amber"><strong>现状判断：</strong>用户提出的“主要按页面匹配”基本准确；“判定只依赖单截图”需要细化——已有多 Capture、Web sequence 和页面 journey_steps 上下文，但尚缺通用的流程主体、精确步骤关系与端到端生产闭环。不能把 journey_observation 配置名、计划锁定或两张截图当作流程能力已完成。</div>
+    </section>
+
+    <section id="domain">
+      <h2><span class="num">03 / DOMAIN</span>领域模型与职责边界</h2>
+      <p>前端称“短流程 / 流程”，领域统一使用现有 Journey。Workflow Skill 是策略指导；JourneyDefinition 是业务检查点与证据合同；ExecutionPlan 冻结合同和自适应策略；JourneyExecution 保存一次真实探索。<strong>业务检查点与具体动作是两层对象</strong>：一个检查点可以通过多次导航和操作取证，一份可信观察也可以服务多个检查点。</p>
+      <div class="entity">
+        <svg viewBox="0 0 920 344" role="img" aria-labelledby="entity-title entity-desc">
+          <title id="entity-title">业务检查点、真实动作证据与规则判定关系</title><desc id="entity-desc">定义冻结业务检查点和证据合同；执行计划不固定页面路径。Explorer 在流程实例内动态规划动作，检查点尝试绑定实际动作和采集，规则按流程类型选择可信证据进入 RuleJudge。</desc>
+          <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8" fill="#7893a4"/></marker></defs>
+          <rect class="node" x="10" y="20" width="250" height="58" rx="7"/><text x="135" y="44" text-anchor="middle">JourneyDefinition + Version</text><text x="135" y="64" text-anchor="middle">业务检查点、证据义务、依赖</text>
+          <rect class="node" x="334" y="20" width="250" height="58" rx="7"/><text x="459" y="44" text-anchor="middle">ExecutionPlan</text><text x="459" y="64" text-anchor="middle">冻结目标与边界，路径动态生成</text>
+          <rect class="node target" x="658" y="20" width="250" height="58" rx="7"/><text x="783" y="44" text-anchor="middle">JourneyExecution</text><text x="783" y="64" text-anchor="middle">一个实例、明确分支与执行终态</text>
+          <path class="line" d="M260 49 H334" marker-end="url(#arrow)"/><path class="line" d="M584 49 H658" marker-end="url(#arrow)"/>
+          <rect class="node" x="658" y="128" width="250" height="58" rx="7"/><text x="783" y="152" text-anchor="middle">CheckpointAttempt + Action Trace</text><text x="783" y="172" text-anchor="middle">动态尝试、动作、观察与关联</text><path class="line" d="M783 78 V128" marker-end="url(#arrow)"/>
+          <rect class="node" x="334" y="128" width="250" height="58" rx="7"/><text x="459" y="152" text-anchor="middle">Capture → Manifest → Artifact</text><text x="459" y="172" text-anchor="middle">截图、结构、媒体、时序事实</text><path class="line" d="M658 157 H584" marker-end="url(#arrow)"/>
+          <rect class="node" x="10" y="128" width="250" height="58" rx="7"/><text x="135" y="152" text-anchor="middle">Rule Target + Input Contract</text><text x="135" y="172" text-anchor="middle">匹配流程类型，声明检查点证据</text>
+          <rect class="node target" x="334" y="252" width="250" height="58" rx="7"/><text x="459" y="276" text-anchor="middle">EvidenceInputSet</text><text x="459" y="296" text-anchor="middle">规则级选择、封存、版本与哈希</text>
+          <path class="line" d="M459 186 V252" marker-end="url(#arrow)"/><path class="line" d="M135 186 V281 H334" marker-end="url(#arrow)"/>
+          <rect class="node" x="658" y="252" width="250" height="58" rx="7"/><text x="783" y="276" text-anchor="middle">RuleJudge → RuleExecution</text><text x="783" y="296" text-anchor="middle">断言、引用、结果、复核与门禁</text><path class="line" d="M584 281 H658" marker-end="url(#arrow)"/>
+        </svg>
+      </div>
+      <div class="table-wrap"><table><thead><tr><th>实体 / 合同</th><th>关键身份与内容</th><th>建设方式</th></tr></thead><tbody>
+        <tr><td>JourneyDefinition / Version</td><td>definition_id、version、content_hash；flow_type、scenario_key、业务检查点、证据义务、必要因果依赖、退出与恢复合同。</td><td>扩展现有定义协议；不写产品按钮名称、固定页面路由或全局线性动作表。发布后不可覆盖。</td></tr>
+        <tr><td>ExecutionPlan / PlanRevision</td><td>task_id、source_agent_run_id、合同版本、场景、参数指纹、规则需求、策略快照；局部动作计划修订及前态依据。</td><td>解除单计划限制。合同与边界冻结，运行路径追加修订；不修改已发生动作。</td></tr>
+        <tr><td>JourneyExecution</td><td>execution_id、execution_plan_id、执行轮次、Session/Surface 段、入口与出口、业务上下文。</td><td>复用现有执行记录；重跑新实例，不混合上次成功步骤。</td></tr>
+        <tr><td>CheckpointAttempt <span class="tag">提案</span></td><td>checkpoint_id、attempt_id、证据义务、尝试目的、实际观察、阻断、关联动态动作列表。</td><td>新增检查点尝试语义；其 observed 表示材料已观察，不能表示产品符合预期。</td></tr>
+        <tr><td>StepAttempt / Action Trace</td><td>动态 step_id、真实事件序号、attempt_no、意图及回执、source/result_capture、起止时间、错误。</td><td>保留现有具体动作尝试。检查点和动作使用显式关联，不能把 next_step_index 直接当业务覆盖游标。</td></tr>
+        <tr><td>JourneyEvidenceLink <span class="tag">提案</span></td><td>execution_id、checkpoint_id、checkpoint_attempt_id、trace_event_id、具体动作 / 步骤引用、Capture 与 Manifest、角色、采样时间。</td><td>支持检查点与事实多对多关联；观察类材料可无新动作，动作规则必须有相应真实动作身份。</td></tr>
+        <tr><td>EvidenceInputSet</td><td>规则合同、目标实例、输入版本、成员顺序、Manifest / Artifact 引用、候选快照哈希。</td><td>复用封存机制；新增检查点选择与证据闭包，数量由具体合同决定，不用目录或固定帧数替代充分性。</td></tr>
+        <tr><td>JourneyObservation <span class="tag">提案</span></td><td>原始证据引用、步骤观察、转移、缺口、能力事实、断言支持与冲突。</td><td>从冻结 InputSet 生成规则判定投影，可缓存但不能成为独立事实源。</td></tr>
+      </tbody></table></div>
+      <h3>责任分工</h3>
+      <p><strong>QcOrchestrator：</strong>统一管理任务状态、预算、租约、补采、完成门禁和报告绑定。<strong>现有 Explorer：</strong>根据当前观察、未满足证据义务与 Skill，动态选择检查点及合法动作。<strong>JourneyRunner 自适应模式：</strong>维护检查点覆盖、局部计划修订与真实动作尝试，校验依赖并持久化。<strong>Driver / Broker：</strong>校验权限、表面、目标及回执。<strong>Publisher / RuleJudge：</strong>核验证据、发布工作项并判断产品行为。新增能力属于 Journey 的局部运行模式，任务最终状态仍由原 Orchestrator 管理。</p>
+    </section>
+
+    <section id="architecture">
+      <h2><span class="num">04 / PIPELINE</span>整体执行链与双重适用性</h2>
+      <ol class="pipeline">
+        <li><h3>冻结目标、证据义务与运行边界</h3><p>从规则版本生成流程类型、场景、必需业务检查点、证据合同和必要依赖；运行策略提供动作与预算。未预先固定入口页面及点击顺序。</p></li>
+        <li><h3>发现入口并核对运行能力</h3><p>结合真实 Capture、账号与产品能力、当前表面状态核对入口。发现播放器可作为触发线索；最终按目标流程和上下文核验。记录适用 / 不适用 / 未证明。</p></li>
+        <li><h3>动态规划与逐动作观察</h3><p>观察当前状态 → 检查可复用证据 → 选择尚缺检查点及下一动作 → 权限校验 → 正式执行 → 留证 → 更新覆盖。必要时改变入口、插入清障、换策略或重规划；同一 Session 仍保持单写者。</p></li>
+        <li><h3>绑定真实路径与检查点证据</h3><p>每次正式动作和观察提交后，按规则要求关联检查点尝试。记录路径分支、局部计划修订、时序与因果关系；保存失败、未知和中止材料，不仅保存成功路径。</p></li>
+        <li><h3>按流程匹配规则并判定</h3><p>流程目标产生独立候选；按每条规则选择最小充分证据，生成冻结 InputSet 与 JourneyObservation，经确定性断言 / 模型复核进入原有 RuleJudge 写回链。</p></li>
+        <li><h3>补采、复核、覆盖与完成门禁</h3><p>缺证进入可恢复补证请求；不可靠模型结论进入复核。流程终态、规则工作项、未决请求和报告绑定均收口后，由既有 Orchestrator 决定最终状态。</p></li>
+      </ol>
+      <h3>适用性与执行可行性必须分开</h3>
+      <div class="grid2"><div class="box"><h3>产品是否具有该流程</h3><p>会员产品有支付链路，即使平台禁止真实下单，支付成功规则仍可能业务适用。功能入口未找到、账号不满足、页型未知不能直接推断不存在。</p></div><div class="box"><h3>当前运行能否采足证据</h3><p>设备缺媒体状态、没有沙箱支付权限、登录会话失效等属于运行能力或取证约束。记录阻断原因，保留待判规则与真实缺口。</p></div></div>
+      <p>流程完成后核对返回页面、账号、媒体或购物上下文。无法恢复时记录 <code>return_context_unverified</code>，交现有恢复流程；不直接继续点击下一入口并遗失探索状态。</p>
+    </section>
+
+    <section id="skills">
+      <h2><span class="num">05 / ADAPTIVE CONTRACT</span>业务检查点合同、Workflow Skills 与产品适配</h2>
+      <p>DSL 作为声明式合同，定义要观察和判断的业务行为，不预写一串产品页面与控件操作。首期可采用受校验的 JSON 表达，不必建设复杂脚本语言。增加 <code>player-interaction-workflow</code> 与 <code>payment-readonly-workflow</code> 提供策略；现有 Explorer 负责现场发现和路径选择。</p>
+      <div class="callout"><strong>松绑范围：</strong>入口位置、页面数量、控件文案、菜单展开、导航、清障、等待与下一目标选择可动态变化。业务预期、证据来源、必要因果关系、权限及预算继续由冻结合同约束。</div>
+      <div class="table-wrap"><table><thead><tr><th>层</th><th>稳定内容</th><th>允许变化</th></tr></thead><tbody>
+        <tr><td>业务检查点合同</td><td>暂停尝试及其后观察、恢复尝试及其后观察；证据义务和必要依赖。</td><td>如何进入播放器、如何显示控件、用哪些合法动作完成取证。</td></tr>
+        <tr><td>Workflow Skill</td><td>语义识别、取证规程、失败处理、典型候选策略。</td><td>策略选择、组合和局部替换；示例路径不是必经流程。</td></tr>
+        <tr><td>产品 / 平台适配</td><td>当前状态证明、目标定位、动作能力与可观测来源。</td><td>按钮、手势、原生控件或 Web 媒体操作；可选产品快捷路径。</td></tr>
+        <tr><td>实际运行路径</td><td>真实动作与回执、前后采集、计划修订、关联及错误均持久化。</td><td>节点数和顺序可以变化，但须满足规则明确要求的局部因果关系。</td></tr>
+        <tr><td>运行策略与规则标准</td><td>权限、预算、采样合同、数值容差、业务预期和复核政策。</td><td>在允许配额内分配局部动作与等待成本；不能由模型降低标准或扩大权限。</td></tr>
+      </tbody></table></div>
+      <h3>业务检查点不是页面状态的成功门禁</h3>
+      <p>“暂停效果”检查点表示已尝试暂停并取得其后观察。观察到进度仍推进时，该检查点的证据可以充分，产品行为判为 fail。<code>pending / observed / blocked / unresolved</code> 描述采证处理状态；产品是否支持某能力与证据是否充分独立保存，不把按钮点击成功、期望页面到达或期望状态实现作为发布前提。</p>
+      <h3>合同示例：暂停与恢复的采证目标</h3>
+      <p class="small muted">以下为待实施的目标协议。数组用于列举检查点，排列位置没有执行顺序含义；只有 required_relations 定义必要依赖。现有 journey-dsl.v1 及顺序 Runner 需要协议和运行模式扩展。</p>
+      <pre><code>{
+  "schema_version": "journey-intent-contract.v1-proposed",
+  "flow_type": "player.interaction",
+  "scenario_key": "pause_resume",
+  "objective": "取得同一媒体的暂停与恢复效果证据",
+  "checkpoints": [
+    {"id": "playback_baseline", "intent": "observe_current_playback",
+     "evidence_contract_ref": "rule.playback-baseline"},
+    {"id": "pause_effect", "intent": "attempt_pause_and_observe",
+     "evidence_contract_ref": "rule.pause-effect",
+     "observation_must_include": ["pause_attempt", "post_attempt_window"]},
+    {"id": "resume_effect", "intent": "attempt_resume_and_observe",
+     "evidence_contract_ref": "rule.resume-effect",
+     "observation_must_include": ["resume_attempt", "post_attempt_window"]}
+  ],
+  "required_relations": [
+    {"before": "playback_baseline", "after": "pause_effect",
+     "relation": "same_media_and_verified_baseline"},
+    {"before": "pause_effect", "after": "resume_effect",
+     "relation": "observed_pause_attempt_before_resume_attempt"}
+  ],
+  "business_invariants": ["media_id", "account_state"],
+  "strategy_hints": ["discover_playable_content", "reveal_controls_if_needed"],
+  "adaptation_policy_ref": "runtime.short-flow-adaptation",
+  "action_policy_ref": "task.allowed-actions",
+  "budget_ref": "task.short-flow-budget",
+  "exit_contract_ref": "task.restore-source-context"
+}</code></pre>
+      <p>合同不指定必须从详情页进入、不指定播放按钮文本、不要求一定先进入全屏。自动播放的可信观察可以满足 baseline；已处于暂停态只能证明当前状态，不能代替本次“尝试暂停”的动作证据。窗口、采样数和容差从规则读取；不会因产品路径长而偷偷缩短观察窗口。</p>
+      <h3>同一合同适配三类产品</h3>
+      <div class="table-wrap"><table><thead><tr><th>产品交互差异</th><th>可能的实际路径</th><th>共同验收内容</th></tr></thead><tbody>
+        <tr><td>A · 进入即自动播放</td><td>观察当前播放 → 尝试暂停并取证 → 尝试恢复并取证。</td><td>同媒体 baseline、真实暂停 / 恢复尝试、各自后的观察窗口。</td></tr>
+        <tr><td>B · 详情页手动播放</td><td>发现播放入口 → 点击播放 → 核对媒体 → 按当前控件取暂停 / 恢复证据。</td><td>合同不要求 A 与 B 的页面或操作数量相同。</td></tr>
+        <tr><td>C · 广告遮挡且控件隐藏</td><td>正式清障 → 核对播放器 → 必要时进入全屏 / 唤醒控件 → 完成业务检查点 → 返回。</td><td>额外操作纳入预算与真实轨迹；检查点证据关系保持严格。</td></tr>
+      </tbody></table></div>
+      <div class="demo" id="adaptive-demo">
+        <div class="controls"><label for="adaptive-product">产品路径示意</label><select id="adaptive-product"><option value="autoplay">产品 A · 自动播放</option><option value="manual">产品 B · 点击播放</option><option value="obstructed">产品 C · 广告与隐藏控件</option></select></div>
+        <p><strong>共同业务检查点：</strong>播放基线 / 暂停效果 / 恢复效果。检查点不随产品更换。</p>
+        <h4 id="adaptive-path-title">产品 A · 当前内容已自动播放</h4>
+        <ol class="timeline" id="adaptive-path" aria-live="polite"><li><b>事件 1 · 观察播放基线</b>核对媒体及可信时间窗口</li><li><b>事件 2 · 尝试暂停</b>记录目标、回执与前后证据</li><li><b>事件 3 · 观察暂停效果</b>保存真实结果，允许记录暂停失效</li><li><b>事件 4 · 尝试恢复</b>确认同一媒体并正式执行</li><li><b>事件 5 · 观察恢复效果</b>核对持续播放或异常</li></ol>
+        <p id="adaptive-path-note" class="small muted">示例共 5 个实际事件；事件编号仅表达本示例的真实先后，不是合同要求的固定动作数量。</p>
+        <p class="small muted">预置方案演示，无真实操作与取证。打印保留当前示例，并保留上方三类产品对照。</p>
+      </div>
+      <h3>产品适配：通用策略优先，专属策略可选</h3>
+      <ol>
+        <li><strong>语义能力：</strong>发现“播放 / 暂停 / 恢复 / 展示价格”等业务意图与当前状态，不依赖固定 page_type 或页面路由。业务能力、运行端动作能力、观测能力和授权状态分别核对。</li>
+        <li><strong>实际目标：</strong>Driver adapter 从当前可信 DOM、UI Tree 或视觉候选定位控件，绑定真实几何和表面。存在多个候选时先观察或消歧；不能用旧坐标硬点。</li>
+        <li><strong>策略候选：</strong>可通过菜单、点击画面、全屏、返回入口等合法路径取得证据；策略变化写入计划修订。无法证明目标或效果时记录未知，不猜测成功。</li>
+        <li><strong>可选产品配置：</strong>表达已知入口别名、观测源、业务上下文提取和安全返回方法；只有反复出现的差异才形成适配。已有脚本须验证前态，不匹配时回到通用探索。</li>
+        <li><strong>合同一致性：</strong>不同产品可以选择等效观测源，但该替代必须经合同允许并满足精度；模型不能把画面变化自动当作精确播放进度，或删除不易完成的检查点。</li>
+      </ol>
+      <h3>版本与分支</h3>
+      <p>冻结 Skill、合同、策略、工具能力及规则版本；运行时产生的路径和局部计划修订追加留存，无需为每次点击路线发布新的 JourneyDefinition。<code>scenario_key</code> 表达业务行为目标，例如暂停恢复或只读价格核对，不表达产品页面组合。</p>
+      <p>必需场景来自冻结规则范围，可选能力按真实发现记录。意外广告、登录墙、内容失效等形成实际分支与缺口；模型不能为提高覆盖率删减目标。新发现会影响适用性的能力按版本化事实台账与既有门禁裁定处理，不静默缩小原分母。首期支持局部重规划及有限因果依赖，无需建设通用嵌套工作流引擎。</p>
+      <p>Skill 经草稿、回放验证、发布和停用管理，正文加载当前业务目标和候选策略，参考材料按需读取。Skill 提供指导，合同与正式动作接口提供可验证边界。</p>
+    </section>
+
+    <section id="scheduling">
+      <h2><span class="num">06 / RUNTIME</span>自适应调度、预算与恢复</h2>
+      <h3>目标驱动的观察—规划—执行循环</h3>
+      <p>每个 Run 从冻结规则需求生成待探索流程清单。发现入口后，先扣专项预算、核对能力，再创建计划和执行实例。优先级由业务规则严重度、证据缺口、当前入口可达性和剩余成本决定；相同内容 / 商品 / 场景通过业务参数指纹去重。</p>
+      <p>普通页面遍历继续存在。流程执行期间持有当前 Session 的动作租约，探索导航暂停；流程完成或明确中止后回到原遍历游标。不同 Session 可以并行，已封存证据的离线分析及 RuleJudge 可以并行，同一浏览器 / 设备保持单写者。</p>
+      <ol class="pipeline">
+        <li><h3>观察并复用已存在的可信材料</h3><p>识别当前业务对象、账号、表面、阻挡及能力，检查已有 Capture 是否满足检查点。只读事实可以复用；要求特定动作效果的规则仍须真实动作与因果关系。</p></li>
+        <li><h3>选择可达的检查点与局部路径</h3><p>从尚缺证据中选择满足必要依赖的目标，结合 Skill、当前候选和运行策略规划下一动作或短动作块。没有必要依赖的检查点可重排。</p></li>
+        <li><h3>校验动作并提交实际结果</h3><p>核对权限、租约、当前目标和预算；执行一次正式动作并采集回执及所需材料。不能将一次模型建议中的多个点击无观察地连续下发。</p></li>
+        <li><h3>更新检查点、调整策略或结束</h3><p>保存实际观察、缺口与冲突。可以换候选入口、补充观察、处理阻挡、重规划或明确中止。充分失败证据立即交判，不反复尝试把产品改成成功状态。</p></li>
+      </ol>
+      <p>每次局部计划记录 <code>revision_id / parent_revision_id / source_capture_id / checkpoint_id</code>、策略来源、简短结构化选择理由、预期采证对象与实际结果。持久化事实支持恢复，不要求模型复现相同措辞或重新猜测旧路径；任务控制仍由现有 Orchestrator 完成。</p>
+      <div class="table-wrap"><table><thead><tr><th>约束</th><th>建议首期策略</th><th>审计要求</th></tr></thead><tbody>
+        <tr><td>任务预算</td><td>专项动作、等待时长和制品配额计入全局预算；可配置保留额度，避免页面遍历耗尽所有流程预算。</td><td>记录预留、实际消耗与未覆盖项。预算耗尽是未完成原因。</td></tr>
+        <tr><td>尝试与策略切换</td><td>按当前状态选择合法替代路径；相同目标无变化时限制重复，转向观察、其他候选或中止。有副作用动作超时先查回执与状态。</td><td>检查点、具体动作尝试、策略修订、错误类型、切换理由及是否已执行。</td></tr>
+        <tr><td>租约失效</td><td>丢失租约立即停止动作；由现有恢复所有者接管，不另起并行执行器。</td><td>owner、token、epoch 与版本，旧所有者写回必须被拒绝。</td></tr>
+        <tr><td>采集失败</td><td>动作回执已成功时，优先恢复同次采集上传 / 关联；不能重做动作以“补一张截图”。</td><td>区分动作、采集、上传、提交和关联阶段。</td></tr>
+        <tr><td>页面与路径变化</td><td>每个动作前核对可信 Capture；出现弹层、路由变化、隐藏控件或新入口时重新规划。合理路径差异不直接判失败。</td><td>新观察、局部计划修订、正式清障和真实目标；采集不能偷偷唤醒控件。</td></tr>
+        <tr><td>恢复策略</td><td>按缺证合同和当前状态选择恢复上传、继续取证、返回可证明的安全状态或新实例重跑；核验不变量，非重放场景人工或中止。</td><td>恢复决策依据、父实例、业务身份、因果连续性、禁止复用片段及新输入版本。</td></tr>
+      </tbody></table></div>
+      <h3>三个独立状态维度</h3>
+      <div class="grid3"><div class="box"><h3>执行状态</h3><p>planned / running / completed / aborted / failed / cancelled。表示执行器是否完成采证工作，沿用或扩展既有枚举。</p></div><div class="box"><h3>证据状态</h3><p>collecting / sealed_sufficient / sealed_partial / rejected_integrity。按具体规则计算充分性，同一流程可能只对部分规则充分。</p></div><div class="box"><h3>业务判定</h3><p>pass / fail / evidence_insufficient / manual_review 等沿用规则结果。不得将 Runner 的 completed 直接映射为 pass。</p></div></div>
+      <div class="callout"><strong>保留失败证据：</strong>点击暂停后进度仍增加，是应交给 Judge 的潜在产品缺陷；不能因为步骤“未达到期望播放态”就抛弃流程。执行器只检查可观测性、技术边界与退出条件；业务期望由规则判断。</div>
+      <p>Microsoft Agent Framework 有工作流检查点能力，可辅助模型执行状态恢复；浏览器、设备和服务端交易状态仍要独立核验。本仓库固定 <code>agent-framework-core==1.10.0</code>，不能直接套用新版文档 API。建议先复用现有 PostgreSQL 游标、租约与 StepAttempt，新增 MAF 检查点适配时单独验证版本兼容。<a href="https://learn.microsoft.com/en-us/agent-framework/workflows/checkpoints?pivots=programming-language-python" target="_blank" rel="noreferrer">[E1] Microsoft 官方检查点说明</a></p>
+    </section>
+
+    <section id="evidence">
+      <h2><span class="num">07 / EVIDENCE</span>流程证据、关联合同与目录规范</h2>
+      <h3>一条证据至少回答六个问题</h3>
+      <ol><li>属于哪个 Task / Run / 流程实例、业务检查点及其真实尝试？</li><li>来自哪一个 Session 和表面段，关联哪次实际事件及正式动作？</li><li>是动作前、动作后、过程采样、错误、返回还是外跳证据？</li><li>采集发生在什么时候，顺序与因果关系如何证明？</li><li>引用哪一个 Capture、Manifest 精确版本和原始 Artifact？</li><li>满足哪些检查点和规则的证据义务，仍缺哪些材料？</li></ol>
+      <h3>证据组合同</h3>
+      <pre><code>{
+  "schema_version": "journey-evidence.v1-proposed",
+  "task_id": "T1",
+  "source_agent_run_id": "R1",
+  "journey_execution_id": "J1",
+  "definition": {"id": "player-interaction", "version": 2, "content_hash": "…"},
+  "scenario_key": "pause_resume",
+  "business_context": {"media_ref": "content-A", "account_state_ref": "…"},
+  "segments": [{"segment_id": "seg-1", "surface_session_id": "S1",
+                "surface_kind": "android", "capture_epoch": 4}],
+  "links": [
+    {"sequence_no": 10, "trace_event_id": "E10",
+     "checkpoint_id": "pause_effect", "checkpoint_attempt_id": "CA2",
+     "runtime_step_attempt_id": "SA2", "plan_revision_id": "PR2",
+     "action_execution_id": "A2", "segment_id": "seg-1",
+     "capture_role": "before_action", "capture_id": "C10",
+     "manifest": {"id": "M10", "version": 1, "hash": "…"},
+     "observed_at": "2026-10-09T02:00:01Z", "monotonic_offset_ms": 1200,
+     "artifacts": [{"artifact_id": "IMG10", "sha256": "…"}]}
+  ],
+  "checkpoint_coverage": {
+    "pause_effect": {"attempts": ["CA2"], "evidence_state": "partial",
+                     "missing_roles": ["post_attempt_window"]}
+  },
+  "evidence_assessments": [
+    {"rule_contract_ref": "rule.pause-effect", "status": "partial",
+     "missing_relations": ["pause_attempt_to_observation_window"]}
+  ],
+  "continuity": {"verified": true, "gaps": []},
+  "terminal": {"execution_status": "aborted", "reason": "budget_exhausted"}
+}</code></pre>
+      <p>示例展示一条关联及其缺口，执行终态与规则证据充分性分开保存。<code>before_action</code> 等角色复用现有词表；检查点标签独立记录。观察类关联可以没有新动作 ID；规则要求动作效果时必须验证真实动作、回执及观察窗口，不能只靠标签命中。</p>
+      <h3>顺序、时间和连续性</h3>
+      <ul>
+        <li><strong>顺序：</strong>真实事件先后与持久化追加顺序分别记录；以事件序号、动作回执、采集时间及因果边核对。保留 attempt_no / sample_index；step_index 仅为旧模式或展示信息，不能要求所有产品执行同一全局顺序。上传与文件排序不能替代动作发生顺序。</li>
+        <li><strong>时间：</strong>记录采集开始 / 结束、设备观察时间、服务端接收时间及同段单调偏移。跨设备注明时钟偏差；不能仅凭两张图片的秒级文件时间判断短时变化。</li>
+        <li><strong>因果：</strong>动作前后帧指向同一次正式动作与检查点尝试；只核验规则要求的局部依赖。暂停观察窗口必须在暂停尝试之后，并证明未换媒体或插入破坏观测的动作；其他无依赖的检查点允许调换顺序。</li>
+        <li><strong>同源：</strong>冻结集合按同一源 Run 校验。跨 App、浏览器或支付提供方的合法切换用明确 segment 与受控转移回执连接，不强求同一 Session，也不允许任意跨会话拼图。</li>
+        <li><strong>Epoch：</strong>区分原 Capture 的采集 epoch、补证归属和最终封存 epoch。封存提升不能要求重写原 Capture 身份；通过现有合法血缘与 InputSet 合同核验。</li>
+        <li><strong>重复：</strong>相同像素哈希可以代表不同真实时间采样，保留独立 Capture 的时间和来源；展示可去重，但不能将重复图片当作状态变化。</li>
+      </ul>
+      <h3>目录与命名：面向查看与导出</h3>
+      <p>一个目录对应一次 JourneyExecution。材料按真实事件编号，业务检查点索引引用材料，可同时按检查点和真实路径浏览；不预生成必经步骤目录。在线继续引用现有对象与 Manifest，下载时校验后生成目录，可读名称不作为唯一身份。</p>
+      <pre><code>task-T1/run-R1/journeys/
+  player.interaction__pause_resume__J1/
+    index.html
+    manifest.json
+    timeline.jsonl
+    plan-revisions.jsonl
+    rule-inputs/
+      rule-player-pause__inputset-IS1.json
+    events/
+      000008__clear_obstruction__A1__receipt.json
+      000009__observation__C9__screenshot.png
+      000010__before_action__C10__screenshot.png
+      000011__action__A2__receipt.json
+      000012__after_action__C11__screenshot.png
+      000013__window_sample__C12__screenshot.png
+      000014__window_sample__C13__media_state.json
+    checkpoints/
+      playback_baseline__CA1.json
+      pause_effect__CA2.json
+      resume_effect__CA3.json
+    derived/
+      ocr__source-IMG12__extractor-v2.json
+      contact-sheet__source-set-H1.png
+    gaps.json</code></pre>
+      <div class="table-wrap"><table><thead><tr><th>文件</th><th>内容与规则</th></tr></thead><tbody>
+        <tr><td>manifest.json</td><td>精确身份、成员、角色、顺序、原始存储引用及哈希、封存版本、导出包哈希。文件清单闭包禁止遗漏、替换和新增未引用主证据。</td></tr>
+        <tr><td>timeline.jsonl / plan-revisions.jsonl</td><td>真实事件及局部计划修订：目标发现、策略选择、正式动作、观察、错误、返回。计划建议与实际发生分别标识，未执行动作不能当证据。</td></tr>
+        <tr><td>checkpoints/</td><td>检查点尝试的证据索引，引用事件 / 原图，不重复复制同一制品；一条材料可按合同支持多个检查点。</td></tr>
+        <tr><td>index.html</td><td>离线真实路径、检查点覆盖、前后并排、规则引用及缺口；编号代表实际事件，不是必经步骤。</td></tr>
+        <tr><td>derived/</td><td>OCR、摘要、裁剪或拼接必须有来源 IDs、算法 / 模型版本与哈希。总览图仅辅助查看；判断返回原始帧。</td></tr>
+        <tr><td>gaps.json</td><td>缺少角色、无法观测能力、时间不确定、业务身份变化、技术失败和策略阻断，关联受影响规则。</td></tr>
+      </tbody></table></div>
+      <p>命名固定 UTF-8，真实事件序号固定宽度，检查点、尝试和实例身份稳定，可读名称安全清洗；禁止路径穿越和文件名中的敏感信息。编号遗漏如实保留，额外导航与失败事件同样留存，不补造检查点材料。</p>
+      <h3>材料取舍</h3>
+      <p>每个状态改变动作保存前后原图和回执；短暂 Toast、拖动和播放进度按窗口采样。DOM / UI Tree / 媒体状态按端侧实际能力保存，缺失不得伪造。录屏、HAR、网络和控制台按规则需求选采；播放是否推进通常需要媒体进度或可信多时点观察，单帧画面和按钮文案均不足。</p>
+      <p>Web 可选择使用 Playwright trace 辅助技术排查，其动作与 DOM / 网络记录适合复盘。正式规则输入仍需经 Alioth Manifest 与合同校验，不将 trace.zip 自动视作已通过证据门禁。<a href="https://playwright.dev/docs/api/class-tracing" target="_blank" rel="noreferrer">[E2] Playwright 官方 Tracing 文档</a></p>
+    </section>
+
+    <section id="matching">
+      <h2><span class="num">08 / RULE TARGET</span>规则匹配目标与输入范围分离</h2>
+      <div class="grid3"><div class="box"><div class="big">Page</div><h3>页面规则</h3><p>匹配页面类型、渠道及页面状态。例：播放器页返回按钮大小。输入可以包含动作前后多帧。</p></div><div class="box"><div class="big">Journey</div><h3>流程规则</h3><p>匹配流程类型、场景、业务能力。例：暂停后进度稳定、恢复后持续播放。主身份是流程实例。</p></div><div class="box"><div class="big">Task</div><h3>任务聚合规则</h3><p>匹配任务范围与产品能力。例：多个页面的 Toast 样式一致。保留现有聚合特化策略。</p></div></div>
+      <h3>目标字段与合同</h3>
+      <p>建议规则新增 <code>match_target_type</code> 与 <code>match_target_config</code>；复用 <code>capability_config.evidence_input_scope</code>。新增匹配语义必须进入规则合同哈希或独立冻结的匹配策略哈希，避免规则重判时随当前页型 / 当前规则配置漂移。</p>
+      <pre><code>{
+  "match_target_type": "journey",
+  "match_target_config": {
+    "flow_types": ["player.interaction"],
+    "scenario_keys": ["pause_resume"],
+    "channels": ["web", "h5", "app"],
+    "required_product_capabilities": ["player_pause_resume"]
+  },
+  "judge_config": {
+    "capability_config": {
+      "evidence_input_scope": "journey",
+      "evidence_scope_key": "journey_observation"
+    },
+    "strategy_key": "player.pause_resume.v1"
+  },
+  "input_contract": {
+    "required_checkpoints": ["playback_baseline", "pause_effect", "resume_effect"],
+    "required_evidence": ["real_pause_attempt", "post_pause_window",
+                          "real_resume_attempt", "post_resume_window"],
+    "required_relations": ["same_media", "action_to_its_window", "causal_order"],
+    "required_measurements": ["progress_delta", "elapsed_time"],
+    "threshold_source": "frozen_rule_contract"
+  }
+}</code></pre>
+      <p class="small muted">字段名为实施建议；发布时同时核对策略注册、运行端能力和证据合同。需要支持多个流程类型的规则，每个执行实例分别判断；首期不做一个规则混合页面与流程两类匹配主体。</p>
+      <p>流程类型表示行为目标，不能以某个技能是否加载或是否走了某条路线作为唯一匹配依据。必须从可信对象、实际动作与观察建立流程实例。单个展示事实可能只需一份采集，时序规则则需要足够样本及时间窗；新协议据合同校验，现有 Journey“至少两个 Capture”约束保留在旧协议中，不机械套用到所有新检查点。</p>
+      <h3>匹配算法</h3>
+      <ol>
+        <li><strong>冻结候选：</strong>规则清单按 target 分组；页面规则走原候选链，流程规则走独立流程候选链，不进入页面类型必填过滤。</li>
+        <li><strong>核对业务适用：</strong>用产品声明、实际入口 / 能力观察、账号条件形成适用性快照。<code>not_applicable</code> 必须有明确、可引用依据。</li>
+        <li><strong>核对流程实例：</strong>flow_type、scenario、业务参数、渠道和定义兼容性满足目标后绑定 execution_id。页型未知不自动排除已可信确认的流程实例。</li>
+        <li><strong>核对输入就绪：</strong>按 required_checkpoints / required_evidence / relations / observations 检查证据。实际页面、导航次数和非必要操作顺序变化不影响匹配；两张图或 completed 不能自动放行。</li>
+        <li><strong>发布工作：</strong>冻结 InputSet 和目标合同，幂等创建原有 Inspection Work；受影响规则按目标实例去重。</li>
+      </ol>
+      <div class="table-wrap"><table><thead><tr><th>情形</th><th>处理</th><th>避免误判</th></tr></thead><tbody>
+        <tr><td>产品明确没有该功能</td><td>有权威声明 / 可验证负向探索依据时记 not_applicable。</td><td>找不到入口不等于功能不存在。</td></tr>
+        <tr><td>有功能，未到达入口</td><td>适用或未证明；继续探索或记录覆盖缺口。</td><td>不能记 skipped 后计为覆盖完成。</td></tr>
+        <tr><td>页型不确定，流程入口与业务身份可信</td><td>可以形成流程候选；按流程合同继续核验。</td><td>避免流程判定继续被 page_type 兜底拦截。</td></tr>
+        <tr><td>现有端缺必要动作 / 可观测字段</td><td>记录运行能力阻断及证据不足；必要时按规则政策人工复核。</td><td>能力缺失不能改为业务不适用。</td></tr>
+        <tr><td>流程未完成，但已存在充分失败证据</td><td>仅受该证据覆盖的断言可得到 fail，其余仍缺证。</td><td>不要求产品操作成功才交给 Judge。</td></tr>
+      </tbody></table></div>
+      <h3>执行身份与统计</h3>
+      <p>建议工作幂等身份包含 <code>source_run + rule_contract_hash + target_instance_id + input_set_hash</code>，同时保持现有 lease / attempt / 幂等写回。页面、流程、任务结果采用显式目标字段；流程结果可以无 page_capture_id，但必须有 journey_execution_id 和 InputSet，禁止随机选一页作为宿主。</p>
+      <p>一条规则可能针对多次流程实例执行。界面分别统计唯一规则覆盖数与实例执行数；任务级合成按冻结规则聚合政策处理，不能默认“最后一次覆盖前一次失败”或“任何一次通过即可通过”。首期可采用任一实例失败则该规则失败、必需实例缺证则未完备的明确政策。</p>
+    </section>
+
+    <section id="judging">
+      <h2><span class="num">09 / JUDGING</span>成组证据判定：真实路径与业务检查点</h2>
+      <p>流程图集保存完整探索材料；每条规则消费其最小充分子集。EvidenceInputSet 先冻结该规则的权威选择快照，再按快照完整成员封存。不得在冻结集合后让模型挑选有利图片，也不把流程所有制品无差别塞进上下文。</p>
+      <ol class="pipeline">
+        <li><h3>可信与完整性校验</h3><p>目标、Run、段、Capture、Manifest 精确身份与哈希、角色、附件闭包及合法血缘均通过。完整性失配进入拒绝输入 / 技术处置，不能作为 pass 或产品 fail。</p></li>
+        <li><h3>检查点事实投影</h3><p>把实际事件映射为检查点的证据集合，保留正式动作、前后态、采样时间、局部因果与缺口。不同产品路径可满足同一合同；OCR / Vision注明来源与不确定性。</p></li>
+        <li><h3>确定性断言优先</h3><p>对顺序、样本数、时长、进度变化、价格关系、订单标识和状态比较使用合同中的精确规则；缺字段不补默认值，测量误差按合同处理。</p></li>
+        <li><h3>语义判断与复核</h3><p>对提示、弹层、视觉反馈等非确定性内容调用模型，输入为冻结的检查点事实及真实引用；不能因路径不同判失败。冲突、低置信和 Provider 故障沿既有复核政策收口。</p></li>
+        <li><h3>结构化写回</h3><p>逐断言记录 outcome、observed、expected_ref、evidence_refs、缺口及冲突；继续使用原有 RuleExecution、人审、报告和 Completion Gate 链。</p></li>
+      </ol>
+      <h3>判定结果建议</h3>
+      <pre><code>{
+  "target": {"type": "journey", "journey_execution_id": "J1"},
+  "input_set_ref": {"id": "IS1", "hash": "…"},
+  "outcome": "fail",
+  "assertions": [
+    {"id": "pause_stops_progress", "outcome": "fail",
+     "observed": {"progress_delta_seconds": 4.2},
+     "expected_ref": "frozen-rule.pause-tolerance",
+     "evidence_refs": [
+       {"capture_id": "C12", "artifact_id": "MEDIA12",
+        "checkpoint_attempt_id": "CA2", "trace_event_id": "E13"},
+       {"capture_id": "C13", "artifact_id": "MEDIA13",
+        "checkpoint_attempt_id": "CA2", "trace_event_id": "E14"}
+     ]}
+  ],
+  "missing_evidence": [],
+  "context_invariants": {"same_media": true, "same_account": true}
+}</code></pre>
+      <p class="small muted">数字仅为方案示例，不代表真实运行结果。结论应说明“哪个动作、哪个时间窗、哪些事实违反哪条合同”，不能只写“播放器交互异常”。</p>
+      <div class="callout blue"><strong>检查点充分性原则：</strong>“暂停后稳定”需要真实暂停尝试及其后观察窗口，不要求某个详情页、某种控件或固定导航步骤。“全流程状态保持”根据其合同核对必需检查点和出口。按业务事实判断，检查点覆盖与实际动作数量分别展示。</div>
+      <p>引入两个规则驱动集合：<code>must_observe</code> 是进入判断所需证据；<code>expected_behavior</code> 是待验证业务表现。前者缺失产生缺证，后者被真实材料否定产生失败。避免把“点击后必须成功播放”放进发布门禁而漏掉播放器不能播放的缺陷。</p>
+      <h3>内容成本与采样质量</h3>
+      <p>先用结构化事实形成阶段摘要，再读取关键前后帧、冲突帧及失败片段；限制帧数、分辨率和推理预算。抽样仍须满足规则合同的观察窗口及最小数量。测量不可靠时请求相应证据或人工复核，不因节省上下文删除关键中间态。</p>
+    </section>
+
+    <section id="player">
+      <h2><span class="num">10 / PLAYER</span>播放器：跨产品检查点与实际分支</h2>
+      <p>以下是业务能力与证据关注项，不是所有产品必经的页面或动作顺序。Explorer 可从内嵌播放器、详情、短剧、选集或已有播放状态切入，按当前控件和规则需求选择路径。Web/H5 复用现有媒体与 sequence；App 先补齐可信动作和观测，再声明相应覆盖。</p>
+      <div class="table-wrap"><table><thead><tr><th>业务检查点 / 场景</th><th>所需证据</th><th>可判规则与边界</th></tr></thead><tbody>
+        <tr><td>播放基线 / 首播效果</td><td>当前可信来源、媒体身份、初始画面、规则所需时序样本；若发生导航或播放操作，保留其回执。</td><td>自动播放可直接形成基线；首播规则若要求主动播放效果，仍须真实尝试。静止画面不直接等于未播放。</td></tr>
+        <tr><td>暂停与恢复</td><td>暂停 / 恢复的前后帧与回执；各自后的观察窗口、媒体进度及账号 / 内容不变量。</td><td>暂停后进度变化在合同容差内；恢复后持续推进。图标切换仅是辅助。</td></tr>
+        <tr><td>拖动定位</td><td>拖前、真实拖动路径 / 操作、必要中间采样、拖后位置与稳定后播放观察。</td><td>目标位置及实际进度在合同容差内，内容未变化，拖动后能继续。禁止单帧证明拖动。</td></tr>
+        <tr><td>全屏进入与退出</td><td>实际全屏 / 原始模式、动作前后布局及方向、退出后的播放状态。</td><td>验证切换、退出及状态保持；只有可信依据证明产品无此功能时记可选分支不适用。运行端缺动作或观测能力则记能力阻断和缺证。</td></tr>
+        <tr><td>可选：倍速 / 清晰度 / 线路 / 换集</td><td>能力及目标选项、切换回执、实际媒体状态与相应播放窗口。</td><td>仅覆盖声明能力；换集是新媒体上下文，不能混入“同一媒体进度连续性”。</td></tr>
+        <tr><td>返回与再次进入</td><td>真实返回动作、来源上下文、重新进入的内容及进度。</td><td>规则明确要求时检查记忆播放位置；位置容差和自动播放期望均由合同指定。</td></tr>
+      </tbody></table></div>
+      <h3>产品差异与实际分支</h3>
+      <p>登录墙、付费解锁、广告插入、控件隐藏、手势操作与内容失效均按实际观察形成分支。可按策略正式清障、显示控件、换可验证入口或记录阻断；不要求它们先出现在 DSL 的节点表里。需要业务故障注入时另行声明运行能力，不将当前 network_fault stub 当可用。</p>
+      <p>操作存在但不生效应保留失败证据；仅未找到入口不足以判功能不支持。一次探索可以覆盖多个检查点，规则只取对应材料。倍速、清晰度、全屏等无因果依赖的关注项可按当前可达性重排；暂停观察必须发生在对应暂停尝试之后。</p>
+      <div class="demo">
+        <div class="controls"><span>证据关注项示意：</span><button type="button" data-flow="player" aria-pressed="true">播放器</button><button type="button" data-flow="payment" aria-pressed="false">支付只读</button></div>
+        <div id="flow-player">
+          <h3 style="margin-top:0">player.interaction / pause_resume</h3>
+          <ul class="timeline"><li><b>播放基线</b>可信时间窗口与进度样本<span>可从当前自动播放状态采集，不要求先点击播放。</span></li><li><b>暂停尝试</b>真实动作及前后材料<span>按钮、菜单或手势由当前产品和运行能力决定。</span></li><li><b>暂停效果</b>尝试后的连续观察<span>保留暂停失效；图标切换仅为辅助。</span></li><li><b>恢复尝试</b>同一媒体的正式动作<span>根据当前实际状态选择策略，不伪造状态切换。</span></li><li><b>恢复效果</b>规则所需观察窗口<span>验证推进或异常，因果绑定到本次尝试。</span></li><li><b>退出上下文</b>真实路径及返回依据<span>按来源选择退出方法，不指定必须返回某个页面。</span></li></ul>
+        </div>
+        <div id="flow-payment" hidden>
+          <h3 style="margin-top:0">payment.checkout / readonly</h3>
+          <ul class="timeline"><li><b>业务身份</b>商品 / 方案、金额及账号态<span>从当前真实展示核验，不假定固定入口。</span></li><li><b>可比价格</b>规则要求的位置与条件<span>允许会员页、付费层或收银台，按实际产品映射。</span></li><li><b>条款与渠道</b>期限、币种及可见选择项<span>按规则取证，不主动提交订单。</span></li><li><b>动作边界</b>真实控件、策略及阻断<span>创建订单或扣款不能因路径重规划被绕过。</span></li><li><b>返回上下文</b>实际来源及账号态<span>只在需要导航时执行并核验恢复。</span></li><li><b>分项结果</b>可判事实与未覆盖目标<span>不因缺少独立收银台页面直接判产品失败。</span></li></ul>
+        </div>
+        <p class="small muted">这些卡片表示证据义务与关注项，不规定固定执行顺序。无真实截图或运行结果；打印时同时显示两组关注项。</p>
+      </div>
+      <h3>App 能力门槛</h3>
+      <p>原生播放器可能没有可读 currentTime。后续可建设可信媒体状态、可验证时间码与 OCR 多帧、受控视觉观测等替代来源，并记录精度与可证明范围；当前 Android <code>ocr_text</code> 为 unsupported，不能直接依赖此采集能力，新增方案须实现并登记后启用。截图画面变化通常不能精确证明进度或倍速。所选正式动作与观测源未受能力登记支持，或精度不满足合同，才构成该路径阻断；未来经验证的进度条手势适配可作为 seek 的等效路径，不强求所有端使用同名操作。</p>
+      <p>拖动动作必须绑定真实可交互进度条及当前几何信息；禁止猜测坐标。针对纯原生 Surface 的受控手势适配需保留当前目标、轨迹、动作回执与采样，遵循现有 Broker / command policy。</p>
+    </section>
+
+    <section id="payment">
+      <h2><span class="num">11 / PAYMENT</span>支付：区分只读链、沙箱交易与真实业务结果</h2>
+      <p>支付流程涉及订单创建、扣款、回调和权益，步骤跨表面且部分动作不可重放。当前 payment-rule 明确要求零交易触发，既有种子声明在支付确认前停止，但此前含“立即支付”点击，不能据此证明前序无建单副作用；Runner 也未接入生产。本阶段重新核对每个动作权限，将只读流程与未来沙箱交易分别建模。</p>
+      <div class="table-wrap"><table><thead><tr><th>场景</th><th>业务目标与材料</th><th>可以证明</th><th>不能证明</th></tr></thead><tbody>
+        <tr><td>payment.checkout / readonly <span class="tag good">首期</span></td><td>取得规则需要的商品 / 方案、可比价格、条款及渠道；按当前页面选择合法观察或导航，并核验需要的返回上下文。</td><td>可比条件下展示价格、币种、期限、选择项及实际导航 / 返回行为。</td><td>订单有效创建、扣款、支付成功、回调一致、权益到账。</td></tr>
+        <tr><td>payment.checkout / sandbox_success <span class="tag">后续</span></td><td>验证受授权沙箱中的交易尝试、提供方结果、回源和业务终态关联；各产品可用不同 UI 路径，但绑定同一脱敏订单 / 交易标识。</td><td>已授权沙箱内成功链路的业务一致性。</td><td>真实商户、真实资金、生产结算及账务正确性。</td></tr>
+        <tr><td>sandbox_cancel / failure / timeout <span class="tag">后续</span></td><td>沙箱模拟取消、失败、超时；核对订单及权益未误更新，回源与重试入口。</td><td>指定分支的状态恢复与提示一致。</td><td>未运行分支或跨支付渠道的覆盖。</td></tr>
+        <tr><td>真实交易</td><td>需要单独授权、专用账号、交易额度、提供方及业务验收计划。</td><td>仅在独立执行与核对后给出其明确范围内结论。</td><td>本方案文档及只读探索不构成真实交易授权。</td></tr>
+      </tbody></table></div>
+      <h3>按业务关注面拆分</h3>
+      <p><code>checkout_display</code>、<code>provider_handoff_return</code>、<code>payment_result_consistency</code> 表达展示、交接返回及业务结果三个可组合关注面，不是三张必经页面。价格可能在会员页或播放器付费层直接展示；仅在合同确需其他位置且导航允许时继续探索。跨位置规则仍须取得真实、可比的材料，不能因产品差异删除比较目标。</p>
+      <h3>上下文与证据要求</h3>
+      <ul><li>价格比较保存商品 / 方案、数量、优惠、税费、币种、金额单位、账号资格、渠道和采集时段。无法建立可比条件时不硬判相等。</li><li>所谓“取消”若前置动作会创建订单、锁库存或触发权益，也超出当前只读权限；不能因为最终不扣款就默认安全。</li><li>外部提供方切换保存源表面、目标表面、关联事件和回源依据；遵循当前外跳边界，首期不把外部支付页自动纳入正式证据。</li><li>成功页面 / Toast 只是 UI 结果。成功一致性规则需要订单只读状态、提供方凭据或权益事实；没有可靠接口时降级为 UI 展示规则或缺证。</li><li>超时后禁止直接再点支付；先检查订单 / 交易状态和幂等标识。提供方回调在可信时间窗中观察，超窗标 pending，不按未收到截图判失败。</li></ul>
+      <div class="callout amber"><strong>补全支付能力的前提：</strong>未来启用沙箱 Journey 时，同步实现运行策略允许清单、测试商户识别、隔离凭证、可核验业务标识、状态读取能力和副作用恢复合同。Mock / 沙箱必须标明来源，不能冒充生产证据。</div>
+    </section>
+
+    <section id="supplement">
+      <h2><span class="num">12 / RECOVERY & GATE</span>补采、重判与完成门禁</h2>
+      <h3>补采按检查点的证据缺口发起</h3>
+      <p>EvidenceRequest 声明目标 JourneyExecution、checkpoint / attempt、缺失事实、角色 / 时间窗、因果约束、不变量及恢复边界，不指定必须点击哪个产品按钮。Explorer 根据现场选择合法补证路径，Orchestrator 管理调度；Judge 不直接操作设备。</p>
+      <div class="table-wrap"><table><thead><tr><th>缺口</th><th>恢复方案</th><th>输入版本</th></tr></thead><tbody>
+        <tr><td>已有原图，上传 / 关联失败</td><td>读取同次 Capture 和制品并校验，恢复提交与关联；不重做操作。</td><td>补齐同次流程的真实关联后创建新封存集合。</td></tr>
+        <tr><td>当前同源暂停窗口少一个样本</td><td>仅在现场连续性和所需时序仍成立时采样；不能事后伪造原时间窗。</td><td>保留原版，新增完整窗口或新尝试的 InputSet。</td></tr>
+        <tr><td>设备已退出，暂停后证据丢失</td><td>先核对能否恢复同次连续性；不能证明则新建实例，动态选择入口重取该检查点及必要依赖，不能接到旧暂停动作后。</td><td>新 execution_id、新 InputSet，保留父实例与恢复依据；无需复现上次完全相同的页面路线。</td></tr>
+        <tr><td>订单 / 凭证 / 价格已变化</td><td>按 exact 或人工政策处理；不以视觉相似判断状态等价。</td><td>不得把新订单截图补入旧交易链。</td></tr>
+        <tr><td>模型故障或结论冲突</td><td>沿既有重试与人工复核策略处理。无需补采时直接重判冻结证据。</td><td>同 InputSet 可产生新 Judge Attempt，保留全部历史。</td></tr>
+      </tbody></table></div>
+      <h3>重判与不可变历史</h3>
+      <p>规则、技能、模型升级后可对已保留流程证据独立重判；新规则需求超出历史证据时明确缺证。原始 Manifest、InputSet、执行结果和人审记录保持不可变，新结果通过 source_input_set、supersedes / parent 等关系连接。当前页面 journey_steps 仅为上下文，不能自动升格成已验证的流程主证据。</p>
+      <h3>完成门禁扩展</h3>
+      <ol><li>本 Run 的必需流程范围已冻结，业务适用性为 applicable / not_applicable / unproven，负向结论有权威证据。</li><li>所有必需流程实例已技术终结，未完成分支和恢复失败如实列入覆盖缺口；没有未处理动作或采集。</li><li>流程证据封存和完整性核验完成；每条规则有可信输入或结构化缺证原因。</li><li>适用流程规则的 Inspection Work 已终结，EvidenceRequest 为完成 / 不可执行 / 过期等明确状态，无静默遗失。</li><li>人工复核政策、规则结果与报告身份满足既有 Gate；未证明的流程不能被“页面覆盖率 100%”遮蔽。</li></ol>
+      <p>区分<strong>任务已终结</strong>与<strong>质检范围完整</strong>。含缺证任务可根据既有政策生成明确未完备的报告或预览，不能以放宽 Gate 获得完整结论。产品有明确 fail 不妨碍形成“证据充分的完整质检报告”。</p>
+      <h3>覆盖指标</h3>
+      <p>分别展示适用性、业务检查点证据覆盖、规则要求的因果关系覆盖、唯一规则覆盖、实例结果与未决补证。实际动作 / 导航数量单独展示，不作为覆盖分母。分母来自冻结合同及合法裁定的不适用项；新发现及范围修订有审计，不能靠删除困难检查点提高覆盖率。</p>
+    </section>
+
+    <section id="product">
+      <h2><span class="num">13 / PRODUCT & API</span>工作台、权限、接口与报告</h2>
+      <h3>工作台交互</h3>
+      <div class="table-wrap"><table><thead><tr><th>现有入口</th><th>拟增加行为</th><th>重要边界</th></tr></thead><tbody>
+        <tr><td>规则管理</td><td>“匹配目标”选择页面 / 流程 / 任务；流程目标显示业务检查点、证据义务、依赖与策略。</td><td>不要求录入产品必经页面；保存前校验目标、输入范围和实际 Handler 能力。</td></tr>
+        <tr><td>任务创建</td><td>由规则集展示需覆盖流程、预算、端能力和限制；可选择已批准流程范围。</td><td>流程选择不能使运行策略自动扩大交易权限。</td></tr>
+        <tr><td>任务详情</td><td>同时展示业务检查点覆盖与本次真实路径；查看额外导航、清障、策略修订、前后证据和缺口。</td><td>实际路径差异可见，不能把它压成模板步骤；与页面时间线并存。</td></tr>
+        <tr><td>规则详情</td><td>跳转到断言的检查点及实际事件 / 制品，展示 InputSet 版本、因果关系与缺口。</td><td>不能在引用图集内混入其他流程或未引用帧。</td></tr>
+        <tr><td>证据下载</td><td>按单实例生成带索引、原图、回执和精确清单的包；受控支持批量。</td><td>权限校验、审计、脱敏视图与下载完整性检查。</td></tr>
+        <tr><td>报告与人审</td><td>目标、检查点、真实路径及引用、失败行为、缺证 / 阻断和版本。</td><td>分开规则数、检查点覆盖和实际动作数；人审不覆盖原始事实。</td></tr>
+      </tbody></table></div>
+      <h3>拟议接口</h3>
+      <p>沿用 FastAPI V2 与现有能力，不另建一套任务提交、Judge 或最终封存入口。下表是业务契约建议；实际 URI 与 DTO 需在实现前对齐现有路由。</p>
+      <div class="table-wrap"><table><thead><tr><th>接口 / 操作</th><th>输入与输出重点</th></tr></thead><tbody>
+        <tr><td><code>GET /api/v2/tasks/{id}/journey-executions</code></td><td>当前或显式历史 Run；流程类型、场景、执行与证据状态、缺口、规则统计；分页与权限。</td></tr>
+        <tr><td><code>GET /api/v2/tasks/{id}/journey-executions/{execution_id}</code></td><td>冻结业务合同、检查点尝试、局部计划修订、片段、真实动作与证据关联、版本与哈希。</td></tr>
+        <tr><td><code>POST /api/v2/tasks/{id}/journey-executions/{execution_id}/evidence-exports</code></td><td>指定 InputSet / 导出版本与脱敏权限，异步生成导出任务，审计下载身份。</td></tr>
+        <tr><td>规则新增 / 更新 DTO</td><td>新增 match_target；按目标条件验证页型、流程类型、场景和可执行策略。</td></tr>
+        <tr><td>既有 supplemental-evidence 操作</td><td>扩展 Journey、检查点、证据缺口与恢复约束；运行路径由受控探索选择。</td></tr>
+        <tr><td>既有 rule-evaluation-runs 操作</td><td>支持指定流程证据版本 / 新规则版本，仍通过正式工作项执行和报告资格核验。</td></tr>
+      </tbody></table></div>
+      <h3>权限与审计</h3>
+      <p>复用部门、产品、任务和角色权限。区分流程定义编辑 / 发布、任务运行、规则配置、人审、证据查看 / 下载和沙箱动作能力；发布者与执行者职责可分。新增角色能力应接入现有 IAM，禁止以页面路径或前端按钮可见性代替授权。</p>
+      <p>所有流程日志、OCR、HAR、录屏与订单信息受任务证据权限约束。凭证不进入截图名称、模型 Prompt 或日志；敏感原始证据若确需保存，使用既有受限存储与保留策略，普通查看提供有来源关系的脱敏派生版本。保留查看、导出、补证、重判和人工改判审计。</p>
+      <p>前端复用现有规则表单、截图查看器、任务详情和权限守卫。首期新增详情分区即可；流程定义管理若采用独立路由，需同步管理端与部门端菜单、路由、权限及深链恢复。</p>
+    </section>
+
+    <section id="migration">
+      <h2><span class="num">14 / ENGINEERING</span>兼容迁移与工程拆分</h2>
+      <h3>需要数据库迁移</h3>
+      <ol>
+        <li><strong>规则目标：</strong>增加目标类型和配置，冻结匹配合同。旧规则保持原路径；已存在 task / matrix / Web sequence 特化输入不得仅凭空页型被自动转换目标。</li>
+        <li><strong>多计划：</strong>执行计划扩展 Run、场景及业务参数身份，迁移 UNIQUE(task_id) 为经核对的新唯一约束。建议新身份为 task + source_run + definition + scenario + parameters_hash，定义版本作为冻结内容；旧计划保留可读且不被重写。</li>
+        <li><strong>检查点与真实动作：</strong>增加 CheckpointAttempt、PlanRevision 及证据关联；复用 StepAttempt 记录具体动作，并建立检查点、动作、Capture 的同源和幂等约束。</li>
+        <li><strong>流程目标执行：</strong>Inspection Work / RuleExecution / 补采请求及报告投影扩展 target_instance / Journey 引用，不能伪造 page_capture_id 适配旧表。</li>
+        <li><strong>输入协议：</strong>冻结检查点证据与必要因果关系，成员数量和观测源按具体合同校验，实际路径独立追加；新增协议版本处理该语义，历史 v1 InputSet 的两 Capture 等约束仍按原规则验证。</li>
+      </ol>
+      <h3>扩展 → 回填 → 影子验证 → 逐步启用</h3>
+      <p><strong>顺序 Runner 的兼容：</strong>保留现有 linear 模式和旧合同，新增 adaptive 模式。后者从未满足证据义务选择目标，局部动作块可复用原处理器，但覆盖游标、依赖及动态尝试需扩展；不能仅把 steps 字段改名后声称具备自适应能力。验证过的固定脚本作为候选策略执行，失配时按策略返回动态探索。</p>
+      <p>先新增可空字段及新协议适配；回填只处理身份明确、可验证的数据，旧 Journey 无步骤绑定时标为 legacy_context，不能从页面时间线自动拼成“完整流程”。规则更新创建新合同版本，在途 Run 保持原快照；历史结果继续由原版本解释。</p>
+      <p>保留 feature flag：多流程调度、Journey 证据封存、流程目标规则、通用流程 Judge 分开控制。影子阶段只生成候选、完整性结果及对照结论，不改正式报告或 Gate。启用后遇到故障可关闭新调度与规则发布，已创建工作项按明确政策收口，不能静默丢弃。</p>
+      <div class="table-wrap"><table><thead><tr><th>责任块</th><th>优先修改位置</th><th>完成输出</th></tr></thead><tbody>
+        <tr><td>Journey 领域与仓储</td><td>domain/journey、journey_definitions、journey_execution、对应 repository / migrations。</td><td>业务合同、检查点尝试、局部计划修订、多计划身份和事实一致性。</td></tr>
+        <tr><td>探索与 Driver 接线</td><td>现有 Explorer、JourneyRunner adaptive 模式、各端 capability / runtime、Skill 路由。</td><td>逐动作观察与重规划、产品语义适配、正式回执、能力门禁及恢复。</td></tr>
+        <tr><td>证据封存与补证</td><td>domain/evidence、InputSet 仓储、Manifest 读取、aggregate publication、supplement reseal。</td><td>检查点证据闭包、局部因果、最小充分选择、合法血缘与导出。</td></tr>
+        <tr><td>规则匹配与 Judge</td><td>rules API / DTO、task_rule_inventory、aggregate config / execution、Web sequence adapters。</td><td>目标适用性、实际策略注册、观察投影、断言级结果及幂等发布。</td></tr>
+        <tr><td>门禁与报告</td><td>App 规则清单完成门禁、Web sequence 正式收口门禁、report inventory、Orchestrator finalization。</td><td>流程覆盖、工作终态和缺口进入同 Run 的完成与报告核验。</td></tr>
+        <tr><td>工作台</td><td>规则管理面板、TaskDetailView、证据查看器、报告与权限路由。</td><td>流程目标编辑、时间线、精确引用、缺证和版本查看。</td></tr>
+      </tbody></table></div>
+      <h3>避免重复建设</h3>
+      <p>不用目录扫描发布规则，不新增独立交易编排服务，不复制 RuleJudge 队列，不新增能自行宣布任务完成的 Agent。Web sequence 保留既有事实和判定合同，通过适配建立统一关联及展示；不能直接把其 scope 改为 journey 破坏已冻结输入。</p>
+      <p>实施时同步维护 <code>docs/专项能力与高频回归规则.md</code>：检查点与真实动作精确关联、失败证据可判、产品差异与能力阻断区分、单写者、不可重放边界、规则目标与证据范围分离、源 epoch 血缘和图集合范围。通用且已验证的领域原则再回写 AGENTS.md；本次更新限于方案与文档验证资产。</p>
+    </section>
+
+    <section id="delivery">
+      <h2><span class="num">15 / DELIVERY</span>交付阶段与验收标准</h2>
+      <p>以能力闸门推进，不以“Prompt 已增加”“接口返回 202”或“能看到多图”作为完成。建议先形成一个端的最小正式闭环，再扩展端和分支；三端共享领域合同，运行能力分别验收。</p>
+      <div class="table-wrap"><table><thead><tr><th>阶段</th><th>交付内容</th><th>准入下一阶段的条件</th></tr></thead><tbody>
+        <tr><td>M0 · 合同与基准</td><td>业务检查点 / 证据协议、必要依赖、自适应策略、多计划迁移、不同交互产品的样本。</td><td>业务预期及边界清楚；合同不绑定页面 / 控件顺序；发布校验核对实际 Handler。</td></tr>
+        <tr><td>M1 · 跨产品播放器闭环</td><td>同一暂停恢复 / 拖动合同，在自动播放、手动播放、遮挡或隐藏控件产品上运行：Explorer → adaptive Runner → 可信输入 → Judge / Gate。</td><td>路径自动适配，新增导航合法留证；正确行为通过、错误行为失败、缺证不通过，不能因路径不同误判。</td></tr>
+        <tr><td>M2 · 流程规则与工作台</td><td>页面 / 流程目标表单、适用性台账、多计划、流程时间线、导出与规则步骤引用。</td><td>流程候选不依赖宿主页型；旧规则与 Web sequence 回归不漂移；多实例统计和权限正确。</td></tr>
+        <tr><td>M3 · App 与支付只读</td><td>App 媒体动作 / 观测适配，支付展示链及返回，分支缺口与能力阻断。</td><td>真实设备证明媒体时间、拖动及连续性；只读链无交易副作用，不把收银台到达计为支付成功。</td></tr>
+        <tr><td>M4 · 受控扩展</td><td>步骤补证、重跑 / 重判、更多播放器分支、沙箱支付结果与异常。</td><td>故障恢复及新输入版本闭环；沙箱业务标识与终态可信；高风险动作受正式策略约束。</td></tr>
+      </tbody></table></div>
+      <h3>最低验收矩阵</h3>
+      <div class="table-wrap"><table><thead><tr><th>维度</th><th>必测情况</th><th>预期证据</th></tr></thead><tbody>
+        <tr><td>跨产品适配</td><td>自动 / 手动播放、不同入口与页面数、按钮 / 手势、隐藏控件、先选集、不同价格展示位置。</td><td>同一业务合同形成不同真实路径；必需检查点与证据标准不变。新产品不要求先复制一套专属脚本。</td></tr>
+        <tr><td>局部重规划</td><td>运行中出现广告、目标失效、菜单变化、候选歧义、路线恢复、无效果重复及能力未知。</td><td>逐次观察、合法策略切换、计划修订及停止依据可追溯；不盲目重复，也不偷偷删检查点。</td></tr>
+        <tr><td>规则语义</td><td>暂停失效、恢复失效、拖动错位、全屏无法退出；正确与错误对照样本。</td><td>失败必须由真实动作与时间窗口支持，并定位到断言及制品。</td></tr>
+        <tr><td>流程完整性</td><td>缺中间态、乱序、错误 attempt、换媒体、跨 Run、未记录操作、相同图重复。</td><td>被拒绝或标注缺证，不能仅凭 completed / 两张图通过。</td></tr>
+        <tr><td>规则匹配</td><td>页型未知但流程明确；存在入口却未到达；确无功能；运行能力不足。</td><td>适用、不适用、未证明和能力阻断准确区分，覆盖分母有依据。</td></tr>
+        <tr><td>基础设施</td><td>租约过期、进程重启、上传失败、重复事件、晚到 Capture、补证封存、取消。</td><td>无重复动作或双写，步骤与工作项可恢复，所有历史版本可追溯。</td></tr>
+        <tr><td>支付</td><td>价格不可比、导航创建订单风险、沙箱取消 / 失败 / 超时、成功 UI 但无业务终态。</td><td>只读边界不绕过；沙箱单独标识；成功不能由截图文案推断。</td></tr>
+        <tr><td>工作台与报告</td><td>不同流程图集无串图、步骤跳转、权限、窄屏、导出、旧结果、同规则多实例。</td><td>可复核原图与引用，统计不重复，手机可读，无身份混淆。</td></tr>
+        <tr><td>兼容</td><td>旧页面规则、三种已实现聚合策略、Web failure / interaction sequence、人审与 Gate。</td><td>原合同继续有效；新增能力不改写历史正式结果。</td></tr>
+      </tbody></table></div>
+      <h3>建议验收指标</h3>
+      <ul><li>至少覆盖三类不同交互产品，并用未参与适配的页面变体或新产品检验通用性；该数字是首期验收门槛建议，不代表现有结果。</li><li>记录同合同跨产品检查点覆盖、通用策略采证完成情况、路径调整与人工接管原因，按业务能力差异分组，不用平均成功率隐藏缺口。</li><li>目标实例、InputSet、检查点尝试、实际动作及原始证据身份完整率为 100%；错误关联、篡改及缺证样本不产生自动 pass。</li><li>同 Session 保持单写者；合同 / Skill / 策略 / 模型版本和路径修订可追溯，目录可由清单重建。</li><li>业务覆盖、证据充分、产品合格和动作成本分别计算；导航较长不直接判失败，成本仍受冻结运行策略约束。</li></ul>
+      <div class="callout"><strong>实施优先顺序：</strong>先收口业务检查点与证据关系，扩展 Runner 的自适应模式，贯通正式探索、成组判定及门禁；以跨产品暂停恢复 / 拖动和支付只读核对为首批样板，再接工作台与导出。</div>
+    </section>
+
+    <section id="decision-lab">
+      <h2><span class="num">16 / SCENARIO REVIEW</span>判定场景推演</h2>
+      <p>预置场景用于评审状态和结果语义，不运行真实规则引擎。选择场景可以查看建议的流程处置、规则结果及覆盖影响。</p>
+      <div class="demo">
+        <div class="controls"><label for="scenario">评审场景</label><select id="scenario"><option value="good">暂停恢复证据充分，行为正确</option><option value="defect">暂停后进度继续推进</option><option value="gap">暂停后缺第二个时间样本</option><option value="tampered">截图哈希与 Manifest 不符</option><option value="blocked">支付成功规则适用，但仅有只读权限</option><option value="absent">产品明确不支持倍速</option></select></div>
+        <div id="decision-result" class="decision" aria-live="polite"><h4>可完成质检，规则通过</h4><p>执行：采证完成。证据：步骤与时序充分。规则：pass。覆盖：计入必需场景完成，仍需等待其他工作项及门禁。</p></div>
+      </div>
+      <div class="table-wrap"><table><thead><tr><th>场景</th><th>流程 / 规则处置</th><th>覆盖影响</th></tr></thead><tbody>
+        <tr><td>充分正确证据</td><td>采证完成、输入充分、规则 pass。</td><td>该实例已判；任务完成仍由全局 Gate 决定。</td></tr>
+        <tr><td>暂停失效</td><td>保留真实操作和持续推进证据；断言 fail。</td><td>可以证据充分且产品不合格。</td></tr>
+        <tr><td>样本缺失</td><td>规则 evidence_insufficient；现场可补则补，无法恢复则新实例重跑。</td><td>执行结束不等于证据覆盖完成。</td></tr>
+        <tr><td>哈希失配</td><td>输入拒绝、技术恢复或审计处置；不运行产品判定。</td><td>不能计入通过或业务失败证据。</td></tr>
+        <tr><td>支付规则适用但动作被阻断</td><td>保留适用性，记录 policy_blocked 及缺证 / 人审。</td><td>不能标功能不存在或已覆盖支付成功。</td></tr>
+        <tr><td>明确无倍速能力</td><td>依据权威能力事实记可选分支不适用。</td><td>按冻结计划调整分支分母，并保留负向依据。</td></tr>
+      </tbody></table></div>
+    </section>
+
+    <section id="references">
+      <h2><span class="num">17 / REFERENCES</span>代码与设计依据</h2>
+      <p>路径均相对本 HTML 解析；行号对应 2026-10-09 当前工作区。实现代码与既有方案分别列明，后者不作为能力已经上线的证明。</p>
+      <ol class="source-list">
+        <li id="s1"><strong>[S1] 技能与加载：</strong><a href="../../services/api/app/agents/explorer/bootstrap.py">agents/explorer/bootstrap.py</a>：20–31、35–48；<a href="../../services/api/app/agents/skills/loader.py">skills/loader.py</a>：230–242、307–320；Web 实际注入见 <a href="../../services/api/app/application/web_run_policy.py">web_run_policy.py</a>：102–109；<a href="../../services/api/app/agents/skills/app-workflow/SKILL.md">app-workflow/SKILL.md</a>：146–164；<a href="../../services/api/app/agents/skills/rule/player-rule/SKILL.md">player-rule</a>；<a href="../../services/api/app/agents/skills/rule/payment-rule/SKILL.md">payment-rule</a>。</li>
+        <li id="s2"><strong>[S2] Journey 定义、执行与种子：</strong><a href="../../services/api/app/domain/journey/definitions.py">domain/journey/definitions.py</a>；<a href="../../services/api/app/domain/journey/execution.py">execution.py</a>；<a href="../data/journey_definitions/p1_4_journeys.json">p1_4_journeys.json</a>。</li>
+        <li id="s3"><strong>[S3] Runner 与生产桥：</strong><a href="../../services/api/app/application/journey_runner.py">journey_runner.py</a>：33；<a href="../../services/api/app/application/app_screenshot_exploration.py">app_screenshot_exploration.py</a>：1605；<a href="../../services/api/tests/test_journey_execution.py">test_journey_execution.py</a>：236。测试存在不等于本次已运行或生产调用。</li>
+        <li id="s4"><strong>[S4] 计划唯一性：</strong><a href="../../services/api/migrations/versions/20260803_0026_v2_control_plane.py">0026_v2_control_plane.py</a>：57；<a href="../../services/api/app/application/app_journey_execution_bridge.py">app_journey_execution_bridge.py</a>：62、97–98。</li>
+        <li id="s5"><strong>[S5] InputSet：</strong><a href="../../services/api/app/domain/evidence/input_set.py">domain/evidence/input_set.py</a>：36、69、168、220–225、333、499–504；<a href="../../services/api/app/domain/evidence/contracts.py">contracts.py</a>：131。</li>
+        <li id="s6"><strong>[S6] Web sequence：</strong><a href="../../services/api/app/application/web_rule_evidence_contract.py">web_rule_evidence_contract.py</a>：141；<a href="../../services/api/app/application/web_sequence_reader.py">web_sequence_reader.py</a>：25；<a href="../../services/api/app/application/web_sequence_observation.py">web_sequence_observation.py</a>：71；<a href="../../services/api/app/application/web_sequence_rule_selection.py">web_sequence_rule_selection.py</a>：17；<a href="../../services/api/app/application/rule_judge.py">rule_judge.py</a>：3569。</li>
+        <li id="s7"><strong>[S7] App 证据与能力：</strong><a href="../../services/api/app/application/app_evidence_role_contract.py">app_evidence_role_contract.py</a>：235；<a href="../../services/api/app/domain/interaction/capabilities.py">interaction/capabilities.py</a>：192；<a href="../../services/api/app/application/capture_profiles.py">capture_profiles.py</a>：353。Web 的 SEEK_MEDIA 处理另见 <a href="../../services/api/app/infrastructure/browser/capture_runtime.py">browser/capture_runtime.py</a>：2413，不能由此推断 App 支持。</li>
+        <li id="s8"><strong>[S8] 页面匹配依赖：</strong><a href="../../services/api/app/api/v1/rules.py">api/v1/rules.py</a>：130–131；<a href="../../services/api/app/application/task_rule_inventory.py">task_rule_inventory.py</a>：219–220；<a href="../../services/api/app/application/aggregate_inspection_publication.py">aggregate_inspection_publication.py</a>：318–322、375。</li>
+        <li id="s9"><strong>[S9] 配置名与实际 Handler：</strong><a href="../../services/api/app/application/aggregate_rule_config.py">aggregate_rule_config.py</a>：17、67–70；<a href="../../services/api/app/application/aggregate_inspection_execution.py">aggregate_inspection_execution.py</a>：180、189–193。journey_observation 配置允许与实际不可执行的差异应优先修复。</li>
+        <li id="s10"><strong>[S10] 补采与工作台：</strong><a href="../../services/api/app/application/supplement_input_set_reseal.py">supplement_input_set_reseal.py</a>：319–323；Journey 约束见 [S5]：499–504；<a href="../../app/workstation/src/modules/tasks/pages/TaskDetailView.vue">TaskDetailView.vue</a>：743、845、2067、2232。</li>
+        <li id="s11"><strong>[S11] 上下文不是主证据：</strong><a href="../../services/api/app/application/observation_packet.py">observation_packet.py</a>：89、494；<a href="../../services/api/app/application/manifest_backed_observation.py">manifest_backed_observation.py</a>：371–374。</li>
+        <li id="s12"><strong>[S12] 规则合同、报告与门禁：</strong><a href="../../services/api/app/application/inspection_work_items.py">inspection_work_items.py</a>：139、918；<a href="../../services/api/app/infrastructure/db/app_rule_inventory_completion_gate.py">app_rule_inventory_completion_gate.py</a>：54；<a href="../../services/api/app/infrastructure/db/web_sequence_completion_gate_sql.py">web_sequence_completion_gate_sql.py</a>：89；<a href="../../services/api/app/application/report_rule_inventory.py">report_rule_inventory.py</a>：142。</li>
+        <li id="s13"><strong>[S13] 当前依赖：</strong><a href="../../pyproject.toml">pyproject.toml</a>：12–13，MAF 固定 1.10.0。<a href="../data/alioth_first_ruleset_rules_seed_table.md">当前规则种子说明</a>：151 起的流程要求仍需按实际合同迁移。</li>
+        <li><strong>关联设计：</strong><a href="../plans/2026-10-alioth-iteration-plan.html">10 月迭代方案</a>；<a href="../reports/2026-09-29-alioth-system-flow.html">三端系统流程</a>；<a href="../专项能力与高频回归规则.md">专项能力与高频回归规则</a>。这些文档用于延续领域约定，当前能力以本次代码核对为准。</li>
+        <li><strong>[E1] 框架能力参考：</strong><a href="https://learn.microsoft.com/en-us/agent-framework/workflows/checkpoints?pivots=programming-language-python" target="_blank" rel="noreferrer">Microsoft Agent Framework · Checkpoints</a>。检查点可保存与恢复框架状态；设备 / 业务状态核验是本方案结合现有架构的设计要求，官方最新 API 不直接适用于固定旧版本。</li>
+        <li><strong>[E2] Web 取证参考：</strong><a href="https://playwright.dev/docs/api/class-tracing" target="_blank" rel="noreferrer">Playwright · Tracing</a>。用于动作、快照及网络排查，不能替代 Alioth 的正式证据身份、规则断言与门禁。</li>
+      </ol>
+    </section>
+    <footer class="footer">Alioth · 短流程探索与流程证据质检方案 v1.1 · 自适应探索 · 2026-10-09<br>建议实现基于现有分层单体：Python FastAPI / PostgreSQL / Vue + TypeScript / Microsoft Agent Framework。</footer>
+  </main>
+  <script>
+    const printButton = document.getElementById('print-button');
+    printButton.addEventListener('click', function(){ window.print(); });
+    const commonAdaptiveEvents = [
+      ['观察播放基线','核对媒体及可信时间窗口'],
+      ['尝试暂停','记录目标、回执与前后证据'],
+      ['观察暂停效果','保存真实结果，允许记录暂停失效'],
+      ['尝试恢复','确认同一媒体并正式执行'],
+      ['观察恢复效果','核对持续播放或异常']
+    ];
+    const adaptiveExamples = {
+      autoplay: {title:'产品 A · 当前内容已自动播放', events:commonAdaptiveEvents,
+        note:'自动播放的可信观察满足基线，无需补做一次播放点击。'},
+      manual: {title:'产品 B · 详情页需要点击播放', events:[
+        ['发现可播放入口','从当前产品页面选择可信候选'],
+        ['正式点击播放','核对目标并取得真实动作回执']
+      ].concat(commonAdaptiveEvents),
+        note:'多出入口发现与播放操作，业务检查点和证据标准保持一致。'},
+      obstructed: {title:'产品 C · 广告遮挡且操作控件隐藏', events:[
+        ['正式关闭遮挡','仅对可信关闭目标执行并留证'],
+        ['选择当前可用播放形态','本例通过允许的全屏入口继续'],
+        ['显式显示控件','动作单独记录，采集过程不偷偷点击']
+      ].concat(commonAdaptiveEvents, [
+        ['恢复原播放形态','核对媒体与来源上下文，保存退出依据']
+      ]),
+        note:'清障、形态切换和控件显示纳入真实路径；所选策略不是其他产品的必经步骤。'}
+    };
+    const adaptiveSelect = document.getElementById('adaptive-product');
+    const adaptivePath = document.getElementById('adaptive-path');
+    const adaptiveTitle = document.getElementById('adaptive-path-title');
+    const adaptiveNote = document.getElementById('adaptive-path-note');
+    function updateAdaptiveExample(){
+      const example = adaptiveExamples[adaptiveSelect.value];
+      adaptiveTitle.textContent = example.title;
+      adaptivePath.replaceChildren();
+      example.events.forEach(function(event,index){
+        const item = document.createElement('li');
+        const label = document.createElement('b');
+        label.textContent = '事件 ' + (index + 1) + ' · ' + event[0];
+        item.append(label,document.createTextNode(event[1]));
+        adaptivePath.append(item);
+      });
+      adaptiveNote.textContent = '示例共 ' + example.events.length + ' 个实际事件。' + example.note + ' 编号仅表达本次示例的先后。';
+    }
+    adaptiveSelect.addEventListener('change',updateAdaptiveExample);
+    updateAdaptiveExample();
+    const playerPanel = document.getElementById('flow-player');
+    const paymentPanel = document.getElementById('flow-payment');
+    const flowButtons = Array.from(document.querySelectorAll('[data-flow]'));
+    let activeFlow = 'player';
+    function showFlow(value){
+      activeFlow = value;
+      playerPanel.hidden = value !== 'player';
+      paymentPanel.hidden = value !== 'payment';
+      flowButtons.forEach(function(button){button.setAttribute('aria-pressed', String(button.dataset.flow === value));});
+    }
+    flowButtons.forEach(function(button){button.addEventListener('click', function(){showFlow(button.dataset.flow);});});
+    window.addEventListener('beforeprint', function(){playerPanel.hidden=false;paymentPanel.hidden=false;});
+    window.addEventListener('afterprint', function(){showFlow(activeFlow);});
+    const scenarioContent = {
+      good: ['可完成质检，规则通过','执行：采证完成。证据：步骤与时序充分。规则：pass。覆盖：计入必需场景完成，仍需等待其他工作项及门禁。'],
+      defect: ['充分失败证据应进入 Judge','执行：真实暂停动作及观察已完成。证据：同一媒体、同一暂停动作后的进度持续增加。规则：fail。覆盖：该断言证据充分；产品失败不应被发布门禁过滤。'],
+      gap: ['证据不足，不用执行完成代替通过','执行：可能已结束。证据：缺少第二个时间样本，无法判断暂停后进度。规则：evidence_insufficient。恢复：仅在连续性仍可证实时补样，否则新实例重跑。'],
+      tampered: ['拒绝输入，保留审计原因','证据完整性：Artifact 哈希与精确 Manifest 不符。处理：拒绝发布 / 消费，进入技术恢复或审计。规则：不产生可信产品 pass / fail；不能计入正式充分证据。'],
+      blocked: ['业务适用，运行策略阻断','适用性：产品有支付链路，成功一致性规则适用。运行：只有只读权限。规则：记录 policy_blocked 与 evidence_insufficient，按合同决定复核。覆盖：支付成功分支仍未覆盖，不能改为功能不存在。'],
+      absent: ['有依据的不适用可以排除可选分支','依据：权威产品能力或经过验证的负向观察明确不支持倍速。规则：可选倍速分支 not_applicable。覆盖：保留负向引用，按冻结计划排除分母；仅“没找到按钮”不满足此条件。']
+    };
+    const scenarioSelect = document.getElementById('scenario');
+    const decisionResult = document.getElementById('decision-result');
+    scenarioSelect.addEventListener('change', function(){
+      const value = scenarioContent[scenarioSelect.value];
+      decisionResult.replaceChildren();
+      const heading = document.createElement('h4'); heading.textContent = value[0];
+      const paragraph = document.createElement('p'); paragraph.textContent = value[1];
+      decisionResult.append(heading, paragraph);
+    });
+    if ('IntersectionObserver' in window){
+      const links = Array.from(document.querySelectorAll('.sidebar nav a'));
+      const observer = new IntersectionObserver(function(entries){
+        entries.forEach(function(entry){
+          if(entry.isIntersecting){
+            links.forEach(function(link){link.classList.toggle('active',link.getAttribute('href')==='#'+entry.target.id);});
+          }
+        });
+      },{rootMargin:'-10% 0px -75% 0px'});
+      document.querySelectorAll('main section').forEach(function(section){observer.observe(section);});
+    }
+  </script>
+</body>
+</html>

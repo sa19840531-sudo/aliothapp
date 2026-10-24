@@ -1,0 +1,24 @@
+{
+  "source_commit": "9fa17259f6dd5d778c61ea8c518522ad5e1a9c5f",
+  "upstream_base": "b2340c76662a372c67cf0019b18659521a89467f",
+  "files": [
+    "services/api/tests/test_task_progress.py",
+    "services/api/tests/test_workstation_query_repository.py",
+    "services/api/tests/test_task_insight_repository.py",
+    "services/api/tests/test_app_report_insight_availability.py",
+    "services/api/tests/test_report_green_results.py",
+    "services/api/tests/test_green_rule_results_postgres.py",
+    "services/api/tests/test_report_green_results_postgres.py",
+    "services/api/tests/test_green_rule_result_projection.py",
+    "services/api/tests/test_report_insight.py"
+  ],
+  "exit_code": 0,
+  "container_id": "f03c324ce6c7b8b19e0d968289dbaea654c2f08e817370d962ed4ecf3f551145",
+  "container": "alioth-green-push-pg-20261019",
+  "volume": "alioth-green-shared-20261019-pgdata",
+  "tests": 432,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "passed": 432
+}

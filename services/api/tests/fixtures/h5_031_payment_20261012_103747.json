@@ -1,0 +1,44 @@
+{
+  "batch": "20261012-103747",
+  "task_id": "0456e777-7769-4433-a501-9671e28b7065",
+  "run_id": "8451a9db-e050-49c3-8a2e-b1208d779612",
+  "fixture_scope": "保存DOM的结构片段与Snapshot布局重建，不是完整页面重采集；不含用户信息或媒体素材",
+  "fragment_note": "保留核对后的主体直接子节点类型与类名，子树正文和尺寸为脱敏受控重建；不复用原Blob图片",
+  "cases": [
+    {
+      "name": "probe",
+      "action_id": "action-execution:dbfc64c548a745c44926de22f6c0c18db0ee8f32c0ba2428a5c2e0a53c6a345e",
+      "before_capture_id": "472e737a-2966-4367-a589-bd4f42bd3885",
+      "after_capture_id": "ba4048dd-3b30-41e6-a84c-ef0345b53e52",
+      "started_at": "2026-10-12T03:42:45.112+00:00",
+      "after_captured_at": "2026-10-12T03:42:54.209+00:00",
+      "before_dom_sha256": "80c152f3178c1e6df9e1a83522df530b868f9c783cb6fd8889020badbe0d64d5",
+      "dom_sha256": "ec0f455ee9e6df5142c7abc4db3037328c2f5ddcd5dd2e925d1bb6bccd3b678d",
+      "snapshot_sha256": "81bc79656e6ad9edf14a89e408c1100d981a0a1c45ef8a2ac8ca4f72d9ec19e5",
+      "screenshot_sha256": "3791ad5a2f720dd7e8b9bf206dd99330e3cc61dd447722128197ca32474d8af8",
+      "stable_wait_ms": 110.956
+    },
+    {
+      "name": "main",
+      "action_id": "action-execution:e14f0da2a976c4efe27149766e6f62934c27fc622a8864791e07e9f4990ceaa9",
+      "before_capture_id": "ce85dd38-1cb5-4b2d-9802-a2fdf7a83941",
+      "after_capture_id": "0762b947-f0c6-4f1e-8c72-8f1e2bde8c2d",
+      "started_at": "2026-10-12T04:00:12.153778+00:00",
+      "after_captured_at": "2026-10-12T04:00:19.591720+00:00",
+      "before_dom_sha256": "7d44d8de6a76169d4e5d385ffaa82753f3bff481a0e8456830e8f2aa090cc6db",
+      "dom_sha256": "4d14442974cc301513e1addbc0c1a0bc0c39b45777ec9af3e9f0afde88370491",
+      "snapshot_sha256": "a44728a3236d38131062bec2fbcffa66e14acd64953329900e8ccb4db1e1404b",
+      "screenshot_sha256": "807c47d58ed937c59b1545d85ce454620f85290becb50ecc3da9d9d447b14130",
+      "stable_wait_ms": 86.923,
+      "publication_status_observed_1230": "published",
+      "coverage_allowed": false,
+      "rule_matching_allowed": false
+    }
+  ],
+  "failure_code": "LOGICAL_TRANSITION_UNVERIFIED",
+  "transition_reason": "dom_spa_identity_change_uncorroborated",
+  "settle_outcome": "startup_obstruction_ready",
+  "after_visible_text": "会员中心\n充值记录\n开通会员 畅享专属特权\n倒计时:22:53:58\n更多权益\nVIP影片\n免费观看\n下载100部\n会员免广告\n丝滑看片\n¥100/立即支付\n支付问题反馈，点击联系\n在线客服",
+  "before_fragment": "<div class=\"main_wrapper\"><div class=\"main_content\"><div class=\"mainboxs\"><div class=\"minePage overflow-y-auto\" id=\"mine0\"><div class=\"lazy_img mine_page_bg\"></div><div class=\"van-pull-refresh\"><div class=\"van-pull-refresh__track\"><div class=\"user\">个人信息</div><div class=\"entry\">立即开通</div><div style=\"height:1000px\">业务区域</div></div></div></div></div></div><div class=\"van-tabbar\"><div role=\"tab\" aria-selected=\"true\" class=\"van-tabbar-item van-tabbar-item--active\">我的</div></div></div>",
+  "after_fragment": "<div class=\"member\"><div class=\"header flex-center-between\"><svg aria-hidden=\"true\" class=\"svg-icon back\"></svg><div class=\"title\">会员中心</div><div class=\"title\">会员中心</div><div class=\"right-btn\"><div>充值记录</div></div></div><div class=\"main overflow-y-auto\"><div class=\"userInfoBox flex-vcenter\">开通会员 畅享专属特权</div><div class=\"horizontalLine\"></div><div class=\"card-box\"><div class=\"swiper my_swiper\"><div class=\"swiper-wrapper\">¥100 ¥200 ¥500 <div class=\"countdown\">倒计时:22:53:58</div></div></div></div><div class=\"horizontalLine\"></div><div class=\"lazy_img preSaleEntBox\"><div class=\"laz_com\">预售套餐</div></div><div class=\"morePrivilegeSection\" style=\"height:887px\">更多权益 VIP影片 会员免广告</div></div><div class=\"bottomBox\"><div class=\"nowPay\"> ¥100/立即支付</div><div class=\"customerService\">支付问题反馈，点击联系 <span>在线客服</span></div></div></div>"
+}

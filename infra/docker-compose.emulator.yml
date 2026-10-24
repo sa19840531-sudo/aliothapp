@@ -1,0 +1,124 @@
+# Android 模擬器 Docker 整合（overlay）— 對齊青云客「標準運行結構」
+#
+# 用法（Linux 宿主，需 /dev/kvm + binderfs）：
+#   bash scripts/linux-prepare-redroid-host.sh
+#   bash scripts/start-docker-emulator-stack.sh
+#
+# 架構：
+#   alioth-api / alioth-worker
+#        │
+#        ▼
+#   alioth-mobile-host:8765  ──adb──►  alioth-redroid:5555
+#   （可選）alioth-appium:4723 ────────┘
+#   （可選）alioth-redroid-2:5556
+#
+# Windows Docker Desktop：通常無 KVM，勿硬跑 ReDroid；改用雷電或遠端 Linux。
+
+services:
+  # ── Android Emulator Container 1（青云客示意）──
+  alioth-redroid:
+    image: ${ALIOTH_REDROID_IMAGE:-redroid/redroid:12.0.0_64only-latest}
+    container_name: alioth-redroid
+    restart: unless-stopped
+    privileged: true
+    profiles:
+      - emulator
+    ports:
+      - "${ALIOTH_REDROID_PORT:-5555}:5555"
+    volumes:
+      - alioth_redroid_data:/data
+      # 宿主需先跑 scripts/linux-prepare-redroid-host.sh
+      - /dev/binderfs:/dev/binderfs
+    command:
+      - androidboot.redroid_gpu_mode=${ALIOTH_REDROID_GPU_MODE:-guest}
+      - androidboot.use_memfd=true
+      - androidboot.redroid_width=${ALIOTH_REDROID_WIDTH:-1080}
+      - androidboot.redroid_height=${ALIOTH_REDROID_HEIGHT:-1920}
+      - androidboot.redroid_dpi=${ALIOTH_REDROID_DPI:-320}
+    devices:
+      - /dev/kvm
+    networks:
+      - alioth
+
+  # ── Android Emulator Container 2（可選並行）──
+  alioth-redroid-2:
+    image: ${ALIOTH_REDROID_IMAGE:-redroid/redroid:12.0.0_64only-latest}
+    container_name: alioth-redroid-2
+    restart: unless-stopped
+    privileged: true
+    profiles:
+      - emulator-multi
+    ports:
+      - "${ALIOTH_REDROID_2_PORT:-5556}:5555"
+    volumes:
+      - alioth_redroid_2_data:/data
+      - /dev/binderfs:/dev/binderfs
+    command:
+      - androidboot.redroid_gpu_mode=${ALIOTH_REDROID_GPU_MODE:-guest}
+      - androidboot.use_memfd=true
+      - androidboot.redroid_width=${ALIOTH_REDROID_WIDTH:-1080}
+      - androidboot.redroid_height=${ALIOTH_REDROID_HEIGHT:-1920}
+      - androidboot.redroid_dpi=${ALIOTH_REDROID_DPI:-320}
+    devices:
+      - /dev/kvm
+    networks:
+      - alioth
+
+  # ── 自動化執行容器（ADB + Airtest；對應青云客「測試 Agent」裝置側）──
+  alioth-mobile-host:
+    build:
+      context: ..
+      dockerfile: infra/docker/mobile-host/Dockerfile
+    container_name: alioth-mobile-host
+    restart: unless-stopped
+    profiles:
+      - emulator
+    env_file:
+      - ${ALIOTH_ENV_FILE:-./env/.env.local}
+    environment:
+      ALIOTH_DEVICE_BACKEND: redroid
+      ALIOTH_REDROID_ADB: alioth-redroid:5555
+      ALIOTH_MOBILE_DEMO_FORCE_LOCAL: "1"
+      ALIOTH_MOBILE_DEMO_HOST_BIND: 0.0.0.0
+      ALIOTH_MOBILE_DEMO_DATA_DIR: /workspace/.alioth-mobile-demo
+      # 與 API 同掛 /workspace；勿用 Windows 的 F:/... 當 WORKSPACE_HOST
+      ALIOTH_WORKSPACE_HOST: /workspace
+      ANDROID_HOME: /opt/android-sdk
+      ANDROID_SDK_ROOT: /opt/android-sdk
+    volumes:
+      - ..:/workspace
+    depends_on:
+      - alioth-redroid
+    ports:
+      - "${ALIOTH_MOBILE_HOST_BIND:-127.0.0.1}:${ALIOTH_MOBILE_HOST_PORT:-8765}:8765"
+    networks:
+      - alioth
+
+  # ── Appium（可選預留；與 Airtest Demo 並行，不互相取代）──
+  alioth-appium:
+    image: ${ALIOTH_APPIUM_IMAGE:-appium/appium:latest}
+    container_name: alioth-appium
+    restart: unless-stopped
+    profiles:
+      - appium
+    environment:
+      # 連同網路內 ReDroid；實際 capability 由呼叫端指定
+      ANDROID_ADB_SERVER_ADDRESS: alioth-redroid
+      ANDROID_ADB_SERVER_PORT: "5555"
+    depends_on:
+      - alioth-redroid
+    ports:
+      - "${ALIOTH_APPIUM_PORT:-4723}:4723"
+    networks:
+      - alioth
+
+  # 覆寫 API：Linux Docker 模擬器模式
+  alioth-api:
+    environment:
+      ALIOTH_DEVICE_BACKEND: redroid
+      ALIOTH_MOBILE_DEMO_HOST_EXECUTOR: http://alioth-mobile-host:8765
+      ALIOTH_WORKSPACE_HOST: /workspace
+
+volumes:
+  alioth_redroid_data:
+  alioth_redroid_2_data:

@@ -1,0 +1,5408 @@
+{
+  "method": "SSH登录后通过bash调用现有API容器独立Python进程；所有数据库读取使用repeatable_read、readonly事务，未写业务数据或部署。",
+  "sample": "按created_at DESC,id DESC选取最近10条未删除任务；固定Task ID后继续只读核验。",
+  "deployed_image": "alioth-local/api:8dd5eb79486cd4fef7d745a2621014f7dabbb219",
+  "timezone": "原始时间为UTC；报告展示北京时间UTC+8",
+  "summary": {
+    "tasks": [
+      {
+        "task_id": "3f0e52c5-9e83-471c-a4c2-1ee1e7e97f17",
+        "name": "heiliao",
+        "platform": "web",
+        "status": "running",
+        "selected_rule_count": 73,
+        "rules_with_records": 48,
+        "execution_or_disposition_records": 382,
+        "confirmed_gap_rules": 17,
+        "confirmed_gap_records": 74,
+        "missing_rule_classification": null,
+        "record_snapshot_at": "2026-10-08 03:47:46.578435+00:00",
+        "gap_snapshot_at": "2026-10-08 03:47:46.578435+00:00"
+      },
+      {
+        "task_id": "cbd2a5c1-6538-46c4-85e2-349fd915ed59",
+        "name": "萝莉岛2",
+        "platform": "app",
+        "status": "review",
+        "selected_rule_count": 73,
+        "rules_with_records": 25,
+        "execution_or_disposition_records": 504,
+        "confirmed_gap_rules": 23,
+        "confirmed_gap_records": 378,
+        "missing_rule_classification": {
+          "eligible": 38,
+          "platform_not_supported": 2,
+          "auth_requirement_not_met": 8
+        },
+        "record_snapshot_at": "2026-10-08 03:42:26.984899+00:00",
+        "gap_snapshot_at": "2026-10-08 03:47:46.578435+00:00"
+      },
+      {
+        "task_id": "97ae1d9c-ebb3-46cb-80f0-491f449c05bc",
+        "name": "黑料网app",
+        "platform": "app",
+        "status": "review",
+        "selected_rule_count": 73,
+        "rules_with_records": 20,
+        "execution_or_disposition_records": 343,
+        "confirmed_gap_rules": 16,
+        "confirmed_gap_records": 263,
+        "missing_rule_classification": {
+          "eligible": 34,
+          "inspection_scope_excluded": 13,
+          "platform_not_supported": 2,
+          "auth_requirement_not_met": 4
+        },
+        "record_snapshot_at": "2026-10-08 03:42:26.984899+00:00",
+        "gap_snapshot_at": "2026-10-08 03:47:46.578435+00:00"
+      },
+      {
+        "task_id": "2c47e4dc-0942-4885-9286-666f33be416c",
+        "name": "黑料网白包",
+        "platform": "app",
+        "status": "review",
+        "selected_rule_count": 73,
+        "rules_with_records": 36,
+        "execution_or_disposition_records": 161,
+        "confirmed_gap_rules": 25,
+        "confirmed_gap_records": 115,
+        "missing_rule_classification": {
+          "inspection_scope_excluded": 13,
+          "eligible": 18,
+          "platform_not_supported": 2,
+          "auth_requirement_not_met": 4
+        },
+        "record_snapshot_at": "2026-10-08 03:42:26.984899+00:00",
+        "gap_snapshot_at": "2026-10-08 03:47:46.578435+00:00"
+      },
+      {
+        "task_id": "4decf71b-a98e-4af9-91e4-02dde0fb2912",
+        "name": "黑料不打烊app",
+        "platform": "app",
+        "status": "review",
+        "selected_rule_count": 73,
+        "rules_with_records": 43,
+        "execution_or_disposition_records": 354,
+        "confirmed_gap_rules": 33,
+        "confirmed_gap_records": 230,
+        "missing_rule_classification": {
+          "eligible": 14,
+          "inspection_scope_excluded": 10,
+          "platform_not_supported": 2,
+          "auth_requirement_not_met": 4
+        },
+        "record_snapshot_at": "2026-10-08 03:42:26.984899+00:00",
+        "gap_snapshot_at": "2026-10-08 03:47:46.578435+00:00"
+      },
+      {
+        "task_id": "8665f9c3-5084-4954-a033-db8366251857",
+        "name": "欲漫涩",
+        "platform": "app",
+        "status": "review",
+        "selected_rule_count": 73,
+        "rules_with_records": 20,
+        "execution_or_disposition_records": 354,
+        "confirmed_gap_rules": 18,
+        "confirmed_gap_records": 268,
+        "missing_rule_classification": {
+          "eligible": 34,
+          "inspection_scope_excluded": 13,
+          "platform_not_supported": 2,
+          "auth_requirement_not_met": 4
+        },
+        "record_snapshot_at": "2026-10-08 03:42:26.984899+00:00",
+        "gap_snapshot_at": "2026-10-08 03:47:46.578435+00:00"
+      },
+      {
+        "task_id": "9555bec5-6c43-4256-9eb0-b553613bb700",
+        "name": "撸啊撸",
+        "platform": "app",
+        "status": "review",
+        "selected_rule_count": 73,
+        "rules_with_records": 19,
+        "execution_or_disposition_records": 608,
+        "confirmed_gap_rules": 17,
+        "confirmed_gap_records": 418,
+        "missing_rule_classification": {
+          "eligible": 35,
+          "inspection_scope_excluded": 13,
+          "platform_not_supported": 2,
+          "auth_requirement_not_met": 4
+        },
+        "record_snapshot_at": "2026-10-08 03:42:26.984899+00:00",
+        "gap_snapshot_at": "2026-10-08 03:47:46.578435+00:00"
+      },
+      {
+        "task_id": "32291da8-c238-43fe-ab46-30f4acc72c4f",
+        "name": "杏吧",
+        "platform": "app",
+        "status": "review",
+        "selected_rule_count": 73,
+        "rules_with_records": 20,
+        "execution_or_disposition_records": 486,
+        "confirmed_gap_rules": 18,
+        "confirmed_gap_records": 365,
+        "missing_rule_classification": {
+          "eligible": 34,
+          "inspection_scope_excluded": 13,
+          "platform_not_supported": 2,
+          "auth_requirement_not_met": 4
+        },
+        "record_snapshot_at": "2026-10-08 03:42:26.984899+00:00",
+        "gap_snapshot_at": "2026-10-08 03:47:46.578435+00:00"
+      },
+      {
+        "task_id": "37477b41-4e81-4506-9360-894f9f3f63ee",
+        "name": "哔咔漫画",
+        "platform": "app",
+        "status": "review",
+        "selected_rule_count": 73,
+        "rules_with_records": 20,
+        "execution_or_disposition_records": 435,
+        "confirmed_gap_rules": 19,
+        "confirmed_gap_records": 317,
+        "missing_rule_classification": {
+          "eligible": 34,
+          "inspection_scope_excluded": 13,
+          "platform_not_supported": 2,
+          "auth_requirement_not_met": 4
+        },
+        "record_snapshot_at": "2026-10-08 03:42:26.984899+00:00",
+        "gap_snapshot_at": "2026-10-08 03:47:46.578435+00:00"
+      },
+      {
+        "task_id": "921da978-425c-427d-bc5a-fceb892d6415",
+        "name": "oio禁漫",
+        "platform": "app",
+        "status": "review",
+        "selected_rule_count": 73,
+        "rules_with_records": 60,
+        "execution_or_disposition_records": 653,
+        "confirmed_gap_rules": 43,
+        "confirmed_gap_records": 239,
+        "missing_rule_classification": {
+          "inspection_scope_excluded": 13
+        },
+        "record_snapshot_at": "2026-10-08 03:42:26.984899+00:00",
+        "gap_snapshot_at": "2026-10-08 03:47:46.578435+00:00"
+      }
+    ],
+    "app_totals": {
+      "selected_rules": 657,
+      "rules_with_records": 263,
+      "records": 3898,
+      "confirmed_gap_rules": 212,
+      "confirmed_gap_records": 2593
+    },
+    "app_missing_reasons": {
+      "eligible": 241,
+      "platform_not_supported": 16,
+      "auth_requirement_not_met": 36,
+      "inspection_scope_excluded": 101
+    }
+  },
+  "baseline": {
+    "checked_at": "2026-10-08 03:42:26.984899+00:00",
+    "tasks": [
+      {
+        "task_id": "3f0e52c5-9e83-471c-a4c2-1ee1e7e97f17",
+        "task_name": "heiliao",
+        "target_platform": "web",
+        "created_at": "2026-10-08 02:37:22.651777+00:00",
+        "status": "running",
+        "execution_status": null,
+        "quality_outcome": null,
+        "finalization_state": "open",
+        "finalization_epoch": 0,
+        "owner_run_id": "6c8946bd-3023-4204-b77e-4d94460c7ddf",
+        "selected_rule_total": "73",
+        "has_frozen_inventory": false,
+        "all_run_stored_rows": 328,
+        "owner_stored_rows": 328,
+        "actual_execution_count": 328,
+        "triggered_rule_count": 38,
+        "evidence_gap_count": 53,
+        "evidence_gap_rule_count": 11,
+        "raw_distribution": {
+          "pass": 241,
+          "skipped": 28,
+          "manual_review": 6,
+          "evidence_insufficient": 53
+        },
+        "pass_count": 241,
+        "fail_count": 0,
+        "remaining_skipped_count": 28,
+        "gate_passed": null,
+        "block_reasons": null,
+        "exploration_terminal": null,
+        "app_coverage_satisfied": null,
+        "sealed_at": null,
+        "session_draining_at": null
+      },
+      {
+        "task_id": "cbd2a5c1-6538-46c4-85e2-349fd915ed59",
+        "task_name": "萝莉岛2",
+        "target_platform": "app",
+        "created_at": "2026-10-07 12:09:16.215831+00:00",
+        "status": "review",
+        "execution_status": "needs_review",
+        "quality_outcome": "unknown",
+        "finalization_state": "sealed",
+        "finalization_epoch": 0,
+        "owner_run_id": "5b48e739-4958-4103-a00b-40965c31d982",
+        "selected_rule_total": "73",
+        "has_frozen_inventory": false,
+        "all_run_stored_rows": 504,
+        "owner_stored_rows": 504,
+        "actual_execution_count": 504,
+        "triggered_rule_count": 25,
+        "evidence_gap_count": 378,
+        "evidence_gap_rule_count": 23,
+        "raw_distribution": {
+          "fail": 6,
+          "pass": 80,
+          "skipped": 408,
+          "manual_review": 10
+        },
+        "pass_count": 80,
+        "fail_count": 6,
+        "remaining_skipped_count": 30,
+        "gate_passed": false,
+        "block_reasons": [
+          "manual_review_seal"
+        ],
+        "exploration_terminal": false,
+        "app_coverage_satisfied": false,
+        "sealed_at": "2026-10-07 13:57:02.851866+00:00",
+        "session_draining_at": "2026-10-07 13:57:02.851866+00:00"
+      },
+      {
+        "task_id": "97ae1d9c-ebb3-46cb-80f0-491f449c05bc",
+        "task_name": "黑料网app",
+        "target_platform": "app",
+        "created_at": "2026-10-07 01:45:22.040146+00:00",
+        "status": "review",
+        "execution_status": "needs_review",
+        "quality_outcome": "unknown",
+        "finalization_state": "sealed",
+        "finalization_epoch": 0,
+        "owner_run_id": "232220a5-716e-486a-96b8-6e7553cfef93",
+        "selected_rule_total": "73",
+        "has_frozen_inventory": false,
+        "all_run_stored_rows": 343,
+        "owner_stored_rows": 343,
+        "actual_execution_count": 343,
+        "triggered_rule_count": 20,
+        "evidence_gap_count": 263,
+        "evidence_gap_rule_count": 16,
+        "raw_distribution": {
+          "pass": 61,
+          "skipped": 282
+        },
+        "pass_count": 61,
+        "fail_count": 0,
+        "remaining_skipped_count": 19,
+        "gate_passed": false,
+        "block_reasons": [
+          "manual_review_seal"
+        ],
+        "exploration_terminal": false,
+        "app_coverage_satisfied": false,
+        "sealed_at": "2026-10-07 03:42:11.022116+00:00",
+        "session_draining_at": "2026-10-07 03:42:11.022116+00:00"
+      },
+      {
+        "task_id": "2c47e4dc-0942-4885-9286-666f33be416c",
+        "task_name": "黑料网白包",
+        "target_platform": "app",
+        "created_at": "2026-10-06 08:38:26.864804+00:00",
+        "status": "review",
+        "execution_status": "needs_review",
+        "quality_outcome": "unknown",
+        "finalization_state": "sealed",
+        "finalization_epoch": 0,
+        "owner_run_id": "90198c7b-fba6-4fa7-b1d6-d3b5a345c373",
+        "selected_rule_total": "73",
+        "has_frozen_inventory": false,
+        "all_run_stored_rows": 161,
+        "owner_stored_rows": 161,
+        "actual_execution_count": 161,
+        "triggered_rule_count": 36,
+        "evidence_gap_count": 115,
+        "evidence_gap_rule_count": 25,
+        "raw_distribution": {
+          "fail": 1,
+          "pass": 40,
+          "skipped": 120
+        },
+        "pass_count": 40,
+        "fail_count": 1,
+        "remaining_skipped_count": 5,
+        "gate_passed": false,
+        "block_reasons": [
+          "manual_review_seal"
+        ],
+        "exploration_terminal": false,
+        "app_coverage_satisfied": false,
+        "sealed_at": "2026-10-06 09:22:03.150169+00:00",
+        "session_draining_at": "2026-10-06 09:22:03.150169+00:00"
+      },
+      {
+        "task_id": "4decf71b-a98e-4af9-91e4-02dde0fb2912",
+        "task_name": "黑料不打烊app",
+        "target_platform": "app",
+        "created_at": "2026-10-06 07:08:57.808306+00:00",
+        "status": "review",
+        "execution_status": "needs_review",
+        "quality_outcome": "unknown",
+        "finalization_state": "sealed",
+        "finalization_epoch": 0,
+        "owner_run_id": "8acc676f-8aa1-4eb3-9a29-02c786f9ed93",
+        "selected_rule_total": "73",
+        "has_frozen_inventory": false,
+        "all_run_stored_rows": 354,
+        "owner_stored_rows": 354,
+        "actual_execution_count": 354,
+        "triggered_rule_count": 43,
+        "evidence_gap_count": 220,
+        "evidence_gap_rule_count": 32,
+        "raw_distribution": {
+          "pass": 101,
+          "skipped": 250,
+          "manual_review": 3
+        },
+        "pass_count": 101,
+        "fail_count": 0,
+        "remaining_skipped_count": 30,
+        "gate_passed": false,
+        "block_reasons": [
+          "manual_review_seal"
+        ],
+        "exploration_terminal": false,
+        "app_coverage_satisfied": false,
+        "sealed_at": "2026-10-06 08:35:17.048349+00:00",
+        "session_draining_at": "2026-10-06 08:35:17.048349+00:00"
+      },
+      {
+        "task_id": "8665f9c3-5084-4954-a033-db8366251857",
+        "task_name": "欲漫涩",
+        "target_platform": "app",
+        "created_at": "2026-10-06 02:26:05.628394+00:00",
+        "status": "review",
+        "execution_status": "needs_review",
+        "quality_outcome": "unknown",
+        "finalization_state": "sealed",
+        "finalization_epoch": 0,
+        "owner_run_id": "bbdd7241-723f-42c6-b0b7-b75562802c77",
+        "selected_rule_total": "73",
+        "has_frozen_inventory": false,
+        "all_run_stored_rows": 354,
+        "owner_stored_rows": 354,
+        "actual_execution_count": 354,
+        "triggered_rule_count": 20,
+        "evidence_gap_count": 268,
+        "evidence_gap_rule_count": 18,
+        "raw_distribution": {
+          "fail": 5,
+          "pass": 66,
+          "skipped": 279,
+          "manual_review": 4
+        },
+        "pass_count": 66,
+        "fail_count": 5,
+        "remaining_skipped_count": 11,
+        "gate_passed": false,
+        "block_reasons": [
+          "manual_review_seal"
+        ],
+        "exploration_terminal": false,
+        "app_coverage_satisfied": false,
+        "sealed_at": "2026-10-06 04:06:34.272614+00:00",
+        "session_draining_at": "2026-10-06 04:06:34.272614+00:00"
+      },
+      {
+        "task_id": "9555bec5-6c43-4256-9eb0-b553613bb700",
+        "task_name": "撸啊撸",
+        "target_platform": "app",
+        "created_at": "2026-10-05 08:05:06.019001+00:00",
+        "status": "review",
+        "execution_status": "needs_review",
+        "quality_outcome": "unknown",
+        "finalization_state": "sealed",
+        "finalization_epoch": 0,
+        "owner_run_id": "945fe432-80c1-4173-8091-56e15be831a8",
+        "selected_rule_total": "73",
+        "has_frozen_inventory": false,
+        "all_run_stored_rows": 608,
+        "owner_stored_rows": 608,
+        "actual_execution_count": 608,
+        "triggered_rule_count": 19,
+        "evidence_gap_count": 418,
+        "evidence_gap_rule_count": 17,
+        "raw_distribution": {
+          "fail": 12,
+          "pass": 101,
+          "skipped": 490,
+          "manual_review": 5
+        },
+        "pass_count": 101,
+        "fail_count": 12,
+        "remaining_skipped_count": 72,
+        "gate_passed": false,
+        "block_reasons": [
+          "manual_review_seal"
+        ],
+        "exploration_terminal": false,
+        "app_coverage_satisfied": false,
+        "sealed_at": "2026-10-05 09:57:43.173523+00:00",
+        "session_draining_at": "2026-10-05 09:57:43.173523+00:00"
+      },
+      {
+        "task_id": "32291da8-c238-43fe-ab46-30f4acc72c4f",
+        "task_name": "杏吧",
+        "target_platform": "app",
+        "created_at": "2026-10-05 05:46:47.847320+00:00",
+        "status": "review",
+        "execution_status": "needs_review",
+        "quality_outcome": "unknown",
+        "finalization_state": "sealed",
+        "finalization_epoch": 0,
+        "owner_run_id": "fcd9e1d5-2510-483f-8da8-af5296f0d343",
+        "selected_rule_total": "73",
+        "has_frozen_inventory": false,
+        "all_run_stored_rows": 486,
+        "owner_stored_rows": 486,
+        "actual_execution_count": 486,
+        "triggered_rule_count": 20,
+        "evidence_gap_count": 365,
+        "evidence_gap_rule_count": 18,
+        "raw_distribution": {
+          "fail": 5,
+          "pass": 79,
+          "skipped": 395,
+          "manual_review": 7
+        },
+        "pass_count": 79,
+        "fail_count": 5,
+        "remaining_skipped_count": 30,
+        "gate_passed": false,
+        "block_reasons": [
+          "manual_review_seal"
+        ],
+        "exploration_terminal": false,
+        "app_coverage_satisfied": false,
+        "sealed_at": "2026-10-05 07:36:49.560104+00:00",
+        "session_draining_at": "2026-10-05 07:36:49.560104+00:00"
+      },
+      {
+        "task_id": "37477b41-4e81-4506-9360-894f9f3f63ee",
+        "task_name": "哔咔漫画",
+        "target_platform": "app",
+        "created_at": "2026-10-05 03:19:07.655190+00:00",
+        "status": "review",
+        "execution_status": "needs_review",
+        "quality_outcome": "unknown",
+        "finalization_state": "sealed",
+        "finalization_epoch": 0,
+        "owner_run_id": "9a0aaa4b-4dfc-4bdd-9770-022482ac38a1",
+        "selected_rule_total": "73",
+        "has_frozen_inventory": false,
+        "all_run_stored_rows": 435,
+        "owner_stored_rows": 435,
+        "actual_execution_count": 435,
+        "triggered_rule_count": 20,
+        "evidence_gap_count": 317,
+        "evidence_gap_rule_count": 19,
+        "raw_distribution": {
+          "fail": 4,
+          "pass": 86,
+          "skipped": 340,
+          "manual_review": 5
+        },
+        "pass_count": 86,
+        "fail_count": 4,
+        "remaining_skipped_count": 23,
+        "gate_passed": false,
+        "block_reasons": [
+          "manual_review_seal"
+        ],
+        "exploration_terminal": false,
+        "app_coverage_satisfied": false,
+        "sealed_at": "2026-10-05 05:17:09.840262+00:00",
+        "session_draining_at": "2026-10-05 05:17:09.840262+00:00"
+      },
+      {
+        "task_id": "921da978-425c-427d-bc5a-fceb892d6415",
+        "task_name": "oio禁漫",
+        "target_platform": "app",
+        "created_at": "2026-10-04 12:39:41.514710+00:00",
+        "status": "review",
+        "execution_status": "needs_review",
+        "quality_outcome": "unknown",
+        "finalization_state": "sealed",
+        "finalization_epoch": 0,
+        "owner_run_id": "3f1ab1d0-7886-4a49-859f-46119cd1eae1",
+        "selected_rule_total": "73",
+        "has_frozen_inventory": false,
+        "all_run_stored_rows": 653,
+        "owner_stored_rows": 653,
+        "actual_execution_count": 653,
+        "triggered_rule_count": 60,
+        "evidence_gap_count": 234,
+        "evidence_gap_rule_count": 41,
+        "raw_distribution": {
+          "fail": 17,
+          "pass": 178,
+          "skipped": 454,
+          "manual_review": 4
+        },
+        "pass_count": 178,
+        "fail_count": 17,
+        "remaining_skipped_count": 220,
+        "gate_passed": false,
+        "block_reasons": [
+          "nonterminal_enforced_work_item",
+          "review_policy_unsatisfied",
+          "app_coverage_or_visual_quality_incomplete",
+          "natural_evidence_presentation_violation"
+        ],
+        "exploration_terminal": true,
+        "app_coverage_satisfied": false,
+        "sealed_at": "2026-10-04 14:33:01.491451+00:00",
+        "session_draining_at": "2026-10-04 14:14:40.026701+00:00"
+      }
+    ],
+    "chain": [
+      {
+        "task_id": "3f0e52c5-9e83-471c-a4c2-1ee1e7e97f17",
+        "app_index_count": 0,
+        "app_result_count": 0,
+        "app_publication_count": 0,
+        "publication_statuses": null,
+        "page_work_counts": {
+          "snapshot": 74,
+          "active_session": 97
+        },
+        "aggregate_candidates": 0,
+        "aggregate_work": 0,
+        "exploration_inflight_at_seal": 0,
+        "first_failure_at": null,
+        "failure_types": null
+      },
+      {
+        "task_id": "cbd2a5c1-6538-46c4-85e2-349fd915ed59",
+        "app_index_count": 0,
+        "app_result_count": 0,
+        "app_publication_count": 0,
+        "publication_statuses": null,
+        "page_work_counts": {
+          "active_session": 282
+        },
+        "aggregate_candidates": 0,
+        "aggregate_work": 0,
+        "exploration_inflight_at_seal": 0,
+        "first_failure_at": "2026-10-07 13:57:24.367190+00:00",
+        "failure_types": {
+          "DeviceLeaseLostError": 1
+        }
+      },
+      {
+        "task_id": "97ae1d9c-ebb3-46cb-80f0-491f449c05bc",
+        "app_index_count": 0,
+        "app_result_count": 0,
+        "app_publication_count": 0,
+        "publication_statuses": null,
+        "page_work_counts": {
+          "active_session": 213
+        },
+        "aggregate_candidates": 0,
+        "aggregate_work": 0,
+        "exploration_inflight_at_seal": 1,
+        "first_failure_at": "2026-10-07 03:42:25.364830+00:00",
+        "failure_types": {
+          "AppExplorationLeaseLostError": 1
+        }
+      },
+      {
+        "task_id": "2c47e4dc-0942-4885-9286-666f33be416c",
+        "app_index_count": 1,
+        "app_result_count": 1,
+        "app_publication_count": 1,
+        "publication_statuses": {
+          "needs_review": 1
+        },
+        "page_work_counts": {
+          "snapshot": 52,
+          "active_session": 85
+        },
+        "aggregate_candidates": 0,
+        "aggregate_work": 0,
+        "exploration_inflight_at_seal": 0,
+        "first_failure_at": null,
+        "failure_types": null
+      },
+      {
+        "task_id": "4decf71b-a98e-4af9-91e4-02dde0fb2912",
+        "app_index_count": 1,
+        "app_result_count": 1,
+        "app_publication_count": 1,
+        "publication_statuses": {
+          "needs_review": 1
+        },
+        "page_work_counts": {
+          "snapshot": 175,
+          "active_session": 168
+        },
+        "aggregate_candidates": 0,
+        "aggregate_work": 0,
+        "exploration_inflight_at_seal": 0,
+        "first_failure_at": "2026-10-06 08:28:30.068270+00:00",
+        "failure_types": {
+          "AppExplorationTechnicalOutcome": 1
+        }
+      },
+      {
+        "task_id": "8665f9c3-5084-4954-a033-db8366251857",
+        "app_index_count": 1,
+        "app_result_count": 1,
+        "app_publication_count": 0,
+        "publication_statuses": null,
+        "page_work_counts": {
+          "active_session": 204
+        },
+        "aggregate_candidates": 0,
+        "aggregate_work": 0,
+        "exploration_inflight_at_seal": 1,
+        "first_failure_at": "2026-10-06 04:06:44.107641+00:00",
+        "failure_types": {
+          "RaiseError": 1
+        }
+      },
+      {
+        "task_id": "9555bec5-6c43-4256-9eb0-b553613bb700",
+        "app_index_count": 0,
+        "app_result_count": 0,
+        "app_publication_count": 0,
+        "publication_statuses": null,
+        "page_work_counts": {
+          "active_session": 344
+        },
+        "aggregate_candidates": 0,
+        "aggregate_work": 0,
+        "exploration_inflight_at_seal": 1,
+        "first_failure_at": "2026-10-05 09:58:11.970876+00:00",
+        "failure_types": {
+          "AppExplorationLeaseLostError": 1
+        }
+      },
+      {
+        "task_id": "32291da8-c238-43fe-ab46-30f4acc72c4f",
+        "app_index_count": 0,
+        "app_result_count": 0,
+        "app_publication_count": 0,
+        "publication_statuses": null,
+        "page_work_counts": {
+          "active_session": 281
+        },
+        "aggregate_candidates": 0,
+        "aggregate_work": 0,
+        "exploration_inflight_at_seal": 1,
+        "first_failure_at": "2026-10-05 07:37:14.597205+00:00",
+        "failure_types": {
+          "AppExplorationLeaseLostError": 1
+        }
+      },
+      {
+        "task_id": "37477b41-4e81-4506-9360-894f9f3f63ee",
+        "app_index_count": 1,
+        "app_result_count": 1,
+        "app_publication_count": 0,
+        "publication_statuses": null,
+        "page_work_counts": {
+          "active_session": 241
+        },
+        "aggregate_candidates": 0,
+        "aggregate_work": 0,
+        "exploration_inflight_at_seal": 1,
+        "first_failure_at": "2026-10-05 05:17:34.302780+00:00",
+        "failure_types": {
+          "RaiseError": 1
+        }
+      },
+      {
+        "task_id": "921da978-425c-427d-bc5a-fceb892d6415",
+        "app_index_count": 1,
+        "app_result_count": 1,
+        "app_publication_count": 1,
+        "publication_statuses": {
+          "needs_review": 1
+        },
+        "page_work_counts": {
+          "snapshot": 122,
+          "active_session": 123
+        },
+        "aggregate_candidates": 3,
+        "aggregate_work": 3,
+        "exploration_inflight_at_seal": 0,
+        "first_failure_at": null,
+        "failure_types": null
+      }
+    ],
+    "inventory_validity": [
+      {
+        "task_id": "3f0e52c5-9e83-471c-a4c2-1ee1e7e97f17",
+        "ruleset_unchanged": true,
+        "scope_unchanged": true,
+        "rules_unchanged": true,
+        "current_enabled_rule_count": 73
+      },
+      {
+        "task_id": "cbd2a5c1-6538-46c4-85e2-349fd915ed59",
+        "ruleset_unchanged": true,
+        "scope_unchanged": true,
+        "rules_unchanged": true,
+        "current_enabled_rule_count": 73
+      },
+      {
+        "task_id": "97ae1d9c-ebb3-46cb-80f0-491f449c05bc",
+        "ruleset_unchanged": true,
+        "scope_unchanged": true,
+        "rules_unchanged": true,
+        "current_enabled_rule_count": 73
+      },
+      {
+        "task_id": "2c47e4dc-0942-4885-9286-666f33be416c",
+        "ruleset_unchanged": true,
+        "scope_unchanged": true,
+        "rules_unchanged": true,
+        "current_enabled_rule_count": 73
+      },
+      {
+        "task_id": "4decf71b-a98e-4af9-91e4-02dde0fb2912",
+        "ruleset_unchanged": true,
+        "scope_unchanged": true,
+        "rules_unchanged": true,
+        "current_enabled_rule_count": 73
+      },
+      {
+        "task_id": "8665f9c3-5084-4954-a033-db8366251857",
+        "ruleset_unchanged": true,
+        "scope_unchanged": true,
+        "rules_unchanged": true,
+        "current_enabled_rule_count": 73
+      },
+      {
+        "task_id": "9555bec5-6c43-4256-9eb0-b553613bb700",
+        "ruleset_unchanged": true,
+        "scope_unchanged": true,
+        "rules_unchanged": true,
+        "current_enabled_rule_count": 73
+      },
+      {
+        "task_id": "32291da8-c238-43fe-ab46-30f4acc72c4f",
+        "ruleset_unchanged": true,
+        "scope_unchanged": true,
+        "rules_unchanged": true,
+        "current_enabled_rule_count": 73
+      },
+      {
+        "task_id": "37477b41-4e81-4506-9360-894f9f3f63ee",
+        "ruleset_unchanged": true,
+        "scope_unchanged": true,
+        "rules_unchanged": true,
+        "current_enabled_rule_count": 73
+      },
+      {
+        "task_id": "921da978-425c-427d-bc5a-fceb892d6415",
+        "ruleset_unchanged": true,
+        "scope_unchanged": true,
+        "rules_unchanged": true,
+        "current_enabled_rule_count": 73
+      }
+    ]
+  },
+  "missing_rule_details": {
+    "checked_at": "2026-10-08 03:45:36.813188+00:00",
+    "tasks": [
+      {
+        "task_id": "3f0e52c5-9e83-471c-a4c2-1ee1e7e97f17",
+        "name": "heiliao",
+        "platform": "web",
+        "scope": [],
+        "auth_states": [
+          "unknown"
+        ],
+        "explicit_no_test_account": null,
+        "explicit_has_test_account": null,
+        "missing_rule_count": 35,
+        "missing_reason_counts": {
+          "eligible": 34,
+          "platform_not_supported": 1
+        },
+        "missing_rules": [
+          {
+            "rule_code": "alioth_47",
+            "name": "客服入口可用性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_new_20",
+            "name": "列表触底反馈检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_48",
+            "name": "Toast样式统一性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_44",
+            "name": "进度条时间显示检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_37",
+            "name": "弱网占位页检查",
+            "reason": "platform_not_supported",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_new_24",
+            "name": "充值页控件间距检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_15",
+            "name": "封面与内容相符检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_22",
+            "name": "首页弹窗连续展示流畅性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_21",
+            "name": "首页弹窗蒙层点击行为检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_16",
+            "name": "广告素材比例检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_17",
+            "name": "广告内容与落地页一致性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_26",
+            "name": "广告失败后正片播放检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_25",
+            "name": "播放前广告展示检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_28",
+            "name": "政治恐怖与人身攻击内容检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_45",
+            "name": "上传限制与多选规则展示检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_29",
+            "name": "用户输入防刷与刷屏检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_31",
+            "name": "评论发布与计数同步检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_7",
+            "name": "外部链接新窗口跳转检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_46",
+            "name": "帖子媒体全屏浏览检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_48",
+            "name": "退出登录入口检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_8",
+            "name": "互动状态即时反馈检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_13",
+            "name": "商品价格一致性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_43",
+            "name": "播放历史进度恢复检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_40",
+            "name": "下架内容前置标识检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_10",
+            "name": "提示文案易懂性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_11",
+            "name": "提示文案正向表达检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_12",
+            "name": "提示文案叹号结尾检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_ops_6",
+            "name": "分享链接有效性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_ops_7",
+            "name": "官方群入口跳转检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_ops_4",
+            "name": "充值入口进入充值页检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_ops_5",
+            "name": "充值拉起支付检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_ops_11",
+            "name": "拉单金额一致性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_ops_10",
+            "name": "漫画与图文阅读检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_ops_9",
+            "name": "短剧与动漫分集播放检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_ops_3",
+            "name": "视频与短视频播放检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          }
+        ],
+        "execution_reason_groups": [
+          {
+            "execution_status": "pass",
+            "error_code": null,
+            "output_error_code": null,
+            "reason": null,
+            "quality_outcome": "passed",
+            "output_quality_status": null,
+            "output_quality_outcome": null,
+            "count": 250
+          },
+          {
+            "execution_status": "skipped",
+            "error_code": null,
+            "output_error_code": null,
+            "reason": null,
+            "quality_outcome": "skipped",
+            "output_quality_status": null,
+            "output_quality_outcome": null,
+            "count": 29
+          },
+          {
+            "execution_status": "evidence_insufficient",
+            "error_code": "web_active_interaction_not_enabled",
+            "output_error_code": null,
+            "reason": null,
+            "quality_outcome": "evidence_gap",
+            "output_quality_status": null,
+            "output_quality_outcome": null,
+            "count": 28
+          },
+          {
+            "execution_status": "manual_review",
+            "error_code": null,
+            "output_error_code": null,
+            "reason": null,
+            "quality_outcome": "inconclusive",
+            "output_quality_status": null,
+            "output_quality_outcome": null,
+            "count": 6
+          },
+          {
+            "execution_status": "evidence_insufficient",
+            "error_code": "SUPPLEMENTAL_EVIDENCE_DISABLED",
+            "output_error_code": null,
+            "reason": null,
+            "quality_outcome": "evidence_gap",
+            "output_quality_status": null,
+            "output_quality_outcome": null,
+            "count": 28
+          }
+        ]
+      },
+      {
+        "task_id": "cbd2a5c1-6538-46c4-85e2-349fd915ed59",
+        "name": "萝莉岛2",
+        "platform": "app",
+        "scope": [],
+        "auth_states": [
+          "unknown"
+        ],
+        "explicit_no_test_account": null,
+        "explicit_has_test_account": null,
+        "missing_rule_count": 48,
+        "missing_reason_counts": {
+          "eligible": 38,
+          "platform_not_supported": 2,
+          "auth_requirement_not_met": 8
+        },
+        "missing_rules": [
+          {
+            "rule_code": "alioth_33",
+            "name": "英国政治内容检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_48",
+            "name": "Toast样式统一性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_37",
+            "name": "弱网占位页检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_new_24",
+            "name": "充值页控件间距检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_38",
+            "name": "列表排列整齐性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_17",
+            "name": "分辨率兼容性检查",
+            "reason": "platform_not_supported",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_new_29",
+            "name": "封面标题布局检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_27",
+            "name": "整屏图片安全边距检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_18",
+            "name": "浏览器兼容性检查",
+            "reason": "platform_not_supported",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_28",
+            "name": "页面元素对齐与层次感检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_new_25",
+            "name": "多端一致性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_new_27",
+            "name": "标题截断规范检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_24",
+            "name": "文字层次感检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_22",
+            "name": "首页弹窗连续展示流畅性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_19",
+            "name": "跳过按钮可点击区域检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_16",
+            "name": "广告素材比例检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_18",
+            "name": "广告倒计时准确性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_17",
+            "name": "广告内容与落地页一致性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_25",
+            "name": "播放前广告展示检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_28",
+            "name": "政治恐怖与人身攻击内容检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_45",
+            "name": "上传限制与多选规则展示检查",
+            "reason": "auth_requirement_not_met",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_29",
+            "name": "用户输入防刷与刷屏检查",
+            "reason": "auth_requirement_not_met",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_34",
+            "name": "恐怖行为支持内容检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_30",
+            "name": "成人赌博与私人广告内容检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_32",
+            "name": "涉华战争政治民族内容检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_31",
+            "name": "评论发布与计数同步检查",
+            "reason": "auth_requirement_not_met",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_27",
+            "name": "恶意链接与外跳诱导检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_41",
+            "name": "二维码与网址有效性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_48",
+            "name": "退出登录入口检查",
+            "reason": "auth_requirement_not_met",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_8",
+            "name": "互动状态即时反馈检查",
+            "reason": "auth_requirement_not_met",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_9",
+            "name": "数据变更后刷新检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_14",
+            "name": "优惠价低于原价检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_43",
+            "name": "播放历史进度恢复检查",
+            "reason": "auth_requirement_not_met",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_42",
+            "name": "失效活动展示同步检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_38",
+            "name": "分类标签大小写一致性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_2",
+            "name": "文案语言规范检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_4",
+            "name": "错别字检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_39",
+            "name": "榜单数据排序合理性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_3",
+            "name": "图片展示质量检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_6",
+            "name": "技术错误直出检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_5",
+            "name": "页面模块空白兜底检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_36",
+            "name": "未成年红线标记检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_ops_1",
+            "name": "产品域名可访问检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_ops_7",
+            "name": "官方群入口跳转检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_ops_5",
+            "name": "充值拉起支付检查",
+            "reason": "auth_requirement_not_met",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_ops_11",
+            "name": "拉单金额一致性检查",
+            "reason": "auth_requirement_not_met",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_ops_8",
+            "name": "封面加载完整性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_ops_2",
+            "name": "产品双端可打开检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          }
+        ],
+        "execution_reason_groups": [
+          {
+            "execution_status": "skipped",
+            "error_code": "SUPPLEMENTAL_EVIDENCE_DISABLED",
+            "output_error_code": null,
+            "reason": "",
+            "quality_outcome": "skipped",
+            "output_quality_status": null,
+            "output_quality_outcome": null,
+            "count": 378
+          },
+          {
+            "execution_status": "skipped",
+            "error_code": null,
+            "output_error_code": null,
+            "reason": null,
+            "quality_outcome": "skipped",
+            "output_quality_status": null,
+            "output_quality_outcome": null,
+            "count": 28
+          },
+          {
+            "execution_status": "pass",
+            "error_code": null,
+            "output_error_code": null,
+            "reason": null,
+            "quality_outcome": "passed",
+            "output_quality_status": null,
+            "output_quality_outcome": null,
+            "count": 80
+          },
+          {
+            "execution_status": "manual_review",
+            "error_code": null,
+            "output_error_code": null,
+            "reason": null,
+            "quality_outcome": "inconclusive",
+            "output_quality_status": null,
+            "output_quality_outcome": null,
+            "count": 10
+          },
+          {
+            "execution_status": "fail",
+            "error_code": null,
+            "output_error_code": null,
+            "reason": null,
+            "quality_outcome": "failed",
+            "output_quality_status": null,
+            "output_quality_outcome": null,
+            "count": 6
+          },
+          {
+            "execution_status": "skipped",
+            "error_code": null,
+            "output_error_code": null,
+            "reason": "",
+            "quality_outcome": "skipped",
+            "output_quality_status": null,
+            "output_quality_outcome": null,
+            "count": 2
+          }
+        ]
+      },
+      {
+        "task_id": "97ae1d9c-ebb3-46cb-80f0-491f449c05bc",
+        "name": "黑料网app",
+        "platform": "app",
+        "scope": [
+          "content_detail",
+          "content_list",
+          "home",
+          "video_detail",
+          "video_list"
+        ],
+        "auth_states": [
+          "unknown"
+        ],
+        "explicit_no_test_account": null,
+        "explicit_has_test_account": null,
+        "missing_rule_count": 53,
+        "missing_reason_counts": {
+          "eligible": 34,
+          "inspection_scope_excluded": 13,
+          "platform_not_supported": 2,
+          "auth_requirement_not_met": 4
+        },
+        "missing_rules": [
+          {
+            "rule_code": "alioth_33",
+            "name": "英国政治内容检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_47",
+            "name": "客服入口可用性检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_48",
+            "name": "Toast样式统一性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_37",
+            "name": "弱网占位页检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_new_24",
+            "name": "充值页控件间距检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_38",
+            "name": "列表排列整齐性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_17",
+            "name": "分辨率兼容性检查",
+            "reason": "platform_not_supported",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_new_29",
+            "name": "封面标题布局检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_27",
+            "name": "整屏图片安全边距检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_18",
+            "name": "浏览器兼容性检查",
+            "reason": "platform_not_supported",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_28",
+            "name": "页面元素对齐与层次感检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_new_25",
+            "name": "多端一致性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_new_27",
+            "name": "标题截断规范检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_24",
+            "name": "文字层次感检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_22",
+            "name": "首页弹窗连续展示流畅性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_19",
+            "name": "跳过按钮可点击区域检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_16",
+            "name": "广告素材比例检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_18",
+            "name": "广告倒计时准确性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_17",
+            "name": "广告内容与落地页一致性检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_25",
+            "name": "播放前广告展示检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_28",
+            "name": "政治恐怖与人身攻击内容检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_45",
+            "name": "上传限制与多选规则展示检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_29",
+            "name": "用户输入防刷与刷屏检查",
+            "reason": "auth_requirement_not_met",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_34",
+            "name": "恐怖行为支持内容检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_30",
+            "name": "成人赌博与私人广告内容检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_32",
+            "name": "涉华战争政治民族内容检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_31",
+            "name": "评论发布与计数同步检查",
+            "reason": "auth_requirement_not_met",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_27",
+            "name": "恶意链接与外跳诱导检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_7",
+            "name": "外部链接新窗口跳转检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_46",
+            "name": "帖子媒体全屏浏览检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_41",
+            "name": "二维码与网址有效性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_48",
+            "name": "退出登录入口检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_8",
+            "name": "互动状态即时反馈检查",
+            "reason": "auth_requirement_not_met",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_9",
+            "name": "数据变更后刷新检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_14",
+            "name": "优惠价低于原价检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_43",
+            "name": "播放历史进度恢复检查",
+            "reason": "auth_requirement_not_met",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_42",
+            "name": "失效活动展示同步检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_38",
+            "name": "分类标签大小写一致性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_2",
+            "name": "文案语言规范检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_4",
+            "name": "错别字检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_10",
+            "name": "提示文案易懂性检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_11",
+            "name": "提示文案正向表达检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_39",
+            "name": "榜单数据排序合理性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_3",
+            "name": "图片展示质量检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_6",
+            "name": "技术错误直出检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_5",
+            "name": "页面模块空白兜底检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_36",
+            "name": "未成年红线标记检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_ops_1",
+            "name": "产品域名可访问检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_ops_7",
+            "name": "官方群入口跳转检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_ops_5",
+            "name": "充值拉起支付检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_ops_11",
+            "name": "拉单金额一致性检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_ops_8",
+            "name": "封面加载完整性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_ops_2",
+            "name": "产品双端可打开检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          }
+        ],
+        "execution_reason_groups": [
+          {
+            "execution_status": "skipped",
+            "error_code": "SUPPLEMENTAL_EVIDENCE_DISABLED",
+            "output_error_code": null,
+            "reason": "",
+            "quality_outcome": "skipped",
+            "output_quality_status": null,
+            "output_quality_outcome": null,
+            "count": 263
+          },
+          {
+            "execution_status": "pass",
+            "error_code": null,
+            "output_error_code": null,
+            "reason": null,
+            "quality_outcome": "passed",
+            "output_quality_status": null,
+            "output_quality_outcome": null,
+            "count": 61
+          },
+          {
+            "execution_status": "skipped",
+            "error_code": null,
+            "output_error_code": null,
+            "reason": null,
+            "quality_outcome": "skipped",
+            "output_quality_status": null,
+            "output_quality_outcome": null,
+            "count": 19
+          }
+        ]
+      },
+      {
+        "task_id": "2c47e4dc-0942-4885-9286-666f33be416c",
+        "name": "黑料网白包",
+        "platform": "app",
+        "scope": [
+          "content_detail",
+          "content_list",
+          "home",
+          "video_detail",
+          "video_list"
+        ],
+        "auth_states": [
+          "unknown"
+        ],
+        "explicit_no_test_account": null,
+        "explicit_has_test_account": null,
+        "missing_rule_count": 37,
+        "missing_reason_counts": {
+          "inspection_scope_excluded": 13,
+          "eligible": 18,
+          "platform_not_supported": 2,
+          "auth_requirement_not_met": 4
+        },
+        "missing_rules": [
+          {
+            "rule_code": "alioth_47",
+            "name": "客服入口可用性检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_48",
+            "name": "Toast样式统一性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_37",
+            "name": "弱网占位页检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_new_24",
+            "name": "充值页控件间距检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_38",
+            "name": "列表排列整齐性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_17",
+            "name": "分辨率兼容性检查",
+            "reason": "platform_not_supported",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_new_29",
+            "name": "封面标题布局检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_27",
+            "name": "整屏图片安全边距检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_18",
+            "name": "浏览器兼容性检查",
+            "reason": "platform_not_supported",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_new_25",
+            "name": "多端一致性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_new_27",
+            "name": "标题截断规范检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_24",
+            "name": "文字层次感检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_22",
+            "name": "首页弹窗连续展示流畅性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_21",
+            "name": "首页弹窗蒙层点击行为检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_16",
+            "name": "广告素材比例检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_17",
+            "name": "广告内容与落地页一致性检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_24",
+            "name": "启动广告虚假跳过按钮检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_25",
+            "name": "播放前广告展示检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_28",
+            "name": "政治恐怖与人身攻击内容检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_45",
+            "name": "上传限制与多选规则展示检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_29",
+            "name": "用户输入防刷与刷屏检查",
+            "reason": "auth_requirement_not_met",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_31",
+            "name": "评论发布与计数同步检查",
+            "reason": "auth_requirement_not_met",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_7",
+            "name": "外部链接新窗口跳转检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_46",
+            "name": "帖子媒体全屏浏览检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_48",
+            "name": "退出登录入口检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_8",
+            "name": "互动状态即时反馈检查",
+            "reason": "auth_requirement_not_met",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_43",
+            "name": "播放历史进度恢复检查",
+            "reason": "auth_requirement_not_met",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_10",
+            "name": "提示文案易懂性检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_11",
+            "name": "提示文案正向表达检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_39",
+            "name": "榜单数据排序合理性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_6",
+            "name": "技术错误直出检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_5",
+            "name": "页面模块空白兜底检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_ops_1",
+            "name": "产品域名可访问检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_ops_7",
+            "name": "官方群入口跳转检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_ops_5",
+            "name": "充值拉起支付检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_ops_11",
+            "name": "拉单金额一致性检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_ops_2",
+            "name": "产品双端可打开检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          }
+        ],
+        "execution_reason_groups": [
+          {
+            "execution_status": "skipped",
+            "error_code": "SUPPLEMENTAL_EVIDENCE_NOT_READY",
+            "output_error_code": null,
+            "reason": "",
+            "quality_outcome": "skipped",
+            "output_quality_status": null,
+            "output_quality_outcome": null,
+            "count": 3
+          },
+          {
+            "execution_status": "pass",
+            "error_code": null,
+            "output_error_code": null,
+            "reason": null,
+            "quality_outcome": "passed",
+            "output_quality_status": null,
+            "output_quality_outcome": null,
+            "count": 40
+          },
+          {
+            "execution_status": "skipped",
+            "error_code": "SUPPLEMENTAL_EVIDENCE_DISABLED",
+            "output_error_code": null,
+            "reason": "",
+            "quality_outcome": "skipped",
+            "output_quality_status": null,
+            "output_quality_outcome": null,
+            "count": 112
+          },
+          {
+            "execution_status": "skipped",
+            "error_code": null,
+            "output_error_code": null,
+            "reason": "",
+            "quality_outcome": "skipped",
+            "output_quality_status": null,
+            "output_quality_outcome": null,
+            "count": 1
+          },
+          {
+            "execution_status": "skipped",
+            "error_code": null,
+            "output_error_code": null,
+            "reason": null,
+            "quality_outcome": "skipped",
+            "output_quality_status": null,
+            "output_quality_outcome": null,
+            "count": 4
+          },
+          {
+            "execution_status": "fail",
+            "error_code": null,
+            "output_error_code": null,
+            "reason": null,
+            "quality_outcome": "failed",
+            "output_quality_status": null,
+            "output_quality_outcome": null,
+            "count": 1
+          }
+        ]
+      },
+      {
+        "task_id": "4decf71b-a98e-4af9-91e4-02dde0fb2912",
+        "name": "黑料不打烊app",
+        "platform": "app",
+        "scope": [
+          "activity",
+          "content_detail",
+          "content_list",
+          "home",
+          "post_list",
+          "video_detail",
+          "video_list"
+        ],
+        "auth_states": [
+          "unknown"
+        ],
+        "explicit_no_test_account": null,
+        "explicit_has_test_account": null,
+        "missing_rule_count": 30,
+        "missing_reason_counts": {
+          "eligible": 14,
+          "inspection_scope_excluded": 10,
+          "platform_not_supported": 2,
+          "auth_requirement_not_met": 4
+        },
+        "missing_rules": [
+          {
+            "rule_code": "alioth_33",
+            "name": "英国政治内容检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_47",
+            "name": "客服入口可用性检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_48",
+            "name": "Toast样式统一性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_new_24",
+            "name": "充值页控件间距检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_17",
+            "name": "分辨率兼容性检查",
+            "reason": "platform_not_supported",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_18",
+            "name": "浏览器兼容性检查",
+            "reason": "platform_not_supported",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_22",
+            "name": "首页弹窗连续展示流畅性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_16",
+            "name": "广告素材比例检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_17",
+            "name": "广告内容与落地页一致性检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_25",
+            "name": "播放前广告展示检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_28",
+            "name": "政治恐怖与人身攻击内容检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_45",
+            "name": "上传限制与多选规则展示检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_29",
+            "name": "用户输入防刷与刷屏检查",
+            "reason": "auth_requirement_not_met",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_34",
+            "name": "恐怖行为支持内容检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_30",
+            "name": "成人赌博与私人广告内容检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_32",
+            "name": "涉华战争政治民族内容检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_31",
+            "name": "评论发布与计数同步检查",
+            "reason": "auth_requirement_not_met",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_27",
+            "name": "恶意链接与外跳诱导检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_48",
+            "name": "退出登录入口检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_8",
+            "name": "互动状态即时反馈检查",
+            "reason": "auth_requirement_not_met",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_43",
+            "name": "播放历史进度恢复检查",
+            "reason": "auth_requirement_not_met",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_38",
+            "name": "分类标签大小写一致性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_2",
+            "name": "文案语言规范检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_4",
+            "name": "错别字检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_10",
+            "name": "提示文案易懂性检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_11",
+            "name": "提示文案正向表达检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_39",
+            "name": "榜单数据排序合理性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_ops_7",
+            "name": "官方群入口跳转检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_ops_5",
+            "name": "充值拉起支付检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_ops_11",
+            "name": "拉单金额一致性检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          }
+        ],
+        "execution_reason_groups": [
+          {
+            "execution_status": "pass",
+            "error_code": null,
+            "output_error_code": null,
+            "reason": null,
+            "quality_outcome": "passed",
+            "output_quality_status": null,
+            "output_quality_outcome": null,
+            "count": 101
+          },
+          {
+            "execution_status": "skipped",
+            "error_code": "SUPPLEMENTAL_EVIDENCE_DISABLED",
+            "output_error_code": null,
+            "reason": "",
+            "quality_outcome": "skipped",
+            "output_quality_status": null,
+            "output_quality_outcome": null,
+            "count": 213
+          },
+          {
+            "execution_status": "skipped",
+            "error_code": null,
+            "output_error_code": null,
+            "reason": null,
+            "quality_outcome": "skipped",
+            "output_quality_status": null,
+            "output_quality_outcome": null,
+            "count": 20
+          },
+          {
+            "execution_status": "manual_review",
+            "error_code": null,
+            "output_error_code": null,
+            "reason": null,
+            "quality_outcome": "inconclusive",
+            "output_quality_status": null,
+            "output_quality_outcome": null,
+            "count": 3
+          },
+          {
+            "execution_status": "skipped",
+            "error_code": "INSPECTION_CLOSURE_SETTLEMENT",
+            "output_error_code": null,
+            "reason": "",
+            "quality_outcome": "skipped",
+            "output_quality_status": null,
+            "output_quality_outcome": null,
+            "count": 7
+          },
+          {
+            "execution_status": "skipped",
+            "error_code": "SUPPLEMENTAL_EVIDENCE_NOT_READY",
+            "output_error_code": null,
+            "reason": "",
+            "quality_outcome": "skipped",
+            "output_quality_status": null,
+            "output_quality_outcome": null,
+            "count": 7
+          },
+          {
+            "execution_status": "skipped",
+            "error_code": "EVIDENCE_INSUFFICIENT",
+            "output_error_code": null,
+            "reason": "",
+            "quality_outcome": "skipped",
+            "output_quality_status": null,
+            "output_quality_outcome": null,
+            "count": 3
+          }
+        ]
+      },
+      {
+        "task_id": "8665f9c3-5084-4954-a033-db8366251857",
+        "name": "欲漫涩",
+        "platform": "app",
+        "scope": [
+          "content_detail",
+          "content_list",
+          "home",
+          "video_detail",
+          "video_list"
+        ],
+        "auth_states": [
+          "unknown"
+        ],
+        "explicit_no_test_account": null,
+        "explicit_has_test_account": null,
+        "missing_rule_count": 53,
+        "missing_reason_counts": {
+          "eligible": 34,
+          "inspection_scope_excluded": 13,
+          "platform_not_supported": 2,
+          "auth_requirement_not_met": 4
+        },
+        "missing_rules": [
+          {
+            "rule_code": "alioth_33",
+            "name": "英国政治内容检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_47",
+            "name": "客服入口可用性检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_48",
+            "name": "Toast样式统一性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_37",
+            "name": "弱网占位页检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_new_24",
+            "name": "充值页控件间距检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_38",
+            "name": "列表排列整齐性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_17",
+            "name": "分辨率兼容性检查",
+            "reason": "platform_not_supported",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_new_29",
+            "name": "封面标题布局检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_27",
+            "name": "整屏图片安全边距检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_18",
+            "name": "浏览器兼容性检查",
+            "reason": "platform_not_supported",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_28",
+            "name": "页面元素对齐与层次感检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_new_25",
+            "name": "多端一致性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_new_27",
+            "name": "标题截断规范检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_24",
+            "name": "文字层次感检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_22",
+            "name": "首页弹窗连续展示流畅性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_19",
+            "name": "跳过按钮可点击区域检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_16",
+            "name": "广告素材比例检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_18",
+            "name": "广告倒计时准确性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_17",
+            "name": "广告内容与落地页一致性检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_25",
+            "name": "播放前广告展示检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_28",
+            "name": "政治恐怖与人身攻击内容检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_45",
+            "name": "上传限制与多选规则展示检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_29",
+            "name": "用户输入防刷与刷屏检查",
+            "reason": "auth_requirement_not_met",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_34",
+            "name": "恐怖行为支持内容检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_30",
+            "name": "成人赌博与私人广告内容检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_32",
+            "name": "涉华战争政治民族内容检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_31",
+            "name": "评论发布与计数同步检查",
+            "reason": "auth_requirement_not_met",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_27",
+            "name": "恶意链接与外跳诱导检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_7",
+            "name": "外部链接新窗口跳转检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_46",
+            "name": "帖子媒体全屏浏览检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_41",
+            "name": "二维码与网址有效性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_48",
+            "name": "退出登录入口检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_8",
+            "name": "互动状态即时反馈检查",
+            "reason": "auth_requirement_not_met",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_9",
+            "name": "数据变更后刷新检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_14",
+            "name": "优惠价低于原价检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_43",
+            "name": "播放历史进度恢复检查",
+            "reason": "auth_requirement_not_met",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_42",
+            "name": "失效活动展示同步检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_38",
+            "name": "分类标签大小写一致性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_2",
+            "name": "文案语言规范检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_4",
+            "name": "错别字检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_10",
+            "name": "提示文案易懂性检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_11",
+            "name": "提示文案正向表达检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_39",
+            "name": "榜单数据排序合理性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_3",
+            "name": "图片展示质量检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_6",
+            "name": "技术错误直出检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_5",
+            "name": "页面模块空白兜底检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_36",
+            "name": "未成年红线标记检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_ops_1",
+            "name": "产品域名可访问检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_ops_7",
+            "name": "官方群入口跳转检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_ops_5",
+            "name": "充值拉起支付检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_ops_11",
+            "name": "拉单金额一致性检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_ops_8",
+            "name": "封面加载完整性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_ops_2",
+            "name": "产品双端可打开检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          }
+        ],
+        "execution_reason_groups": [
+          {
+            "execution_status": "pass",
+            "error_code": null,
+            "output_error_code": null,
+            "reason": null,
+            "quality_outcome": "passed",
+            "output_quality_status": null,
+            "output_quality_outcome": null,
+            "count": 66
+          },
+          {
+            "execution_status": "skipped",
+            "error_code": "SUPPLEMENTAL_EVIDENCE_DISABLED",
+            "output_error_code": null,
+            "reason": "",
+            "quality_outcome": "skipped",
+            "output_quality_status": null,
+            "output_quality_outcome": null,
+            "count": 268
+          },
+          {
+            "execution_status": "fail",
+            "error_code": null,
+            "output_error_code": null,
+            "reason": null,
+            "quality_outcome": "failed",
+            "output_quality_status": null,
+            "output_quality_outcome": null,
+            "count": 5
+          },
+          {
+            "execution_status": "manual_review",
+            "error_code": null,
+            "output_error_code": null,
+            "reason": null,
+            "quality_outcome": "inconclusive",
+            "output_quality_status": null,
+            "output_quality_outcome": null,
+            "count": 4
+          },
+          {
+            "execution_status": "skipped",
+            "error_code": null,
+            "output_error_code": null,
+            "reason": null,
+            "quality_outcome": "skipped",
+            "output_quality_status": null,
+            "output_quality_outcome": null,
+            "count": 11
+          }
+        ]
+      },
+      {
+        "task_id": "9555bec5-6c43-4256-9eb0-b553613bb700",
+        "name": "撸啊撸",
+        "platform": "app",
+        "scope": [
+          "content_detail",
+          "content_list",
+          "home",
+          "video_detail",
+          "video_list"
+        ],
+        "auth_states": [
+          "unknown"
+        ],
+        "explicit_no_test_account": null,
+        "explicit_has_test_account": null,
+        "missing_rule_count": 54,
+        "missing_reason_counts": {
+          "eligible": 35,
+          "inspection_scope_excluded": 13,
+          "platform_not_supported": 2,
+          "auth_requirement_not_met": 4
+        },
+        "missing_rules": [
+          {
+            "rule_code": "alioth_33",
+            "name": "英国政治内容检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_47",
+            "name": "客服入口可用性检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_48",
+            "name": "Toast样式统一性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_37",
+            "name": "弱网占位页检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_new_24",
+            "name": "充值页控件间距检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_38",
+            "name": "列表排列整齐性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_17",
+            "name": "分辨率兼容性检查",
+            "reason": "platform_not_supported",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_new_29",
+            "name": "封面标题布局检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_27",
+            "name": "整屏图片安全边距检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_18",
+            "name": "浏览器兼容性检查",
+            "reason": "platform_not_supported",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_28",
+            "name": "页面元素对齐与层次感检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_new_25",
+            "name": "多端一致性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_new_27",
+            "name": "标题截断规范检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_24",
+            "name": "文字层次感检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_22",
+            "name": "首页弹窗连续展示流畅性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_19",
+            "name": "跳过按钮可点击区域检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_16",
+            "name": "广告素材比例检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_18",
+            "name": "广告倒计时准确性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_17",
+            "name": "广告内容与落地页一致性检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_25",
+            "name": "播放前广告展示检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_28",
+            "name": "政治恐怖与人身攻击内容检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_45",
+            "name": "上传限制与多选规则展示检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_29",
+            "name": "用户输入防刷与刷屏检查",
+            "reason": "auth_requirement_not_met",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_34",
+            "name": "恐怖行为支持内容检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_30",
+            "name": "成人赌博与私人广告内容检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_32",
+            "name": "涉华战争政治民族内容检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_31",
+            "name": "评论发布与计数同步检查",
+            "reason": "auth_requirement_not_met",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_27",
+            "name": "恶意链接与外跳诱导检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_7",
+            "name": "外部链接新窗口跳转检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_46",
+            "name": "帖子媒体全屏浏览检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_41",
+            "name": "二维码与网址有效性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_48",
+            "name": "退出登录入口检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_8",
+            "name": "互动状态即时反馈检查",
+            "reason": "auth_requirement_not_met",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_9",
+            "name": "数据变更后刷新检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_14",
+            "name": "优惠价低于原价检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_43",
+            "name": "播放历史进度恢复检查",
+            "reason": "auth_requirement_not_met",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_42",
+            "name": "失效活动展示同步检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_38",
+            "name": "分类标签大小写一致性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_2",
+            "name": "文案语言规范检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_4",
+            "name": "错别字检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_10",
+            "name": "提示文案易懂性检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_11",
+            "name": "提示文案正向表达检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_39",
+            "name": "榜单数据排序合理性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_3",
+            "name": "图片展示质量检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_6",
+            "name": "技术错误直出检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_5",
+            "name": "页面模块空白兜底检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_36",
+            "name": "未成年红线标记检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_ops_1",
+            "name": "产品域名可访问检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_ops_7",
+            "name": "官方群入口跳转检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_ops_5",
+            "name": "充值拉起支付检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_ops_11",
+            "name": "拉单金额一致性检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_ops_10",
+            "name": "漫画与图文阅读检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_ops_8",
+            "name": "封面加载完整性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_ops_2",
+            "name": "产品双端可打开检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          }
+        ],
+        "execution_reason_groups": [
+          {
+            "execution_status": "pass",
+            "error_code": null,
+            "output_error_code": null,
+            "reason": null,
+            "quality_outcome": "passed",
+            "output_quality_status": null,
+            "output_quality_outcome": null,
+            "count": 101
+          },
+          {
+            "execution_status": "skipped",
+            "error_code": "SUPPLEMENTAL_EVIDENCE_DISABLED",
+            "output_error_code": null,
+            "reason": "",
+            "quality_outcome": "skipped",
+            "output_quality_status": null,
+            "output_quality_outcome": null,
+            "count": 418
+          },
+          {
+            "execution_status": "skipped",
+            "error_code": null,
+            "output_error_code": null,
+            "reason": null,
+            "quality_outcome": "skipped",
+            "output_quality_status": null,
+            "output_quality_outcome": null,
+            "count": 28
+          },
+          {
+            "execution_status": "manual_review",
+            "error_code": null,
+            "output_error_code": null,
+            "reason": null,
+            "quality_outcome": "inconclusive",
+            "output_quality_status": null,
+            "output_quality_outcome": null,
+            "count": 5
+          },
+          {
+            "execution_status": "fail",
+            "error_code": null,
+            "output_error_code": null,
+            "reason": null,
+            "quality_outcome": "failed",
+            "output_quality_status": null,
+            "output_quality_outcome": null,
+            "count": 12
+          },
+          {
+            "execution_status": "skipped",
+            "error_code": null,
+            "output_error_code": null,
+            "reason": "",
+            "quality_outcome": "skipped",
+            "output_quality_status": null,
+            "output_quality_outcome": null,
+            "count": 44
+          }
+        ]
+      },
+      {
+        "task_id": "32291da8-c238-43fe-ab46-30f4acc72c4f",
+        "name": "杏吧",
+        "platform": "app",
+        "scope": [
+          "content_detail",
+          "content_list",
+          "home",
+          "video_detail",
+          "video_list"
+        ],
+        "auth_states": [
+          "unknown"
+        ],
+        "explicit_no_test_account": null,
+        "explicit_has_test_account": null,
+        "missing_rule_count": 53,
+        "missing_reason_counts": {
+          "eligible": 34,
+          "inspection_scope_excluded": 13,
+          "platform_not_supported": 2,
+          "auth_requirement_not_met": 4
+        },
+        "missing_rules": [
+          {
+            "rule_code": "alioth_33",
+            "name": "英国政治内容检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_47",
+            "name": "客服入口可用性检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_48",
+            "name": "Toast样式统一性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_37",
+            "name": "弱网占位页检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_new_24",
+            "name": "充值页控件间距检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_38",
+            "name": "列表排列整齐性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_17",
+            "name": "分辨率兼容性检查",
+            "reason": "platform_not_supported",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_new_29",
+            "name": "封面标题布局检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_27",
+            "name": "整屏图片安全边距检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_18",
+            "name": "浏览器兼容性检查",
+            "reason": "platform_not_supported",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_28",
+            "name": "页面元素对齐与层次感检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_new_25",
+            "name": "多端一致性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_new_27",
+            "name": "标题截断规范检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_24",
+            "name": "文字层次感检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_22",
+            "name": "首页弹窗连续展示流畅性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_19",
+            "name": "跳过按钮可点击区域检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_16",
+            "name": "广告素材比例检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_18",
+            "name": "广告倒计时准确性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_17",
+            "name": "广告内容与落地页一致性检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_25",
+            "name": "播放前广告展示检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_28",
+            "name": "政治恐怖与人身攻击内容检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_45",
+            "name": "上传限制与多选规则展示检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_29",
+            "name": "用户输入防刷与刷屏检查",
+            "reason": "auth_requirement_not_met",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_34",
+            "name": "恐怖行为支持内容检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_30",
+            "name": "成人赌博与私人广告内容检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_32",
+            "name": "涉华战争政治民族内容检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_31",
+            "name": "评论发布与计数同步检查",
+            "reason": "auth_requirement_not_met",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_27",
+            "name": "恶意链接与外跳诱导检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_7",
+            "name": "外部链接新窗口跳转检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_46",
+            "name": "帖子媒体全屏浏览检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_41",
+            "name": "二维码与网址有效性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_48",
+            "name": "退出登录入口检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_8",
+            "name": "互动状态即时反馈检查",
+            "reason": "auth_requirement_not_met",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_9",
+            "name": "数据变更后刷新检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_14",
+            "name": "优惠价低于原价检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_43",
+            "name": "播放历史进度恢复检查",
+            "reason": "auth_requirement_not_met",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_42",
+            "name": "失效活动展示同步检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_38",
+            "name": "分类标签大小写一致性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_2",
+            "name": "文案语言规范检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_4",
+            "name": "错别字检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_10",
+            "name": "提示文案易懂性检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_11",
+            "name": "提示文案正向表达检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_39",
+            "name": "榜单数据排序合理性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_3",
+            "name": "图片展示质量检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_6",
+            "name": "技术错误直出检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_5",
+            "name": "页面模块空白兜底检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_36",
+            "name": "未成年红线标记检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_ops_1",
+            "name": "产品域名可访问检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_ops_7",
+            "name": "官方群入口跳转检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_ops_5",
+            "name": "充值拉起支付检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_ops_11",
+            "name": "拉单金额一致性检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_ops_8",
+            "name": "封面加载完整性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_ops_2",
+            "name": "产品双端可打开检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          }
+        ],
+        "execution_reason_groups": [
+          {
+            "execution_status": "pass",
+            "error_code": null,
+            "output_error_code": null,
+            "reason": null,
+            "quality_outcome": "passed",
+            "output_quality_status": null,
+            "output_quality_outcome": null,
+            "count": 79
+          },
+          {
+            "execution_status": "skipped",
+            "error_code": "SUPPLEMENTAL_EVIDENCE_DISABLED",
+            "output_error_code": null,
+            "reason": "",
+            "quality_outcome": "skipped",
+            "output_quality_status": null,
+            "output_quality_outcome": null,
+            "count": 365
+          },
+          {
+            "execution_status": "skipped",
+            "error_code": null,
+            "output_error_code": null,
+            "reason": null,
+            "quality_outcome": "skipped",
+            "output_quality_status": null,
+            "output_quality_outcome": null,
+            "count": 28
+          },
+          {
+            "execution_status": "fail",
+            "error_code": null,
+            "output_error_code": null,
+            "reason": null,
+            "quality_outcome": "failed",
+            "output_quality_status": null,
+            "output_quality_outcome": null,
+            "count": 5
+          },
+          {
+            "execution_status": "manual_review",
+            "error_code": null,
+            "output_error_code": null,
+            "reason": null,
+            "quality_outcome": "inconclusive",
+            "output_quality_status": null,
+            "output_quality_outcome": null,
+            "count": 7
+          },
+          {
+            "execution_status": "skipped",
+            "error_code": null,
+            "output_error_code": null,
+            "reason": "",
+            "quality_outcome": "skipped",
+            "output_quality_status": null,
+            "output_quality_outcome": null,
+            "count": 2
+          }
+        ]
+      },
+      {
+        "task_id": "37477b41-4e81-4506-9360-894f9f3f63ee",
+        "name": "哔咔漫画",
+        "platform": "app",
+        "scope": [
+          "content_detail",
+          "content_list",
+          "home",
+          "video_detail",
+          "video_list"
+        ],
+        "auth_states": [
+          "unknown"
+        ],
+        "explicit_no_test_account": null,
+        "explicit_has_test_account": null,
+        "missing_rule_count": 53,
+        "missing_reason_counts": {
+          "eligible": 34,
+          "inspection_scope_excluded": 13,
+          "platform_not_supported": 2,
+          "auth_requirement_not_met": 4
+        },
+        "missing_rules": [
+          {
+            "rule_code": "alioth_33",
+            "name": "英国政治内容检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_47",
+            "name": "客服入口可用性检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_48",
+            "name": "Toast样式统一性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_37",
+            "name": "弱网占位页检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_new_24",
+            "name": "充值页控件间距检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_38",
+            "name": "列表排列整齐性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_17",
+            "name": "分辨率兼容性检查",
+            "reason": "platform_not_supported",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_new_29",
+            "name": "封面标题布局检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_27",
+            "name": "整屏图片安全边距检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_18",
+            "name": "浏览器兼容性检查",
+            "reason": "platform_not_supported",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_28",
+            "name": "页面元素对齐与层次感检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_new_25",
+            "name": "多端一致性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_new_27",
+            "name": "标题截断规范检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_24",
+            "name": "文字层次感检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_22",
+            "name": "首页弹窗连续展示流畅性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_19",
+            "name": "跳过按钮可点击区域检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_16",
+            "name": "广告素材比例检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_18",
+            "name": "广告倒计时准确性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_17",
+            "name": "广告内容与落地页一致性检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_25",
+            "name": "播放前广告展示检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_28",
+            "name": "政治恐怖与人身攻击内容检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_45",
+            "name": "上传限制与多选规则展示检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_29",
+            "name": "用户输入防刷与刷屏检查",
+            "reason": "auth_requirement_not_met",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_34",
+            "name": "恐怖行为支持内容检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_30",
+            "name": "成人赌博与私人广告内容检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_32",
+            "name": "涉华战争政治民族内容检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_31",
+            "name": "评论发布与计数同步检查",
+            "reason": "auth_requirement_not_met",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_27",
+            "name": "恶意链接与外跳诱导检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_7",
+            "name": "外部链接新窗口跳转检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_46",
+            "name": "帖子媒体全屏浏览检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_41",
+            "name": "二维码与网址有效性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_48",
+            "name": "退出登录入口检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_8",
+            "name": "互动状态即时反馈检查",
+            "reason": "auth_requirement_not_met",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_9",
+            "name": "数据变更后刷新检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_14",
+            "name": "优惠价低于原价检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_43",
+            "name": "播放历史进度恢复检查",
+            "reason": "auth_requirement_not_met",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_42",
+            "name": "失效活动展示同步检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_38",
+            "name": "分类标签大小写一致性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_2",
+            "name": "文案语言规范检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_4",
+            "name": "错别字检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_10",
+            "name": "提示文案易懂性检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_11",
+            "name": "提示文案正向表达检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_39",
+            "name": "榜单数据排序合理性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_3",
+            "name": "图片展示质量检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_6",
+            "name": "技术错误直出检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_5",
+            "name": "页面模块空白兜底检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_36",
+            "name": "未成年红线标记检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_ops_1",
+            "name": "产品域名可访问检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_ops_7",
+            "name": "官方群入口跳转检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_ops_5",
+            "name": "充值拉起支付检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_ops_11",
+            "name": "拉单金额一致性检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_ops_8",
+            "name": "封面加载完整性检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_ops_2",
+            "name": "产品双端可打开检查",
+            "reason": "eligible",
+            "session_dependency": null,
+            "auth_requirement": null
+          }
+        ],
+        "execution_reason_groups": [
+          {
+            "execution_status": "skipped",
+            "error_code": "SUPPLEMENTAL_EVIDENCE_DISABLED",
+            "output_error_code": null,
+            "reason": "",
+            "quality_outcome": "skipped",
+            "output_quality_status": null,
+            "output_quality_outcome": null,
+            "count": 317
+          },
+          {
+            "execution_status": "pass",
+            "error_code": null,
+            "output_error_code": null,
+            "reason": null,
+            "quality_outcome": "passed",
+            "output_quality_status": null,
+            "output_quality_outcome": null,
+            "count": 86
+          },
+          {
+            "execution_status": "skipped",
+            "error_code": null,
+            "output_error_code": null,
+            "reason": null,
+            "quality_outcome": "skipped",
+            "output_quality_status": null,
+            "output_quality_outcome": null,
+            "count": 23
+          },
+          {
+            "execution_status": "manual_review",
+            "error_code": null,
+            "output_error_code": null,
+            "reason": null,
+            "quality_outcome": "inconclusive",
+            "output_quality_status": null,
+            "output_quality_outcome": null,
+            "count": 5
+          },
+          {
+            "execution_status": "fail",
+            "error_code": null,
+            "output_error_code": null,
+            "reason": null,
+            "quality_outcome": "failed",
+            "output_quality_status": null,
+            "output_quality_outcome": null,
+            "count": 4
+          }
+        ]
+      },
+      {
+        "task_id": "921da978-425c-427d-bc5a-fceb892d6415",
+        "name": "oio禁漫",
+        "platform": "app",
+        "scope": [
+          "content_detail",
+          "content_list",
+          "home",
+          "video_detail",
+          "video_list"
+        ],
+        "auth_states": [
+          "unknown"
+        ],
+        "explicit_no_test_account": null,
+        "explicit_has_test_account": null,
+        "missing_rule_count": 13,
+        "missing_reason_counts": {
+          "inspection_scope_excluded": 13
+        },
+        "missing_rules": [
+          {
+            "rule_code": "alioth_47",
+            "name": "客服入口可用性检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_spec_new_24",
+            "name": "充值页控件间距检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_16",
+            "name": "广告素材比例检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_17",
+            "name": "广告内容与落地页一致性检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_28",
+            "name": "政治恐怖与人身攻击内容检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_45",
+            "name": "上传限制与多选规则展示检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_7",
+            "name": "外部链接新窗口跳转检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_46",
+            "name": "帖子媒体全屏浏览检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_48",
+            "name": "退出登录入口检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_10",
+            "name": "提示文案易懂性检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_11",
+            "name": "提示文案正向表达检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": null
+          },
+          {
+            "rule_code": "alioth_ops_5",
+            "name": "充值拉起支付检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          },
+          {
+            "rule_code": "alioth_ops_11",
+            "name": "拉单金额一致性检查",
+            "reason": "inspection_scope_excluded",
+            "session_dependency": null,
+            "auth_requirement": "authenticated"
+          }
+        ],
+        "execution_reason_groups": [
+          {
+            "execution_status": "fail",
+            "error_code": null,
+            "output_error_code": null,
+            "reason": null,
+            "quality_outcome": "failed",
+            "output_quality_status": null,
+            "output_quality_outcome": null,
+            "count": 17
+          },
+          {
+            "execution_status": "pass",
+            "error_code": null,
+            "output_error_code": null,
+            "reason": null,
+            "quality_outcome": "passed",
+            "output_quality_status": null,
+            "output_quality_outcome": null,
+            "count": 178
+          },
+          {
+            "execution_status": "manual_review",
+            "error_code": null,
+            "output_error_code": null,
+            "reason": null,
+            "quality_outcome": "inconclusive",
+            "output_quality_status": null,
+            "output_quality_outcome": null,
+            "count": 4
+          },
+          {
+            "execution_status": "skipped",
+            "error_code": null,
+            "output_error_code": null,
+            "reason": null,
+            "quality_outcome": "skipped",
+            "output_quality_status": null,
+            "output_quality_outcome": null,
+            "count": 49
+          },
+          {
+            "execution_status": "skipped",
+            "error_code": "SUPPLEMENTAL_EVIDENCE_DISABLED",
+            "output_error_code": null,
+            "reason": "",
+            "quality_outcome": "skipped",
+            "output_quality_status": null,
+            "output_quality_outcome": null,
+            "count": 193
+          },
+          {
+            "execution_status": "skipped",
+            "error_code": null,
+            "output_error_code": null,
+            "reason": "",
+            "quality_outcome": "skipped",
+            "output_quality_status": null,
+            "output_quality_outcome": null,
+            "count": 166
+          },
+          {
+            "execution_status": "skipped",
+            "error_code": "SUPPLEMENTAL_EVIDENCE_NOT_READY",
+            "output_error_code": null,
+            "reason": "",
+            "quality_outcome": "skipped",
+            "output_quality_status": null,
+            "output_quality_outcome": null,
+            "count": 41
+          },
+          {
+            "execution_status": "skipped",
+            "error_code": "EVIDENCE_INSUFFICIENT",
+            "output_error_code": null,
+            "reason": "",
+            "quality_outcome": "skipped",
+            "output_quality_status": null,
+            "output_quality_outcome": null,
+            "count": 4
+          },
+          {
+            "execution_status": "skipped",
+            "error_code": "TOAST_MONITOR_NOT_OBSERVED",
+            "output_error_code": "TOAST_MONITOR_NOT_OBSERVED",
+            "reason": "",
+            "quality_outcome": "skipped",
+            "output_quality_status": null,
+            "output_quality_outcome": null,
+            "count": 1
+          }
+        ]
+      }
+    ]
+  },
+  "chain_details": {
+    "checked_at": "2026-10-08 03:47:46.578435+00:00",
+    "confirmed_gaps": [
+      {
+        "task_id": "2c47e4dc-0942-4885-9286-666f33be416c",
+        "confirmed_gap_records": 115,
+        "confirmed_gap_rules": 25,
+        "closure_settlement_rows": 0,
+        "closure_settlement_rules": 0,
+        "rules_except_closure_settlement": 36,
+        "records_except_closure_settlement": 161
+      },
+      {
+        "task_id": "32291da8-c238-43fe-ab46-30f4acc72c4f",
+        "confirmed_gap_records": 365,
+        "confirmed_gap_rules": 18,
+        "closure_settlement_rows": 0,
+        "closure_settlement_rules": 0,
+        "rules_except_closure_settlement": 20,
+        "records_except_closure_settlement": 486
+      },
+      {
+        "task_id": "37477b41-4e81-4506-9360-894f9f3f63ee",
+        "confirmed_gap_records": 317,
+        "confirmed_gap_rules": 19,
+        "closure_settlement_rows": 0,
+        "closure_settlement_rules": 0,
+        "rules_except_closure_settlement": 20,
+        "records_except_closure_settlement": 435
+      },
+      {
+        "task_id": "3f0e52c5-9e83-471c-a4c2-1ee1e7e97f17",
+        "confirmed_gap_records": 74,
+        "confirmed_gap_rules": 17,
+        "closure_settlement_rows": 0,
+        "closure_settlement_rules": 0,
+        "rules_except_closure_settlement": 48,
+        "records_except_closure_settlement": 382
+      },
+      {
+        "task_id": "4decf71b-a98e-4af9-91e4-02dde0fb2912",
+        "confirmed_gap_records": 230,
+        "confirmed_gap_rules": 33,
+        "closure_settlement_rows": 7,
+        "closure_settlement_rules": 5,
+        "rules_except_closure_settlement": 43,
+        "records_except_closure_settlement": 347
+      },
+      {
+        "task_id": "8665f9c3-5084-4954-a033-db8366251857",
+        "confirmed_gap_records": 268,
+        "confirmed_gap_rules": 18,
+        "closure_settlement_rows": 0,
+        "closure_settlement_rules": 0,
+        "rules_except_closure_settlement": 20,
+        "records_except_closure_settlement": 354
+      },
+      {
+        "task_id": "921da978-425c-427d-bc5a-fceb892d6415",
+        "confirmed_gap_records": 239,
+        "confirmed_gap_rules": 43,
+        "closure_settlement_rows": 0,
+        "closure_settlement_rules": 0,
+        "rules_except_closure_settlement": 60,
+        "records_except_closure_settlement": 653
+      },
+      {
+        "task_id": "9555bec5-6c43-4256-9eb0-b553613bb700",
+        "confirmed_gap_records": 418,
+        "confirmed_gap_rules": 17,
+        "closure_settlement_rows": 0,
+        "closure_settlement_rules": 0,
+        "rules_except_closure_settlement": 19,
+        "records_except_closure_settlement": 608
+      },
+      {
+        "task_id": "97ae1d9c-ebb3-46cb-80f0-491f449c05bc",
+        "confirmed_gap_records": 263,
+        "confirmed_gap_rules": 16,
+        "closure_settlement_rows": 0,
+        "closure_settlement_rules": 0,
+        "rules_except_closure_settlement": 20,
+        "records_except_closure_settlement": 343
+      },
+      {
+        "task_id": "cbd2a5c1-6538-46c4-85e2-349fd915ed59",
+        "confirmed_gap_records": 378,
+        "confirmed_gap_rules": 23,
+        "closure_settlement_rows": 0,
+        "closure_settlement_rules": 0,
+        "rules_except_closure_settlement": 25,
+        "records_except_closure_settlement": 504
+      }
+    ],
+    "handoff": [
+      {
+        "task_id": "3f0e52c5-9e83-471c-a4c2-1ee1e7e97f17",
+        "sealed_at": null,
+        "index_id": null,
+        "index_status": null,
+        "index_sealed_at": null,
+        "result_persisted_at": null,
+        "session_status": null,
+        "closed_at": null,
+        "lost_at": null,
+        "publication_status": null,
+        "publication_created_at": null,
+        "failure_code": null,
+        "expected_entry_count": null,
+        "terminal_entry_count": null,
+        "linked_work_item_count": null,
+        "explicit_exclusion_count": null
+      },
+      {
+        "task_id": "cbd2a5c1-6538-46c4-85e2-349fd915ed59",
+        "sealed_at": "2026-10-07 13:57:02.851866+00:00",
+        "index_id": null,
+        "index_status": null,
+        "index_sealed_at": null,
+        "result_persisted_at": null,
+        "session_status": null,
+        "closed_at": null,
+        "lost_at": null,
+        "publication_status": null,
+        "publication_created_at": null,
+        "failure_code": null,
+        "expected_entry_count": null,
+        "terminal_entry_count": null,
+        "linked_work_item_count": null,
+        "explicit_exclusion_count": null
+      },
+      {
+        "task_id": "97ae1d9c-ebb3-46cb-80f0-491f449c05bc",
+        "sealed_at": "2026-10-07 03:42:11.022116+00:00",
+        "index_id": null,
+        "index_status": null,
+        "index_sealed_at": null,
+        "result_persisted_at": null,
+        "session_status": null,
+        "closed_at": null,
+        "lost_at": null,
+        "publication_status": null,
+        "publication_created_at": null,
+        "failure_code": null,
+        "expected_entry_count": null,
+        "terminal_entry_count": null,
+        "linked_work_item_count": null,
+        "explicit_exclusion_count": null
+      },
+      {
+        "task_id": "2c47e4dc-0942-4885-9286-666f33be416c",
+        "sealed_at": "2026-10-06 09:22:03.150169+00:00",
+        "index_id": "app-evidence-index:15aa9f861972b7dc0916a5746b7d8012ed735c9fc985322020e0a9c5828fc9fd",
+        "index_status": "sealed",
+        "index_sealed_at": "2026-10-06 09:20:56.386605+00:00",
+        "result_persisted_at": "2026-10-06 09:20:56.422541+00:00",
+        "session_status": "closed",
+        "closed_at": "2026-10-06 09:21:00.155333+00:00",
+        "lost_at": null,
+        "publication_status": "needs_review",
+        "publication_created_at": "2026-10-06 09:21:00.885080+00:00",
+        "failure_code": "entry_needs_review",
+        "expected_entry_count": 34,
+        "terminal_entry_count": 34,
+        "linked_work_item_count": 137,
+        "explicit_exclusion_count": 0
+      },
+      {
+        "task_id": "4decf71b-a98e-4af9-91e4-02dde0fb2912",
+        "sealed_at": "2026-10-06 08:35:17.048349+00:00",
+        "index_id": "app-evidence-index:5a4510b90a01ba3a6af533dc829d2e28f110f4df0eb33e1806c66cc027c70538",
+        "index_status": "sealed",
+        "index_sealed_at": "2026-10-06 08:33:34.289391+00:00",
+        "result_persisted_at": "2026-10-06 08:33:34.345701+00:00",
+        "session_status": "closed",
+        "closed_at": "2026-10-06 08:33:37.731527+00:00",
+        "lost_at": null,
+        "publication_status": "needs_review",
+        "publication_created_at": "2026-10-06 08:33:38.370031+00:00",
+        "failure_code": "entry_needs_review",
+        "expected_entry_count": 48,
+        "terminal_entry_count": 48,
+        "linked_work_item_count": 343,
+        "explicit_exclusion_count": 0
+      },
+      {
+        "task_id": "8665f9c3-5084-4954-a033-db8366251857",
+        "sealed_at": "2026-10-06 04:06:34.272614+00:00",
+        "index_id": "app-evidence-index:8a6d368f640d7a190f6be9925a5a02c111426bef9354dc575d263fee60f844db",
+        "index_status": "sealed",
+        "index_sealed_at": "2026-10-06 04:06:48.263981+00:00",
+        "result_persisted_at": "2026-10-06 04:06:48.334034+00:00",
+        "session_status": "lost",
+        "closed_at": null,
+        "lost_at": "2026-10-06 04:06:52.278173+00:00",
+        "publication_status": null,
+        "publication_created_at": null,
+        "failure_code": null,
+        "expected_entry_count": null,
+        "terminal_entry_count": null,
+        "linked_work_item_count": null,
+        "explicit_exclusion_count": null
+      },
+      {
+        "task_id": "9555bec5-6c43-4256-9eb0-b553613bb700",
+        "sealed_at": "2026-10-05 09:57:43.173523+00:00",
+        "index_id": null,
+        "index_status": null,
+        "index_sealed_at": null,
+        "result_persisted_at": null,
+        "session_status": null,
+        "closed_at": null,
+        "lost_at": null,
+        "publication_status": null,
+        "publication_created_at": null,
+        "failure_code": null,
+        "expected_entry_count": null,
+        "terminal_entry_count": null,
+        "linked_work_item_count": null,
+        "explicit_exclusion_count": null
+      },
+      {
+        "task_id": "32291da8-c238-43fe-ab46-30f4acc72c4f",
+        "sealed_at": "2026-10-05 07:36:49.560104+00:00",
+        "index_id": null,
+        "index_status": null,
+        "index_sealed_at": null,
+        "result_persisted_at": null,
+        "session_status": null,
+        "closed_at": null,
+        "lost_at": null,
+        "publication_status": null,
+        "publication_created_at": null,
+        "failure_code": null,
+        "expected_entry_count": null,
+        "terminal_entry_count": null,
+        "linked_work_item_count": null,
+        "explicit_exclusion_count": null
+      },
+      {
+        "task_id": "37477b41-4e81-4506-9360-894f9f3f63ee",
+        "sealed_at": "2026-10-05 05:17:09.840262+00:00",
+        "index_id": "app-evidence-index:628bb87980bb0b50df3b48497249875a1ecd5f658e4d4b44ece44bba656ac531",
+        "index_status": "sealed",
+        "index_sealed_at": "2026-10-05 05:17:38.864827+00:00",
+        "result_persisted_at": "2026-10-05 05:17:38.942788+00:00",
+        "session_status": "lost",
+        "closed_at": null,
+        "lost_at": "2026-10-05 05:17:42.740857+00:00",
+        "publication_status": null,
+        "publication_created_at": null,
+        "failure_code": null,
+        "expected_entry_count": null,
+        "terminal_entry_count": null,
+        "linked_work_item_count": null,
+        "explicit_exclusion_count": null
+      },
+      {
+        "task_id": "921da978-425c-427d-bc5a-fceb892d6415",
+        "sealed_at": "2026-10-04 14:33:01.491451+00:00",
+        "index_id": "app-evidence-index:26608bdcdafd64f7f6d29e67f15e69c0fe596935abb14fba2f4df47d37458621",
+        "index_status": "sealed",
+        "index_sealed_at": "2026-10-04 14:04:47.798770+00:00",
+        "result_persisted_at": "2026-10-04 14:04:47.844344+00:00",
+        "session_status": "closed",
+        "closed_at": "2026-10-04 14:04:52.173404+00:00",
+        "lost_at": null,
+        "publication_status": "needs_review",
+        "publication_created_at": "2026-10-04 14:04:53.474742+00:00",
+        "failure_code": "entry_needs_review",
+        "expected_entry_count": 52,
+        "terminal_entry_count": 52,
+        "linked_work_item_count": 245,
+        "explicit_exclusion_count": 0
+      }
+    ],
+    "publication_entries": [
+      {
+        "task_id": "2c47e4dc-0942-4885-9286-666f33be416c",
+        "publication_status": "needs_review",
+        "failure_code": "entry_needs_review",
+        "entry_status": "linked",
+        "entry_failure_code": null,
+        "entries": 15
+      },
+      {
+        "task_id": "2c47e4dc-0942-4885-9286-666f33be416c",
+        "publication_status": "needs_review",
+        "failure_code": "entry_needs_review",
+        "entry_status": "needs_review",
+        "entry_failure_code": "page_type_unavailable",
+        "entries": 1
+      },
+      {
+        "task_id": "2c47e4dc-0942-4885-9286-666f33be416c",
+        "publication_status": "needs_review",
+        "failure_code": "entry_needs_review",
+        "entry_status": "not_applicable",
+        "entry_failure_code": null,
+        "entries": 18
+      },
+      {
+        "task_id": "4decf71b-a98e-4af9-91e4-02dde0fb2912",
+        "publication_status": "needs_review",
+        "failure_code": "entry_needs_review",
+        "entry_status": "linked",
+        "entry_failure_code": null,
+        "entries": 40
+      },
+      {
+        "task_id": "4decf71b-a98e-4af9-91e4-02dde0fb2912",
+        "publication_status": "needs_review",
+        "failure_code": "entry_needs_review",
+        "entry_status": "needs_review",
+        "entry_failure_code": "page_type_unavailable",
+        "entries": 4
+      },
+      {
+        "task_id": "4decf71b-a98e-4af9-91e4-02dde0fb2912",
+        "publication_status": "needs_review",
+        "failure_code": "entry_needs_review",
+        "entry_status": "not_applicable",
+        "entry_failure_code": null,
+        "entries": 4
+      },
+      {
+        "task_id": "921da978-425c-427d-bc5a-fceb892d6415",
+        "publication_status": "needs_review",
+        "failure_code": "entry_needs_review",
+        "entry_status": "linked",
+        "entry_failure_code": null,
+        "entries": 26
+      },
+      {
+        "task_id": "921da978-425c-427d-bc5a-fceb892d6415",
+        "publication_status": "needs_review",
+        "failure_code": "entry_needs_review",
+        "entry_status": "needs_review",
+        "entry_failure_code": "page_type_unavailable",
+        "entries": 13
+      },
+      {
+        "task_id": "921da978-425c-427d-bc5a-fceb892d6415",
+        "publication_status": "needs_review",
+        "failure_code": "entry_needs_review",
+        "entry_status": "not_applicable",
+        "entry_failure_code": null,
+        "entries": 13
+      }
+    ],
+    "page_work_states": [
+      {
+        "task_id": "2c47e4dc-0942-4885-9286-666f33be416c",
+        "session_dependency": "active_session",
+        "status": "partial",
+        "last_error_code": null,
+        "work_count": 74,
+        "unfinished_at_task_seal": 0
+      },
+      {
+        "task_id": "2c47e4dc-0942-4885-9286-666f33be416c",
+        "session_dependency": "active_session",
+        "status": "succeeded",
+        "last_error_code": null,
+        "work_count": 11,
+        "unfinished_at_task_seal": 0
+      },
+      {
+        "task_id": "2c47e4dc-0942-4885-9286-666f33be416c",
+        "session_dependency": "snapshot",
+        "status": "partial",
+        "last_error_code": null,
+        "work_count": 4,
+        "unfinished_at_task_seal": 0
+      },
+      {
+        "task_id": "2c47e4dc-0942-4885-9286-666f33be416c",
+        "session_dependency": "snapshot",
+        "status": "pending",
+        "last_error_code": null,
+        "work_count": 41,
+        "unfinished_at_task_seal": 41
+      },
+      {
+        "task_id": "2c47e4dc-0942-4885-9286-666f33be416c",
+        "session_dependency": "snapshot",
+        "status": "running",
+        "last_error_code": null,
+        "work_count": 2,
+        "unfinished_at_task_seal": 2
+      },
+      {
+        "task_id": "2c47e4dc-0942-4885-9286-666f33be416c",
+        "session_dependency": "snapshot",
+        "status": "succeeded",
+        "last_error_code": null,
+        "work_count": 5,
+        "unfinished_at_task_seal": 0
+      },
+      {
+        "task_id": "32291da8-c238-43fe-ab46-30f4acc72c4f",
+        "session_dependency": "active_session",
+        "status": "partial",
+        "last_error_code": null,
+        "work_count": 249,
+        "unfinished_at_task_seal": 0
+      },
+      {
+        "task_id": "32291da8-c238-43fe-ab46-30f4acc72c4f",
+        "session_dependency": "active_session",
+        "status": "succeeded",
+        "last_error_code": null,
+        "work_count": 32,
+        "unfinished_at_task_seal": 0
+      },
+      {
+        "task_id": "37477b41-4e81-4506-9360-894f9f3f63ee",
+        "session_dependency": "active_session",
+        "status": "partial",
+        "last_error_code": null,
+        "work_count": 219,
+        "unfinished_at_task_seal": 0
+      },
+      {
+        "task_id": "37477b41-4e81-4506-9360-894f9f3f63ee",
+        "session_dependency": "active_session",
+        "status": "succeeded",
+        "last_error_code": null,
+        "work_count": 22,
+        "unfinished_at_task_seal": 0
+      },
+      {
+        "task_id": "3f0e52c5-9e83-471c-a4c2-1ee1e7e97f17",
+        "session_dependency": "active_session",
+        "status": "partial",
+        "last_error_code": null,
+        "work_count": 12,
+        "unfinished_at_task_seal": 0
+      },
+      {
+        "task_id": "3f0e52c5-9e83-471c-a4c2-1ee1e7e97f17",
+        "session_dependency": "active_session",
+        "status": "pending",
+        "last_error_code": null,
+        "work_count": 89,
+        "unfinished_at_task_seal": 0
+      },
+      {
+        "task_id": "3f0e52c5-9e83-471c-a4c2-1ee1e7e97f17",
+        "session_dependency": "active_session",
+        "status": "running",
+        "last_error_code": null,
+        "work_count": 2,
+        "unfinished_at_task_seal": 0
+      },
+      {
+        "task_id": "3f0e52c5-9e83-471c-a4c2-1ee1e7e97f17",
+        "session_dependency": "active_session",
+        "status": "succeeded",
+        "last_error_code": null,
+        "work_count": 5,
+        "unfinished_at_task_seal": 0
+      },
+      {
+        "task_id": "3f0e52c5-9e83-471c-a4c2-1ee1e7e97f17",
+        "session_dependency": "snapshot",
+        "status": "partial",
+        "last_error_code": null,
+        "work_count": 39,
+        "unfinished_at_task_seal": 0
+      },
+      {
+        "task_id": "3f0e52c5-9e83-471c-a4c2-1ee1e7e97f17",
+        "session_dependency": "snapshot",
+        "status": "pending",
+        "last_error_code": null,
+        "work_count": 3,
+        "unfinished_at_task_seal": 0
+      },
+      {
+        "task_id": "3f0e52c5-9e83-471c-a4c2-1ee1e7e97f17",
+        "session_dependency": "snapshot",
+        "status": "running",
+        "last_error_code": null,
+        "work_count": 1,
+        "unfinished_at_task_seal": 0
+      },
+      {
+        "task_id": "3f0e52c5-9e83-471c-a4c2-1ee1e7e97f17",
+        "session_dependency": "snapshot",
+        "status": "succeeded",
+        "last_error_code": null,
+        "work_count": 39,
+        "unfinished_at_task_seal": 0
+      },
+      {
+        "task_id": "4decf71b-a98e-4af9-91e4-02dde0fb2912",
+        "session_dependency": "active_session",
+        "status": "partial",
+        "last_error_code": "INSPECTION_CLOSURE_SETTLEMENT",
+        "work_count": 4,
+        "unfinished_at_task_seal": 0
+      },
+      {
+        "task_id": "4decf71b-a98e-4af9-91e4-02dde0fb2912",
+        "session_dependency": "active_session",
+        "status": "partial",
+        "last_error_code": null,
+        "work_count": 142,
+        "unfinished_at_task_seal": 0
+      },
+      {
+        "task_id": "4decf71b-a98e-4af9-91e4-02dde0fb2912",
+        "session_dependency": "active_session",
+        "status": "succeeded",
+        "last_error_code": null,
+        "work_count": 22,
+        "unfinished_at_task_seal": 0
+      },
+      {
+        "task_id": "4decf71b-a98e-4af9-91e4-02dde0fb2912",
+        "session_dependency": "snapshot",
+        "status": "partial",
+        "last_error_code": null,
+        "work_count": 11,
+        "unfinished_at_task_seal": 0
+      },
+      {
+        "task_id": "4decf71b-a98e-4af9-91e4-02dde0fb2912",
+        "session_dependency": "snapshot",
+        "status": "pending",
+        "last_error_code": null,
+        "work_count": 156,
+        "unfinished_at_task_seal": 156
+      },
+      {
+        "task_id": "4decf71b-a98e-4af9-91e4-02dde0fb2912",
+        "session_dependency": "snapshot",
+        "status": "running",
+        "last_error_code": null,
+        "work_count": 2,
+        "unfinished_at_task_seal": 2
+      },
+      {
+        "task_id": "4decf71b-a98e-4af9-91e4-02dde0fb2912",
+        "session_dependency": "snapshot",
+        "status": "succeeded",
+        "last_error_code": null,
+        "work_count": 6,
+        "unfinished_at_task_seal": 0
+      },
+      {
+        "task_id": "8665f9c3-5084-4954-a033-db8366251857",
+        "session_dependency": "active_session",
+        "status": "partial",
+        "last_error_code": null,
+        "work_count": 183,
+        "unfinished_at_task_seal": 0
+      },
+      {
+        "task_id": "8665f9c3-5084-4954-a033-db8366251857",
+        "session_dependency": "active_session",
+        "status": "succeeded",
+        "last_error_code": null,
+        "work_count": 21,
+        "unfinished_at_task_seal": 0
+      },
+      {
+        "task_id": "921da978-425c-427d-bc5a-fceb892d6415",
+        "session_dependency": "active_session",
+        "status": "partial",
+        "last_error_code": null,
+        "work_count": 110,
+        "unfinished_at_task_seal": 0
+      },
+      {
+        "task_id": "921da978-425c-427d-bc5a-fceb892d6415",
+        "session_dependency": "active_session",
+        "status": "succeeded",
+        "last_error_code": null,
+        "work_count": 13,
+        "unfinished_at_task_seal": 0
+      },
+      {
+        "task_id": "921da978-425c-427d-bc5a-fceb892d6415",
+        "session_dependency": "snapshot",
+        "status": "partial",
+        "last_error_code": null,
+        "work_count": 45,
+        "unfinished_at_task_seal": 0
+      },
+      {
+        "task_id": "921da978-425c-427d-bc5a-fceb892d6415",
+        "session_dependency": "snapshot",
+        "status": "succeeded",
+        "last_error_code": null,
+        "work_count": 77,
+        "unfinished_at_task_seal": 0
+      },
+      {
+        "task_id": "9555bec5-6c43-4256-9eb0-b553613bb700",
+        "session_dependency": "active_session",
+        "status": "partial",
+        "last_error_code": null,
+        "work_count": 278,
+        "unfinished_at_task_seal": 0
+      },
+      {
+        "task_id": "9555bec5-6c43-4256-9eb0-b553613bb700",
+        "session_dependency": "active_session",
+        "status": "succeeded",
+        "last_error_code": null,
+        "work_count": 66,
+        "unfinished_at_task_seal": 0
+      },
+      {
+        "task_id": "97ae1d9c-ebb3-46cb-80f0-491f449c05bc",
+        "session_dependency": "active_session",
+        "status": "partial",
+        "last_error_code": null,
+        "work_count": 183,
+        "unfinished_at_task_seal": 0
+      },
+      {
+        "task_id": "97ae1d9c-ebb3-46cb-80f0-491f449c05bc",
+        "session_dependency": "active_session",
+        "status": "succeeded",
+        "last_error_code": null,
+        "work_count": 30,
+        "unfinished_at_task_seal": 0
+      },
+      {
+        "task_id": "cbd2a5c1-6538-46c4-85e2-349fd915ed59",
+        "session_dependency": "active_session",
+        "status": "partial",
+        "last_error_code": null,
+        "work_count": 242,
+        "unfinished_at_task_seal": 0
+      },
+      {
+        "task_id": "cbd2a5c1-6538-46c4-85e2-349fd915ed59",
+        "session_dependency": "active_session",
+        "status": "retry_wait",
+        "last_error_code": "INSPECTION_WORK_ITEM_RETRYABLE_INCOMPLETE",
+        "work_count": 1,
+        "unfinished_at_task_seal": 1
+      },
+      {
+        "task_id": "cbd2a5c1-6538-46c4-85e2-349fd915ed59",
+        "session_dependency": "active_session",
+        "status": "succeeded",
+        "last_error_code": null,
+        "work_count": 39,
+        "unfinished_at_task_seal": 0
+      }
+    ],
+    "gap_samples": [
+      {
+        "error_code": "EVIDENCE_INSUFFICIENT",
+        "execution_status": "skipped",
+        "conclusion": "evidence_insufficient",
+        "missing": {
+          "page_states": [],
+          "presentation": null,
+          "capture_roles": [],
+          "artifact_types": [],
+          "judge_statements": [
+            "弱网或加载过程中的截图，需能看到骨架屏、灰色占位块、模拟结构示意图，或转圈、三个点、进度条等加载动画"
+          ],
+          "quality_gate_sources": []
+        },
+        "review_status": null
+      },
+      {
+        "error_code": "INSPECTION_CLOSURE_SETTLEMENT",
+        "execution_status": "skipped",
+        "conclusion": "evidence_insufficient",
+        "missing": null,
+        "review_status": "pending"
+      },
+      {
+        "error_code": "SUPPLEMENTAL_EVIDENCE_DISABLED",
+        "execution_status": "skipped",
+        "conclusion": "evidence_insufficient",
+        "missing": {
+          "page_states": [],
+          "presentation": null,
+          "capture_roles": [
+            "before"
+          ],
+          "artifact_types": [],
+          "judge_statements": [],
+          "quality_gate_sources": []
+        },
+        "review_status": null
+      },
+      {
+        "error_code": "SUPPLEMENTAL_EVIDENCE_NOT_READY",
+        "execution_status": "skipped",
+        "conclusion": "evidence_insufficient",
+        "missing": {
+          "page_states": [],
+          "presentation": {
+            "code": "BASE_PAGE_OCCLUDED",
+            "reason": "当前画面最上层是弹窗或浮层（标识 中心升级购促销广告弹窗_含抢购CTA与底部圆形关闭X），底层页面被遮挡，截图和页面结构里的底层内容不能当作这个页面的可见证据；需要关闭遮挡后的页面证据"
+          },
+          "capture_roles": [],
+          "artifact_types": [],
+          "judge_statements": [
+            "关闭遮挡后、底层页面真实可见的当前页面证据"
+          ],
+          "quality_gate_sources": []
+        },
+        "review_status": null
+      },
+      {
+        "error_code": "TOAST_MONITOR_NOT_OBSERVED",
+        "execution_status": "skipped",
+        "conclusion": null,
+        "missing": null,
+        "review_status": "pending"
+      }
+    ]
+  },
+  "limits": [
+    "有记录规则数不代表完整质检完成；执行/处置记录含缺证及7次收口结算。",
+    "所有Run落库量与主Run归属量及排除既有占位后的计数在本样本一致；完成资格仍需范围、证据轮次、复核和门禁。",
+    "缺证数按明确execution_status、结构化conclusion或已核实诊断码统计；没有这些标记不保证已完成。",
+    "无冻结清单；当前规则与组合规则集未在任务创建后修改且数量匹配73，可验证历史分母，不代表这些任务提交时已冻结完整契约。",
+    "Web仍运行，多个只读快照中的计数随执行增长；Web汇总采用2026-10-08 03:47:46.578435+00:00快照。",
+    "APP共性封存标记不证明相同来源或操作者；本轮未修改或重跑历史任务。"
+  ]
+}

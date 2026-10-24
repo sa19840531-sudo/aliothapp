@@ -1,0 +1,140 @@
+{
+  "range": "'玉衡10月'!D110",
+  "before": {
+    "spreadsheetId": "1NqpIamgatg4aMb6HE7I4Pxbu7XUgUPtzarxDf4zr8Sk",
+    "spreadsheetUrl": "https://docs.google.com/spreadsheets/d/1NqpIamgatg4aMb6HE7I4Pxbu7XUgUPtzarxDf4zr8Sk/edit",
+    "properties": {
+      "title": "玉衡项目进度排期",
+      "locale": "zh_CN",
+      "timeZone": "Asia/Shanghai"
+    },
+    "sheets": [
+      {
+        "properties": {
+          "sheetId": 1678407108,
+          "title": "玉衡10月",
+          "index": 4,
+          "sheetType": "GRID",
+          "gridProperties": {
+            "rowCount": 1032,
+            "columnCount": 27
+          }
+        },
+        "data": [
+          {
+            "startRow": 109,
+            "startColumn": 2,
+            "rowData": [
+              {
+                "values": [
+                  {
+                    "formattedValue": "规则结果与证据关联展示",
+                    "userEnteredValue": {
+                      "stringValue": "规则结果与证据关联展示"
+                    },
+                    "userEnteredFormat": {
+                      "wrapStrategy": "WRAP"
+                    }
+                  },
+                  {
+                    "formattedValue": "按上周规范复用任务详情、检查点、报告和复核入口；前端只展示后端正式分项、原因、缺项及当前复核，沿用原证据权限。\n10/19进展：保留既有H5检查点基础和32/S35展示，补齐102、App41、S72、62、S49、S73已正式执行的缺证分项。102/App41走页面详情，过程规则走整体检查；八条27个分项及63个实际缺码已有中文，政策缺失、端材料缺失与共享判读尚未完成分别说明。未执行候选不补造结果；App41不借H5/Web或旧alioth_41身份；无实际判据的未判项不借整组输入截图。\n验证：前端62文件525项通过，12项受控浏览器场景、类型检查和构建通过；后端71个唯一文件1252项通过、3项下线Demo跳过，含四条时序实际Judge/Writer/独立PG只读、错范围和动作漂移回归。受控验证不代表三端产品验收。\n后续：报告/复核入口与任务详情的当前状态同口径仍待接，封存报告不得被当前数据改写；确认和导出需回归。102政策由产品/规则负责人提供；三端材料仍由App星语、H5天枢、Web青云客交付（第60–62行），共享业务判读继续由立川维护（第109行）。八条缺项与材料齐后共享侧待做已逐项列清；本地未提交、未推送、未发布，探索和采集未改，不登记八条规则整体完成。",
+                    "userEnteredValue": {
+                      "stringValue": "按上周规范复用任务详情、检查点、报告和复核入口；前端只展示后端正式分项、原因、缺项及当前复核，沿用原证据权限。\n10/19进展：保留既有H5检查点基础和32/S35展示，补齐102、App41、S72、62、S49、S73已正式执行的缺证分项。102/App41走页面详情，过程规则走整体检查；八条27个分项及63个实际缺码已有中文，政策缺失、端材料缺失与共享判读尚未完成分别说明。未执行候选不补造结果；App41不借H5/Web或旧alioth_41身份；无实际判据的未判项不借整组输入截图。\n验证：前端62文件525项通过，12项受控浏览器场景、类型检查和构建通过；后端71个唯一文件1252项通过、3项下线Demo跳过，含四条时序实际Judge/Writer/独立PG只读、错范围和动作漂移回归。受控验证不代表三端产品验收。\n后续：报告/复核入口与任务详情的当前状态同口径仍待接，封存报告不得被当前数据改写；确认和导出需回归。102政策由产品/规则负责人提供；三端材料仍由App星语、H5天枢、Web青云客交付（第60–62行），共享业务判读继续由立川维护（第109行）。八条缺项与材料齐后共享侧待做已逐项列清；本地未提交、未推送、未发布，探索和采集未改，不登记八条规则整体完成。"
+                    },
+                    "userEnteredFormat": {
+                      "wrapStrategy": "WRAP"
+                    }
+                  },
+                  {
+                    "formattedValue": "立川",
+                    "userEnteredValue": {
+                      "stringValue": "立川"
+                    }
+                  },
+                  {},
+                  {
+                    "formattedValue": "进行中",
+                    "userEnteredValue": {
+                      "stringValue": "进行中"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "after": {
+    "spreadsheetId": "1NqpIamgatg4aMb6HE7I4Pxbu7XUgUPtzarxDf4zr8Sk",
+    "spreadsheetUrl": "https://docs.google.com/spreadsheets/d/1NqpIamgatg4aMb6HE7I4Pxbu7XUgUPtzarxDf4zr8Sk/edit",
+    "properties": {
+      "title": "玉衡项目进度排期",
+      "locale": "zh_CN",
+      "timeZone": "Asia/Shanghai"
+    },
+    "sheets": [
+      {
+        "properties": {
+          "sheetId": 1678407108,
+          "title": "玉衡10月",
+          "index": 4,
+          "sheetType": "GRID",
+          "gridProperties": {
+            "rowCount": 1032,
+            "columnCount": 27
+          }
+        },
+        "data": [
+          {
+            "startRow": 109,
+            "startColumn": 2,
+            "rowData": [
+              {
+                "values": [
+                  {
+                    "formattedValue": "规则结果与证据关联展示",
+                    "userEnteredValue": {
+                      "stringValue": "规则结果与证据关联展示"
+                    },
+                    "userEnteredFormat": {
+                      "wrapStrategy": "WRAP"
+                    }
+                  },
+                  {
+                    "formattedValue": "按上周规范复用任务详情、检查点、报告和复核入口；只展示正式分项、原因、缺项和当前复核，沿原证据权限。\n10/19已完成：八条27个正式分项、63个缺码中文及页面/整体归属展示；未执行候选不补结果，未判项不借整组输入图。报告页现已与任务详情共用当前绿色投影：缺证、pending/needs_recheck及关联失效口径统一；明确失败加缺项仍保留失败，但不计完整。历史人工通过或approved不能填平缺证，真实材料齐全且已终审保留原结论。\n确认/导出保护：缺证或失联不能业务确认，待确认清零也不解锁导出；保持原审核权限，审核身份不扩大为任务/原图读取。原图只用分项有效引用与当前索引交集，切任务/新Run/轮询失效撤旧图，迟到响应不恢复。H5明确失败保留预览。\n已封存报告保留原正文、统计、原图、确认和导出，不用当前数据改写。验证：前端63文件544项、构建/类型检查和8项受控浏览器通过；后端89个唯一文件1615项通过、3项下线Demo跳过，含真实独立PG一致性/无写入/审核权限及封存回归。受控验证不代表三端产品验收。\n后续：已有复核队列到规则详情的定位/权限可继续；八条缺项及材料齐后共享判读待做已列清。102政策由产品/规则负责人提供；三端材料仍归App星语、H5天枢、Web青云客（第60–62行），共享判读归第109行。本地dev_2.0未提交、未推送、未发布；探索和采集未改，不登记八条整体完成。",
+                    "userEnteredValue": {
+                      "stringValue": "按上周规范复用任务详情、检查点、报告和复核入口；只展示正式分项、原因、缺项和当前复核，沿原证据权限。\n10/19已完成：八条27个正式分项、63个缺码中文及页面/整体归属展示；未执行候选不补结果，未判项不借整组输入图。报告页现已与任务详情共用当前绿色投影：缺证、pending/needs_recheck及关联失效口径统一；明确失败加缺项仍保留失败，但不计完整。历史人工通过或approved不能填平缺证，真实材料齐全且已终审保留原结论。\n确认/导出保护：缺证或失联不能业务确认，待确认清零也不解锁导出；保持原审核权限，审核身份不扩大为任务/原图读取。原图只用分项有效引用与当前索引交集，切任务/新Run/轮询失效撤旧图，迟到响应不恢复。H5明确失败保留预览。\n已封存报告保留原正文、统计、原图、确认和导出，不用当前数据改写。验证：前端63文件544项、构建/类型检查和8项受控浏览器通过；后端89个唯一文件1615项通过、3项下线Demo跳过，含真实独立PG一致性/无写入/审核权限及封存回归。受控验证不代表三端产品验收。\n后续：已有复核队列到规则详情的定位/权限可继续；八条缺项及材料齐后共享判读待做已列清。102政策由产品/规则负责人提供；三端材料仍归App星语、H5天枢、Web青云客（第60–62行），共享判读归第109行。本地dev_2.0未提交、未推送、未发布；探索和采集未改，不登记八条整体完成。"
+                    },
+                    "userEnteredFormat": {
+                      "wrapStrategy": "WRAP"
+                    }
+                  },
+                  {
+                    "formattedValue": "立川",
+                    "userEnteredValue": {
+                      "stringValue": "立川"
+                    }
+                  },
+                  {},
+                  {
+                    "formattedValue": "进行中",
+                    "userEnteredValue": {
+                      "stringValue": "进行中"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "readback_verified": true,
+  "changed_fields": "userEnteredValue",
+  "owner": "立川",
+  "status": "进行中",
+  "wrap_strategy": "WRAP"
+}

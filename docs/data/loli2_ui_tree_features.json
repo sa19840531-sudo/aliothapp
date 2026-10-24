@@ -1,0 +1,76 @@
+{
+  "schema_version": "app-ui-tree-features.v1",
+  "product_name": "萝莉岛2",
+  "product_aliases": [
+    "萝莉岛2",
+    "loli2",
+    "萝莉岛2"
+  ],
+  "playbook_id": "loli2",
+  "apk_hint": "F:\\apptest\\萝莉岛2\\erbulld3.0.26.apk",
+  "package_name": "com.example.hddjxvideoclient",
+  "package_hints": [
+    "com.example.hddjxvideoclient",
+    "loli2",
+    "萝莉岛2",
+    "erbulld"
+  ],
+  "flow_order": [
+    "age_gate",
+    "startup_ad",
+    "popup_ads",
+    "bottom_tabs"
+  ],
+  "collection": {
+    "device_slot": "qa-a",
+    "adb_endpoint": "172.104.172.119:30615",
+    "collected_at": "2026-09-17T17:54:56.791123+00:00",
+    "status": "partial",
+    "partial_reasons": [
+      "install_failed_or_timeout",
+      "no_ui_tree_dump"
+    ],
+    "note": "qa-a 上 pm install / adb install 多次超时（installd 卡住）；包名已由 aapt2 确认，待设备恢复后补采。"
+  },
+  "note": "萝莉岛2（loli2）UI Tree；qa-a 安装失败，特征待补采。",
+  "age_gate": {
+    "phase": "age_gate",
+    "status": "not_observed",
+    "enter_button_texts": [
+      "我已满18岁",
+      "我年满18岁"
+    ],
+    "leave_button_texts": [
+      "未满18",
+      "离开"
+    ],
+    "match_fields": [
+      "semantic_target",
+      "metadata.text",
+      "metadata.content_desc"
+    ]
+  },
+  "startup_ad": {
+    "phase": "startup_ad",
+    "status": "not_observed",
+    "close_zones": [],
+    "close_button_texts": [
+      "跳过",
+      "skip"
+    ]
+  },
+  "popup_ads": {
+    "phase": "popup_ads",
+    "status": "not_observed",
+    "close_zones": []
+  },
+  "bottom_navigation": {
+    "phase": "bottom_tabs",
+    "status": "not_observed",
+    "ordered_tabs": [],
+    "bounds": {
+      "min_top": 0.85,
+      "max_bottom": 1.02
+    }
+  }
+}

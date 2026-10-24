@@ -1,0 +1,15 @@
+CI_REGISTRY_IMAGE=registry.example.com/tyzx/alioth
+ALIOTH_IMAGE_TAG=replace-with-commit-sha
+ALIOTH_APP_ENV_FILE=./env/.env.production.example
+DATA_SERVICES_NETWORK=data_services_net
+MINIO_NETWORK=minio_net
+ALIOTH_GATEWAY_HTTP_PORT=80
+ALIOTH_GATEWAY_HTTPS_PORT=443
+ALIOTH_GATEWAY_ADMIN_PORT=8088
+ALIOTH_GATEWAY_RADAR_DOMAIN=xnwork.xyz
+ALIOTH_GATEWAY_RADAR_UPSTREAM=http://host.docker.internal:8787
+ALIOTH_GATEWAY_TLS_HOST_PATH=/etc/letsencrypt
+ALIOTH_GATEWAY_ACME_WEBROOT_HOST_PATH=/opt/alioth/config/acme-challenge
+# 按生产 Gateway/Ingress 对端单 IP 修改；默认回环值只保证模板可展开，不形成外部信任。
+ALIOTH_MOBILE_DEMO_TRUSTED_PROXY_ADDRESSES=127.0.0.1
+ALIOTH_MOBILE_DEMO_TRUSTED_PROXY_NETWORKS=

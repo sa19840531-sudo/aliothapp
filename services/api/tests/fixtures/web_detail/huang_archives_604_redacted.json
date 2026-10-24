@@ -1,0 +1,4586 @@
+{
+  "source_capture_id": "f460d5d5-6e08-432b-a9a8-23a6efdc85f4",
+  "source_artifact_id": "945e9e57-7799-457d-864f-bb1e78230097",
+  "redaction": "历史真实 UI snapshot 结构投影；URL、正文与媒体地址已替换",
+  "url": "https://example.test/archives/604/",
+  "elements": [
+    {
+      "selector": "html > body > div:nth-of-type(1) > div > main > section > article",
+      "parent_selector": "html > body > div:nth-of-type(1) > div > main > section",
+      "tag": "article",
+      "role": null,
+      "visible": true,
+      "interactive": false,
+      "class_tokens": [
+        "hg-post-detail__main"
+      ],
+      "ancestor_class_tokens": [
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body",
+        "base-layout",
+        "hg-layout",
+        "os-linux",
+        "screen-desktop-wide",
+        "device-desktop"
+      ],
+      "repeat_group_size": 0,
+      "within_repeated_structure": false,
+      "text_length": 542,
+      "web_subject_text_length": 427,
+      "rect": {
+        "x": 415,
+        "y": 154,
+        "width": 1090,
+        "height": 10574.22
+      },
+      "within_navigation": false,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": false,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section",
+          "tag": "section",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main",
+          "tag": "main",
+          "repeat_group_size": 0
+        }
+      ],
+      "text": "内容"
+    },
+    {
+      "selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(2)",
+      "parent_selector": "html > body > div:nth-of-type(1) > div > main > section > article",
+      "tag": "div",
+      "role": null,
+      "visible": true,
+      "interactive": false,
+      "class_tokens": [
+        "hg-post-detail__body",
+        "article-body"
+      ],
+      "ancestor_class_tokens": [
+        "hg-post-detail__main",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body",
+        "base-layout",
+        "hg-layout",
+        "os-linux",
+        "screen-desktop-wide",
+        "device-desktop"
+      ],
+      "repeat_group_size": 0,
+      "within_repeated_structure": false,
+      "text_length": 348,
+      "web_subject_text_length": 318,
+      "rect": {
+        "x": 415,
+        "y": 365,
+        "width": 1090,
+        "height": 10229.22
+      },
+      "within_navigation": false,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": false,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article",
+          "tag": "article",
+          "repeat_group_size": 0
+        }
+      ],
+      "text": "内容"
+    },
+    {
+      "selector": "body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(2) > p:nth-of-type(1)",
+      "parent_selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(2)",
+      "tag": "p",
+      "role": null,
+      "visible": true,
+      "interactive": false,
+      "class_tokens": [],
+      "ancestor_class_tokens": [
+        "hg-post-detail__body",
+        "article-body",
+        "hg-post-detail__main",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body",
+        "base-layout",
+        "hg-layout",
+        "os-linux",
+        "screen-desktop-wide",
+        "device-desktop"
+      ],
+      "repeat_group_size": 3,
+      "within_repeated_structure": true,
+      "text_length": 150,
+      "rect": {
+        "x": 415,
+        "y": 365,
+        "width": 1090,
+        "height": 90
+      },
+      "within_navigation": false,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": false,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(2)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article",
+          "tag": "article",
+          "repeat_group_size": 0
+        }
+      ],
+      "text": "正文"
+    },
+    {
+      "selector": "body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(2) > p:nth-of-type(2)",
+      "parent_selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(2)",
+      "tag": "p",
+      "role": null,
+      "visible": true,
+      "interactive": false,
+      "class_tokens": [],
+      "ancestor_class_tokens": [
+        "hg-post-detail__body",
+        "article-body",
+        "hg-post-detail__main",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body",
+        "base-layout",
+        "hg-layout",
+        "os-linux",
+        "screen-desktop-wide",
+        "device-desktop"
+      ],
+      "repeat_group_size": 3,
+      "within_repeated_structure": true,
+      "text_length": 78,
+      "rect": {
+        "x": 415,
+        "y": 4690.45,
+        "width": 1090,
+        "height": 60
+      },
+      "within_navigation": false,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": false,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(2)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article",
+          "tag": "article",
+          "repeat_group_size": 0
+        }
+      ],
+      "text": "正文"
+    },
+    {
+      "selector": "body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(2) > p:nth-of-type(3)",
+      "parent_selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(2)",
+      "tag": "p",
+      "role": null,
+      "visible": true,
+      "interactive": false,
+      "class_tokens": [],
+      "ancestor_class_tokens": [
+        "hg-post-detail__body",
+        "article-body",
+        "hg-post-detail__main",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body",
+        "base-layout",
+        "hg-layout",
+        "os-linux",
+        "screen-desktop-wide",
+        "device-desktop"
+      ],
+      "repeat_group_size": 3,
+      "within_repeated_structure": true,
+      "text_length": 77,
+      "rect": {
+        "x": 415,
+        "y": 9863.09,
+        "width": 1090,
+        "height": 60
+      },
+      "within_navigation": false,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": false,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(2)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article",
+          "tag": "article",
+          "repeat_group_size": 0
+        }
+      ],
+      "text": "正文"
+    },
+    {
+      "selector": "html > body > div:nth-of-type(1) > div > main > section > div:nth-of-type(2)",
+      "parent_selector": "html > body > div:nth-of-type(1) > div > main > section",
+      "tag": "div",
+      "role": null,
+      "visible": true,
+      "interactive": false,
+      "class_tokens": [
+        "hg-post-detail__related"
+      ],
+      "ancestor_class_tokens": [
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body",
+        "base-layout",
+        "hg-layout",
+        "os-linux",
+        "screen-desktop-wide",
+        "device-desktop"
+      ],
+      "repeat_group_size": 0,
+      "within_repeated_structure": false,
+      "rect": {
+        "x": 96,
+        "y": 11255.22,
+        "width": 1728,
+        "height": 467.16
+      },
+      "within_navigation": false,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": false,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section",
+          "tag": "section",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main",
+          "tag": "main",
+          "repeat_group_size": 0
+        }
+      ],
+      "text": "内容"
+    },
+    {
+      "selector": "html > body > div:nth-of-type(1) > div > main > section > div:nth-of-type(2) > div:nth-of-type(2)",
+      "parent_selector": "html > body > div:nth-of-type(1) > div > main > section > div:nth-of-type(2)",
+      "tag": "div",
+      "role": null,
+      "visible": true,
+      "interactive": false,
+      "class_tokens": [
+        "hg-post-detail__related-grid"
+      ],
+      "ancestor_class_tokens": [
+        "hg-post-detail__related",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body",
+        "base-layout",
+        "hg-layout",
+        "os-linux",
+        "screen-desktop-wide",
+        "device-desktop"
+      ],
+      "repeat_group_size": 0,
+      "within_repeated_structure": false,
+      "rect": {
+        "x": 96,
+        "y": 11308.72,
+        "width": 1728,
+        "height": 413.66
+      },
+      "within_navigation": false,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": false,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > div:nth-of-type(2)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section",
+          "tag": "section",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main",
+          "tag": "main",
+          "repeat_group_size": 0
+        }
+      ],
+      "text": "内容"
+    },
+    {
+      "selector": "body > div:nth-of-type(1) > div > main > section > div:nth-of-type(2) > div:nth-of-type(1) > div",
+      "parent_selector": "html > body > div:nth-of-type(1) > div > main > section > div:nth-of-type(2) > div:nth-of-type(1)",
+      "tag": "div",
+      "role": null,
+      "visible": true,
+      "interactive": false,
+      "class_tokens": [
+        "hg-section-title"
+      ],
+      "ancestor_class_tokens": [
+        "hg-section-header",
+        "hg-post-detail__related",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body",
+        "base-layout",
+        "hg-layout",
+        "os-linux",
+        "screen-desktop-wide",
+        "device-desktop"
+      ],
+      "repeat_group_size": 0,
+      "within_repeated_structure": false,
+      "rect": {
+        "x": 96,
+        "y": 11258.97,
+        "width": 104,
+        "height": 30
+      },
+      "within_navigation": false,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": false,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > div:nth-of-type(2) > div:nth-of-type(1)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > div:nth-of-type(2)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section",
+          "tag": "section",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main",
+          "tag": "main",
+          "repeat_group_size": 0
+        }
+      ],
+      "text": "内容"
+    },
+    {
+      "selector": "div:nth-of-type(1) > div > main > section > div:nth-of-type(2) > div:nth-of-type(1) > div > h2",
+      "parent_selector": "body > div:nth-of-type(1) > div > main > section > div:nth-of-type(2) > div:nth-of-type(1) > div",
+      "tag": "h2",
+      "role": null,
+      "visible": true,
+      "interactive": false,
+      "class_tokens": [],
+      "ancestor_class_tokens": [
+        "hg-section-title",
+        "hg-section-header",
+        "hg-post-detail__related",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body",
+        "base-layout",
+        "hg-layout"
+      ],
+      "repeat_group_size": 0,
+      "within_repeated_structure": false,
+      "rect": {
+        "x": 112,
+        "y": 11258.97,
+        "width": 88,
+        "height": 30
+      },
+      "within_navigation": false,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": false,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "body > div:nth-of-type(1) > div > main > section > div:nth-of-type(2) > div:nth-of-type(1) > div",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > div:nth-of-type(2) > div:nth-of-type(1)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > div:nth-of-type(2)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section",
+          "tag": "section",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main",
+          "tag": "main",
+          "repeat_group_size": 0
+        }
+      ],
+      "text": "相关推荐"
+    },
+    {
+      "selector": "body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1) > a",
+      "parent_selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1)",
+      "tag": "a",
+      "role": null,
+      "visible": true,
+      "interactive": true,
+      "class_tokens": [
+        "hg-post-detail__author"
+      ],
+      "ancestor_class_tokens": [
+        "hg-post-detail__meta",
+        "hg-post-detail__main",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body",
+        "base-layout",
+        "hg-layout",
+        "os-linux",
+        "screen-desktop-wide",
+        "device-desktop"
+      ],
+      "repeat_group_size": 0,
+      "within_repeated_structure": false,
+      "rect": {
+        "x": 415,
+        "y": 288,
+        "width": 272.44,
+        "height": 34
+      },
+      "within_navigation": false,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": true,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article",
+          "tag": "article",
+          "repeat_group_size": 0
+        }
+      ],
+      "href": "https://example.test/other/23/",
+      "text": "内容"
+    },
+    {
+      "selector": "body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(4) > a:nth-of-type(1)",
+      "parent_selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(4)",
+      "tag": "a",
+      "role": null,
+      "visible": true,
+      "interactive": true,
+      "class_tokens": [],
+      "ancestor_class_tokens": [
+        "hg-post-detail__tags",
+        "hg-post-detail__main",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body",
+        "base-layout",
+        "hg-layout",
+        "os-linux",
+        "screen-desktop-wide",
+        "device-desktop"
+      ],
+      "repeat_group_size": 12,
+      "within_repeated_structure": true,
+      "rect": {
+        "x": 415,
+        "y": 10698.22,
+        "width": 60,
+        "height": 30
+      },
+      "within_navigation": false,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": true,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(4)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article",
+          "tag": "article",
+          "repeat_group_size": 0
+        }
+      ],
+      "href": "https://example.test/search/post/label-24/",
+      "text": "内容"
+    },
+    {
+      "selector": "body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(4) > a:nth-of-type(2)",
+      "parent_selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(4)",
+      "tag": "a",
+      "role": null,
+      "visible": true,
+      "interactive": true,
+      "class_tokens": [],
+      "ancestor_class_tokens": [
+        "hg-post-detail__tags",
+        "hg-post-detail__main",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body",
+        "base-layout",
+        "hg-layout",
+        "os-linux",
+        "screen-desktop-wide",
+        "device-desktop"
+      ],
+      "repeat_group_size": 12,
+      "within_repeated_structure": true,
+      "rect": {
+        "x": 483,
+        "y": 10698.22,
+        "width": 60,
+        "height": 30
+      },
+      "within_navigation": false,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": true,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(4)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article",
+          "tag": "article",
+          "repeat_group_size": 0
+        }
+      ],
+      "href": "https://example.test/search/post/label-25/",
+      "text": "内容"
+    },
+    {
+      "selector": "body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(4) > a:nth-of-type(3)",
+      "parent_selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(4)",
+      "tag": "a",
+      "role": null,
+      "visible": true,
+      "interactive": true,
+      "class_tokens": [],
+      "ancestor_class_tokens": [
+        "hg-post-detail__tags",
+        "hg-post-detail__main",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body",
+        "base-layout",
+        "hg-layout",
+        "os-linux",
+        "screen-desktop-wide",
+        "device-desktop"
+      ],
+      "repeat_group_size": 12,
+      "within_repeated_structure": true,
+      "rect": {
+        "x": 551,
+        "y": 10698.22,
+        "width": 60,
+        "height": 30
+      },
+      "within_navigation": false,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": true,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(4)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article",
+          "tag": "article",
+          "repeat_group_size": 0
+        }
+      ],
+      "href": "https://example.test/search/post/label-26/",
+      "text": "内容"
+    },
+    {
+      "selector": "body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(4) > a:nth-of-type(4)",
+      "parent_selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(4)",
+      "tag": "a",
+      "role": null,
+      "visible": true,
+      "interactive": true,
+      "class_tokens": [],
+      "ancestor_class_tokens": [
+        "hg-post-detail__tags",
+        "hg-post-detail__main",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body",
+        "base-layout",
+        "hg-layout",
+        "os-linux",
+        "screen-desktop-wide",
+        "device-desktop"
+      ],
+      "repeat_group_size": 12,
+      "within_repeated_structure": true,
+      "rect": {
+        "x": 619,
+        "y": 10698.22,
+        "width": 60,
+        "height": 30
+      },
+      "within_navigation": false,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": true,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(4)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article",
+          "tag": "article",
+          "repeat_group_size": 0
+        }
+      ],
+      "href": "https://example.test/search/post/label-27/",
+      "text": "内容"
+    },
+    {
+      "selector": "body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(4) > a:nth-of-type(5)",
+      "parent_selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(4)",
+      "tag": "a",
+      "role": null,
+      "visible": true,
+      "interactive": true,
+      "class_tokens": [],
+      "ancestor_class_tokens": [
+        "hg-post-detail__tags",
+        "hg-post-detail__main",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body",
+        "base-layout",
+        "hg-layout",
+        "os-linux",
+        "screen-desktop-wide",
+        "device-desktop"
+      ],
+      "repeat_group_size": 12,
+      "within_repeated_structure": true,
+      "rect": {
+        "x": 687,
+        "y": 10698.22,
+        "width": 60,
+        "height": 30
+      },
+      "within_navigation": false,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": true,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(4)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article",
+          "tag": "article",
+          "repeat_group_size": 0
+        }
+      ],
+      "href": "https://example.test/search/post/label-28/",
+      "text": "内容"
+    },
+    {
+      "selector": "body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(4) > a:nth-of-type(6)",
+      "parent_selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(4)",
+      "tag": "a",
+      "role": null,
+      "visible": true,
+      "interactive": true,
+      "class_tokens": [],
+      "ancestor_class_tokens": [
+        "hg-post-detail__tags",
+        "hg-post-detail__main",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body",
+        "base-layout",
+        "hg-layout",
+        "os-linux",
+        "screen-desktop-wide",
+        "device-desktop"
+      ],
+      "repeat_group_size": 12,
+      "within_repeated_structure": true,
+      "rect": {
+        "x": 755,
+        "y": 10698.22,
+        "width": 63,
+        "height": 30
+      },
+      "within_navigation": false,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": true,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(4)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article",
+          "tag": "article",
+          "repeat_group_size": 0
+        }
+      ],
+      "href": "https://example.test/search/post/label-29/",
+      "text": "内容"
+    },
+    {
+      "selector": "body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(4) > a:nth-of-type(7)",
+      "parent_selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(4)",
+      "tag": "a",
+      "role": null,
+      "visible": true,
+      "interactive": true,
+      "class_tokens": [],
+      "ancestor_class_tokens": [
+        "hg-post-detail__tags",
+        "hg-post-detail__main",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body",
+        "base-layout",
+        "hg-layout",
+        "os-linux",
+        "screen-desktop-wide",
+        "device-desktop"
+      ],
+      "repeat_group_size": 12,
+      "within_repeated_structure": true,
+      "rect": {
+        "x": 826,
+        "y": 10698.22,
+        "width": 63,
+        "height": 30
+      },
+      "within_navigation": false,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": true,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(4)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article",
+          "tag": "article",
+          "repeat_group_size": 0
+        }
+      ],
+      "href": "https://example.test/search/post/label-30/",
+      "text": "内容"
+    },
+    {
+      "selector": "body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(4) > a:nth-of-type(8)",
+      "parent_selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(4)",
+      "tag": "a",
+      "role": null,
+      "visible": true,
+      "interactive": true,
+      "class_tokens": [],
+      "ancestor_class_tokens": [
+        "hg-post-detail__tags",
+        "hg-post-detail__main",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body",
+        "base-layout",
+        "hg-layout",
+        "os-linux",
+        "screen-desktop-wide",
+        "device-desktop"
+      ],
+      "repeat_group_size": 12,
+      "within_repeated_structure": true,
+      "rect": {
+        "x": 897,
+        "y": 10698.22,
+        "width": 60,
+        "height": 30
+      },
+      "within_navigation": false,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": true,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(4)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article",
+          "tag": "article",
+          "repeat_group_size": 0
+        }
+      ],
+      "href": "https://example.test/search/post/label-31/",
+      "text": "内容"
+    },
+    {
+      "selector": "body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(4) > a:nth-of-type(9)",
+      "parent_selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(4)",
+      "tag": "a",
+      "role": null,
+      "visible": true,
+      "interactive": true,
+      "class_tokens": [],
+      "ancestor_class_tokens": [
+        "hg-post-detail__tags",
+        "hg-post-detail__main",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body",
+        "base-layout",
+        "hg-layout",
+        "os-linux",
+        "screen-desktop-wide",
+        "device-desktop"
+      ],
+      "repeat_group_size": 12,
+      "within_repeated_structure": true,
+      "rect": {
+        "x": 965,
+        "y": 10698.22,
+        "width": 60,
+        "height": 30
+      },
+      "within_navigation": false,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": true,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(4)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article",
+          "tag": "article",
+          "repeat_group_size": 0
+        }
+      ],
+      "href": "https://example.test/search/post/label-32/",
+      "text": "内容"
+    },
+    {
+      "selector": "body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(4) > a:nth-of-type(10)",
+      "parent_selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(4)",
+      "tag": "a",
+      "role": null,
+      "visible": true,
+      "interactive": true,
+      "class_tokens": [],
+      "ancestor_class_tokens": [
+        "hg-post-detail__tags",
+        "hg-post-detail__main",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body",
+        "base-layout",
+        "hg-layout",
+        "os-linux",
+        "screen-desktop-wide",
+        "device-desktop"
+      ],
+      "repeat_group_size": 12,
+      "within_repeated_structure": true,
+      "rect": {
+        "x": 1033,
+        "y": 10698.22,
+        "width": 93,
+        "height": 30
+      },
+      "within_navigation": false,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": true,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(4)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article",
+          "tag": "article",
+          "repeat_group_size": 0
+        }
+      ],
+      "href": "https://example.test/search/post/label-33/",
+      "text": "内容"
+    },
+    {
+      "selector": "body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(4) > a:nth-of-type(11)",
+      "parent_selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(4)",
+      "tag": "a",
+      "role": null,
+      "visible": true,
+      "interactive": true,
+      "class_tokens": [],
+      "ancestor_class_tokens": [
+        "hg-post-detail__tags",
+        "hg-post-detail__main",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body",
+        "base-layout",
+        "hg-layout",
+        "os-linux",
+        "screen-desktop-wide",
+        "device-desktop"
+      ],
+      "repeat_group_size": 12,
+      "within_repeated_structure": true,
+      "rect": {
+        "x": 1134,
+        "y": 10698.22,
+        "width": 78,
+        "height": 30
+      },
+      "within_navigation": false,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": true,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(4)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article",
+          "tag": "article",
+          "repeat_group_size": 0
+        }
+      ],
+      "href": "https://example.test/search/post/label-34/",
+      "text": "内容"
+    },
+    {
+      "selector": "body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(4) > a:nth-of-type(12)",
+      "parent_selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(4)",
+      "tag": "a",
+      "role": null,
+      "visible": true,
+      "interactive": true,
+      "class_tokens": [],
+      "ancestor_class_tokens": [
+        "hg-post-detail__tags",
+        "hg-post-detail__main",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body",
+        "base-layout",
+        "hg-layout",
+        "os-linux",
+        "screen-desktop-wide",
+        "device-desktop"
+      ],
+      "repeat_group_size": 12,
+      "within_repeated_structure": true,
+      "rect": {
+        "x": 1220,
+        "y": 10698.22,
+        "width": 78,
+        "height": 30
+      },
+      "within_navigation": false,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": true,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(4)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article",
+          "tag": "article",
+          "repeat_group_size": 0
+        }
+      ],
+      "href": "https://example.test/search/post/label-35/",
+      "text": "内容"
+    },
+    {
+      "selector": "html > body > div:nth-of-type(1) > div > main > section > div:nth-of-type(1) > a:nth-of-type(1)",
+      "parent_selector": "html > body > div:nth-of-type(1) > div > main > section > div:nth-of-type(1)",
+      "tag": "a",
+      "role": null,
+      "visible": true,
+      "interactive": true,
+      "class_tokens": [
+        "hg-post-detail__nav-item"
+      ],
+      "ancestor_class_tokens": [
+        "hg-post-detail__nav",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body",
+        "base-layout",
+        "hg-layout",
+        "os-linux",
+        "screen-desktop-wide",
+        "device-desktop"
+      ],
+      "repeat_group_size": 2,
+      "within_repeated_structure": true,
+      "rect": {
+        "x": 415,
+        "y": 10758.22,
+        "width": 535,
+        "height": 210
+      },
+      "within_navigation": true,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": true,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > div:nth-of-type(1)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section",
+          "tag": "section",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main",
+          "tag": "main",
+          "repeat_group_size": 0
+        }
+      ],
+      "href": "https://example.test/archives/605/",
+      "text": "上一篇"
+    },
+    {
+      "selector": "html > body > div:nth-of-type(1) > div > main > section > div:nth-of-type(1) > a:nth-of-type(2)",
+      "parent_selector": "html > body > div:nth-of-type(1) > div > main > section > div:nth-of-type(1)",
+      "tag": "a",
+      "role": null,
+      "visible": true,
+      "interactive": true,
+      "class_tokens": [
+        "hg-post-detail__nav-item"
+      ],
+      "ancestor_class_tokens": [
+        "hg-post-detail__nav",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body",
+        "base-layout",
+        "hg-layout",
+        "os-linux",
+        "screen-desktop-wide",
+        "device-desktop"
+      ],
+      "repeat_group_size": 2,
+      "within_repeated_structure": true,
+      "rect": {
+        "x": 970,
+        "y": 10758.22,
+        "width": 535,
+        "height": 210
+      },
+      "within_navigation": true,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": true,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > div:nth-of-type(1)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section",
+          "tag": "section",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main",
+          "tag": "main",
+          "repeat_group_size": 0
+        }
+      ],
+      "href": "https://example.test/archives/603/",
+      "text": "上一篇"
+    },
+    {
+      "selector": "body > div:nth-of-type(1) > div > main > section > div:nth-of-type(2) > div:nth-of-type(2) > a:nth-of-type(1)",
+      "parent_selector": "html > body > div:nth-of-type(1) > div > main > section > div:nth-of-type(2) > div:nth-of-type(2)",
+      "tag": "a",
+      "role": null,
+      "visible": true,
+      "interactive": true,
+      "class_tokens": [
+        "hg-post-detail__rel-card"
+      ],
+      "ancestor_class_tokens": [
+        "hg-post-detail__related-grid",
+        "hg-post-detail__related",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body",
+        "base-layout",
+        "hg-layout",
+        "os-linux",
+        "screen-desktop-wide",
+        "device-desktop"
+      ],
+      "repeat_group_size": 3,
+      "within_repeated_structure": true,
+      "rect": {
+        "x": 96,
+        "y": 11308.72,
+        "width": 565.33,
+        "height": 413.66
+      },
+      "within_navigation": false,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": true,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > div:nth-of-type(2) > div:nth-of-type(2)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > div:nth-of-type(2)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section",
+          "tag": "section",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main",
+          "tag": "main",
+          "repeat_group_size": 0
+        }
+      ],
+      "href": "https://example.test/archives/67/",
+      "text": "内容"
+    },
+    {
+      "selector": "body > div:nth-of-type(1) > div > main > section > div:nth-of-type(2) > div:nth-of-type(2) > a:nth-of-type(2)",
+      "parent_selector": "html > body > div:nth-of-type(1) > div > main > section > div:nth-of-type(2) > div:nth-of-type(2)",
+      "tag": "a",
+      "role": null,
+      "visible": true,
+      "interactive": true,
+      "class_tokens": [
+        "hg-post-detail__rel-card"
+      ],
+      "ancestor_class_tokens": [
+        "hg-post-detail__related-grid",
+        "hg-post-detail__related",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body",
+        "base-layout",
+        "hg-layout",
+        "os-linux",
+        "screen-desktop-wide",
+        "device-desktop"
+      ],
+      "repeat_group_size": 3,
+      "within_repeated_structure": true,
+      "rect": {
+        "x": 677.33,
+        "y": 11308.72,
+        "width": 565.33,
+        "height": 413.66
+      },
+      "within_navigation": false,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": true,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > div:nth-of-type(2) > div:nth-of-type(2)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > div:nth-of-type(2)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section",
+          "tag": "section",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main",
+          "tag": "main",
+          "repeat_group_size": 0
+        }
+      ],
+      "href": "https://example.test/archives/65/",
+      "text": "内容"
+    },
+    {
+      "selector": "body > div:nth-of-type(1) > div > main > section > div:nth-of-type(2) > div:nth-of-type(2) > a:nth-of-type(3)",
+      "parent_selector": "html > body > div:nth-of-type(1) > div > main > section > div:nth-of-type(2) > div:nth-of-type(2)",
+      "tag": "a",
+      "role": null,
+      "visible": true,
+      "interactive": true,
+      "class_tokens": [
+        "hg-post-detail__rel-card"
+      ],
+      "ancestor_class_tokens": [
+        "hg-post-detail__related-grid",
+        "hg-post-detail__related",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body",
+        "base-layout",
+        "hg-layout",
+        "os-linux",
+        "screen-desktop-wide",
+        "device-desktop"
+      ],
+      "repeat_group_size": 3,
+      "within_repeated_structure": true,
+      "rect": {
+        "x": 1258.66,
+        "y": 11308.72,
+        "width": 565.33,
+        "height": 413.66
+      },
+      "within_navigation": false,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": true,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > div:nth-of-type(2) > div:nth-of-type(2)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > div:nth-of-type(2)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section",
+          "tag": "section",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main",
+          "tag": "main",
+          "repeat_group_size": 0
+        }
+      ],
+      "href": "https://example.test/archives/63/",
+      "text": "内容"
+    },
+    {
+      "selector": "html > body > div:nth-of-type(1) > div > main > section",
+      "parent_selector": "html > body > div:nth-of-type(1) > div > main",
+      "tag": "section",
+      "role": null,
+      "visible": true,
+      "interactive": false,
+      "class_tokens": [
+        "hg-post-detail"
+      ],
+      "ancestor_class_tokens": [
+        "main",
+        "hg-main",
+        "hg-body",
+        "base-layout",
+        "hg-layout",
+        "os-linux",
+        "screen-desktop-wide",
+        "device-desktop"
+      ],
+      "repeat_group_size": 0,
+      "within_repeated_structure": false,
+      "rect": {
+        "x": 0,
+        "y": 78,
+        "width": 1920,
+        "height": 12106.88
+      },
+      "within_navigation": false,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": false,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main",
+          "tag": "main",
+          "repeat_group_size": 0
+        }
+      ],
+      "text": "内容"
+    },
+    {
+      "selector": "html > body > div:nth-of-type(1) > div > main > section > nav",
+      "parent_selector": "html > body > div:nth-of-type(1) > div > main > section",
+      "tag": "nav",
+      "role": null,
+      "visible": true,
+      "interactive": false,
+      "class_tokens": [
+        "hg-breadcrumb"
+      ],
+      "ancestor_class_tokens": [
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body",
+        "base-layout",
+        "hg-layout",
+        "os-linux",
+        "screen-desktop-wide",
+        "device-desktop"
+      ],
+      "repeat_group_size": 0,
+      "within_repeated_structure": false,
+      "rect": {
+        "x": 96,
+        "y": 102,
+        "width": 1728,
+        "height": 20
+      },
+      "within_navigation": true,
+      "within_web_navigation": true,
+      "within_pagination": false,
+      "within_breadcrumb": true,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": false,
+      "aria_label": "面包屑",
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section",
+          "tag": "section",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main",
+          "tag": "main",
+          "repeat_group_size": 0
+        }
+      ],
+      "text": "内容"
+    },
+    {
+      "selector": "html > body > div:nth-of-type(1) > div > main > section > nav > a:nth-of-type(1)",
+      "parent_selector": "html > body > div:nth-of-type(1) > div > main > section > nav",
+      "tag": "a",
+      "role": null,
+      "visible": true,
+      "interactive": true,
+      "class_tokens": [],
+      "ancestor_class_tokens": [
+        "hg-breadcrumb",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body",
+        "base-layout",
+        "hg-layout",
+        "os-linux",
+        "screen-desktop-wide",
+        "device-desktop"
+      ],
+      "repeat_group_size": 3,
+      "within_repeated_structure": true,
+      "rect": {
+        "x": 96,
+        "y": 102,
+        "width": 56,
+        "height": 20
+      },
+      "within_navigation": true,
+      "within_web_navigation": true,
+      "within_pagination": false,
+      "within_breadcrumb": true,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": false,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > nav",
+          "tag": "nav",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section",
+          "tag": "section",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main",
+          "tag": "main",
+          "repeat_group_size": 0
+        }
+      ],
+      "href": "https://example.test/other/58/",
+      "text": "内容"
+    },
+    {
+      "selector": "html > body > div:nth-of-type(1) > div > main > section > nav > span:nth-of-type(1)",
+      "parent_selector": "html > body > div:nth-of-type(1) > div > main > section > nav",
+      "tag": "span",
+      "role": null,
+      "visible": true,
+      "interactive": false,
+      "class_tokens": [
+        "hg-breadcrumb__sep"
+      ],
+      "ancestor_class_tokens": [
+        "hg-breadcrumb",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body",
+        "base-layout",
+        "hg-layout",
+        "os-linux",
+        "screen-desktop-wide",
+        "device-desktop"
+      ],
+      "repeat_group_size": 3,
+      "within_repeated_structure": true,
+      "rect": {
+        "x": 160,
+        "y": 102,
+        "width": 3.89,
+        "height": 20
+      },
+      "within_navigation": true,
+      "within_web_navigation": true,
+      "within_pagination": false,
+      "within_breadcrumb": true,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": false,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > nav",
+          "tag": "nav",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section",
+          "tag": "section",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main",
+          "tag": "main",
+          "repeat_group_size": 0
+        }
+      ],
+      "text": "内容"
+    },
+    {
+      "selector": "html > body > div:nth-of-type(1) > div > main > section > nav > a:nth-of-type(2)",
+      "parent_selector": "html > body > div:nth-of-type(1) > div > main > section > nav",
+      "tag": "a",
+      "role": null,
+      "visible": true,
+      "interactive": true,
+      "class_tokens": [],
+      "ancestor_class_tokens": [
+        "hg-breadcrumb",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body",
+        "base-layout",
+        "hg-layout",
+        "os-linux",
+        "screen-desktop-wide",
+        "device-desktop"
+      ],
+      "repeat_group_size": 3,
+      "within_repeated_structure": true,
+      "rect": {
+        "x": 171.89,
+        "y": 102,
+        "width": 56,
+        "height": 20
+      },
+      "within_navigation": true,
+      "within_web_navigation": true,
+      "within_pagination": false,
+      "within_breadcrumb": true,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": false,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > nav",
+          "tag": "nav",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section",
+          "tag": "section",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main",
+          "tag": "main",
+          "repeat_group_size": 0
+        }
+      ],
+      "href": "https://example.test/other/60/",
+      "text": "内容"
+    },
+    {
+      "selector": "html > body > div:nth-of-type(1) > div > main > section > nav > span:nth-of-type(2)",
+      "parent_selector": "html > body > div:nth-of-type(1) > div > main > section > nav",
+      "tag": "span",
+      "role": null,
+      "visible": true,
+      "interactive": false,
+      "class_tokens": [
+        "hg-breadcrumb__sep"
+      ],
+      "ancestor_class_tokens": [
+        "hg-breadcrumb",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body",
+        "base-layout",
+        "hg-layout",
+        "os-linux",
+        "screen-desktop-wide",
+        "device-desktop"
+      ],
+      "repeat_group_size": 3,
+      "within_repeated_structure": true,
+      "rect": {
+        "x": 235.89,
+        "y": 102,
+        "width": 3.89,
+        "height": 20
+      },
+      "within_navigation": true,
+      "within_web_navigation": true,
+      "within_pagination": false,
+      "within_breadcrumb": true,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": false,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > nav",
+          "tag": "nav",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section",
+          "tag": "section",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main",
+          "tag": "main",
+          "repeat_group_size": 0
+        }
+      ],
+      "text": "内容"
+    },
+    {
+      "selector": "html > body > div:nth-of-type(1) > div > main > section > nav > a:nth-of-type(3)",
+      "parent_selector": "html > body > div:nth-of-type(1) > div > main > section > nav",
+      "tag": "a",
+      "role": null,
+      "visible": true,
+      "interactive": true,
+      "class_tokens": [],
+      "ancestor_class_tokens": [
+        "hg-breadcrumb",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body",
+        "base-layout",
+        "hg-layout",
+        "os-linux",
+        "screen-desktop-wide",
+        "device-desktop"
+      ],
+      "repeat_group_size": 3,
+      "within_repeated_structure": true,
+      "rect": {
+        "x": 247.78,
+        "y": 102,
+        "width": 56,
+        "height": 20
+      },
+      "within_navigation": true,
+      "within_web_navigation": true,
+      "within_pagination": false,
+      "within_breadcrumb": true,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": false,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > nav",
+          "tag": "nav",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section",
+          "tag": "section",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main",
+          "tag": "main",
+          "repeat_group_size": 0
+        }
+      ],
+      "href": "https://example.test/other/62/",
+      "text": "内容"
+    },
+    {
+      "selector": "html > body > div:nth-of-type(1) > div > main > section > nav > span:nth-of-type(3)",
+      "parent_selector": "html > body > div:nth-of-type(1) > div > main > section > nav",
+      "tag": "span",
+      "role": null,
+      "visible": true,
+      "interactive": false,
+      "class_tokens": [
+        "hg-breadcrumb__sep"
+      ],
+      "ancestor_class_tokens": [
+        "hg-breadcrumb",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body",
+        "base-layout",
+        "hg-layout",
+        "os-linux",
+        "screen-desktop-wide",
+        "device-desktop"
+      ],
+      "repeat_group_size": 3,
+      "within_repeated_structure": true,
+      "rect": {
+        "x": 311.78,
+        "y": 102,
+        "width": 3.89,
+        "height": 20
+      },
+      "within_navigation": true,
+      "within_web_navigation": true,
+      "within_pagination": false,
+      "within_breadcrumb": true,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": false,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > nav",
+          "tag": "nav",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section",
+          "tag": "section",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main",
+          "tag": "main",
+          "repeat_group_size": 0
+        }
+      ],
+      "text": "内容"
+    },
+    {
+      "selector": "html > body > div:nth-of-type(1) > div > main > section > nav > span:nth-of-type(4)",
+      "parent_selector": "html > body > div:nth-of-type(1) > div > main > section > nav",
+      "tag": "span",
+      "role": null,
+      "visible": true,
+      "interactive": false,
+      "class_tokens": [
+        "hg-breadcrumb__current"
+      ],
+      "ancestor_class_tokens": [
+        "hg-breadcrumb",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body",
+        "base-layout",
+        "hg-layout",
+        "os-linux",
+        "screen-desktop-wide",
+        "device-desktop"
+      ],
+      "repeat_group_size": 0,
+      "within_repeated_structure": false,
+      "rect": {
+        "x": 323.67,
+        "y": 102,
+        "width": 1500.33,
+        "height": 20
+      },
+      "within_navigation": true,
+      "within_web_navigation": true,
+      "within_pagination": false,
+      "within_breadcrumb": true,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": false,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > nav",
+          "tag": "nav",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section",
+          "tag": "section",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main",
+          "tag": "main",
+          "repeat_group_size": 0
+        }
+      ],
+      "text": "内容"
+    },
+    {
+      "selector": "html > body > div:nth-of-type(1) > div > main > section > article > h1",
+      "parent_selector": "html > body > div:nth-of-type(1) > div > main > section > article",
+      "tag": "h1",
+      "role": null,
+      "visible": true,
+      "interactive": false,
+      "class_tokens": [
+        "hg-post-detail__title"
+      ],
+      "ancestor_class_tokens": [
+        "hg-post-detail__main",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body",
+        "base-layout",
+        "hg-layout",
+        "os-linux",
+        "screen-desktop-wide",
+        "device-desktop"
+      ],
+      "repeat_group_size": 0,
+      "within_repeated_structure": false,
+      "rect": {
+        "x": 415,
+        "y": 154,
+        "width": 1090,
+        "height": 112
+      },
+      "within_navigation": false,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": false,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article",
+          "tag": "article",
+          "repeat_group_size": 0
+        }
+      ],
+      "text": "文章标题"
+    },
+    {
+      "selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1)",
+      "parent_selector": "html > body > div:nth-of-type(1) > div > main > section > article",
+      "tag": "div",
+      "role": null,
+      "visible": true,
+      "interactive": false,
+      "class_tokens": [
+        "hg-post-detail__meta"
+      ],
+      "ancestor_class_tokens": [
+        "hg-post-detail__main",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body",
+        "base-layout",
+        "hg-layout",
+        "os-linux",
+        "screen-desktop-wide",
+        "device-desktop"
+      ],
+      "repeat_group_size": 0,
+      "within_repeated_structure": false,
+      "rect": {
+        "x": 415,
+        "y": 286,
+        "width": 1090,
+        "height": 38
+      },
+      "within_navigation": false,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": false,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article",
+          "tag": "article",
+          "repeat_group_size": 0
+        }
+      ],
+      "text": "内容"
+    },
+    {
+      "selector": "div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1) > a > span:nth-of-type(1)",
+      "parent_selector": "body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1) > a",
+      "tag": "span",
+      "role": null,
+      "visible": true,
+      "interactive": true,
+      "class_tokens": [
+        "pd-ava"
+      ],
+      "ancestor_class_tokens": [
+        "hg-post-detail__author",
+        "hg-post-detail__meta",
+        "hg-post-detail__main",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body",
+        "base-layout",
+        "hg-layout"
+      ],
+      "repeat_group_size": 0,
+      "within_repeated_structure": false,
+      "rect": {
+        "x": 415,
+        "y": 288,
+        "width": 34,
+        "height": 34
+      },
+      "within_navigation": false,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": false,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1) > a",
+          "tag": "a",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article",
+          "tag": "article",
+          "repeat_group_size": 0
+        }
+      ]
+    },
+    {
+      "selector": "div > main > section > article > div:nth-of-type(1) > a > span:nth-of-type(1) > img",
+      "parent_selector": "div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1) > a > span:nth-of-type(1)",
+      "tag": "img",
+      "role": null,
+      "visible": true,
+      "interactive": true,
+      "class_tokens": [],
+      "ancestor_class_tokens": [
+        "pd-ava",
+        "hg-post-detail__author",
+        "hg-post-detail__meta",
+        "hg-post-detail__main",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body"
+      ],
+      "repeat_group_size": 0,
+      "within_repeated_structure": false,
+      "rect": {
+        "x": 415,
+        "y": 288,
+        "width": 34,
+        "height": 34
+      },
+      "within_navigation": false,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": false,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1) > a > span:nth-of-type(1)",
+          "tag": "span",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1) > a",
+          "tag": "a",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article",
+          "tag": "article",
+          "repeat_group_size": 0
+        }
+      ],
+      "src": "https://example.test/media/68"
+    },
+    {
+      "selector": "div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1) > a > span:nth-of-type(2)",
+      "parent_selector": "body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1) > a",
+      "tag": "span",
+      "role": null,
+      "visible": true,
+      "interactive": true,
+      "class_tokens": [
+        "hg-post-detail__author-name"
+      ],
+      "ancestor_class_tokens": [
+        "hg-post-detail__author",
+        "hg-post-detail__meta",
+        "hg-post-detail__main",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body",
+        "base-layout",
+        "hg-layout"
+      ],
+      "repeat_group_size": 0,
+      "within_repeated_structure": false,
+      "rect": {
+        "x": 457,
+        "y": 295.25,
+        "width": 70,
+        "height": 19.5
+      },
+      "within_navigation": false,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": false,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1) > a",
+          "tag": "a",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article",
+          "tag": "article",
+          "repeat_group_size": 0
+        }
+      ],
+      "text": "内容"
+    },
+    {
+      "selector": "div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1) > a > span:nth-of-type(3)",
+      "parent_selector": "body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1) > a",
+      "tag": "span",
+      "role": null,
+      "visible": true,
+      "interactive": true,
+      "class_tokens": [
+        "hg-post-detail__dot"
+      ],
+      "ancestor_class_tokens": [
+        "hg-post-detail__author",
+        "hg-post-detail__meta",
+        "hg-post-detail__main",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body",
+        "base-layout",
+        "hg-layout"
+      ],
+      "repeat_group_size": 2,
+      "within_repeated_structure": true,
+      "rect": {
+        "x": 535,
+        "y": 295.25,
+        "width": 4.67,
+        "height": 19.5
+      },
+      "within_navigation": false,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": false,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1) > a",
+          "tag": "a",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article",
+          "tag": "article",
+          "repeat_group_size": 0
+        }
+      ],
+      "text": "内容"
+    },
+    {
+      "selector": "div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1) > a > span:nth-of-type(4)",
+      "parent_selector": "body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1) > a",
+      "tag": "span",
+      "role": null,
+      "visible": true,
+      "interactive": true,
+      "class_tokens": [],
+      "ancestor_class_tokens": [
+        "hg-post-detail__author",
+        "hg-post-detail__meta",
+        "hg-post-detail__main",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body",
+        "base-layout",
+        "hg-layout"
+      ],
+      "repeat_group_size": 2,
+      "within_repeated_structure": true,
+      "rect": {
+        "x": 547.67,
+        "y": 295.25,
+        "width": 71.63,
+        "height": 19.5
+      },
+      "within_navigation": false,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": false,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1) > a",
+          "tag": "a",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article",
+          "tag": "article",
+          "repeat_group_size": 0
+        }
+      ],
+      "text": "内容"
+    },
+    {
+      "selector": "div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1) > a > span:nth-of-type(5)",
+      "parent_selector": "body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1) > a",
+      "tag": "span",
+      "role": null,
+      "visible": true,
+      "interactive": true,
+      "class_tokens": [
+        "hg-post-detail__dot"
+      ],
+      "ancestor_class_tokens": [
+        "hg-post-detail__author",
+        "hg-post-detail__meta",
+        "hg-post-detail__main",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body",
+        "base-layout",
+        "hg-layout"
+      ],
+      "repeat_group_size": 2,
+      "within_repeated_structure": true,
+      "rect": {
+        "x": 627.3,
+        "y": 295.25,
+        "width": 4.67,
+        "height": 19.5
+      },
+      "within_navigation": false,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": false,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1) > a",
+          "tag": "a",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article",
+          "tag": "article",
+          "repeat_group_size": 0
+        }
+      ],
+      "text": "内容"
+    },
+    {
+      "selector": "div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1) > a > span:nth-of-type(6)",
+      "parent_selector": "body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1) > a",
+      "tag": "span",
+      "role": null,
+      "visible": true,
+      "interactive": true,
+      "class_tokens": [],
+      "ancestor_class_tokens": [
+        "hg-post-detail__author",
+        "hg-post-detail__meta",
+        "hg-post-detail__main",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body",
+        "base-layout",
+        "hg-layout"
+      ],
+      "repeat_group_size": 2,
+      "within_repeated_structure": true,
+      "rect": {
+        "x": 639.97,
+        "y": 295.25,
+        "width": 47.47,
+        "height": 19.5
+      },
+      "within_navigation": false,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": false,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1) > a",
+          "tag": "a",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article",
+          "tag": "article",
+          "repeat_group_size": 0
+        }
+      ],
+      "text": "内容"
+    },
+    {
+      "selector": "body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1) > button",
+      "parent_selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1)",
+      "tag": "button",
+      "role": null,
+      "visible": true,
+      "interactive": true,
+      "class_tokens": [
+        "hg-post-detail__follow"
+      ],
+      "ancestor_class_tokens": [
+        "hg-post-detail__meta",
+        "hg-post-detail__main",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body",
+        "base-layout",
+        "hg-layout",
+        "os-linux",
+        "screen-desktop-wide",
+        "device-desktop"
+      ],
+      "repeat_group_size": 0,
+      "within_repeated_structure": false,
+      "rect": {
+        "x": 707.44,
+        "y": 287,
+        "width": 74,
+        "height": 36
+      },
+      "within_navigation": false,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": false,
+      "aria_label": null,
+      "type": "button",
+      "web_ancestor_structure": [
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article",
+          "tag": "article",
+          "repeat_group_size": 0
+        }
+      ],
+      "text": "内容"
+    },
+    {
+      "selector": "body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1) > div",
+      "parent_selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1)",
+      "tag": "div",
+      "role": null,
+      "visible": true,
+      "interactive": false,
+      "class_tokens": [
+        "hg-post-detail__actions"
+      ],
+      "ancestor_class_tokens": [
+        "hg-post-detail__meta",
+        "hg-post-detail__main",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body",
+        "base-layout",
+        "hg-layout",
+        "os-linux",
+        "screen-desktop-wide",
+        "device-desktop"
+      ],
+      "repeat_group_size": 0,
+      "within_repeated_structure": false,
+      "rect": {
+        "x": 1171.84,
+        "y": 286,
+        "width": 333.16,
+        "height": 38
+      },
+      "within_navigation": false,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": false,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article",
+          "tag": "article",
+          "repeat_group_size": 0
+        }
+      ],
+      "text": "内容"
+    },
+    {
+      "selector": "div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1) > div > button:nth-of-type(1)",
+      "parent_selector": "body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1) > div",
+      "tag": "button",
+      "role": null,
+      "visible": true,
+      "interactive": true,
+      "class_tokens": [
+        "hg-post-detail__action"
+      ],
+      "ancestor_class_tokens": [
+        "hg-post-detail__actions",
+        "hg-post-detail__meta",
+        "hg-post-detail__main",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body",
+        "base-layout",
+        "hg-layout"
+      ],
+      "repeat_group_size": 3,
+      "within_repeated_structure": true,
+      "rect": {
+        "x": 1171.84,
+        "y": 286,
+        "width": 105.58,
+        "height": 38
+      },
+      "within_navigation": false,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": false,
+      "aria_label": "点赞",
+      "type": "button",
+      "web_ancestor_structure": [
+        {
+          "selector": "body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1) > div",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article",
+          "tag": "article",
+          "repeat_group_size": 0
+        }
+      ],
+      "text": "内容"
+    },
+    {
+      "selector": "div > main > section > article > div:nth-of-type(1) > div > button:nth-of-type(1) > span:nth-of-type(1)",
+      "parent_selector": "div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1) > div > button:nth-of-type(1)",
+      "tag": "span",
+      "role": null,
+      "visible": true,
+      "interactive": true,
+      "class_tokens": [],
+      "ancestor_class_tokens": [
+        "hg-post-detail__action",
+        "hg-post-detail__actions",
+        "hg-post-detail__meta",
+        "hg-post-detail__main",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body"
+      ],
+      "repeat_group_size": 3,
+      "within_repeated_structure": true,
+      "rect": {
+        "x": 1212.84,
+        "y": 294.5,
+        "width": 28,
+        "height": 21
+      },
+      "within_navigation": false,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": false,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1) > div > button:nth-of-type(1)",
+          "tag": "button",
+          "repeat_group_size": 3
+        },
+        {
+          "selector": "body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1) > div",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article",
+          "tag": "article",
+          "repeat_group_size": 0
+        }
+      ],
+      "text": "内容"
+    },
+    {
+      "selector": "div > main > section > article > div:nth-of-type(1) > div > button:nth-of-type(1) > span:nth-of-type(2)",
+      "parent_selector": "div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1) > div > button:nth-of-type(1)",
+      "tag": "span",
+      "role": null,
+      "visible": true,
+      "interactive": true,
+      "class_tokens": [
+        "num"
+      ],
+      "ancestor_class_tokens": [
+        "hg-post-detail__action",
+        "hg-post-detail__actions",
+        "hg-post-detail__meta",
+        "hg-post-detail__main",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body"
+      ],
+      "repeat_group_size": 3,
+      "within_repeated_structure": true,
+      "rect": {
+        "x": 1248.84,
+        "y": 294.5,
+        "width": 15.58,
+        "height": 21
+      },
+      "within_navigation": false,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": false,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1) > div > button:nth-of-type(1)",
+          "tag": "button",
+          "repeat_group_size": 3
+        },
+        {
+          "selector": "body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1) > div",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article",
+          "tag": "article",
+          "repeat_group_size": 0
+        }
+      ],
+      "text": "内容"
+    },
+    {
+      "selector": "div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1) > div > button:nth-of-type(2)",
+      "parent_selector": "body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1) > div",
+      "tag": "button",
+      "role": null,
+      "visible": true,
+      "interactive": true,
+      "class_tokens": [
+        "hg-post-detail__action"
+      ],
+      "ancestor_class_tokens": [
+        "hg-post-detail__actions",
+        "hg-post-detail__meta",
+        "hg-post-detail__main",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body",
+        "base-layout",
+        "hg-layout"
+      ],
+      "repeat_group_size": 3,
+      "within_repeated_structure": true,
+      "rect": {
+        "x": 1297.42,
+        "y": 286,
+        "width": 105.58,
+        "height": 38
+      },
+      "within_navigation": false,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": false,
+      "aria_label": null,
+      "type": "button",
+      "web_ancestor_structure": [
+        {
+          "selector": "body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1) > div",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article",
+          "tag": "article",
+          "repeat_group_size": 0
+        }
+      ],
+      "text": "内容"
+    },
+    {
+      "selector": "div > main > section > article > div:nth-of-type(1) > div > button:nth-of-type(2) > span:nth-of-type(1)",
+      "parent_selector": "div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1) > div > button:nth-of-type(2)",
+      "tag": "span",
+      "role": null,
+      "visible": true,
+      "interactive": true,
+      "class_tokens": [],
+      "ancestor_class_tokens": [
+        "hg-post-detail__action",
+        "hg-post-detail__actions",
+        "hg-post-detail__meta",
+        "hg-post-detail__main",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body"
+      ],
+      "repeat_group_size": 3,
+      "within_repeated_structure": true,
+      "rect": {
+        "x": 1338.42,
+        "y": 294.5,
+        "width": 28,
+        "height": 21
+      },
+      "within_navigation": false,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": false,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1) > div > button:nth-of-type(2)",
+          "tag": "button",
+          "repeat_group_size": 3
+        },
+        {
+          "selector": "body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1) > div",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article",
+          "tag": "article",
+          "repeat_group_size": 0
+        }
+      ],
+      "text": "内容"
+    },
+    {
+      "selector": "div > main > section > article > div:nth-of-type(1) > div > button:nth-of-type(2) > span:nth-of-type(2)",
+      "parent_selector": "div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1) > div > button:nth-of-type(2)",
+      "tag": "span",
+      "role": null,
+      "visible": true,
+      "interactive": true,
+      "class_tokens": [
+        "num"
+      ],
+      "ancestor_class_tokens": [
+        "hg-post-detail__action",
+        "hg-post-detail__actions",
+        "hg-post-detail__meta",
+        "hg-post-detail__main",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body"
+      ],
+      "repeat_group_size": 3,
+      "within_repeated_structure": true,
+      "rect": {
+        "x": 1374.42,
+        "y": 294.5,
+        "width": 15.58,
+        "height": 21
+      },
+      "within_navigation": false,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": false,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1) > div > button:nth-of-type(2)",
+          "tag": "button",
+          "repeat_group_size": 3
+        },
+        {
+          "selector": "body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1) > div",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article",
+          "tag": "article",
+          "repeat_group_size": 0
+        }
+      ],
+      "text": "内容"
+    },
+    {
+      "selector": "div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1) > div > button:nth-of-type(3)",
+      "parent_selector": "body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1) > div",
+      "tag": "button",
+      "role": null,
+      "visible": true,
+      "interactive": true,
+      "class_tokens": [
+        "hg-post-detail__action"
+      ],
+      "ancestor_class_tokens": [
+        "hg-post-detail__actions",
+        "hg-post-detail__meta",
+        "hg-post-detail__main",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body",
+        "base-layout",
+        "hg-layout"
+      ],
+      "repeat_group_size": 3,
+      "within_repeated_structure": true,
+      "rect": {
+        "x": 1423,
+        "y": 286,
+        "width": 82,
+        "height": 38
+      },
+      "within_navigation": false,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": false,
+      "aria_label": null,
+      "type": "button",
+      "web_ancestor_structure": [
+        {
+          "selector": "body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1) > div",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article",
+          "tag": "article",
+          "repeat_group_size": 0
+        }
+      ],
+      "text": "内容"
+    },
+    {
+      "selector": "div > main > section > article > div:nth-of-type(1) > div > button:nth-of-type(3) > img",
+      "parent_selector": "div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1) > div > button:nth-of-type(3)",
+      "tag": "img",
+      "role": null,
+      "visible": true,
+      "interactive": true,
+      "class_tokens": [],
+      "ancestor_class_tokens": [
+        "hg-post-detail__action",
+        "hg-post-detail__actions",
+        "hg-post-detail__meta",
+        "hg-post-detail__main",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body"
+      ],
+      "repeat_group_size": 3,
+      "within_repeated_structure": true,
+      "rect": {
+        "x": 1436,
+        "y": 295,
+        "width": 20,
+        "height": 20
+      },
+      "within_navigation": false,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": false,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1) > div > button:nth-of-type(3)",
+          "tag": "button",
+          "repeat_group_size": 3
+        },
+        {
+          "selector": "body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1) > div",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article",
+          "tag": "article",
+          "repeat_group_size": 0
+        }
+      ],
+      "src": "https://example.test/media/83"
+    },
+    {
+      "selector": "div > main > section > article > div:nth-of-type(1) > div > button:nth-of-type(3) > span",
+      "parent_selector": "div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1) > div > button:nth-of-type(3)",
+      "tag": "span",
+      "role": null,
+      "visible": true,
+      "interactive": true,
+      "class_tokens": [],
+      "ancestor_class_tokens": [
+        "hg-post-detail__action",
+        "hg-post-detail__actions",
+        "hg-post-detail__meta",
+        "hg-post-detail__main",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body"
+      ],
+      "repeat_group_size": 3,
+      "within_repeated_structure": true,
+      "rect": {
+        "x": 1464,
+        "y": 294.5,
+        "width": 28,
+        "height": 21
+      },
+      "within_navigation": false,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": false,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1) > div > button:nth-of-type(3)",
+          "tag": "button",
+          "repeat_group_size": 3
+        },
+        {
+          "selector": "body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1) > div",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(1)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article",
+          "tag": "article",
+          "repeat_group_size": 0
+        }
+      ],
+      "text": "内容"
+    },
+    {
+      "selector": "html > body > div:nth-of-type(1) > div > main > section > article > hr",
+      "parent_selector": "html > body > div:nth-of-type(1) > div > main > section > article",
+      "tag": "hr",
+      "role": null,
+      "visible": true,
+      "interactive": false,
+      "class_tokens": [
+        "hg-post-detail__rule"
+      ],
+      "ancestor_class_tokens": [
+        "hg-post-detail__main",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body",
+        "base-layout",
+        "hg-layout",
+        "os-linux",
+        "screen-desktop-wide",
+        "device-desktop"
+      ],
+      "repeat_group_size": 0,
+      "within_repeated_structure": false,
+      "rect": {
+        "x": 415,
+        "y": 344,
+        "width": 1090,
+        "height": 1
+      },
+      "within_navigation": false,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": false,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article",
+          "tag": "article",
+          "repeat_group_size": 0
+        }
+      ]
+    },
+    {
+      "selector": "body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(2) > img:nth-of-type(1)",
+      "parent_selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(2)",
+      "tag": "img",
+      "role": null,
+      "visible": true,
+      "interactive": false,
+      "class_tokens": [],
+      "ancestor_class_tokens": [
+        "hg-post-detail__body",
+        "article-body",
+        "hg-post-detail__main",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body",
+        "base-layout",
+        "hg-layout",
+        "os-linux",
+        "screen-desktop-wide",
+        "device-desktop"
+      ],
+      "repeat_group_size": 7,
+      "within_repeated_structure": true,
+      "rect": {
+        "x": 415,
+        "y": 485,
+        "width": 1090,
+        "height": 1600.94
+      },
+      "within_navigation": false,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": false,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(2)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article",
+          "tag": "article",
+          "repeat_group_size": 0
+        }
+      ],
+      "src": "https://example.test/media/86"
+    },
+    {
+      "selector": "body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(2) > img:nth-of-type(2)",
+      "parent_selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(2)",
+      "tag": "img",
+      "role": null,
+      "visible": true,
+      "interactive": false,
+      "class_tokens": [],
+      "ancestor_class_tokens": [
+        "hg-post-detail__body",
+        "article-body",
+        "hg-post-detail__main",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body",
+        "base-layout",
+        "hg-layout",
+        "os-linux",
+        "screen-desktop-wide",
+        "device-desktop"
+      ],
+      "repeat_group_size": 7,
+      "within_repeated_structure": true,
+      "rect": {
+        "x": 415,
+        "y": 2115.94,
+        "width": 1090,
+        "height": 1224.06
+      },
+      "within_navigation": false,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": false,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(2)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article",
+          "tag": "article",
+          "repeat_group_size": 0
+        }
+      ],
+      "src": "https://example.test/media/87"
+    },
+    {
+      "selector": "body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(2) > img:nth-of-type(3)",
+      "parent_selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(2)",
+      "tag": "img",
+      "role": null,
+      "visible": true,
+      "interactive": false,
+      "class_tokens": [],
+      "ancestor_class_tokens": [
+        "hg-post-detail__body",
+        "article-body",
+        "hg-post-detail__main",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body",
+        "base-layout",
+        "hg-layout",
+        "os-linux",
+        "screen-desktop-wide",
+        "device-desktop"
+      ],
+      "repeat_group_size": 7,
+      "within_repeated_structure": true,
+      "rect": {
+        "x": 415,
+        "y": 3370,
+        "width": 1090,
+        "height": 1224.06
+      },
+      "within_navigation": false,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": false,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(2)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article",
+          "tag": "article",
+          "repeat_group_size": 0
+        }
+      ],
+      "src": "https://example.test/media/88"
+    },
+    {
+      "selector": "body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(2) > h2:nth-of-type(1)",
+      "parent_selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(2)",
+      "tag": "h2",
+      "role": null,
+      "visible": true,
+      "interactive": false,
+      "class_tokens": [],
+      "ancestor_class_tokens": [
+        "hg-post-detail__body",
+        "article-body",
+        "hg-post-detail__main",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body",
+        "base-layout",
+        "hg-layout",
+        "os-linux",
+        "screen-desktop-wide",
+        "device-desktop"
+      ],
+      "repeat_group_size": 2,
+      "within_repeated_structure": true,
+      "rect": {
+        "x": 415,
+        "y": 4624.06,
+        "width": 1090,
+        "height": 36.39
+      },
+      "within_navigation": false,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": false,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(2)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article",
+          "tag": "article",
+          "repeat_group_size": 0
+        }
+      ],
+      "text": "内容"
+    },
+    {
+      "selector": "body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(2) > img:nth-of-type(4)",
+      "parent_selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(2)",
+      "tag": "img",
+      "role": null,
+      "visible": true,
+      "interactive": false,
+      "class_tokens": [],
+      "ancestor_class_tokens": [
+        "hg-post-detail__body",
+        "article-body",
+        "hg-post-detail__main",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body",
+        "base-layout",
+        "hg-layout",
+        "os-linux",
+        "screen-desktop-wide",
+        "device-desktop"
+      ],
+      "repeat_group_size": 7,
+      "within_repeated_structure": true,
+      "rect": {
+        "x": 415,
+        "y": 4780.45,
+        "width": 1090,
+        "height": 1224.06
+      },
+      "within_navigation": false,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": false,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(2)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article",
+          "tag": "article",
+          "repeat_group_size": 0
+        }
+      ],
+      "src": "https://example.test/media/90"
+    },
+    {
+      "selector": "body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(2) > img:nth-of-type(5)",
+      "parent_selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(2)",
+      "tag": "img",
+      "role": null,
+      "visible": true,
+      "interactive": false,
+      "class_tokens": [],
+      "ancestor_class_tokens": [
+        "hg-post-detail__body",
+        "article-body",
+        "hg-post-detail__main",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body",
+        "base-layout",
+        "hg-layout",
+        "os-linux",
+        "screen-desktop-wide",
+        "device-desktop"
+      ],
+      "repeat_group_size": 7,
+      "within_repeated_structure": true,
+      "rect": {
+        "x": 415,
+        "y": 6034.52,
+        "width": 1090,
+        "height": 1224.06
+      },
+      "within_navigation": false,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": false,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(2)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article",
+          "tag": "article",
+          "repeat_group_size": 0
+        }
+      ],
+      "src": "https://example.test/media/91"
+    },
+    {
+      "selector": "body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(2) > img:nth-of-type(6)",
+      "parent_selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(2)",
+      "tag": "img",
+      "role": null,
+      "visible": true,
+      "interactive": false,
+      "class_tokens": [],
+      "ancestor_class_tokens": [
+        "hg-post-detail__body",
+        "article-body",
+        "hg-post-detail__main",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body",
+        "base-layout",
+        "hg-layout",
+        "os-linux",
+        "screen-desktop-wide",
+        "device-desktop"
+      ],
+      "repeat_group_size": 7,
+      "within_repeated_structure": true,
+      "rect": {
+        "x": 415,
+        "y": 7288.58,
+        "width": 1090,
+        "height": 1224.06
+      },
+      "within_navigation": false,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": false,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(2)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article",
+          "tag": "article",
+          "repeat_group_size": 0
+        }
+      ],
+      "src": "https://example.test/media/92"
+    },
+    {
+      "selector": "body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(2) > img:nth-of-type(7)",
+      "parent_selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(2)",
+      "tag": "img",
+      "role": null,
+      "visible": true,
+      "interactive": false,
+      "class_tokens": [],
+      "ancestor_class_tokens": [
+        "hg-post-detail__body",
+        "article-body",
+        "hg-post-detail__main",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body",
+        "base-layout",
+        "hg-layout",
+        "os-linux",
+        "screen-desktop-wide",
+        "device-desktop"
+      ],
+      "repeat_group_size": 7,
+      "within_repeated_structure": true,
+      "rect": {
+        "x": 415,
+        "y": 8542.64,
+        "width": 1090,
+        "height": 1224.06
+      },
+      "within_navigation": false,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": false,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(2)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article",
+          "tag": "article",
+          "repeat_group_size": 0
+        }
+      ],
+      "src": "https://example.test/media/93"
+    },
+    {
+      "selector": "body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(2) > h2:nth-of-type(2)",
+      "parent_selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(2)",
+      "tag": "h2",
+      "role": null,
+      "visible": true,
+      "interactive": false,
+      "class_tokens": [],
+      "ancestor_class_tokens": [
+        "hg-post-detail__body",
+        "article-body",
+        "hg-post-detail__main",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body",
+        "base-layout",
+        "hg-layout",
+        "os-linux",
+        "screen-desktop-wide",
+        "device-desktop"
+      ],
+      "repeat_group_size": 2,
+      "within_repeated_structure": true,
+      "rect": {
+        "x": 415,
+        "y": 9796.7,
+        "width": 1090,
+        "height": 36.39
+      },
+      "within_navigation": false,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": false,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article > div:nth-of-type(2)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > article",
+          "tag": "article",
+          "repeat_group_size": 0
+        }
+      ],
+      "text": "内容"
+    },
+    {
+      "selector": "div > main > section > div:nth-of-type(2) > div:nth-of-type(2) > a:nth-of-type(2) > div:nth-of-type(2) > p",
+      "parent_selector": "div:nth-of-type(1) > div > main > section > div:nth-of-type(2) > div:nth-of-type(2) > a:nth-of-type(2) > div:nth-of-type(2)",
+      "tag": "p",
+      "role": null,
+      "visible": true,
+      "interactive": true,
+      "class_tokens": [
+        "hg-post-detail__rel-cat"
+      ],
+      "ancestor_class_tokens": [
+        "hg-post-detail__rel-body",
+        "hg-post-detail__rel-card",
+        "hg-post-detail__related-grid",
+        "hg-post-detail__related",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body"
+      ],
+      "repeat_group_size": 3,
+      "within_repeated_structure": true,
+      "text_length": 4,
+      "rect": {
+        "x": 694.33,
+        "y": 11603.38,
+        "width": 531.33,
+        "height": 24
+      },
+      "within_navigation": false,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": false,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "div:nth-of-type(1) > div > main > section > div:nth-of-type(2) > div:nth-of-type(2) > a:nth-of-type(2) > div:nth-of-type(2)",
+          "tag": "div",
+          "repeat_group_size": 3
+        },
+        {
+          "selector": "body > div:nth-of-type(1) > div > main > section > div:nth-of-type(2) > div:nth-of-type(2) > a:nth-of-type(2)",
+          "tag": "a",
+          "repeat_group_size": 3
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > div:nth-of-type(2) > div:nth-of-type(2)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > div:nth-of-type(2)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section",
+          "tag": "section",
+          "repeat_group_size": 0
+        }
+      ],
+      "text": "正文"
+    },
+    {
+      "selector": "div > main > section > div:nth-of-type(2) > div:nth-of-type(2) > a:nth-of-type(2) > div:nth-of-type(2) > h3",
+      "parent_selector": "div:nth-of-type(1) > div > main > section > div:nth-of-type(2) > div:nth-of-type(2) > a:nth-of-type(2) > div:nth-of-type(2)",
+      "tag": "h3",
+      "role": null,
+      "visible": true,
+      "interactive": true,
+      "class_tokens": [],
+      "ancestor_class_tokens": [
+        "hg-post-detail__rel-body",
+        "hg-post-detail__rel-card",
+        "hg-post-detail__related-grid",
+        "hg-post-detail__related",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body"
+      ],
+      "repeat_group_size": 3,
+      "within_repeated_structure": true,
+      "rect": {
+        "x": 694.33,
+        "y": 11633.38,
+        "width": 531.33,
+        "height": 24
+      },
+      "within_navigation": false,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": false,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "div:nth-of-type(1) > div > main > section > div:nth-of-type(2) > div:nth-of-type(2) > a:nth-of-type(2) > div:nth-of-type(2)",
+          "tag": "div",
+          "repeat_group_size": 3
+        },
+        {
+          "selector": "body > div:nth-of-type(1) > div > main > section > div:nth-of-type(2) > div:nth-of-type(2) > a:nth-of-type(2)",
+          "tag": "a",
+          "repeat_group_size": 3
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > div:nth-of-type(2) > div:nth-of-type(2)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > div:nth-of-type(2)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section",
+          "tag": "section",
+          "repeat_group_size": 0
+        }
+      ],
+      "text": "相关推荐"
+    },
+    {
+      "selector": "div > main > section > div:nth-of-type(2) > div:nth-of-type(2) > a:nth-of-type(2) > div:nth-of-type(2) > div",
+      "parent_selector": "div:nth-of-type(1) > div > main > section > div:nth-of-type(2) > div:nth-of-type(2) > a:nth-of-type(2) > div:nth-of-type(2)",
+      "tag": "div",
+      "role": null,
+      "visible": true,
+      "interactive": true,
+      "class_tokens": [
+        "hg-post-detail__rel-meta"
+      ],
+      "ancestor_class_tokens": [
+        "hg-post-detail__rel-body",
+        "hg-post-detail__rel-card",
+        "hg-post-detail__related-grid",
+        "hg-post-detail__related",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body"
+      ],
+      "repeat_group_size": 3,
+      "within_repeated_structure": true,
+      "rect": {
+        "x": 694.33,
+        "y": 11663.38,
+        "width": 531.33,
+        "height": 18
+      },
+      "within_navigation": false,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": false,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "div:nth-of-type(1) > div > main > section > div:nth-of-type(2) > div:nth-of-type(2) > a:nth-of-type(2) > div:nth-of-type(2)",
+          "tag": "div",
+          "repeat_group_size": 3
+        },
+        {
+          "selector": "body > div:nth-of-type(1) > div > main > section > div:nth-of-type(2) > div:nth-of-type(2) > a:nth-of-type(2)",
+          "tag": "a",
+          "repeat_group_size": 3
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > div:nth-of-type(2) > div:nth-of-type(2)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > div:nth-of-type(2)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section",
+          "tag": "section",
+          "repeat_group_size": 0
+        }
+      ],
+      "text": "内容"
+    },
+    {
+      "selector": "main > section > div:nth-of-type(2) > div:nth-of-type(2) > a:nth-of-type(2) > div:nth-of-type(2) > div > span:nth-of-type(1)",
+      "parent_selector": "div > main > section > div:nth-of-type(2) > div:nth-of-type(2) > a:nth-of-type(2) > div:nth-of-type(2) > div",
+      "tag": "span",
+      "role": null,
+      "visible": true,
+      "interactive": true,
+      "class_tokens": [],
+      "ancestor_class_tokens": [
+        "hg-post-detail__rel-meta",
+        "hg-post-detail__rel-body",
+        "hg-post-detail__rel-card",
+        "hg-post-detail__related-grid",
+        "hg-post-detail__related",
+        "hg-post-detail",
+        "main",
+        "hg-main"
+      ],
+      "repeat_group_size": 2,
+      "within_repeated_structure": true,
+      "rect": {
+        "x": 694.33,
+        "y": 11663.38,
+        "width": 66.5,
+        "height": 18
+      },
+      "within_navigation": false,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": false,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "div > main > section > div:nth-of-type(2) > div:nth-of-type(2) > a:nth-of-type(2) > div:nth-of-type(2) > div",
+          "tag": "div",
+          "repeat_group_size": 3
+        },
+        {
+          "selector": "div:nth-of-type(1) > div > main > section > div:nth-of-type(2) > div:nth-of-type(2) > a:nth-of-type(2) > div:nth-of-type(2)",
+          "tag": "div",
+          "repeat_group_size": 3
+        },
+        {
+          "selector": "body > div:nth-of-type(1) > div > main > section > div:nth-of-type(2) > div:nth-of-type(2) > a:nth-of-type(2)",
+          "tag": "a",
+          "repeat_group_size": 3
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > div:nth-of-type(2) > div:nth-of-type(2)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > div:nth-of-type(2)",
+          "tag": "div",
+          "repeat_group_size": 0
+        }
+      ],
+      "text": "内容"
+    },
+    {
+      "selector": "main > section > div:nth-of-type(2) > div:nth-of-type(2) > a:nth-of-type(2) > div:nth-of-type(2) > div > span:nth-of-type(2)",
+      "parent_selector": "div > main > section > div:nth-of-type(2) > div:nth-of-type(2) > a:nth-of-type(2) > div:nth-of-type(2) > div",
+      "tag": "span",
+      "role": null,
+      "visible": true,
+      "interactive": true,
+      "class_tokens": [],
+      "ancestor_class_tokens": [
+        "hg-post-detail__rel-meta",
+        "hg-post-detail__rel-body",
+        "hg-post-detail__rel-card",
+        "hg-post-detail__related-grid",
+        "hg-post-detail__related",
+        "hg-post-detail",
+        "main",
+        "hg-main"
+      ],
+      "repeat_group_size": 2,
+      "within_repeated_structure": true,
+      "rect": {
+        "x": 1162.06,
+        "y": 11663.38,
+        "width": 63.59,
+        "height": 18
+      },
+      "within_navigation": false,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": false,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "div > main > section > div:nth-of-type(2) > div:nth-of-type(2) > a:nth-of-type(2) > div:nth-of-type(2) > div",
+          "tag": "div",
+          "repeat_group_size": 3
+        },
+        {
+          "selector": "div:nth-of-type(1) > div > main > section > div:nth-of-type(2) > div:nth-of-type(2) > a:nth-of-type(2) > div:nth-of-type(2)",
+          "tag": "div",
+          "repeat_group_size": 3
+        },
+        {
+          "selector": "body > div:nth-of-type(1) > div > main > section > div:nth-of-type(2) > div:nth-of-type(2) > a:nth-of-type(2)",
+          "tag": "a",
+          "repeat_group_size": 3
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > div:nth-of-type(2) > div:nth-of-type(2)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > div:nth-of-type(2)",
+          "tag": "div",
+          "repeat_group_size": 0
+        }
+      ],
+      "text": "内容"
+    },
+    {
+      "selector": "div:nth-of-type(1) > div > main > section > div:nth-of-type(2) > div:nth-of-type(2) > a:nth-of-type(3) > div:nth-of-type(1)",
+      "parent_selector": "body > div:nth-of-type(1) > div > main > section > div:nth-of-type(2) > div:nth-of-type(2) > a:nth-of-type(3)",
+      "tag": "div",
+      "role": null,
+      "visible": true,
+      "interactive": true,
+      "class_tokens": [
+        "hg-post-detail__rel-cover"
+      ],
+      "ancestor_class_tokens": [
+        "hg-post-detail__rel-card",
+        "hg-post-detail__related-grid",
+        "hg-post-detail__related",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body",
+        "base-layout",
+        "hg-layout"
+      ],
+      "repeat_group_size": 3,
+      "within_repeated_structure": true,
+      "rect": {
+        "x": 1275.66,
+        "y": 11325.72,
+        "width": 531.33,
+        "height": 265.66
+      },
+      "within_navigation": false,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": false,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "body > div:nth-of-type(1) > div > main > section > div:nth-of-type(2) > div:nth-of-type(2) > a:nth-of-type(3)",
+          "tag": "a",
+          "repeat_group_size": 3
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > div:nth-of-type(2) > div:nth-of-type(2)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > div:nth-of-type(2)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section",
+          "tag": "section",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main",
+          "tag": "main",
+          "repeat_group_size": 0
+        }
+      ],
+      "text": "内容"
+    },
+    {
+      "selector": "div > main > section > div:nth-of-type(2) > div:nth-of-type(2) > a:nth-of-type(3) > div:nth-of-type(1) > span",
+      "parent_selector": "div:nth-of-type(1) > div > main > section > div:nth-of-type(2) > div:nth-of-type(2) > a:nth-of-type(3) > div:nth-of-type(1)",
+      "tag": "span",
+      "role": null,
+      "visible": true,
+      "interactive": true,
+      "class_tokens": [
+        "hg-post-detail__rel-badge"
+      ],
+      "ancestor_class_tokens": [
+        "hg-post-detail__rel-cover",
+        "hg-post-detail__rel-card",
+        "hg-post-detail__related-grid",
+        "hg-post-detail__related",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body"
+      ],
+      "repeat_group_size": 3,
+      "within_repeated_structure": true,
+      "rect": {
+        "x": 1275.66,
+        "y": 11325.72,
+        "width": 72,
+        "height": 23
+      },
+      "within_navigation": false,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": false,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "div:nth-of-type(1) > div > main > section > div:nth-of-type(2) > div:nth-of-type(2) > a:nth-of-type(3) > div:nth-of-type(1)",
+          "tag": "div",
+          "repeat_group_size": 3
+        },
+        {
+          "selector": "body > div:nth-of-type(1) > div > main > section > div:nth-of-type(2) > div:nth-of-type(2) > a:nth-of-type(3)",
+          "tag": "a",
+          "repeat_group_size": 3
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > div:nth-of-type(2) > div:nth-of-type(2)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > div:nth-of-type(2)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section",
+          "tag": "section",
+          "repeat_group_size": 0
+        }
+      ],
+      "text": "内容"
+    },
+    {
+      "selector": "div:nth-of-type(1) > div > main > section > div:nth-of-type(2) > div:nth-of-type(2) > a:nth-of-type(3) > div:nth-of-type(2)",
+      "parent_selector": "body > div:nth-of-type(1) > div > main > section > div:nth-of-type(2) > div:nth-of-type(2) > a:nth-of-type(3)",
+      "tag": "div",
+      "role": null,
+      "visible": true,
+      "interactive": true,
+      "class_tokens": [
+        "hg-post-detail__rel-body"
+      ],
+      "ancestor_class_tokens": [
+        "hg-post-detail__rel-card",
+        "hg-post-detail__related-grid",
+        "hg-post-detail__related",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body",
+        "base-layout",
+        "hg-layout"
+      ],
+      "repeat_group_size": 3,
+      "within_repeated_structure": true,
+      "rect": {
+        "x": 1275.66,
+        "y": 11603.38,
+        "width": 531.33,
+        "height": 78
+      },
+      "within_navigation": false,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": false,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "body > div:nth-of-type(1) > div > main > section > div:nth-of-type(2) > div:nth-of-type(2) > a:nth-of-type(3)",
+          "tag": "a",
+          "repeat_group_size": 3
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > div:nth-of-type(2) > div:nth-of-type(2)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > div:nth-of-type(2)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section",
+          "tag": "section",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main",
+          "tag": "main",
+          "repeat_group_size": 0
+        }
+      ],
+      "text": "内容"
+    },
+    {
+      "selector": "div > main > section > div:nth-of-type(2) > div:nth-of-type(2) > a:nth-of-type(3) > div:nth-of-type(2) > p",
+      "parent_selector": "div:nth-of-type(1) > div > main > section > div:nth-of-type(2) > div:nth-of-type(2) > a:nth-of-type(3) > div:nth-of-type(2)",
+      "tag": "p",
+      "role": null,
+      "visible": true,
+      "interactive": true,
+      "class_tokens": [
+        "hg-post-detail__rel-cat"
+      ],
+      "ancestor_class_tokens": [
+        "hg-post-detail__rel-body",
+        "hg-post-detail__rel-card",
+        "hg-post-detail__related-grid",
+        "hg-post-detail__related",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body"
+      ],
+      "repeat_group_size": 3,
+      "within_repeated_structure": true,
+      "text_length": 4,
+      "rect": {
+        "x": 1275.66,
+        "y": 11603.38,
+        "width": 531.33,
+        "height": 24
+      },
+      "within_navigation": false,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": false,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "div:nth-of-type(1) > div > main > section > div:nth-of-type(2) > div:nth-of-type(2) > a:nth-of-type(3) > div:nth-of-type(2)",
+          "tag": "div",
+          "repeat_group_size": 3
+        },
+        {
+          "selector": "body > div:nth-of-type(1) > div > main > section > div:nth-of-type(2) > div:nth-of-type(2) > a:nth-of-type(3)",
+          "tag": "a",
+          "repeat_group_size": 3
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > div:nth-of-type(2) > div:nth-of-type(2)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > div:nth-of-type(2)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section",
+          "tag": "section",
+          "repeat_group_size": 0
+        }
+      ],
+      "text": "正文"
+    },
+    {
+      "selector": "div > main > section > div:nth-of-type(2) > div:nth-of-type(2) > a:nth-of-type(3) > div:nth-of-type(2) > h3",
+      "parent_selector": "div:nth-of-type(1) > div > main > section > div:nth-of-type(2) > div:nth-of-type(2) > a:nth-of-type(3) > div:nth-of-type(2)",
+      "tag": "h3",
+      "role": null,
+      "visible": true,
+      "interactive": true,
+      "class_tokens": [],
+      "ancestor_class_tokens": [
+        "hg-post-detail__rel-body",
+        "hg-post-detail__rel-card",
+        "hg-post-detail__related-grid",
+        "hg-post-detail__related",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body"
+      ],
+      "repeat_group_size": 3,
+      "within_repeated_structure": true,
+      "rect": {
+        "x": 1275.66,
+        "y": 11633.38,
+        "width": 531.33,
+        "height": 24
+      },
+      "within_navigation": false,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": false,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "div:nth-of-type(1) > div > main > section > div:nth-of-type(2) > div:nth-of-type(2) > a:nth-of-type(3) > div:nth-of-type(2)",
+          "tag": "div",
+          "repeat_group_size": 3
+        },
+        {
+          "selector": "body > div:nth-of-type(1) > div > main > section > div:nth-of-type(2) > div:nth-of-type(2) > a:nth-of-type(3)",
+          "tag": "a",
+          "repeat_group_size": 3
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > div:nth-of-type(2) > div:nth-of-type(2)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > div:nth-of-type(2)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section",
+          "tag": "section",
+          "repeat_group_size": 0
+        }
+      ],
+      "text": "相关推荐"
+    },
+    {
+      "selector": "div > main > section > div:nth-of-type(2) > div:nth-of-type(2) > a:nth-of-type(3) > div:nth-of-type(2) > div",
+      "parent_selector": "div:nth-of-type(1) > div > main > section > div:nth-of-type(2) > div:nth-of-type(2) > a:nth-of-type(3) > div:nth-of-type(2)",
+      "tag": "div",
+      "role": null,
+      "visible": true,
+      "interactive": true,
+      "class_tokens": [
+        "hg-post-detail__rel-meta"
+      ],
+      "ancestor_class_tokens": [
+        "hg-post-detail__rel-body",
+        "hg-post-detail__rel-card",
+        "hg-post-detail__related-grid",
+        "hg-post-detail__related",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body"
+      ],
+      "repeat_group_size": 3,
+      "within_repeated_structure": true,
+      "rect": {
+        "x": 1275.66,
+        "y": 11663.38,
+        "width": 531.33,
+        "height": 18
+      },
+      "within_navigation": false,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": false,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "div:nth-of-type(1) > div > main > section > div:nth-of-type(2) > div:nth-of-type(2) > a:nth-of-type(3) > div:nth-of-type(2)",
+          "tag": "div",
+          "repeat_group_size": 3
+        },
+        {
+          "selector": "body > div:nth-of-type(1) > div > main > section > div:nth-of-type(2) > div:nth-of-type(2) > a:nth-of-type(3)",
+          "tag": "a",
+          "repeat_group_size": 3
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > div:nth-of-type(2) > div:nth-of-type(2)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > div:nth-of-type(2)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section",
+          "tag": "section",
+          "repeat_group_size": 0
+        }
+      ],
+      "text": "内容"
+    },
+    {
+      "selector": "main > section > div:nth-of-type(2) > div:nth-of-type(2) > a:nth-of-type(3) > div:nth-of-type(2) > div > span:nth-of-type(1)",
+      "parent_selector": "div > main > section > div:nth-of-type(2) > div:nth-of-type(2) > a:nth-of-type(3) > div:nth-of-type(2) > div",
+      "tag": "span",
+      "role": null,
+      "visible": true,
+      "interactive": true,
+      "class_tokens": [],
+      "ancestor_class_tokens": [
+        "hg-post-detail__rel-meta",
+        "hg-post-detail__rel-body",
+        "hg-post-detail__rel-card",
+        "hg-post-detail__related-grid",
+        "hg-post-detail__related",
+        "hg-post-detail",
+        "main",
+        "hg-main"
+      ],
+      "repeat_group_size": 2,
+      "within_repeated_structure": true,
+      "rect": {
+        "x": 1275.66,
+        "y": 11663.38,
+        "width": 66.5,
+        "height": 18
+      },
+      "within_navigation": false,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": false,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "div > main > section > div:nth-of-type(2) > div:nth-of-type(2) > a:nth-of-type(3) > div:nth-of-type(2) > div",
+          "tag": "div",
+          "repeat_group_size": 3
+        },
+        {
+          "selector": "div:nth-of-type(1) > div > main > section > div:nth-of-type(2) > div:nth-of-type(2) > a:nth-of-type(3) > div:nth-of-type(2)",
+          "tag": "div",
+          "repeat_group_size": 3
+        },
+        {
+          "selector": "body > div:nth-of-type(1) > div > main > section > div:nth-of-type(2) > div:nth-of-type(2) > a:nth-of-type(3)",
+          "tag": "a",
+          "repeat_group_size": 3
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > div:nth-of-type(2) > div:nth-of-type(2)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > div:nth-of-type(2)",
+          "tag": "div",
+          "repeat_group_size": 0
+        }
+      ],
+      "text": "内容"
+    },
+    {
+      "selector": "main > section > div:nth-of-type(2) > div:nth-of-type(2) > a:nth-of-type(3) > div:nth-of-type(2) > div > span:nth-of-type(2)",
+      "parent_selector": "div > main > section > div:nth-of-type(2) > div:nth-of-type(2) > a:nth-of-type(3) > div:nth-of-type(2) > div",
+      "tag": "span",
+      "role": null,
+      "visible": true,
+      "interactive": true,
+      "class_tokens": [],
+      "ancestor_class_tokens": [
+        "hg-post-detail__rel-meta",
+        "hg-post-detail__rel-body",
+        "hg-post-detail__rel-card",
+        "hg-post-detail__related-grid",
+        "hg-post-detail__related",
+        "hg-post-detail",
+        "main",
+        "hg-main"
+      ],
+      "repeat_group_size": 2,
+      "within_repeated_structure": true,
+      "rect": {
+        "x": 1743.39,
+        "y": 11663.38,
+        "width": 63.59,
+        "height": 18
+      },
+      "within_navigation": false,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": false,
+      "aria_label": null,
+      "type": null,
+      "web_ancestor_structure": [
+        {
+          "selector": "div > main > section > div:nth-of-type(2) > div:nth-of-type(2) > a:nth-of-type(3) > div:nth-of-type(2) > div",
+          "tag": "div",
+          "repeat_group_size": 3
+        },
+        {
+          "selector": "div:nth-of-type(1) > div > main > section > div:nth-of-type(2) > div:nth-of-type(2) > a:nth-of-type(3) > div:nth-of-type(2)",
+          "tag": "div",
+          "repeat_group_size": 3
+        },
+        {
+          "selector": "body > div:nth-of-type(1) > div > main > section > div:nth-of-type(2) > div:nth-of-type(2) > a:nth-of-type(3)",
+          "tag": "a",
+          "repeat_group_size": 3
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > div:nth-of-type(2) > div:nth-of-type(2)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > div:nth-of-type(2)",
+          "tag": "div",
+          "repeat_group_size": 0
+        }
+      ],
+      "text": "内容"
+    },
+    {
+      "selector": "body > div:nth-of-type(1) > div > main > section > div:nth-of-type(3) > div:nth-of-type(2) > button",
+      "parent_selector": "html > body > div:nth-of-type(1) > div > main > section > div:nth-of-type(3) > div:nth-of-type(2)",
+      "tag": "button",
+      "role": null,
+      "visible": true,
+      "interactive": true,
+      "class_tokens": [
+        "hg-post-detail__submit"
+      ],
+      "ancestor_class_tokens": [
+        "hg-post-detail__composer",
+        "hg-post-detail__comments",
+        "hg-post-detail",
+        "main",
+        "hg-main",
+        "hg-body",
+        "base-layout",
+        "hg-layout",
+        "os-linux",
+        "screen-desktop-wide",
+        "device-desktop"
+      ],
+      "repeat_group_size": 0,
+      "within_repeated_structure": false,
+      "rect": {
+        "x": 1674,
+        "y": 11986.88,
+        "width": 150,
+        "height": 48
+      },
+      "within_navigation": false,
+      "within_web_navigation": false,
+      "within_pagination": false,
+      "within_breadcrumb": false,
+      "within_footer": false,
+      "is_advertisement": false,
+      "web_detail_priority_candidate": false,
+      "aria_label": null,
+      "type": "button",
+      "web_ancestor_structure": [
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > div:nth-of-type(3) > div:nth-of-type(2)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section > div:nth-of-type(3)",
+          "tag": "div",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main > section",
+          "tag": "section",
+          "repeat_group_size": 0
+        },
+        {
+          "selector": "html > body > div:nth-of-type(1) > div > main",
+          "tag": "main",
+          "repeat_group_size": 0
+        }
+      ],
+      "text": "内容"
+    }
+  ]
+}

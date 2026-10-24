@@ -1,0 +1,152 @@
+[
+  {
+    "file": "combined-final-tests.log",
+    "bytes": 2596,
+    "sha256": "4f5e702fafdd1446fce4a826877a9f4fdfe3978b258a6ae98d00dedecce4559a"
+  },
+  {
+    "file": "combined-final-tests.xml",
+    "bytes": 124334,
+    "sha256": "48d9c51a5744c76c436fb1d47f249726c51a27b58013f2ca53010aa9998ceadc"
+  },
+  {
+    "file": "combined-first-role-guard.log",
+    "bytes": 39700,
+    "sha256": "cb0fa7762ceb6750b5f37cc79fee028f86fecd0fee471a12222876dd5cf79fda"
+  },
+  {
+    "file": "combined-first-role-guard.xml",
+    "bytes": 159439,
+    "sha256": "630a0a08188f8816b87ba99b2c559f117b98f821e500c243c6aa165c5326f106"
+  },
+  {
+    "file": "environment-and-cleanup.json",
+    "bytes": 3580,
+    "sha256": "c7f93cddf11d236bfbe3c41c5d6748ff26e4fb567b679d52e1a9acae570b145f"
+  },
+  {
+    "file": "green-aggregate-postgres-first.log",
+    "bytes": 11921,
+    "sha256": "e062724034bb3a7ea2cc078cc73d150f67df17c8040875cb7b4581adb0dfde75"
+  },
+  {
+    "file": "green-aggregate-postgres-second.log",
+    "bytes": 11311,
+    "sha256": "db384ea1f2d08b4fef637f57e3e1f2e88d0d5bcdbbeba1ad60849298d228da98"
+  },
+  {
+    "file": "green-aggregate-postgres-third.log",
+    "bytes": 814,
+    "sha256": "3a3e89c40d22abacdddee89119afcb7237969c03380d4ea24a2f4b956b09d392"
+  },
+  {
+    "file": "green-evidence-components-final.log",
+    "bytes": 815,
+    "sha256": "b18f6ff590fd340249fafdb0f3235706055f672f759c2de18dc46ee3c9a5ec32"
+  },
+  {
+    "file": "green-evidence-module-regression.log",
+    "bytes": 815,
+    "sha256": "e9e7fb3fc6e07e32e99f0d659e21f27362112df879a36957741c204552ef6581"
+  },
+  {
+    "file": "green-evidence-reader-boundaries.json",
+    "bytes": 2701,
+    "sha256": "f9c89131acdb43603d7af6eda335039fc741901fab1c5c5e882ef6b908670f92"
+  },
+  {
+    "file": "green-publication-postgres-first.log",
+    "bytes": 2664,
+    "sha256": "ed04af4b0b2c6aa226f76e4e12c7738c8b21db50ad34cb982ef1a8bd223df673"
+  },
+  {
+    "file": "green-publication-postgres-second.log",
+    "bytes": 814,
+    "sha256": "ae940217f6bf770321eddd225ff91bda84d89b60b18232b019d7ee9f160c2b71"
+  },
+  {
+    "file": "green-web-freeze-regression.log",
+    "bytes": 814,
+    "sha256": "5f443fa11887659764ec8a78732a818c277c988da161f8951294087eb10da6b5"
+  },
+  {
+    "file": "legacy-baseline.log",
+    "bytes": 1455,
+    "sha256": "4aa8682522875b8566a88e70dcb34e57da6ba9fca8f8df6be1cfe5649a7181b8"
+  },
+  {
+    "file": "legacy-new-expectations-before.log",
+    "bytes": 831,
+    "sha256": "f1347a6170c0e3e76adafc4b4be34fb3333d7b383166be5c305272d4c5fc76b6"
+  },
+  {
+    "file": "legacy-postgres-initial-failure-summary.json",
+    "bytes": 794,
+    "sha256": "2b5753c97fe8665857911e2ccef66eaebe168247a57caa68fb6a1234a26cd560"
+  },
+  {
+    "file": "legacy-postgres-regression-final.log",
+    "bytes": 826,
+    "sha256": "0047cf97b188ce55e70ec8f39ca0a83950e91b26865830249136c80f1369c766"
+  },
+  {
+    "file": "legacy-postgres-regression.log",
+    "bytes": 816,
+    "sha256": "988819241512046e85ce3ed9e3dc7f2afd3737f8a5d575516d062a52fef8ee2f"
+  },
+  {
+    "file": "legacy-postgres-verification.json",
+    "bytes": 868,
+    "sha256": "4e01139a2c93e7bcaa2d056e18f639325ba8153e04d9cea3733ae3edac5879e7"
+  },
+  {
+    "file": "legacy-regression-final.log",
+    "bytes": 2306,
+    "sha256": "b58d72d24f2ca4790c23addbe68b46b328aa207c94e6a8932437bd0cb4a7b024"
+  },
+  {
+    "file": "legacy-regression-summary.json",
+    "bytes": 1705,
+    "sha256": "d3933c8e91755be4da963c5c7d01cef278b0aaf6a7f425bf192d48ef6b19c720"
+  },
+  {
+    "file": "legacy-regression.log",
+    "bytes": 2306,
+    "sha256": "3be2e6c8c07f10cd9934d95b542b382fb92f905aab816c1387b5a82e852fc98f"
+  },
+  {
+    "file": "legacy-source-integrity.json",
+    "bytes": 3616,
+    "sha256": "3ed01855fa05f99cce690e96739657517607297563f7277d69e33d08487556fb"
+  },
+  {
+    "file": "legacy-specialized-regression.log",
+    "bytes": 815,
+    "sha256": "52fbd9a16b5a010641c344f6986defbb0a4b561553ae618bf19528a935311d1a"
+  },
+  {
+    "file": "legacy-test-files.json",
+    "bytes": 1676,
+    "sha256": "f1656255fe50d9d40bbd3e685015b12efa1cd21d91c6ead54c676f1313c2f760"
+  },
+  {
+    "file": "ruleset-v4-preview.json",
+    "bytes": 181938,
+    "sha256": "51c225335efff1814e7aa4fe145287a26ffd45ddb653f559d3dc92e4e707da17"
+  },
+  {
+    "file": "source-sha256.json",
+    "bytes": 5390,
+    "sha256": "7877d4ab34ce3819cf9a822e53aac31a90d6cef4eb9eb44cf964b88a4787e54d"
+  },
+  {
+    "file": "verification-summary.json",
+    "bytes": 1327,
+    "sha256": "683fb4e353c08f540a5d9e0257138896c91d494c2d304f76b2738bc6edad51e2"
+  },
+  {
+    "file": "verification-test-files.json",
+    "bytes": 2827,
+    "sha256": "4f8a014407cd021c729a59c531e51c5433f81a9c7205f77892462324084be544"
+  }
+]

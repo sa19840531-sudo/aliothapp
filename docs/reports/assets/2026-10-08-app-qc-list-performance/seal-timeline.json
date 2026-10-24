@@ -1,0 +1,131 @@
+{
+  "task_id": "97ae1d9c-ebb3-46cb-80f0-491f449c05bc",
+  "agent_run_id": "232220a5-716e-486a-96b8-6e7553cfef93",
+  "checked_on": "2026-10-08",
+  "method": "只读数据库事务与容器既有日志；未变更线上服务或数据",
+  "time_zone": "UTC；北京时间为下列时间加8小时",
+  "timeline": [
+    {
+      "at": "2026-10-07T01:46:40.850980Z",
+      "source": "qc_app_exploration_runtime_checkpoint",
+      "fact": "当前Task/Run/Session/build检查点已持久化，deadline为04:46:40.850980Z"
+    },
+    {
+      "at": "2026-10-07T03:40:25.197202Z",
+      "source": "qc_v2_work_item",
+      "fact": "第40个exploration Work进入running；此前39个succeeded"
+    },
+    {
+      "at": "2026-10-07T03:42:11.022116Z",
+      "source": "qc_task、qc_agent_run、qc_completion_gate_snapshot",
+      "fact": "Task变为review/needs_review/sealed，quality_outcome=unknown；Run为done/sealed_for_review；唯一Gate为false，block_reasons=[manual_review_seal]、exploration_terminal=false、app_coverage_satisfied=false"
+    },
+    {
+      "at": "2026-10-07T03:42:25.364830Z",
+      "source": "qc_app_exploration_failure与03:43:04.340Z日志中的原始异常链",
+      "fact": "记录AppExplorationLeaseLostError；异常链显示Work续租被数据库拒绝：任务已进入最终封存阶段，拒绝晚到V2写入"
+    },
+    {
+      "at": "2026-10-07T03:42:26.361Z",
+      "source": "alioth-worker日志",
+      "fact": "技术失败封存分支取消残留Work，同样被最终封存写入门禁拒绝；取消事务未完成，第40个Work仍running"
+    },
+    {
+      "at": "2026-10-07T03:42:26.366990Z",
+      "source": "qc_app_exploration_result_intent",
+      "fact": "技术封存intent已写入；coverage_snapshot_source=latest_persisted_work、technical_failure=true、consumed_turn_count=39。这证明本次覆盖回读已返回且进入closure，不是覆盖evaluator提前逃逸"
+    },
+    {
+      "at": "2026-10-07T03:43:04.323774Z",
+      "source": "qc_surface_session与alioth-worker日志",
+      "fact": "closure在补齐PASS Capture视觉事实时抛AppVisualObservationPersistenceError，未生成sealed EvidenceIndex/ExplorationResult；Session标记lost，failure_reason=app_exploration_closure_failed:AppVisualObservationPersistenceError"
+    },
+    {
+      "at": "2026-10-07T03:43:04.391Z",
+      "source": "alioth-worker日志",
+      "fact": "Worker补记规则被数据库拒绝：任务已封存，拒绝新增规则执行"
+    },
+    {
+      "at": "2026-10-07T03:43:04.416Z",
+      "source": "alioth-worker日志",
+      "fact": "Worker写Run终态发生AgentRunTerminalStateConflict：Run已进入不同终态，拒绝跨终态覆盖"
+    },
+    {
+      "at": "2026-10-07T03:47:29.756441Z",
+      "source": "qc_app_exploration_failure",
+      "fact": "后台对账记录recovery_state=no_evidence、session_status=lost；此状态表示没有已封存Index/Result，不代表没有历史Capture"
+    }
+  ],
+  "verified_current_deployment": {
+    "container": "alioth-worker",
+    "runtime_module": "/workspace/services/api/app/application/app_runtime_composition.py",
+    "technical_seal_helper_present": true,
+    "technical_seal_calls_in_executor": 2,
+    "generic_exception_attempts_seal": true,
+    "interpretation": "当前部署包含尽力封存保护，本次日志也证明已调用，不能归因保护未部署"
+  },
+  "cause_supported_by_evidence": "Task/Run先进入待复核封存，随后在途Work续租、Work取消和规则补记被不可变封存门禁拒绝；技术封存另在视觉事实持久化阶段失败。无sealed Index使正式APP封存发布链无法启动，剩余规则没有形成完整候选与结论清单。",
+  "attribution_limit": {
+    "operator": "unknown",
+    "seal_source": "unknown",
+    "literal_search": "当前本地及线上app Python源码均未找到manual_review_seal字串",
+    "delivery_operation_audit_rows": 0,
+    "api_log_window": "2026-10-07T03:42:00Z至03:42:20Z",
+    "api_log_observation": "窗口中与本Task有关的请求为读取和证据下载ticket，未见封存类请求；不能据此证明人、运维、脚本或某个具体来源触发封存"
+  },
+  "secondary_visual_error_limit": {
+    "capture_id": "f5335327-22a0-52d4-9d81-9fc89ffe5908",
+    "observed": "同Capture视觉理解分别于03:42:50Z和03:43:00Z完成，首份视觉事实03:42:50.765801Z保存；现存Capture/Artifact关联满足save SQL归属与checksum条件",
+    "unproven": "日志未保存第二份attempted result_hash，不能确定视觉异常是并发hash冲突；该异常与已确定的提前封存写入拒绝应分别描述"
+  },
+  "seal_source_followup": {
+    "checked_on": "2026-10-08",
+    "deployed_image": "alioth-local/api:8dd5eb79486cd4fef7d745a2621014f7dabbb219",
+    "image_id": "sha256:7a5566268dfb18eec5597d600c1dac15e33f2fcead144884b2fee419a91fa57b",
+    "containers": ["alioth-api", "alioth-worker"],
+    "container_started_on": "2026-09-30T08:07:47Z",
+    "code_mount_overrides": false,
+    "docker_diff_service_or_script_changes": 0,
+    "literal_search": {
+      "needles": ["manual_review_seal", "sealed_for_review"],
+      "container_roots": ["/workspace/services", "/workspace/scripts"],
+      "text_files_scanned_per_container": 2061,
+      "matches_per_container": 0,
+      "host_root": "/opt/alioth",
+      "host_text_files_scanned": 2080,
+      "host_matches": 0,
+      "database_function_matches": 0,
+      "scope": "代码、SQL、脚本及部署配置文本；跳过数据、日志、依赖及大文件，未扫描任意用户目录，不输出凭据"
+    },
+    "official_builder_comparison": {
+      "method": "只读查询现存Gate行，使用线上已导入的_parse_gate_facts、stable_protocol_hash、_gate_snapshot_id复算，并检查_insert_gate_snapshot实际源码",
+      "manual_review_seal_in_completion_block_reason_enum": false,
+      "sealed_for_review_in_termination_reason_enum": false,
+      "stored_block_reasons": ["manual_review_seal"],
+      "derived_block_reasons": [
+        "exploration_not_terminal",
+        "review_policy_unsatisfied",
+        "app_coverage_or_visual_quality_incomplete"
+      ],
+      "facts_hash_matches_current_typed_builder": false,
+      "snapshot_id_matches_current_builder_from_stored_facts_hash": false,
+      "stored_snapshot_id": "gate_85c6b35ff0bc6172febe9508c5ca0a7f108c4274",
+      "official_snapshot_id_format": "gate_加48位摘要；现存ID为gate_加40位摘要",
+      "official_insert_serializes_derived_enum_reasons": true,
+      "conclusion": "该封存快照不符合当前部署正式Completion Gate构造合同"
+    },
+    "current_sql_audit_configuration": {
+      "log_statement": "none",
+      "log_min_duration_statement": "-1",
+      "log_min_error_statement": "error",
+      "logging_collector": "off",
+      "log_destination": "stderr",
+      "pgaudit_extension_installed": false,
+      "limit": "当前配置没有记录所有成功SQL语句；未取得10月7日该成功写入的调用审计，不据当前配置断言历史配置从未变化"
+    },
+    "available_log_evidence": "api/worker既有容器日志可读取10月7日对应时间窗；已确认封存之后的写入拒绝及异常链，未找到封存调用或操作者的明确日志",
+    "source_and_operator": "unknown；不能从正式合同不匹配、字串缺失或读取日志推断直接SQL、人工、运维、脚本或具体人员"
+  },
+  "changes_to_historical_task": "none",
+  "preserved_safety_boundary": "未绕过sealed写入门禁、证据身份校验或不可变视觉事实约束；未重开或补写历史任务"
+}

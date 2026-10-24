@@ -1,0 +1,17 @@
+........................................................................ [ 15%]
+........................................................................ [ 30%]
+........................................................................ [ 45%]
+........................................................................ [ 60%]
+........................................................................ [ 75%]
+........................................................................ [ 90%]
+..............................................                           [100%]
+============================== warnings summary ===============================
+.venv\Lib\site-packages\agent_framework\_skills.py:122
+  D:\xm\TYZX\alioth\.venv\Lib\site-packages\agent_framework\_skills.py:122: ExperimentalWarning: [SKILLS] SkillResource is experimental and may change or be removed in future versions without notice.
+
+.venv\Lib\site-packages\agent_framework\_harness\_file_access.py:602
+  D:\xm\TYZX\alioth\.venv\Lib\site-packages\agent_framework\_harness\_file_access.py:602: ExperimentalWarning: [HARNESS] AgentFileStore is experimental and may change or be removed in future versions without notice.
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+- generated xml file: D:\xm\TYZX\alioth\docs\reports\assets\2026-10-21-green-shared\backend-final.xml -
+478 passed, 2 warnings in 52.66s

@@ -1,0 +1,1867 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Alioth 有限自主探索与可信证据优化完整方案</title>
+  <style>
+    :root {
+      --bg: #f4f6fb;
+      --panel: #ffffff;
+      --ink: #162033;
+      --muted: #60708a;
+      --line: #dbe2ee;
+      --line-strong: #b9c5d8;
+      --navy: #122447;
+      --brand: #3157d5;
+      --brand-deep: #213d9d;
+      --brand-soft: #edf2ff;
+      --cyan: #087b92;
+      --cyan-soft: #e8f8fb;
+      --green: #087443;
+      --green-soft: #eaf9f1;
+      --orange: #b54708;
+      --orange-soft: #fff3e6;
+      --red: #b42318;
+      --red-soft: #fff0ee;
+      --purple: #6941c6;
+      --purple-soft: #f3efff;
+      --gray-soft: #f6f8fb;
+      --shadow: 0 14px 40px rgba(25, 45, 80, 0.09);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 90% 2%, rgba(49, 87, 213, 0.08), transparent 24rem),
+        var(--bg);
+      font: 15px/1.72 -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+        "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    }
+    a { color: var(--brand); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    h1, h2, h3, h4, p { margin-top: 0; }
+    h2 { margin-bottom: 18px; font-size: 27px; line-height: 1.3; }
+    h3 { margin: 24px 0 11px; font-size: 19px; line-height: 1.4; }
+    h4 { margin: 18px 0 8px; font-size: 16px; }
+    p { margin-bottom: 11px; }
+    ul, ol { margin: 9px 0; padding-left: 1.4rem; }
+    li + li { margin-top: 5px; }
+    code {
+      padding: 0.13rem 0.35rem;
+      border-radius: 6px;
+      color: #27395d;
+      background: #edf1f7;
+      font: 0.92em/1.55 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      overflow-wrap: anywhere;
+    }
+    pre {
+      overflow: auto;
+      margin: 14px 0;
+      padding: 16px 18px;
+      border: 1px solid #253a66;
+      border-radius: 12px;
+      color: #eaf0ff;
+      background: #14213d;
+      font: 13px/1.66 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+
+    .wrap {
+      width: min(1320px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .hero {
+      overflow: hidden;
+      position: relative;
+      padding: 56px 0 42px;
+      color: #fff;
+      background:
+        radial-gradient(circle at 83% 5%, rgba(78, 212, 255, 0.34), transparent 28%),
+        radial-gradient(circle at 12% 110%, rgba(117, 85, 230, 0.42), transparent 33%),
+        linear-gradient(132deg, #101d3a 0%, #233f91 56%, #3157d5 100%);
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      right: -90px;
+      bottom: -180px;
+      width: 420px;
+      height: 420px;
+      border: 1px solid rgba(255,255,255,.16);
+      border-radius: 50%;
+      box-shadow:
+        0 0 0 50px rgba(255,255,255,.035),
+        0 0 0 100px rgba(255,255,255,.025);
+      pointer-events: none;
+    }
+    .eyebrow {
+      margin-bottom: 9px;
+      color: #cbd8ff;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+    h1 {
+      max-width: 1080px;
+      margin: 0;
+      color: #fff;
+      font-size: clamp(34px, 5vw, 54px);
+      line-height: 1.13;
+      letter-spacing: -.03em;
+    }
+    .hero .subtitle {
+      max-width: 980px;
+      margin: 18px 0 0;
+      color: #e6ecff;
+      font-size: 18px;
+    }
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+      margin-top: 22px;
+    }
+    .chip {
+      padding: 6px 11px;
+      border: 1px solid rgba(255,255,255,.25);
+      border-radius: 999px;
+      color: #fff;
+      background: rgba(255,255,255,.09);
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .chip.warn {
+      border-color: rgba(255, 215, 151, .65);
+      background: rgba(181, 71, 8, .28);
+    }
+
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      overflow-x: auto;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255,255,255,.95);
+      backdrop-filter: blur(14px);
+    }
+    .nav-inner {
+      display: flex;
+      gap: 20px;
+      padding: 12px 0;
+      white-space: nowrap;
+    }
+    .nav a {
+      color: #485775;
+      font-size: 13px;
+      font-weight: 750;
+    }
+
+    main { padding: 30px 0 72px; }
+    section { margin-top: 28px; scroll-margin-top: 68px; }
+    .panel {
+      min-width: 0;
+      padding: 28px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+    .lead { color: #35445f; font-size: 17px; }
+    .muted { color: var(--muted); }
+    .small { font-size: 13px; }
+
+    .callout {
+      margin: 15px 0;
+      padding: 16px 18px;
+      border-left: 5px solid var(--brand);
+      border-radius: 11px;
+      background: linear-gradient(90deg, var(--brand-soft), #fff);
+    }
+    .callout strong { color: var(--brand-deep); }
+    .callout.success {
+      border-left-color: var(--green);
+      background: linear-gradient(90deg, var(--green-soft), #fff);
+    }
+    .callout.success strong { color: var(--green); }
+    .callout.warn {
+      border-left-color: var(--orange);
+      background: linear-gradient(90deg, var(--orange-soft), #fff);
+    }
+    .callout.warn strong { color: var(--orange); }
+    .callout.danger {
+      border-left-color: var(--red);
+      background: linear-gradient(90deg, var(--red-soft), #fff);
+    }
+    .callout.danger strong { color: var(--red); }
+
+    .grid-2, .grid-3, .grid-4, .grid-6 {
+      display: grid;
+      gap: 14px;
+    }
+    .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .grid-6 { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+    .card {
+      min-width: 0;
+      padding: 17px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #fff;
+    }
+    .card h3, .card h4 { margin-top: 0; }
+    .card p:last-child, .card ul:last-child { margin-bottom: 0; }
+    .card.brand { border-color: #bac8f5; background: var(--brand-soft); }
+    .card.green { border-color: #a9dfc2; background: var(--green-soft); }
+    .card.orange { border-color: #f0c99f; background: var(--orange-soft); }
+    .card.red { border-color: #f0b7b2; background: var(--red-soft); }
+    .card.purple { border-color: #d1c5f5; background: var(--purple-soft); }
+    .card.cyan { border-color: #a8dce4; background: var(--cyan-soft); }
+
+    .decision {
+      position: relative;
+      padding-top: 47px;
+    }
+    .decision .num {
+      position: absolute;
+      top: 14px;
+      left: 16px;
+      display: grid;
+      place-items: center;
+      width: 25px;
+      height: 25px;
+      border-radius: 8px;
+      color: #fff;
+      background: var(--brand);
+      font-size: 12px;
+      font-weight: 900;
+    }
+    .decision b { display: block; margin-bottom: 5px; }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .badge.p0 { color: var(--red); background: var(--red-soft); }
+    .badge.p1 { color: var(--orange); background: var(--orange-soft); }
+    .badge.p2 { color: var(--brand-deep); background: var(--brand-soft); }
+    .badge.ok { color: var(--green); background: var(--green-soft); }
+    .badge.info { color: var(--cyan); background: var(--cyan-soft); }
+
+    .table-wrap, .diagram-scroll, .flow-scroll { overflow-x: auto; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      border-spacing: 0;
+      font-size: 14px;
+    }
+    th, td {
+      padding: 11px 12px;
+      border: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      color: #2c3d5e;
+      background: #f2f5fa;
+      font-weight: 800;
+    }
+    tbody tr:nth-child(even) td { background: #fbfcfe; }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(145px, 1fr));
+      gap: 24px;
+      min-width: 1160px;
+      padding: 5px 4px 12px;
+    }
+    .flow .step {
+      position: relative;
+      min-height: 122px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: #fff;
+    }
+    .flow .step:not(:last-child)::after {
+      content: "→";
+      position: absolute;
+      top: 42%;
+      right: -19px;
+      color: var(--brand);
+      font-size: 23px;
+      font-weight: 900;
+    }
+    .flow .step b { display: block; margin-bottom: 6px; color: var(--brand-deep); }
+    .flow .step small { color: var(--muted); }
+
+    .budget-layout {
+      display: grid;
+      grid-template-columns: 250px 1fr;
+      gap: 26px;
+      align-items: center;
+    }
+    .donut {
+      position: relative;
+      width: 210px;
+      height: 210px;
+      margin: auto;
+      border-radius: 50%;
+      background: conic-gradient(
+        var(--brand) 0 70%,
+        var(--cyan) 70% 90%,
+        var(--green) 90% 100%
+      );
+      box-shadow: inset 0 0 0 1px rgba(20,40,80,.06);
+    }
+    .donut::after {
+      content: "初始预算\\A 可配置";
+      white-space: pre;
+      position: absolute;
+      inset: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: var(--ink);
+      background: #fff;
+      font-weight: 900;
+      text-align: center;
+      line-height: 1.4;
+    }
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px 17px;
+      margin: 13px 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .legend span { display: inline-flex; align-items: center; gap: 7px; }
+    .dot { width: 11px; height: 11px; border-radius: 3px; }
+
+    .score {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(130px, 1fr));
+      gap: 8px;
+      min-width: 1000px;
+    }
+    .score div {
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      text-align: center;
+      background: var(--gray-soft);
+      font-size: 13px;
+      font-weight: 750;
+    }
+    .score .plus { color: var(--green); background: var(--green-soft); }
+    .score .minus { color: var(--red); background: var(--red-soft); }
+
+    .state-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 12px 0;
+    }
+    .state-pills span {
+      padding: 6px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #fff;
+      font-size: 12px;
+      font-weight: 750;
+    }
+
+    .risk-ladder {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .risk {
+      min-height: 155px;
+      padding: 16px;
+      border-radius: 13px;
+      border: 1px solid var(--line);
+    }
+    .risk b { display: block; margin-bottom: 7px; font-size: 18px; }
+    .risk.r0 { background: var(--green-soft); border-color: #a9dfc2; }
+    .risk.r1 { background: var(--brand-soft); border-color: #bac8f5; }
+    .risk.r2 { background: var(--orange-soft); border-color: #f0c99f; }
+    .risk.r3 { background: var(--red-soft); border-color: #f0b7b2; }
+
+    .timeline {
+      position: relative;
+      margin: 18px 0 0;
+      padding-left: 27px;
+    }
+    .timeline::before {
+      content: "";
+      position: absolute;
+      top: 4px;
+      bottom: 6px;
+      left: 8px;
+      width: 3px;
+      border-radius: 3px;
+      background: linear-gradient(var(--brand), var(--cyan), var(--green));
+    }
+    .milestone {
+      position: relative;
+      margin-bottom: 17px;
+      padding: 15px 17px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: #fff;
+    }
+    .milestone::before {
+      content: "";
+      position: absolute;
+      top: 20px;
+      left: -25px;
+      width: 13px;
+      height: 13px;
+      border: 3px solid #fff;
+      border-radius: 50%;
+      background: var(--brand);
+      box-shadow: 0 0 0 2px var(--brand);
+    }
+    .milestone b { color: var(--brand-deep); }
+
+    .gate-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .gate {
+      padding: 12px 14px;
+      border: 1px solid #b7ddc8;
+      border-radius: 11px;
+      color: #145c39;
+      background: var(--green-soft);
+      font-size: 13px;
+      font-weight: 750;
+    }
+
+    details {
+      margin-top: 10px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: #fff;
+    }
+    summary {
+      cursor: pointer;
+      padding: 12px 14px;
+      color: #2d3d5c;
+      font-weight: 800;
+    }
+    details > div { padding: 0 14px 14px; }
+
+    footer {
+      padding: 28px 0 40px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      background: #fff;
+      font-size: 13px;
+    }
+
+    @media (max-width: 1080px) {
+      .grid-6 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .grid-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .risk-ladder { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .gate-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 720px) {
+      .hero { padding: 40px 0 32px; }
+      .hero .subtitle { font-size: 16px; }
+      .panel { padding: 20px; border-radius: 15px; }
+      .grid-2, .grid-3, .grid-4, .grid-6,
+      .risk-ladder, .gate-grid { grid-template-columns: 1fr; }
+      .budget-layout { grid-template-columns: 1fr; }
+      .donut { width: 180px; height: 180px; }
+      .donut::after { inset: 37px; }
+      h2 { font-size: 23px; }
+    }
+    @media print {
+      body { background: #fff; font-size: 11px; }
+      .nav { display: none; }
+      .hero { padding: 28px 0; background: var(--navy) !important; }
+      .panel { break-inside: avoid; box-shadow: none; }
+      section { break-inside: auto; margin-top: 16px; }
+      a { color: inherit; }
+      .wrap { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="wrap">
+      <p class="eyebrow">ALIOTH · BOUNDED AUTONOMOUS EXPLORATION</p>
+      <h1>有限自主探索、页面状态图与可信证据优化完整方案</h1>
+      <p class="subtitle">
+        用受控 Playwright CLI / ADB 执行层提升 AI 探索灵活性，以页面状态图、动作事务、
+        稳定截图和封存证据链保证每一步可证明、可恢复、可审计。
+      </p>
+      <div class="chips">
+        <span class="chip">创建：2026-09-02 · 更新：2026-09-03</span>
+        <span class="chip">版本：Solution v1.1 · 团队反馈整合</span>
+        <span class="chip">范围：H5 / Web / App</span>
+        <span class="chip warn">状态：设计完成，尚未实现</span>
+      </div>
+    </div>
+  </header>
+
+  <nav class="nav" aria-label="文档目录">
+    <div class="wrap nav-inner">
+      <a href="#summary">结论</a>
+      <a href="#decisions">决策</a>
+      <a href="#diagnosis">现状</a>
+      <a href="#impact">收益映射</a>
+      <a href="#architecture">架构</a>
+      <a href="#scheduler">探索策略</a>
+      <a href="#graph">页面图</a>
+      <a href="#overlay">弹窗</a>
+      <a href="#broker">有限 Shell</a>
+      <a href="#adapters">CLI / ADB</a>
+      <a href="#transaction">动作事务</a>
+      <a href="#settle">截图时机</a>
+      <a href="#interaction">交互/外跳</a>
+      <a href="#evidence">证据</a>
+      <a href="#supplement">补采</a>
+      <a href="#data">数据/API</a>
+      <a href="#workstation">工作台</a>
+      <a href="#rollout">实施</a>
+      <a href="#acceptance">验收</a>
+      <a href="#feedback">14 条反馈裁决</a>
+      <a href="#closed-loop">全流程闭环</a>
+    </div>
+  </nav>
+
+  <main class="wrap">
+    <section id="summary">
+      <div class="panel">
+        <h2>00. 执行结论</h2>
+        <p class="lead">
+          七项优化方向全部有价值，但最终不应落成“AI 直接 Bash 操作浏览器和设备”，
+          也不应落成“页面树加一个 explored 布尔值”。正确方案是保留现有任务、租约、
+          Capture、Manifest、RuleExecution 和 Completion Gate，把 CLI/ADB 接在受控执行层，
+          再增加页面状态图与统一动作事务。
+        </p>
+        <div class="grid-3">
+          <article class="card brand">
+            <span class="badge p0">P0</span>
+            <h3>先让动作和截图可信</h3>
+            <p>统一 preflight、before、execute、settle、after 和 postcondition；命令成功不再等于页面到达。</p>
+          </article>
+          <article class="card purple">
+            <span class="badge p0">P0</span>
+            <h3>再建立页面状态图</h3>
+            <p>页面节点、局部状态、弹窗目标和转场边分开；页面类型不再决定节点身份。</p>
+          </article>
+          <article class="card green">
+            <span class="badge p1">P1</span>
+            <h3>最后扩大 AI 自由度</h3>
+            <p>Playwright CLI / ADB 经 Broker 灰度接入，先影子观测，再开放低风险动作。</p>
+          </article>
+        </div>
+        <div class="callout danger">
+          <strong>两个明确否决：</strong>
+          生产 Agent 不直接获得任意 Bash；页面关系的权威事实不使用单父节点树。
+        </div>
+        <div class="callout success">
+          <strong>最终收益：</strong>
+          AI 可以更灵活地选择动作，但平台仍能回答“从哪里来、点了什么、是否点中、何时稳定、
+          到了哪里、证据属于谁、能否恢复、规则为什么得出这个结论”。
+        </div>
+        <div class="callout">
+          <strong>v1.1 的关键补齐：</strong>
+          先观察入口，再评估产品能力与规则范围；明确当前真正可见的页面/弹窗层；
+          补齐关闭失败、网络辅助判断、外跳旁路、长图血缘、复合动作及最终收口。
+          <a href="#feedback">14 条反馈逐条裁决</a>与<a href="#closed-loop">端到端闭环</a>均已纳入实施和验收。
+        </div>
+      </div>
+    </section>
+
+    <section id="decisions">
+      <div class="panel">
+        <h2>01. 已确认的六项产品决策</h2>
+        <div class="grid-6">
+          <article class="card decision">
+            <span class="num">1</span>
+            <b>有限自由发现</b>
+            <p class="muted small">指定覆盖优先，同时保留受预算约束的自主发现。</p>
+          </article>
+          <article class="card decision">
+            <span class="num">2</span>
+            <b>局部状态归页面</b>
+            <p class="muted small">局部 Tab、筛选、展开默认是同一节点的状态版本。</p>
+          </article>
+          <article class="card decision">
+            <span class="num">3</span>
+            <b>弹窗也要质检</b>
+            <p class="muted small">弹窗是一等质检目标，但默认不成为业务页面节点。</p>
+          </article>
+          <article class="card decision">
+            <span class="num">4</span>
+            <b>外跳不计覆盖</b>
+            <p class="muted small">外部广告落地留证、熔断和恢复，不计产品业务页面。</p>
+          </article>
+          <article class="card decision">
+            <span class="num">5</span>
+            <b>补采按规则声明</b>
+            <p class="muted small">exact/equivalent/fresh/manual 四类，高风险从严。</p>
+          </article>
+          <article class="card decision">
+            <span class="num">6</span>
+            <b>有限 Shell</b>
+            <p class="muted small">只允许 Brokered Wrapper，不允许模型输出进入 bash -lc。</p>
+          </article>
+        </div>
+        <div class="callout warn">
+          <strong>Tab 边界修正：</strong>
+          组件名称不能决定页面身份。页面内“简介/评论”是状态；底部“首页/消息/我的”若改变业务合同、
+          路由或返回栈，仍应提升为不同 PageNode。
+        </div>
+      </div>
+    </section>
+
+    <section id="diagnosis">
+      <div class="panel">
+        <h2>02. 当前基线与问题链</h2>
+        <div class="grid-2">
+          <article class="card green">
+            <h3>已经具备，不推倒</h3>
+            <ul>
+              <li>H5 内部已经使用 Playwright。</li>
+              <li>App V2 已有设备租约、候选重验证和动作前后 Capture。</li>
+              <li>ActionExecution 已有幂等、命令序号和动作终态。</li>
+              <li>Manifest、EvidenceInputSet、RuleExecution 和 Completion Gate 已存在。</li>
+              <li>补采已有协议和等价性概念，只是 Runtime 尚未 ready。</li>
+              <li>产品目标快照、运行时页型评估、规则匹配/聚合范围和局部执行幂等已有基础。</li>
+            </ul>
+          </article>
+          <article class="card orange">
+            <h3>真正缺失</h3>
+            <ul>
+              <li>统一、跨平台、动作感知的稳定截图契约。</li>
+              <li>页面节点、状态、弹窗和转场的可持久化关系。</li>
+              <li>底层 CLI/ADB 命令的受控 Receipt。</li>
+              <li>页面类型漂移与节点身份的解耦。</li>
+              <li>按图验证式恢复，而非固定路径/旧坐标回放。</li>
+            </ul>
+          </article>
+        </div>
+        <h3>问题不是单点，而是连续失真</h3>
+        <div class="flow-scroll">
+          <div class="flow">
+            <div class="step"><b>候选不足/失效</b><small>动态页面重绘、结构变化、Overlay 遮挡</small></div>
+            <div class="step"><b>动作未命中</b><small>ref 过期、框过大、坐标或滚动容器错误</small></div>
+            <div class="step"><b>截图时机错误</b><small>加载中、转场中、截图与 UI Tree 不同窗</small></div>
+            <div class="step"><b>页面类型漂移</b><small>同页被拆分，或新页被当成旧页</small></div>
+            <div class="step"><b>覆盖不可信</b><small>动作成功、URL 变化都不能证明到达</small></div>
+            <div class="step"><b>恢复失败</b><small>旧路径、旧坐标、旧弹窗状态无法重放</small></div>
+            <div class="step"><b>Gate 不通过</b><small>证据不足、规则未执行、任务只能 review</small></div>
+          </div>
+        </div>
+        <p class="small muted">
+          相关现有入口：
+          <a href="../../services/api/app/application/h5_runtime_composition.py">H5 Runtime</a>、
+          <a href="../../services/api/app/application/capture_coordinator.py">Capture Coordinator</a>、
+          <a href="../../services/api/app/domain/exploration/h5_frontier.py">H5 Frontier</a>、
+          <a href="../../services/api/app/domain/exploration/app_frontier.py">App Frontier</a>。
+        </p>
+        <h3>2026-09-03 代码复核：复用什么，真正补什么</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>当前代码事实</th><th>对本轮反馈的影响</th></tr></thead>
+            <tbody>
+              <tr><td><a href="../../services/api/app/infrastructure/browser/page_capture.py">H5 采集器</a>已有请求/DOM/loader/媒体就绪判断，存在默认关闭、受签名限制的遮挡样式隐藏兜底。</td><td>网络不是从零建设；隐藏不是普遍删 DOM 或 z-index=-1。审计实际启用路径和 Writer，将改造分支与自然证据隔离。</td></tr>
+              <tr><td><a href="../../services/api/app/domain/exploration/app_target_profile.py">AppTargetProfile</a>声明目标，<a href="../../services/api/app/application/app_exploration_target.py">提交快照</a>冻结范围，<a href="../../services/api/app/domain/exploration/page_type_assessment.py">PageTypeAssessmentSet</a>记录运行时证据。</td><td>新增产品能力评估是组合已有事实，不允许模型另建权威或缩小必检分母。</td></tr>
+              <tr><td><a href="../../services/api/app/application/task_query.py">候选规则</a>和<a href="../../services/api/app/application/aggregate_rule_config.py">聚合配置</a>已有范围；部分广告规则已有特例。</td><td>RuleScopePlan 接既有匹配条件、Work Item 与 InputSet。逐条审计频控，不把局部特例泛化成广告只跑首页。</td></tr>
+              <tr><td><a href="../../services/api/app/infrastructure/browser/surface_driver.py">Web Surface Driver</a>当前声明多 Surface 与 pin 能力为 false。</td><td>Playwright 支持多标签不等于 Alioth 已接好；外跳旁路还需要生命周期和来源绑定验收。</td></tr>
+              <tr><td>H5 已有 Semantics/视觉坐标合同；Android 有标准坐标映射，运行时 UI Tree 不等于持久化证据。</td><td>复用变换和观察能力，补齐 Capture 同窗、源帧与实际输入坐标血缘。</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="small muted">代码基线：dev_1.5 / c9dfb7c73，只读盘点；并非本轮设备、生产任务或 Completion Gate 验收。</p>
+      </div>
+    </section>
+
+    <section id="impact">
+      <div class="panel">
+        <h2>03. 七项优化分别解决什么、提升什么</h2>
+        <p class="lead">
+          七项优化依次补齐“能操作、知位置、能找回、认得准、截得对、点得准、证据真”七层能力。
+          它们不是并列插件：前一层产生的可信事实，是后一层能够成立的前提。
+        </p>
+        <div class="grid-2">
+          <article class="card brand">
+            <span class="badge p1">优化 1</span>
+            <h3>受控 Playwright CLI / ADB + Skill</h3>
+            <p><strong>解决：</strong>自研 Tool 动作有限，碰到新控件、特殊滚动、新窗口或系统 Dialog 时容易中断；H5/App 专项分支持续增加。</p>
+            <p><strong>提升：</strong>增加可组合观察和动作，缩短新页面适配周期；Skill 复用探索方法，Broker 仍统一限制 Session、Origin、Package、风险与命令参数。</p>
+            <p class="small muted"><strong>验证：</strong>unsupported action 下降，verified arrival、唯一可信页面/分钟提升；Receipt 覆盖必须为 100%，越权命令为 0。</p>
+          </article>
+          <article class="card purple">
+            <span class="badge p0">优化 2</span>
+            <h3>页面状态图与树形投影</h3>
+            <p><strong>解决：</strong>Frontier 只有待执行动作，无法回答页面身份、状态版本、到达路径和质检完成度；单一 explored 布尔值掩盖证据不足。</p>
+            <p><strong>提升：</strong>准确去重、避免重复探索、拆分页面/状态/弹窗覆盖，并为路径解释、循环检测、补采和 Completion Gate 提供统一事实。</p>
+            <p class="small muted"><strong>验证：</strong>重复页面和身份冲突下降；Capture/Action/Graph 对账一致，孤立成功边为 0，Overlay 不进入业务页面分母。</p>
+          </article>
+          <article class="card green">
+            <span class="badge p1">优化 3</span>
+            <h3>基于图路径的精准补采</h3>
+            <p><strong>解决：</strong>证据不足后只能从入口盲找、重放旧坐标或依赖脆弱固定路径；登录态、启动广告和页面改版会让路径失效。</p>
+            <p><strong>提升：</strong>按成功率、新鲜度、风险和长度选路，每步验证并支持替代路径；缩短恢复时间、Token 与设备分钟，高风险状态无法证明等价时安全收口。</p>
+            <p class="small muted"><strong>验证：</strong>恢复成功率与等价性通过率提升，平均恢复时长、路径长度和“无法找回页面”导致的证据不足下降。</p>
+          </article>
+          <article class="card cyan">
+            <span class="badge p1">优化 4</span>
+            <h3>页面描述增强的 PageTypeCard</h3>
+            <p><strong>解决：</strong>同一页面因加载态、空态、文案或局部 Tab 不同被识别成多个类型；相似页面缺少正反判别依据，错误类型污染规则匹配。</p>
+            <p><strong>提升：</strong>产品能力评估与入口页型分开；用正反信号、描述和真实可见层判断。类型与 PageNode 身份解耦，不再强迫导航型产品寻找模板页面。</p>
+            <p class="small muted"><strong>验证：</strong>类型翻转、冲突和规则误匹配下降；标注集准确率/召回率提升，改判新增 PageNode 数量为 0。</p>
+          </article>
+          <article class="card orange">
+            <span class="badge p0">优化 5</span>
+            <h3>Settle Oracle 与稳定截图</h3>
+            <p><strong>解决：</strong>固定等待在慢页面上截早、快页面上空等；截图、DOM/UI Tree、文本和页面身份可能来自不同时间窗。</p>
+            <p><strong>提升：</strong>按动作综合结构、loader、请求、视觉和后置条件形成稳定 quorum；动态页面使用 mask，转场 Witness 与正式 Capture 分离。</p>
+            <p class="small muted"><strong>验证：</strong>稳定页采集成功率提升，等待和错帧重采下降；非稳定帧冒充稳定页面证据为 0，真实超时/关闭失败仍可留证。</p>
+          </article>
+          <article class="card red">
+            <span class="badge p0">优化 6</span>
+            <h3>精准交互与外跳熔断</h3>
+            <p><strong>解决：</strong>过期 ref/坐标、广告关闭误点、滑错容器和无效果动作；误跳外部后继续探索会污染后续页面、路径与证据。</p>
+            <p><strong>提升：</strong>动作前 rebind、hit-test 和安全内缩，动作后校验专属 postcondition；Origin/Package 越界立即留证、停止并有界恢复。</p>
+            <p class="small muted"><strong>验证：</strong>stale target、no-effect、misroute 和 external escape 下降，verified arrival 与外跳恢复成功率提升。</p>
+          </article>
+          <article class="card green">
+            <span class="badge p0">优化 7</span>
+            <h3>五层可信证据留存</h3>
+            <p><strong>解决：</strong>文件存在或 Hash 正确不能证明证据属于正确页面、动作和时间；before/after 串 Session、补采混入原证据或证据角色缺失都会误导规则。</p>
+            <p><strong>提升：</strong>在来源和时间校验之外，显式绑定当前展示层、可见区域及遮挡；长图/DOM 派生件保留血缘，诊断改造不混入自然证据。</p>
+            <p class="small muted"><strong>验证：</strong>规则和成功页面边可追溯率为 100%；孤立 Artifact、层级错配和诊断证据污染为 0。证据质量通过不等于业务规则通过。</p>
+          </article>
+        </div>
+        <div class="callout warn">
+          <strong>收益判断边界：</strong>
+          所有“提升”都必须在 M0 记录同任务、同预算基线后，用 shadow 与真实 H5/App 对照验证。
+          拒绝类指标初期上升未必是退化，也可能表示新系统识别出了过去漏掉的错帧、错页或错来源证据。
+        </div>
+        <div class="callout success">
+          <strong>最终业务结果：</strong>
+          在不放宽权限和证据门禁的前提下，提高单位时间/Token 的可信页面发现量，减少误点、重复探索和补采成本，
+          同时让规则结论更准确、可复现、可审计。
+        </div>
+      </div>
+    </section>
+
+    <section id="architecture">
+      <div class="panel">
+        <h2>04. 目标分层架构</h2>
+        <div class="callout">
+          <strong>图之前的前置流程：</strong>
+          Task/Provider 快照 → 入口 Capture → 当前展示层识别与阻断处理 → 产品能力/入口页型评估 → 规则范围计划。
+          这些是控制流程，不是业务 PageNode；没有见到首页时不能先造一个首页节点。
+        </div>
+        <div class="flow-scroll">
+          <div class="flow">
+            <div class="step card brand"><b>Explorer Agent</b><small>理解观察，选择语义 ActionIntent</small></div>
+            <div class="step card cyan"><b>Bounded Scheduler</b><small>三队列、预算、价值、风险和停止条件</small></div>
+            <div class="step card purple"><b>Command Broker</b><small>Session、Lease、Scope、Risk、argv 校验</small></div>
+            <div class="step card orange"><b>CLI / ADB Adapter</b><small>只执行 typed command，不写业务结论</small></div>
+            <div class="step card brand"><b>Action Transaction</b><small>before → execute → settle → after → assert</small></div>
+            <div class="step card green"><b>Presentation / Graph</b><small>真实可见层、Node、State、Overlay、Transition</small></div>
+            <div class="step card purple"><b>Rule &amp; Gate</b><small>Sealed InputSet、RuleExecution、Completion Gate</small></div>
+          </div>
+        </div>
+        <div class="grid-3">
+          <article class="card">
+            <h3>Agent 做什么</h3>
+            <p>根据当前可信 Observation 和目标选择语义动作，解释探索价值；不持有 Driver、设备句柄或数据库连接。</p>
+          </article>
+          <article class="card">
+            <h3>确定性 Runtime 做什么</h3>
+            <p>权限、预算、执行、采集、就绪门禁、展示层绑定、规则范围及状态机由代码边界强制；模型评估保留证据与版本。</p>
+          </article>
+          <article class="card">
+            <h3>Judge 做什么</h3>
+            <p>只消费封存 EvidenceInputSet 并给出规则结论；可以声明 EvidenceRequest，但不能直接补采。</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="scheduler">
+      <div class="panel">
+        <h2>05. 有限自主探索 Scheduler</h2>
+        <h3>先认识产品与入口，不预设“首页 → 详情 → 我的”</h3>
+        <div class="grid-3">
+          <article class="card brand"><h4>产品能力</h4><p>导航聚合、内容、交易或混合型；已有声明目标与本 Run 观察分开，记录 present / absent_verified / unknown / blocked。</p></article>
+          <article class="card green"><h4>页面类型</h4><p>当前页面可为导航目录、广告列表或其他 Catalog 类型。“首页”是入口角色，未必有详情或个人中心。</p></article>
+          <article class="card orange"><h4>展示层</h4><p>页内广告是区域，浮在上面的充值/登录/广告层是 Overlay；遮住的底层 DOM 只支持候选假设。</p></article>
+        </div>
+        <p>ProductCapabilityAssessment 复用目标快照、PageTypeAssessmentSet 与运行时 applicability。没有找到、预算耗尽、登录阻断都不能自动判不适用；反证出现时追加版本，不回写原始必检目标。</p>
+        <h3>发现菜单是发现候选，不是完成一级页面</h3>
+        <p>先增量读取可见导航/菜单、真实 href、结构语义与视觉候选；记录来源 Capture、目标角色和风险，再入 Frontier。JS 点击、SPA、Native 入口需真实交互验证；可信到达后才建 Node 并判型。直接打开已观察 URL 可补内容，不替代 UI 可达性证明。</p>
+        <div class="budget-layout">
+          <div>
+            <div class="donut" aria-label="覆盖70%，发现20%，恢复10%"></div>
+            <div class="legend">
+              <span><i class="dot" style="background:var(--brand)"></i>覆盖 70%</span>
+              <span><i class="dot" style="background:var(--cyan)"></i>发现 20%</span>
+              <span><i class="dot" style="background:var(--green)"></i>恢复 10%</span>
+            </div>
+          </div>
+          <div>
+            <div class="grid-3">
+              <article class="card brand">
+                <h3>Coverage Queue</h3>
+                <p>指定页面类型、规则前置页面、已知高价值导航和未完成证据需求。</p>
+              </article>
+              <article class="card cyan">
+                <h3>Discovery Queue</h3>
+                <p>预计能产生新 PageNode、PageState、OverlayTarget 或新规则证据的候选。</p>
+              </article>
+              <article class="card green">
+                <h3>Recovery Queue</h3>
+                <p>兄弟分支恢复、来源页返回、封存前补齐和受允许的 Evidence Request。</p>
+              </article>
+            </div>
+            <p class="small muted">70/20/10 是首轮实验默认值，必须由版本化策略注册表管理，而不是写死或交给模型改变。</p>
+          </div>
+        </div>
+        <h3>候选价值必须可解释</h3>
+        <div class="flow-scroll">
+          <div class="score">
+            <div class="plus">覆盖缺口价值</div>
+            <div class="plus">预期新颖度</div>
+            <div class="plus">规则证据价值</div>
+            <div class="plus">可恢复奖励</div>
+            <div class="minus">风险惩罚</div>
+            <div class="minus">时间成本</div>
+            <div class="minus">重复/外部惩罚</div>
+          </div>
+        </div>
+        <div class="grid-2">
+          <article class="card">
+            <h3>什么算进展</h3>
+            <ul>
+              <li>新增稳定 PageNode 或有意义 PageState；</li>
+              <li>新增去重 OverlayTarget；</li>
+              <li>一个节点被可信穷尽或候选被证明不可达；</li>
+              <li>补齐一个 Evidence Requirement。</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>何时停止分支</h3>
+            <ul>
+              <li>deadline、动作、Token 或深度预算耗尽；</li>
+              <li>连续无进展、重复状态/候选达到上限；</li>
+              <li>越过 Origin/Package 或命中高风险副作用；</li>
+              <li>稳定性、Overlay 或来源恢复有界失败。</li>
+            </ul>
+          </article>
+        </div>
+        <h3>RuleScopePlan：减少重复 Judge，不减少应有覆盖</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>规则目标</th><th>执行与复用范围</th><th>不能省略</th></tr></thead>
+            <tbody>
+              <tr><td>全局声明 / 纯素材正文</td><td>按任务相关上下文或素材版本，在首个满足证据的目标执行；不强制首页。</td><td>规则、素材、账号或实验组等相关条件变化时失效。</td></tr>
+              <tr><td>页面广告布局、遮挡、存在性</td><td>PageState + 广告位。</td><td>相同素材不能代替不同页面的展示证据。</td></tr>
+              <tr><td>广告有效性</td><td>PageState + 广告位 + 规则要求的真实转场。</td><td>可见、可点击、来源/落地一致分别按规则验证。</td></tr>
+              <tr><td>弹窗关闭 / 取消 / 倒计时</td><td>Overlay occurrence 或规则声明的交互 episode。</td><td>每次出现仍要轻量检查顶层、阻断和风险，不能只复用文案结果。</td></tr>
+              <tr><td>任务级 / 跨页汇总</td><td>既有 task / journey / environment_matrix 封存输入。</td><td>首页单例不能替代应收集的成员集合。</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="small muted">范围计划接既有 CandidateRule / Work Item / EvidenceInputSet，不新建第二套规则权威。频控维度与输入范围不是同一枚举；复用写 reused_from_execution_id 和等价依据，无配置时不自动降频。</p>
+      </div>
+    </section>
+
+    <section id="graph">
+      <div class="panel">
+        <h2>06. 页面状态图：事实是图，展示可以是树</h2>
+        <p class="small muted">下图仅演示有详情和个人中心的产品，不是所有产品的预置页面清单。启动浮层可先挂 Session/Capture，底层页面取得可信证据后再关联；产品评估显示在树之前。</p>
+        <div class="diagram-scroll">
+          <svg viewBox="0 0 1160 520" width="1160" height="520" role="img" aria-label="页面状态图">
+            <defs>
+              <marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="#3157d5"/>
+              </marker>
+              <marker id="arrow-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="#b42318"/>
+              </marker>
+              <filter id="shadow">
+                <feDropShadow dx="0" dy="6" stdDeviation="8" flood-opacity=".12"/>
+              </filter>
+            </defs>
+            <rect x="25" y="25" width="1110" height="465" rx="22" fill="#f7f9fd" stroke="#dbe2ee"/>
+
+            <g filter="url(#shadow)">
+              <rect x="80" y="175" width="220" height="138" rx="18" fill="#edf2ff" stroke="#91a6ea" stroke-width="2"/>
+              <text x="190" y="207" text-anchor="middle" font-size="17" font-weight="800" fill="#213d9d">首页 PageNode</text>
+              <rect x="105" y="226" width="170" height="30" rx="15" fill="#fff" stroke="#bac8f5"/>
+              <text x="190" y="246" text-anchor="middle" font-size="12" fill="#334469">推荐 Tab · State A</text>
+              <rect x="105" y="267" width="170" height="30" rx="15" fill="#fff" stroke="#bac8f5"/>
+              <text x="190" y="287" text-anchor="middle" font-size="12" fill="#334469">关注 Tab · State B</text>
+            </g>
+
+            <g filter="url(#shadow)">
+              <rect x="470" y="80" width="220" height="125" rx="18" fill="#eaf9f1" stroke="#7bc79d" stroke-width="2"/>
+              <text x="580" y="113" text-anchor="middle" font-size="17" font-weight="800" fill="#087443">详情 PageNode</text>
+              <rect x="495" y="135" width="170" height="30" rx="15" fill="#fff" stroke="#a9dfc2"/>
+              <text x="580" y="155" text-anchor="middle" font-size="12" fill="#334469">正文 State</text>
+            </g>
+
+            <g filter="url(#shadow)">
+              <rect x="470" y="330" width="220" height="125" rx="18" fill="#f3efff" stroke="#b3a0ec" stroke-width="2"/>
+              <text x="580" y="364" text-anchor="middle" font-size="17" font-weight="800" fill="#6941c6">个人中心 PageNode</text>
+              <rect x="495" y="385" width="170" height="30" rx="15" fill="#fff" stroke="#d1c5f5"/>
+              <text x="580" y="405" text-anchor="middle" font-size="12" fill="#334469">已登录 State</text>
+            </g>
+
+            <g filter="url(#shadow)">
+              <rect x="810" y="55" width="245" height="108" rx="18" fill="#fff3e6" stroke="#e0a662" stroke-width="2"/>
+              <text x="932" y="88" text-anchor="middle" font-size="17" font-weight="800" fill="#b54708">广告弹窗 OverlayTarget</text>
+              <text x="932" y="119" text-anchor="middle" font-size="12" fill="#5f6b7f">质检、留证、关闭与结果</text>
+              <text x="932" y="141" text-anchor="middle" font-size="12" fill="#5f6b7f">不进入业务页面树</text>
+            </g>
+
+            <g filter="url(#shadow)">
+              <rect x="825" y="330" width="220" height="105" rx="18" fill="#fff0ee" stroke="#dc8b84" stroke-width="2"/>
+              <text x="935" y="366" text-anchor="middle" font-size="17" font-weight="800" fill="#b42318">External Boundary</text>
+              <text x="935" y="397" text-anchor="middle" font-size="12" fill="#5f6b7f">留外跳证据，不计业务覆盖</text>
+            </g>
+
+            <path d="M300 215 C370 190 405 150 470 142" fill="none" stroke="#3157d5" stroke-width="3" marker-end="url(#arrow-blue)"/>
+            <text x="375" y="164" text-anchor="middle" font-size="12" fill="#3157d5">点击内容卡片</text>
+            <path d="M300 280 C380 315 410 375 470 390" fill="none" stroke="#3157d5" stroke-width="3" marker-end="url(#arrow-blue)"/>
+            <text x="370" y="345" text-anchor="middle" font-size="12" fill="#3157d5">主导航“我的”</text>
+            <path d="M580 205 C570 245 570 285 580 330" fill="none" stroke="#3157d5" stroke-width="3" marker-end="url(#arrow-blue)"/>
+            <text x="625" y="270" font-size="12" fill="#3157d5">作者入口</text>
+            <path d="M690 127 C740 115 770 108 810 108" fill="none" stroke="#b54708" stroke-width="3" stroke-dasharray="8 6"/>
+            <text x="750" y="91" text-anchor="middle" font-size="12" fill="#b54708">挂载 Overlay</text>
+            <path d="M690 392 C755 390 780 385 825 383" fill="none" stroke="#b42318" stroke-width="3" marker-end="url(#arrow-red)"/>
+            <text x="760" y="370" text-anchor="middle" font-size="12" fill="#b42318">广告误点/外跳</text>
+            <path d="M470 430 C390 455 280 430 230 314" fill="none" stroke="#3157d5" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#arrow-blue)"/>
+            <text x="350" y="454" text-anchor="middle" font-size="12" fill="#3157d5">返回/恢复形成环</text>
+          </svg>
+        </div>
+        <div class="grid-4">
+          <article class="card brand"><h3>PageObservation</h3><p>一次不可变 Capture，保留原始页面事实。</p></article>
+          <article class="card green"><h3>PageNode</h3><p>稳定业务身份，不包含 page_type、标题和模型置信度。</p></article>
+          <article class="card purple"><h3>PageStateRevision</h3><p>改变规则、候选或业务内容的局部状态。</p></article>
+          <article class="card orange"><h3>TransitionEdge</h3><p>来源、动作、before/after、目标和后置条件证明。</p></article>
+        </div>
+        <h3>不能再用一个 explored 布尔值</h3>
+        <div class="state-pills">
+          <span>reach · discovered/reached/blocked</span>
+          <span>classification · unknown/confirmed/conflicting</span>
+          <span>expansion · unexpanded/expanding/exhausted</span>
+          <span>evidence · none/partial/ready/stale</span>
+          <span>rule · not_started/running/complete/review</span>
+          <span>restoration · unknown/replayable/degraded</span>
+        </div>
+        <div class="callout">
+          <strong>身份原则：</strong>
+          H5/Web 使用 Origin、route/history、logical surface 与稳定 landmarks；App 使用 package、activity/window、
+          UI Tree landmarks 和顶层导航语义。页面类型、标题、Overlay、滚动坐标、随机内容和 CLI ref 全部排除。
+        </div>
+      </div>
+    </section>
+
+    <section id="overlay">
+      <div class="panel">
+        <h2>07. 弹窗：独立质检目标，不混入业务页面</h2>
+        <div class="grid-3">
+          <article class="card orange">
+            <h3>为什么必须保留</h3>
+            <p>广告、充值/支付、登录/凭证、更新、公告、隐私、错误等都需要识别；核心是能否安全解除阻断，不只是补种类。</p>
+          </article>
+          <article class="card brand">
+            <h3>为什么不进业务树</h3>
+            <p>多数弹窗不改变业务路由和返回栈；把每层弹窗建成页面会让路径、覆盖和恢复全部失真。</p>
+          </article>
+          <article class="card green">
+            <h3>如何两者兼得</h3>
+            <p>OverlayTarget 关联 PageState；启动时底层未知可先关联 Session/Capture。独立保存分类、规则、出现实例、证据及关闭结果。</p>
+          </article>
+        </div>
+        <div class="flow-scroll">
+          <div class="flow">
+            <div class="step"><b>顶层识别</b><small>结构、图像、窗口与层级能力</small></div>
+            <div class="step"><b>去重 Target</b><small>重复出现只增加 occurrence</small></div>
+            <div class="step"><b>计划与前态</b><small>所需证据、风险、关闭前 Capture</small></div>
+            <div class="step"><b>静态质检</b><small>文案/遮挡可先判，关闭结论等待后态</small></div>
+            <div class="step"><b>动态定位</b><small>只选择当前最上层 dismiss 控件</small></div>
+            <div class="step"><b>关闭动作</b><small>不使用固定右上角坐标</small></div>
+            <div class="step"><b>后态与重判</b><small>消失、下一层、外跳或关闭失败</small></div>
+          </div>
+        </div>
+        <h3>统一处理协议，多轴分类；不是统一叫“广告”</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>维度</th><th>分类示例与边界</th></tr></thead>
+            <tbody>
+              <tr><td>呈现形式</td><td>modal / sheet / full_screen_overlay / system_dialog / toast / inline_region；独立业务路由仍是 PageNode。</td></tr>
+              <tr><td>业务语义</td><td>advertisement、recharge/payment、login/credential、update、announcement、privacy/permission、URL notice、QR、save notice 等。</td></tr>
+              <tr><td>阻断与关闭</td><td>全屏/局部/非阻断，立即关闭/倒计时后关闭/不可关闭/未知；记录真实按钮语义。</td></tr>
+              <tr><td>动作风险</td><td>关闭、取消、稍后不等于确认、安装、支付、保存或授权；按实际副作用判风险。</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout danger">
+          <strong>关不掉必须有终态：</strong>
+          有界等待倒计时 → 重观察顶层 → 定位关闭/取消 → 真实输入 → 后态验证。
+          无效果、误跳、无关闭控件、未知识别分别记录；重复出现按来源/浮层/动作签名累计，重启不重置预算。
+          规则要求可关闭且证明失败则判 fail；证据不足才进入补采/人工，不能统一吞成“继续探索”。
+        </div>
+        <p class="small muted">启动层可先按当前层语义和锁定规则上下文生成局部计划，未知底层页型不猜为首页。目标层消失但出现下一层时分别记录“本次关闭成功”和“仍有阻断”；底层未知则首次真实可见后才判型建图。</p>
+        <div class="callout warn">
+          <strong>禁止为了继续探索自动确认：</strong>
+          隐私同意、系统权限、购买、登录提交、删除和发布。此类动作按 R2/R3 策略处理。
+        </div>
+        <p>
+          覆盖必须分别展示业务页面、页面状态、Overlay 类型、Overlay 规则实例和有效规则覆盖，
+          不能把它们简单相加成一个“总页面数”。
+        </p>
+      </div>
+    </section>
+
+    <section id="broker">
+      <div class="panel">
+        <h2>08. 有限 Shell 与 Command Broker</h2>
+        <p class="lead">
+          Agent 可以拥有 Shell 式操作体验，但生产系统不执行模型生成的原始命令字符串。
+          推荐只暴露 <code>alioth-browserctl</code> 与 <code>alioth-appctl</code> 两个受控 Wrapper，
+          由 Broker 映射为固定 executable 与 argv。
+        </p>
+        <div class="risk-ladder">
+          <article class="risk r0">
+            <b>R0 · 观察</b>
+            <p>snapshot、screenshot、DOM/UI Tree、console/network 摘要、dumpsys。</p>
+            <span class="badge ok">自动允许</span>
+          </article>
+          <article class="risk r1">
+            <b>R1 · 可逆交互</b>
+            <p>click/tap、scroll/swipe、back、hover、wait。</p>
+            <span class="badge info">当前帧 + 后置验证</span>
+          </article>
+          <article class="risk r2">
+            <b>R2 · 状态改变</b>
+            <p>fill、submit、登录、打开外部链接、文件选择。</p>
+            <span class="badge p1">策略显式授权</span>
+          </article>
+          <article class="risk r3">
+            <b>R3 · 高风险</b>
+            <p>支付、删除、发布、同意权限、清数据、安装卸载、系统设置。</p>
+            <span class="badge p0">禁止或人工审批</span>
+          </article>
+        </div>
+        <div class="grid-2">
+          <article class="card">
+            <h3>Broker 必须校验</h3>
+            <ol>
+              <li>协议与 payload hash；</li>
+              <li>Task/Run/Session/Lease/Action 归属；</li>
+              <li>provider 与 SurfaceKind；</li>
+              <li>operation allowlist 与风险等级；</li>
+              <li>Capture epoch、候选与目标 ref；</li>
+              <li>Origin/Package/Tab/serial；</li>
+              <li>deadline、并发单写与输出上限。</li>
+            </ol>
+          </article>
+          <article class="card red">
+            <h3>明确禁止</h3>
+            <p>
+              原始 bash/sh、eval/run-code、管道、重定向、命令替换、curl/wget、
+              任意文件路径、Cookie/storage 导出、未绑定会话、未绑定 serial、
+              adb kill-server、pm clear 和任意系统设置。
+            </p>
+          </article>
+        </div>
+        <h3>每个底层命令都必须留下 Receipt</h3>
+        <pre>{
+  "protocol_version": "command-receipt.v1",
+  "task_id": "...",
+  "session_id": "...",
+  "action_execution_id": "...",
+  "provider": "playwright_cli",
+  "operation": "click_ref",
+  "argv_hash": "sha256:...",
+  "risk_tier": "R1",
+  "policy_hash": "sha256:...",
+  "source_capture_id": "...",
+  "exit_code": 0,
+  "status": "completed",
+  "stdout_hash": "sha256:...",
+  "started_at": "...",
+  "finished_at": "..."
+}</pre>
+        <p class="small muted">Receipt 只保存脱敏参数、hash 和受控对象引用，不保存密码、Cookie、Token 或完整环境变量。</p>
+        <p class="small muted">禁止的是 Agent 任意执行代码；平台维护、审查和版本锁定的只读 DOM/层级/网络 Collector 可以由 Adapter 调用。页面文案与脚本始终是待测数据，不具有修改策略或授权命令的权力。</p>
+      </div>
+    </section>
+
+    <section id="adapters">
+      <div class="panel">
+        <h2>09. Playwright CLI 与 ADB Adapter</h2>
+        <div class="grid-2">
+          <article class="card brand">
+            <h3>H5 / Web · Playwright CLI</h3>
+            <ul>
+              <li>每个 Surface Session 对应一个受管命名会话和临时 Profile；</li>
+              <li>首批只开放 snapshot、screenshot、trace、console/network 摘要；</li>
+              <li>低风险阶段再开放 click ref、scroll、back 和 wait；</li>
+              <li>ref 绑定 capture epoch 与 snapshot hash，动作前重新 rebind；</li>
+              <li>新 Tab、跨域 Frame 和 Popup Window 都形成显式事件；</li>
+              <li>现有 Python Playwright Driver 保留为 fallback。</li>
+            </ul>
+          </article>
+          <article class="card green">
+            <h3>App · ADB / Official Adapter</h3>
+            <ul>
+              <li>允许 screenshot、UI Tree、foreground identity、tap/swipe/back；</li>
+              <li>目标优先级：Accessibility/UI Tree → 结构 → 视觉框 → 临时坐标；</li>
+              <li>坐标只在当前 Capture epoch 有效；</li>
+              <li>迁移前先补齐旧 Driver 解析入口的本轮 runtime observation 绑定；</li>
+              <li>每条命令绑定 serial、云手机 env/profile 和 Package allowlist；</li>
+              <li>设备重连和 Lease 由 Orchestrator 负责；</li>
+              <li>离开被测 Package 立即进入外跳熔断。</li>
+            </ul>
+          </article>
+        </div>
+        <div class="callout">
+          <strong>灰度顺序：</strong>
+          先让新 Adapter 只观察并与现有 Driver 比较；再开放低风险动作；只有一致性和收益指标通过后，
+          才逐步缩减旧的页面/站点专项分支。一个 Session 绝不允许两个执行器同时写动作。
+        </div>
+        <p class="small muted">
+          已核验<a href="https://github.com/microsoft/playwright-cli">官方 Playwright CLI</a>提供请求查看、截图、快照、标签及脚本等命令；
+          工具有命令 ≠ 当前安装版本可用 ≠ Agent 被授权。启动时记录版本/能力快照，网络观察默认只读，不开放 mock/route 改写自然证据。
+        </p>
+        <h3>按运行面选结构与视觉，不全平台固定“纯视觉为主”</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>运行面</th><th>优先使用</th><th>交叉验证与降级</th></tr></thead>
+            <tbody>
+              <tr><td>标准 H5 / Web</td><td>可见 DOM/AX、可信 locator、已见 href。</td><td>截图和实际展示层验证；隐藏 DOM 不能当可见正文，URL 不证明真实点击。</td></tr>
+              <tr><td>Native App</td><td>可用 Accessibility/UI Tree 与窗口身份。</td><td>截图/OCR、坐标空间与动作后态；结构缺失时显式降级视觉。</td></tr>
+              <tr><td>Hybrid WebView</td><td>有可用调试通道时联合 DOM 与原生结构。</td><td>核验 Frame/窗口边界；连接 ADB 不保证可读任意 WebView。</td></tr>
+              <tr><td>Flutter / Canvas / 自绘</td><td>先探测 Semantics/可访问结构；无可用结构时视觉主导。</td><td>当前帧 bbox、方向、缩放、连续观察；不虚构 DOM 或原生命中测试能力。</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="small muted">依据：<a href="https://docs.flutter.dev/ui/accessibility">Flutter 可访问性</a>、<a href="https://docs.flutter.dev/ui/accessibility/web-accessibility">Web Semantics</a>、<a href="https://developer.chrome.com/docs/devtools/remote-debugging/webviews">WebView 调试前提</a>。框架支持仍需对实际 APK/站点探测。</p>
+        <div class="callout warn">
+          <strong>分辨率 / UA 是兼容性配置，不是“保证过人机校验”：</strong>
+          冻结 viewport、screen、DPR、UA、touch、isMobile、locale、timezone 等一致 Profile，记录浏览器及系统版本。
+          模拟不能等同真机；挑战页面记环境阻断，采用已授权测试白名单/测试入口或人工接管，不默认隐藏自动化特征或绕过验证码。
+          <a href="https://playwright.dev/docs/emulation">官方模拟能力边界</a>。
+        </div>
+      </div>
+    </section>
+
+    <section id="transaction">
+      <div class="panel">
+        <h2>10. Action Transaction：一次动作必须证明到底</h2>
+        <p>这里是可审计的逻辑事务，不是 UI 原子事务。数据库幂等不保证重复点击安全；进程中断后先读取 Receipt 与当前页面，再决定是否补偿或重试。</p>
+        <div class="flow-scroll">
+          <div class="flow">
+            <div class="step"><b>1. Preflight</b><small>Session、来源状态、候选 epoch、风险</small></div>
+            <div class="step"><b>2. Before</b><small>满足动作角色的 source Capture 与当前层</small></div>
+            <div class="step"><b>3. Rebind</b><small>重新解析唯一、可见、无遮挡目标</small></div>
+            <div class="step"><b>4. Execute</b><small>Broker 执行 typed command，写 Receipt</small></div>
+            <div class="step"><b>5. Settle</b><small>动作感知的稳定性采样与 deadline</small></div>
+            <div class="step"><b>6. After</b><small>canonical Capture + identity sandwich</small></div>
+            <div class="step"><b>7. Assert</b><small>业务后置条件与 TransitionProof</small></div>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>动作</th><th>不能只看</th><th>必须证明</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>页面导航</td><td>URL 或命令退出码</td><td>目标 PageNode/PageState 的稳定 landmarks</td></tr>
+              <tr><td>局部 Tab</td><td>点击成功</td><td>选中态与内容变化，且 PageNode 保持一致</td></tr>
+              <tr><td>弹窗关闭</td><td>关闭按钮被点</td><td>目标层消失且剩余栈符合预期；底层已知核对等价，未知首次可见再判型</td></tr>
+              <tr><td>滑动</td><td>ADB/浏览器返回成功</td><td>指定滚动容器的锚点或范围变化</td></tr>
+              <tr><td>返回</td><td>执行 BACK</td><td>到达可信父状态或显式替代状态</td></tr>
+              <tr><td>外部链接</td><td>打开新页面</td><td>外部边界留证并有界恢复，不计业务到达</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout warn">
+          <strong>四个不同事实：</strong>
+          command_succeeded、interaction_effect_observed、postcondition_satisfied、transition_arrived。
+          只有最后一个可以形成成功页面边。
+        </div>
+      </div>
+    </section>
+
+    <section id="settle">
+      <div class="panel">
+        <h2>11. Settle Oracle：解决截图过早、错帧和不同步</h2>
+        <div class="grid-2">
+          <article class="card brand">
+            <h3>H5 / Web 信号</h3>
+            <ul>
+              <li>Origin、URL/history、frame/tab；</li>
+              <li>DOM mutation quiet 与 logical surface；</li>
+              <li>关键 XHR/fetch、loader、skeleton、transition；</li>
+              <li>可见文本、语义树、核心 landmarks；</li>
+              <li>Viewport、媒体资源和 Overlay signature。</li>
+            </ul>
+          </article>
+          <article class="card green">
+            <h3>App 信号</h3>
+            <ul>
+              <li>foreground package/activity/window；</li>
+              <li>UI Tree 结构与可见文本 hash；</li>
+              <li>screenshot pHash/SSIM；</li>
+              <li>loader、动画、键盘、权限窗、Overlay；</li>
+              <li>屏幕尺寸、方向和动作专属目标。</li>
+            </ul>
+          </article>
+        </div>
+        <div class="flow-scroll">
+          <div class="flow">
+            <div class="step"><b>Transition Witness</b><small>保存转场帧，不冒充稳定页面</small></div>
+            <div class="step"><b>200ms</b><small>轻量 identity / structure sample</small></div>
+            <div class="step"><b>500ms</b><small>loader / text / overlay sample</small></div>
+            <div class="step"><b>1000ms</b><small>结构与后置条件比较</small></div>
+            <div class="step"><b>2000ms+</b><small>按动作 profile 有界继续</small></div>
+            <div class="step"><b>Stable Quorum</b><small>连续 2～3 次通过</small></div>
+            <div class="step"><b>Canonical Capture</b><small>正式截图与 Artifact bundle</small></div>
+          </div>
+        </div>
+        <div class="callout success">
+          <strong>时间一致性三明治：</strong>
+          identity-before → screenshot + DOM/UI Tree + visible text → identity-after。
+          前后身份改变或 Artifact 时间差超限时拒绝当前组合并有界重采。
+        </div>
+        <p>
+          视频、倒计时、轮播和实时 Feed 不要求全屏像素静止。通过动态区域 mask、稳定结构、
+          业务 landmarks 和动作专属阈值判定；规则需要时保存短时间序列。
+        </p>
+        <h3>网络静默可辅助，但“2～3 秒无新请求”不等于加载完成</h3>
+        <pre>network_ready = 关键未完成请求数为 0
+                + 相关网络静默窗口达标
+                + 规则需要的响应条件成立
+stable_page_ready = 身份/展示层一致 + 核心区域可见
+                    + 结构或视觉稳定 + 所需动作后置条件
+                    + 当前策略要求且可观测的网络条件</pre>
+        <p>先注册被动监听，再执行动作；请求开始、响应头、响应体结束和失败分别记账。首个慢请求仍在下载时，即使没有新请求也不能判完成；HTTP 终止也不代表业务成功。2～3 秒仅是待基线调优的 quiet 参数，长轮询/视频等排除项需按规则声明，不能把待测广告资源全部忽略。</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>网络可观测性</th><th>使用方式</th><th>缺失处理</th></tr></thead>
+            <tbody>
+              <tr><td>Playwright / CLI</td><td>受管会话的请求生命周期与有限摘要；Service Worker 等能力差异明确记录。</td><td>仅部分可见记 partial；不为方便采集默认禁用 SW 或改写请求。</td></tr>
+              <tr><td>可调试 WebView</td><td>有可用调试能力时观察，保持原生窗口关联。</td><td>调试不可用时回到结构/视觉门禁。</td></tr>
+              <tr><td>普通 APK + ADB</td><td>ADB 是设备控制工具，不能默认提供完整解密 HTTP(S) 生命周期。</td><td>网络 unknown/unavailable 不计成 0；规则必须要网络证据时记不足，不能静默放行。</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="small muted">
+          依据：<a href="https://playwright.dev/docs/network">Playwright Network</a>、<a href="https://playwright.dev/docs/api/class-request">Request 生命周期</a>、
+          <a href="https://playwright.dev/docs/api/class-page#page-wait-for-load-state">不建议单独依赖 networkidle</a>、
+          <a href="https://playwright.dev/docs/service-workers">Service Worker 边界</a>、
+          <a href="https://developer.android.com/tools/adb">ADB</a>、<a href="https://developer.android.com/studio/debug/network-profiler">Android Network Inspector 支持范围</a>。
+        </p>
+        <div class="callout">
+          <strong>不要过滤掉真实缺陷：</strong>
+          加载超时、动画或关闭失败可使用来源可信的时间序列。Manifest 质量通过表示符合该证据角色，
+          不表示页面已稳定、更不表示业务规则通过。只有稳定且目标层可见的证据才可支持稳定页面到达/布局结论。
+        </div>
+        <div class="state-pills">
+          <span>stable</span><span>loading</span><span>transitional</span><span>timeout</span>
+          <span>identity_drift</span><span>artifact_skew</span><span>capture_failed</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="interaction">
+      <div class="panel">
+        <h2>12. 交互精准度与外跳熔断</h2>
+        <div class="grid-3">
+          <article class="card">
+            <h3>点击</h3>
+            <p>当前帧、唯一、可见、启用、最上层、无遮挡、安全内缩、风险角色一致；支持 hit-test 时必须通过，不支持则明确视觉降级与风险门禁。</p>
+          </article>
+          <article class="card">
+            <h3>滑动</h3>
+            <p>先解析真实 scrollable container，避开系统边缘、广告和固定栏；动作后验证锚点变化。</p>
+          </article>
+          <article class="card">
+            <h3>返回</h3>
+            <p>优先应用内返回，其次 history/BACK；返回后重新识别，不能假设一定回到父节点。</p>
+          </article>
+        </div>
+        <h3>连贯操作：允许计划，不允许盲串命令</h3>
+        <div class="flow-scroll">
+          <div class="flow">
+            <div class="step"><b>目标计划</b><small>到指定容器/目标，步骤与预算有上限</small></div>
+            <div class="step"><b>受控滚动</b><small>每步记录容器、偏移和动作 Receipt</small></div>
+            <div class="step"><b>重新观察</b><small>新 Capture/epoch；检查弹窗与布局变化</small></div>
+            <div class="step"><b>重新绑定</b><small>用语义定位当前目标，校验层级与几何</small></div>
+            <div class="step"><b>真实点击</b><small>完成后置验证；不确定副作用先观察</small></div>
+          </div>
+        </div>
+        <p class="small muted">Playwright locator 点击本身可滚动目标到可见区域，但业务级连续操作仍需分步审计。<a href="https://playwright.dev/docs/input">官方动作行为</a>。</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>动作来源</th><th>应保存的信息</th><th>证据边界</th></tr></thead>
+            <tbody>
+              <tr><td>语义 locator / 原生控件输入</td><td>控件来源、当前 bbox、窗口/Frame、可用时实际点击点、前后 Capture。</td><td>不能只凭命令成功证明命中；仍验证可操作性和后态。</td></tr>
+              <tr><td>视觉坐标输入</td><td>源截图尺寸、裁剪偏移、缩放/留白、CSS px / device px、DPR、旋转/系统栏及最终输入点。</td><td>每步变换链可追溯，任何尺寸/布局/epoch 变化都重算；无可信变换不点。</td></tr>
+              <tr><td>JS click / dispatch / force</td><td>实际调用方式与绕过条件；没有物理输入点就记录不适用。</td><td>不编造坐标，不冒充自然用户点击；绕过路径进入诊断范围。</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <h3>外部广告落地页</h3>
+        <div class="flow-scroll">
+          <div class="flow">
+            <div class="step"><b>检测边界变化</b><small>Origin/Tab 或 Package/Activity 离开作用域</small></div>
+            <div class="step"><b>暂停业务动作</b><small>防止在外部页面继续自由探索</small></div>
+            <div class="step"><b>保存外跳证据</b><small>来源广告、目标、截图、动作与时间</small></div>
+            <div class="step"><b>有界恢复</b><small>close/BACK/warm restore</small></div>
+            <div class="step"><b>重新 Capture</b><small>不使用旧 ref/坐标</small></div>
+            <div class="step"><b>验证来源等价</b><small>成功才继续其他候选</small></div>
+            <div class="step"><b>结算外跳</b><small>预期 external_jump 与误跳 misroute 分开</small></div>
+          </div>
+        </div>
+        <h3>优先旁路，但不承诺所有外跳都能无损分离</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>场景</th><th>建议</th><th>必须保留的限制</th></tr></thead>
+            <tbody>
+              <tr><td>产品天然打开新 Tab/Window</td><td>保持主 Surface，子 Surface 仅等待、观察、截图、关闭。</td><td>保留真实触发动作、opener 与落地；同 context 标签仍共享部分状态。</td></tr>
+              <tr><td>已观察到且允许的安全 GET URL</td><td>可独立受控打开，仅验证落地内容。</td><td>不是原按钮可点击或真实转场证明；账号/存储上下文可能不同。</td></tr>
+              <tr><td>JS、POST、一次性 Token、原标签重定向</td><td>保留真实转场并有界回源；必要时明确不可无损旁路。</td><td>不靠改 target、拦截导航或重放一次性请求伪造自然行为。</td></tr>
+              <tr><td>App 外部 Activity / 浏览器</td><td>按实际平台边界留证与恢复；第二设备仅在独立授权/预算下使用。</td><td>不能通用克隆原进程、返回栈和账号态；新进程不保证隔离。</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>“只截图”允许 open/wait/observe/capture/close，不点击、填表、下载或继续探索；页面加载仍可能执行脚本/请求，需限定域、协议、子 Surface 数、时间、资源及隐私预算。回源反复命中同一弹窗链时终结该恢复分支，不重启再关八次。</p>
+        <p class="small muted">依据：<a href="https://playwright.dev/docs/pages">多标签与 popup</a>、<a href="https://playwright.dev/docs/auth#session-storage">会话状态边界</a>。新 context 不是 JS 内存、sessionStorage 与历史栈的完整克隆；Alioth 子 Surface 接线仍需实现验收。</p>
+      </div>
+    </section>
+
+    <section id="evidence">
+      <div class="panel">
+        <h2>13. 证据可信链：不仅是 Hash</h2>
+        <div class="grid-4">
+          <article class="card brand"><h3>1. 完整性</h3><p>格式、大小、尺寸、hash、不可覆盖。</p></article>
+          <article class="card cyan"><h3>2. 来源性</h3><p>Task、Run、Session、Capture、Action、Command、设备和版本。</p></article>
+          <article class="card green"><h3>3. 时间一致性</h3><p>稳定角色使用同窗数据；时间序列保留每帧时间，不伪装成同帧。</p></article>
+          <article class="card purple"><h3>4. 真实展示层</h3><p>页面、区域、Overlay、遮挡与动作结果匹配，底层 DOM 不冒充可见页面。</p></article>
+        </div>
+        <div class="callout">
+          <strong>第 5 层：规则充分性。</strong>
+          每条规则声明所需的 before/during/after、来源等级和作用域；只有完整 Capture Plan 才能封存输入。
+        </div>
+        <h3>正面处理“标了详情页，截图却全是弹窗”</h3>
+        <p>增加 Capture 绑定的 PresentationStackAssessment：窗口/Frame 身份、层顺序、目标 region、可见/遮挡比例、输入命中目标、截图时间、证据来源和判定置信度。底层页型假设与当前活动层分别记录；页面规则只接收自己的可见区域，弹窗规则只接收对应 occurrence。</p>
+        <pre>base_page_type_hypothesis = detail
+active_surface_type      = recharge_overlay
+target_layer             = overlay-7
+detail_exposure          = blocked
+allowed_evidence_role    = overlay_before
+detail_arrival_coverage  = false</pre>
+        <p>Web 联合实际截图、可见矩形、遮挡/命中测试与 DOM/AX；不能只按全局 z-index 数值排序，stacking context 和 top layer 会改变真实层级。原生联合窗口/UI Tree 和视觉；能力缺失标 unknown，不虚构测量值。<a href="https://www.w3.org/TR/css-position-4/">CSS 层级与 top layer</a>、<a href="https://playwright.dev/docs/actionability">Playwright actionability</a>。</p>
+        <div class="callout danger">
+          <strong>正式证据分支不删除弹窗、不改 z-index：</strong>
+          这会改变被测对象并隐藏“关不掉”的缺陷。现有受保护样式隐藏与 JS 派发 fallback 应逐路径审计，
+          标记 synthetic/diagnostic，并将标记传递到后续 Capture、Writer、Manifest、InputSet 与 Gate。
+          如需诊断，在隔离分支留存变更前后；恢复 CSS 不代表应用状态恢复，回到自然分支必须重建并验证。
+        </div>
+        <div class="flow-scroll">
+          <div class="flow">
+            <div class="step"><b>RuleExecution</b><small>最终规则结论</small></div>
+            <div class="step"><b>EvidenceInputSet</b><small>封存、排序、范围与规则合同</small></div>
+            <div class="step"><b>Manifest</b><small>Artifact 闭包与质量状态</small></div>
+            <div class="step"><b>Readiness / Presentation</b><small>证据角色、可见层、同窗与 chosen frame</small></div>
+            <div class="step"><b>Capture</b><small>不可变页面事实</small></div>
+            <div class="step"><b>Action / Receipt</b><small>语义动作与底层命令</small></div>
+            <div class="step"><b>Graph</b><small>页面、状态、Overlay 和转场</small></div>
+          </div>
+        </div>
+        <div class="gate-grid">
+          <div class="gate">page_graph_consistent</div>
+          <div class="gate">capture_readiness_complete</div>
+          <div class="gate">command_receipt_complete</div>
+          <div class="gate">overlay_target_terminal</div>
+          <div class="gate">external_transition_settled</div>
+          <div class="gate">evidence_provenance_valid</div>
+          <div class="gate">path_replay_verified</div>
+          <div class="gate">supplement_equivalence_verified</div>
+          <div class="gate">page_identity_conflict_count</div>
+          <div class="gate">presentation_target_consistent</div>
+          <div class="gate">rule_scope_reuse_valid</div>
+          <div class="gate">natural_evidence_only</div>
+        </div>
+        <h3>长图可以做，但原始视口帧不能被替代</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>材料</th><th>适合证明</th><th>不适合证明 / 必须保留</th></tr></thead>
+            <tbody>
+              <tr><td>原始 viewport screenshot</td><td>当前实际可见页面、弹窗遮挡、命中区域、before/after。</td><td>无法独自证明屏幕外内容；保留尺寸、DPR、窗口与时间。</td></tr>
+              <tr><td>Web full-page screenshot</td><td>同一页面的扩展内容审阅。</td><td>不是用户同一时刻的视野，也不保证触发全部惰性加载；虚拟列表可能不完整。</td></tr>
+              <tr><td>有序滚动 CaptureSeries</td><td>H5/App 长页面、滚动到目标、上下文连续性。</td><td>每帧保存容器、偏移、锚点、时间和身份；动态刷新/断档分段或标缺口。</td></tr>
+              <tr><td>拼接长图 / 裁剪 / 标注</td><td>评审展示和定位问题。</td><td>作为派生 Artifact 引用原帧与变换，不伪装成单帧原图；禁止靠拼接消除真实遮挡。</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="small muted"><a href="https://playwright.dev/docs/screenshots">Playwright 支持 full-page 与元素截图</a>；实际长页是否完整、滚动是否改状态、固定栏是否重复，仍需采集协议验证。大小/帧数/时间均有限额，超限报告 partial。</p>
+        <h3>长 DOM：存储压缩、展示格式化、模型摘要各司其职</h3>
+        <div class="grid-3">
+          <article class="card brand"><h4>存储</h4><p>对允许留存的采集源件无损压缩，校验解压后的内容 hash；sanitized/truncated 和源件缺口如实记录。</p></article>
+          <article class="card cyan"><h4>展示</h4><p>格式化、折叠、差异和局部高亮是派生件，不覆盖源件。DOM 作为文本/惰性安全视图，不执行采集脚本。</p></article>
+          <article class="card green"><h4>模型输入</h4><p>按规则提取有界 DOM/AX 子树、可见文本与局部截图；引用源件和范围。压缩文件不直接等于节省 Token。</p></article>
+        </div>
+        <p class="small muted">先按隐私策略处理密码、凭证、个人数据与 Token，再存储和分发；脱敏/截断使所需字段不可见时报告证据不足，不能用摘要猜测。</p>
+      </div>
+    </section>
+
+    <section id="supplement">
+      <div class="panel">
+        <h2>14. 图路径恢复与规则声明式补采</h2>
+        <div class="grid-4">
+          <article class="card red">
+            <h3>exact_state</h3>
+            <p>账号、页面、业务对象、关键数据和状态完全一致。</p>
+          </article>
+          <article class="card orange">
+            <h3>equivalent_state</h3>
+            <p>PageNode 与规则声明的业务 invariants 一致。</p>
+          </article>
+          <article class="card green">
+            <h3>fresh_observation</h3>
+            <p>允许重新进入页面并采集当前非破坏性事实。</p>
+          </article>
+          <article class="card purple">
+            <h3>manual_only</h3>
+            <p>自动补采禁止，转人工复核。</p>
+          </article>
+        </div>
+        <div class="callout warn">
+          <strong>高风险默认：</strong>
+          支付、登录、授权、隐私同意、订单、删除和发布使用 exact_state 或 manual_only。
+        </div>
+        <div class="flow-scroll">
+          <div class="flow">
+            <div class="step"><b>EvidenceRequest</b><small>规则只声明缺口和等价性要求</small></div>
+            <div class="step"><b>Route Planner</b><small>按成功率、延迟、风险、新鲜度选路</small></div>
+            <div class="step"><b>逐步验证</b><small>source → rebind → action → target</small></div>
+            <div class="step"><b>失败重规划</b><small>不用旧坐标，不盲目重复</small></div>
+            <div class="step"><b>Equivalence Gate</b><small>Overlay、登录态、业务对象、关键元素</small></div>
+            <div class="step"><b>Supplement Capture</b><small>追加，不覆盖原证据</small></div>
+            <div class="step"><b>Rejudge &amp; Gate</b><small>新 InputSet、新 Attempt、完整血缘</small></div>
+          </div>
+        </div>
+        <p>
+          正式补采 Runtime 在 Producer、Router、Queue、Claim、Runner、Driver、Attach、Rejudge 和 Completion Gate
+          的真实 H5/App E2E 全部通过前继续保持 fail-closed。
+        </p>
+      </div>
+    </section>
+
+    <section id="data">
+      <div class="panel">
+        <h2>15. 数据模型、协议和 API</h2>
+        <h3>继续复用的权威事实</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>现有表/合同</th><th>继续承担</th><th>本次处理</th></tr></thead>
+            <tbody>
+              <tr><td><code>qc_page_capture / qc_capture</code></td><td>不可变 Capture</td><td>不承载页面聚类身份</td></tr>
+              <tr><td><code>qc_action_execution</code></td><td>动作事务主账本</td><td>扩展 versioned stage/result payload</td></tr>
+              <tr><td><code>qc_page_exploration_action</code></td><td>H5 动态动作兼容</td><td>逐步引用 PageState</td></tr>
+              <tr><td><code>qc_app_exploration_frontier</code></td><td>App 候选队列</td><td>增加 source state / queue kind / policy</td></tr>
+              <tr><td><code>qc_task_page_node</code></td><td>旧任务详情投影</td><td>保留兼容，由 Graph Projector 双写</td></tr>
+              <tr><td><code>qc_evidence_manifest</code></td><td>Capture 证据闭包</td><td>绑定 Readiness 与 Graph lineage</td></tr>
+              <tr><td><code>qc_evidence_input_set</code></td><td>Judge 封存输入</td><td>继续作为唯一正式输入</td></tr>
+              <tr><td><code>qc_rule_execution</code></td><td>规则结论</td><td>不直接消费未封存图事实</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <h3>反馈新增事实：优先复用载体，不为每个术语新建表</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>概念</th><th>现有挂接点</th><th>增量合同</th></tr></thead>
+            <tbody>
+              <tr><td>ProductCapabilityAssessment</td><td>App 目标快照、PageTypeAssessmentSet、运行时适用性评估。</td><td>声明/观察分离、证据和版本、反证修订；H5 复用语义而非假定已接线。</td></tr>
+              <tr><td>RuleScopePlan</td><td>规则配置、CandidateRule、Inspection Work、EvidenceInputSet。</td><td>target/frequency/reuse/invalidation 与 scope key，不替代已有匹配条件。</td></tr>
+              <tr><td>PresentationStackAssessment</td><td>AppVisualAnalysis 的 surface/overlay 事实；H5 logical surface；Capture 元数据。</td><td>layer/region/visibility、能力、证据角色与自然/诊断标记。</td></tr>
+              <tr><td>InteractionPlan / CoordinateSpace</td><td>ActionIntent/ActionExecution 的计划和步骤事实。</td><td>step/epoch/Receipt、坐标来源与变换、失败和补偿。</td></tr>
+              <tr><td>ExternalObservation / CaptureSeries</td><td>Surface 事件、Manifest/InputSet 成员和派生 Artifact。</td><td>父子 Surface、打开方式、回源、原帧顺序/时间/偏移/缺口。</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <h3>建议新增的职责单一事实表</h3>
+        <div class="grid-3">
+          <article class="card"><b>qc_exploration_page_node</b><p>稳定页面身份及多维状态。</p></article>
+          <article class="card"><b>qc_exploration_page_state</b><p>业务有效局部状态 revision。</p></article>
+          <article class="card"><b>qc_exploration_transition</b><p>来源、动作、结果、postcondition 和恢复资格。</p></article>
+          <article class="card"><b>qc_exploration_overlay_target</b><p>弹窗身份、分类、证据和规则状态。</p></article>
+          <article class="card"><b>qc_exploration_overlay_event</b><p>出现、质检、关闭、失败和外跳的追加事件。</p></article>
+          <article class="card"><b>qc_command_receipt</b><p>受控 CLI/ADB 命令的不可变收据。</p></article>
+          <article class="card"><b>qc_capture_readiness_assessment</b><p>稳定性、采样、身份三明治和 chosen frame。</p></article>
+        </div>
+        <h3>协议</h3>
+        <div class="state-pills">
+          <span>exploration-policy.v1</span>
+          <span>page-node-identity.v1</span>
+          <span>page-state.v1</span>
+          <span>overlay-target.v1</span>
+          <span>command-request.v1</span>
+          <span>command-receipt.v1</span>
+          <span>capture-readiness.v1</span>
+          <span>transition-proof.v1</span>
+          <span>restoration-route.v1</span>
+          <span>product-capability-assessment.v1</span>
+          <span>presentation-stack.v1</span>
+          <span>rule-scope-plan.v1</span>
+          <span>interaction-plan.v1</span>
+          <span>coordinate-space.v1</span>
+          <span>external-observation.v1</span>
+          <span>capture-series.v1</span>
+        </div>
+        <h3>只读 API</h3>
+        <pre>GET /api/v1/tasks/{task_id}/exploration-graph
+GET /api/v1/tasks/{task_id}/exploration-graph/nodes/{page_node_id}
+GET /api/v1/tasks/{task_id}/overlay-targets
+GET /api/v1/tasks/{task_id}/transitions
+GET /api/v1/tasks/{task_id}/external-transitions
+GET /api/v1/tasks/{task_id}/command-receipts
+GET /api/v1/tasks/{task_id}/capture-readiness
+GET /api/v1/tasks/{task_id}/product-capability-assessments
+GET /api/v1/tasks/{task_id}/rule-scope-plans
+GET /api/v1/tasks/{task_id}/captures/{capture_id}/presentation</pre>
+        <p class="small muted">
+          前端不开放写图、写 Receipt 或写 Readiness；所有写入必须由 Runtime 应用服务和仓储事务完成。
+          迁移基于实施时唯一 Alembic head，先新增/双写，后切读，最后才评估删除旧投影。
+        </p>
+      </div>
+    </section>
+
+    <section id="workstation">
+      <div class="panel">
+        <h2>16. 工作台呈现</h2>
+        <div class="grid-2">
+          <article class="card brand">
+            <h3>默认树视图</h3>
+            <ul>
+              <li>树前展示产品声明、入口观察与规则范围；</li>
+              <li>首次可信路径作为树主干；</li>
+              <li>PageState 折叠在 PageNode 内；</li>
+              <li>Overlay 以侧挂卡片/角标展示；</li>
+              <li>底层未知的启动浮层挂运行入口，不伪造首页；</li>
+              <li>失败与外跳使用虚线和风险色；</li>
+              <li>可切换完整图和恢复路径。</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>节点详情</h3>
+            <ul>
+              <li>identity facts 与类型 Assessment 历史；</li>
+              <li>状态、Overlay、入边、出边和失败边；</li>
+              <li>before/after、Readiness、真实可见层与派生长图；</li>
+              <li>Manifest、InputSet、RuleExecution；</li>
+              <li>CommandReceipt、规则复用来源、关闭/回源循环与错误码。</li>
+            </ul>
+          </article>
+        </div>
+        <div class="callout">
+          <strong>统计必须拆开：</strong>
+          业务页面覆盖、页面状态覆盖、Overlay 类型覆盖、Frontier 执行覆盖、稳定 Capture 率、
+          有效规则覆盖、证据不足/人工复核和 Completion Gate。禁止用一个百分比掩盖其他维度。
+        </div>
+      </div>
+    </section>
+
+    <section id="rollout">
+      <div class="panel">
+        <h2>17. 渐进实施与回滚</h2>
+        <div class="timeline">
+          <article class="milestone"><b>M0 · 契约与基线</b><p>冻结协议和目标/规则范围，盘点广告特例与诊断兜底；建立 H5/App 指标，禁止 Agent 直连 Driver/ADB/CLI。</p></article>
+          <article class="milestone"><b>M1 · 动作、展示层与证据角色</b><p>Readiness + Presentation + 后置条件；隔离诊断改造，补关闭失败/循环终态，Gate 先影子记录。</p></article>
+          <article class="milestone"><b>M2 · 页面状态图影子写入</b><p>新增 Node/State/Transition/Overlay 表，双写但不参与调度和 Gate。</p></article>
+          <article class="milestone"><b>M3 · 产品、页型、弹窗与规则范围</b><p>入口能力评估接既有事实，正反判别卡、多轴弹窗、RuleScopePlan 及规则复用失效合同。</p></article>
+          <article class="milestone"><b>M4 · Command Broker 影子接入</b><p>CLI/ADB 只观测，记录网络/结构/窗口能力与一致 Profile，对比现有 Driver。</p></article>
+          <article class="milestone"><b>M5 · 有限自主探索灰度</b><p>三队列、复合动作、坐标变换、混合发现与条件外跳旁路；Graph 参与去重和恢复。</p></article>
+          <article class="milestone"><b>M6 · 图恢复与证据补齐</b><p>Route Planner、等价门禁、长页 CaptureSeries、DOM 派生血缘、Rejudge 与真实 E2E。</p></article>
+          <article class="milestone"><b>M7 · 工作台、Gate 与退役</b><p>图 UI、Gate enforcement，按指标逐步退役旧专项分支。</p></article>
+        </div>
+        <div class="callout success">
+          <strong>回滚原则：</strong>
+          新能力使用独立 Feature Flag 和策略 ID；Adapter 与现有 Driver 并存；Graph 先双写；
+          Gate 先 shadow；回滚只停新调度，不删除已经形成的审计事实。
+        </div>
+      </div>
+    </section>
+
+    <section id="acceptance">
+      <div class="panel">
+        <h2>18. 测试、验收与风险</h2>
+        <h3>硬性正确性门槛</h3>
+        <div class="grid-2">
+          <article class="card green">
+            <ul>
+              <li>100% 生产命令绑定 CommandReceipt；</li>
+              <li>100% 成功 Transition 有 stable after Capture 与 postcondition；</li>
+              <li>0 个非 stable/被遮挡帧冒充稳定页面证据；</li>
+              <li>0 个历史坐标/ref 跨 epoch 重放；</li>
+              <li>0 个任意 Bash/ADB/CLI 生产入口。</li>
+            </ul>
+          </article>
+          <article class="card green">
+            <ul>
+              <li>page_type 改判不新增 PageNode；</li>
+              <li>弹窗关闭前计划与前态齐备，关闭规则等待后态；</li>
+              <li>外部落地不进入业务覆盖；</li>
+              <li>补采绑定 request/route/equivalence/manifest；</li>
+              <li>Completion Gate 能阻断全部来源缺口。</li>
+              <li>诊断帧、独立 URL 观察不能冒充自然页面/点击；</li>
+              <li>规则复用可追溯，unknown 不缩小必检分母。</li>
+            </ul>
+          </article>
+        </div>
+        <h3>真实验收矩阵</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>维度</th><th>H5 / Web</th><th>App</th><th>必须验证</th></tr></thead>
+            <tbody>
+              <tr><td>页面技术</td><td>标准 DOM、SPA、Flutter/Canvas</td><td>Accessibility 完整/缺失</td><td>身份、候选和到达证明</td></tr>
+              <tr><td>加载</td><td>长轮询、慢图、视频、持续动画</td><td>启动、动画、键盘、方向切换</td><td>Settle 不截早、不永等</td></tr>
+              <tr><td>弹窗</td><td>多层广告、充值/登录/更新</td><td>启动层、权限窗、系统 Dialog</td><td>前态留证、后态判关闭、失败终态</td></tr>
+              <tr><td>交互</td><td>ref 失效、同 URL 页面切换</td><td>大框、嵌套滚动、坐标漂移</td><td>动态 rebind、hit-test、postcondition</td></tr>
+              <tr><td>外跳</td><td>新 Tab、跨域、无法返回</td><td>浏览器/商店/其他 Package</td><td>熔断、留证、恢复、不计覆盖</td></tr>
+              <tr><td>恢复</td><td>启动广告重现、兄弟分支</td><td>Session 丢失、Package 漂移</td><td>图选路、逐步验证、替代路径</td></tr>
+              <tr><td>高风险</td><td>登录、提交、上传</td><td>支付、授权、删除、发布</td><td>R2/R3 fail-closed</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <h3>效果指标</h3>
+        <div class="grid-4">
+          <article class="card"><b>Verified Arrival Rate</b><p class="small muted">真正满足后置条件的导航比例。</p></article>
+          <article class="card"><b>Stable Capture Rate</b><p class="small muted">以稳定页面采集尝试为分母，不惩罚合规失败时间序列。</p></article>
+          <article class="card"><b>Unique Page / Time &amp; Token</b><p class="small muted">唯一可信页面的探索效率。</p></article>
+          <article class="card"><b>Evidence Rejection</b><p class="small muted">错帧、错页、错来源的拒绝率。</p></article>
+          <article class="card"><b>Stale Target / No Effect</b><p class="small muted">目标失效和无效果动作占比。</p></article>
+          <article class="card"><b>External Escape / Recovery</b><p class="small muted">外跳率与恢复成功率。</p></article>
+          <article class="card"><b>Overlay Coverage</b><p class="small muted">弹窗类型及规则有效覆盖。</p></article>
+          <article class="card"><b>Completion Gate</b><p class="small muted">最终质量门禁而非任务表面状态。</p></article>
+        </div>
+        <div class="callout warn">
+          <strong>效果阈值在 M0 后冻结：</strong>
+          先取得相同任务、相同预算的真实基线，再设置提升百分比；不预先拍一个无法验证的目标。
+        </div>
+        <p>反馈新增护栏：层级错配率、非法规则复用数、诊断证据泄漏数、关闭/回源循环耗尽次数、CaptureSeries 断档率、网络可观测性和挑战阻断分布。存储字节下降与模型 Token 下降分开统计，不以减少必要规则执行换效率。</p>
+        <details>
+          <summary>主要风险与缓解</summary>
+          <div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>风险</th><th>缓解</th></tr></thead>
+                <tbody>
+                  <tr><td>Graph 与旧 Frontier 漂移</td><td>Capture/Action 为底层事实，shadow 对账与 Graph hash</td></tr>
+                  <tr><td>页面过度合并或拆分</td><td>身份排除 page_type/title，使用 landmarks、冲突与 merge/split 审计</td></tr>
+                  <tr><td>CLI 灵活性绕过安全</td><td>无通用 Shell、固定 argv、隔离 Profile、Receipt 和风险策略</td></tr>
+                  <tr><td>Settle 过严或过松</td><td>动态区域 mask、结构 quorum、动作专属 Profile、identity sandwich</td></tr>
+                  <tr><td>补采恢复到相似错误状态</td><td>规则声明 invariants、State Equivalence、失败关闭</td></tr>
+                  <tr><td>Shadow 增加成本</td><td>采样比例、摘要存储、按阶段开启和独立预算</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <section id="feedback">
+      <div class="panel">
+        <h2>19. 团队反馈逐条裁决与改动</h2>
+        <p class="lead">反馈集中指出了原方案在产品适用性、可见层级和执行闭环上的缺口，值得整合；但“用单一信号判断完成”“修改页面后当自然证据”“一刀切减少规则”需要修正。</p>
+        <h3>lichuan：7 条反馈</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>反馈</th><th>采纳结论</th><th>结合方式与具体改动</th><th>解决的问题与提升</th></tr></thead>
+            <tbody>
+              <tr id="feedback-l1"><td>L1 · 首页前识别产品页型，导航与弹窗分开</td><td><span class="badge ok">采纳并调整顺序</span></td><td><a href="#scheduler">入口原始观察后做产品能力评估</a>，复用目标快照与页型评估；产品形态、页面类型、展示层分离。</td><td>避免对导航型产品强找详情/个人中心；unknown 不被误写成不适用。</td></tr>
+              <tr id="feedback-l2"><td>L2 · 补齐充值、登录/凭证、更新，重点是关不掉</td><td><span class="badge ok">采纳 · P0 闭环</span></td><td><a href="#overlay">多轴分类与关闭状态机</a>；先前态/计划，后关闭验证；倒计时、无按钮、误跳和无效果分别结算。</td><td>保留真实不可关闭缺陷，减少死循环和误确认；不把所有阻断当广告。</td></tr>
+              <tr id="feedback-l3"><td>L3 · 2～3 秒无新请求判加载完成</td><td><span class="badge p1">仅采纳辅助信号</span></td><td><a href="#settle">关键 inflight + 响应条件 + quiet + UI 门禁</a>，按平台记录 complete/partial/unavailable。</td><td>减少早截和空等；避免慢请求、长轮询及 ADB 网络不可见导致误判。</td></tr>
+              <tr id="feedback-l4"><td>L4 · 外跳单独标签/进程，只截图</td><td><span class="badge p1">条件采纳</span></td><td><a href="#interaction">自然 popup 优先保留主面</a>；已知安全 URL 可旁路观察；JS/POST/Activity 不假定可克隆，回源循环熔断。</td><td>减少破坏主页面和重复关闭；同时保留来源/真实点击证据。</td></tr>
+              <tr id="feedback-l5"><td>L5 · 证据核心是层级；删 DOM/改 z-index；Flutter 纯视觉</td><td><span class="badge p0">采纳痛点，否决改造正式证据</span></td><td><a href="#evidence">Presentation 门禁</a>绑定可见层与规则目标；隐藏/JS fallback 隔离诊断；Flutter 先探测 Semantics。</td><td>直接解决“详情标签 + 弹窗截图”；不靠隐藏缺陷制造通过，避免误判结构能力。</td></tr>
+              <tr id="feedback-l6"><td>L6 · 广告规则首页一次，有效性每页</td><td><span class="badge p1">按规则合同拆分</span></td><td><a href="#scheduler">RuleScopePlan</a>区分全局/素材、页面广告位、弹窗实例、转场和汇总；复用带来源与失效条件。</td><td>减少重复 Judge 成本，但保留逐页展示、关闭与有效点击覆盖。</td></tr>
+              <tr id="feedback-l7"><td>L7 · 爬虫抓不到 JS 入口，选路也要证据</td><td><span class="badge ok">采纳</span></td><td><a href="#scheduler">DOM/AX、真实 href、语义动作与视觉混合发现</a>；每步增量观察，候选不计到达。</td><td>扩大动态页面入口发现；降低盲猜路径和每步全量抓取成本。</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <h3>qingyunke：7 条反馈</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>反馈</th><th>采纳结论</th><th>结合方式与具体改动</th><th>解决的问题与提升</th></tr></thead>
+            <tbody>
+              <tr id="feedback-q1"><td>Q1 · 长截图、长 DOM 格式化/压缩</td><td><span class="badge ok">采纳，区分角色</span></td><td><a href="#evidence">原视口 + full-page/滚动序列 + 派生拼接</a>；源件无损存储、展示格式化、模型有界片段分开。</td><td>长页面可读可审计，减少存储和输入负担；不掩盖惰性加载、截断与断档。</td></tr>
+              <tr id="feedback-q2"><td>Q2 · 先滑动到位置再点击等连贯动作</td><td><span class="badge ok">采纳有界计划</span></td><td><a href="#interaction">InteractionPlan</a>按滚动→观察→重绑定→点击执行，每步有 epoch/Receipt/后态。</td><td>减少模型往返与动作失配，同时防止滑动后使用旧坐标误点。</td></tr>
+              <tr id="feedback-q3"><td>Q3 · 启动广告、公告、支付、网址/二维码/保存通知统一分类</td><td><span class="badge p1">统一协议，不统一为广告</span></td><td><a href="#overlay">呈现形式 × 业务语义 × 阻断 × 风险</a>；独立支付页是页面，页内二维码是区域，浮层才是 Overlay。</td><td>处理可复用，规则分配和风险更准确；避免页面树与广告统计混乱。</td></tr>
+              <tr id="feedback-q4"><td>Q4 · 首页先收菜单并定义一级采集点，属于页型吗</td><td><span class="badge ok">采纳候选发现</span></td><td><a href="#scheduler">菜单入口进入 Frontier</a>，可信到达后再判型建 Node；导航型入口本身按 Catalog 识别。</td><td>获得更好的首批路径；避免把“看到了菜单”误算成“已覆盖页面”。</td></tr>
+              <tr id="feedback-q5"><td>Q5 · 模拟/JS 点击有无坐标，分辨率会不会不准</td><td><span class="badge ok">采纳坐标与动作溯源</span></td><td><a href="#interaction">记录源帧与全变换链</a>；真实输入和程序派发分开，JS 没有物理点时不编造。</td><td>可复现坐标偏差并减少误点；程序触发不再被误判为真实可点击。</td></tr>
+              <tr id="feedback-q6"><td>Q6 · 更真实 UA/分辨率模拟以减少人机校验</td><td><span class="badge p1">采纳一致配置，不保证绕过</span></td><td><a href="#adapters">冻结设备 Profile</a>并保留真机矩阵；挑战记环境阻断，走授权测试入口/人工。</td><td>减少配置不一致引发的布局和环境问题；不把模拟效果夸大成真机或反风控能力。</td></tr>
+              <tr id="feedback-q7"><td>Q7 · 纯视觉主、DOM 辅，Web 直接 URL</td><td><span class="badge p1">按平台修正后采纳</span></td><td><a href="#adapters">DOM/AX、Native Tree、Semantics、视觉按能力组合</a>；direct URL 只补内容可达。</td><td>兼顾精准定位与自绘覆盖，保留真实展示和点击链，不放弃现成结构能力。</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="grid-3">
+          <article class="card red"><h4>P0 · 先纠正证据与终态</h4><p>展示层绑定、自然/诊断隔离、弹窗前后闭环、加载失败证据角色、关闭/回源循环预算。</p></article>
+          <article class="card brand"><h4>P1 · 再提升探索与效率</h4><p>产品能力/规则范围、混合候选、网络能力、复合操作、几何合同、条件旁路、长页与补采。</p></article>
+          <article class="card purple"><h4>P2 · 完善评审呈现</h4><p>工作台展示画像、层级、规则复用、长图缺口与循环诊断；正式切 Gate 前先具备最低可观测性。</p></article>
+        </div>
+        <p class="small muted">这是文档与实施计划更新，没有修改业务代码、规则启用状态、设备配置或运行时开关。详细字段和代码接线见配套设计第 20、27、31、35 节。</p>
+      </div>
+    </section>
+
+    <section id="closed-loop">
+      <div class="panel">
+        <h2>20. 整体流程串联与闭环</h2>
+        <div class="flow-scroll">
+          <div class="flow">
+            <div class="step card brand"><b>冻结并探测</b><small>目标、规则、预算、租约、真实能力</small></div>
+            <div class="step card orange"><b>入口与浮层</b><small>原帧、顶层、前态、安全关闭或阻断</small></div>
+            <div class="step card cyan"><b>产品与范围</b><small>能力评估、页型、规则执行计划</small></div>
+            <div class="step card purple"><b>图与候选</b><small>可信到达建图，菜单链接入 Frontier</small></div>
+            <div class="step card brand"><b>动作与采集</b><small>逐步 rebind、外跳隔离、就绪与展示层</small></div>
+            <div class="step card green"><b>封存与判定</b><small>角色校验、InputSet、异步 Judge</small></div>
+            <div class="step card orange"><b>补采与收口</b><small>图恢复、等价门禁、重判、最终 Gate</small></div>
+          </div>
+        </div>
+        <div class="callout">
+          <strong>三个回路：</strong>
+          新页面/浮层 → 重新观察与评估；规则证据不足 → 图恢复 → 等价补采 → 新输入重判；
+          外跳/关闭失败 → 有界恢复或阻断终态。任何回路都不能重置预算、改写原证据或增加虚假覆盖。
+        </div>
+        <h3>每一步输入、产物和失败出口</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>步骤</th><th>输入与操作</th><th>持久化产物 / 继续条件</th><th>失败如何收口</th></tr></thead>
+            <tbody>
+              <tr><td>S0 · 冻结任务</td><td>产品声明、入口、账号范围、规则、页型目标、允许域/Package、预算。</td><td>TaskSpec 与规则/策略/环境 hash；原始必检目标不可变。</td><td>缺权限或高风险配置冲突先解决，不启动副作用动作。</td></tr>
+              <tr><td>S1 · 获取运行面</td><td>获取租约，探测结构/网络/窗口能力；先监听再打开入口。</td><td>Session/Surface、ProviderCapabilitySnapshot、Profile。</td><td>不可用显式降级/阻断；unknown 不作为空数据。</td></tr>
+              <tr><td>S2 · 入口原帧</td><td>截图、可用结构、身份、时间、可见层。</td><td>Capture + Presentation；允许 PageNode 尚未知。</td><td>身份漂移/错帧有界重采；入口全屏层也必须留证。</td></tr>
+              <tr><td>S3 · 阻断处理</td><td>顶层语义、适用规则计划、前态、安全关闭候选。</td><td>Overlay occurrence、动作/Receipt、后态与关闭结果。</td><td>无关闭、倒计时、误跳、无效果分类；重现计数不清零。</td></tr>
+              <tr><td>S4 · 画像与范围</td><td>声明目标 + 入口及后续实际观察。</td><td>产品能力 revision、PageTypeAssessment、RuleScopePlan。</td><td>未知保留缺口；反证追加版本并使受影响复用失效。</td></tr>
+              <tr><td>S5 · 可信建图</td><td>稳定可见页面区域、identity、实际到达证明。</td><td>PageNode/State/Transition；页面、区域、Overlay 分开。</td><td>被遮挡的底层仅候选假设，不新增业务覆盖。</td></tr>
+              <tr><td>S6 · 证据与候选分流</td><td>规则所需角色、当前结构/截图/菜单/真实链接。</td><td>可用证据送 Work Item，候选送 Frontier。</td><td>证据缺口留待补齐；菜单候选不算已到达页面。</td></tr>
+              <tr><td>S7 · 选择并执行</td><td>三队列、状态、风险和剩余预算。</td><td>InteractionPlan；每步 Intent/Receipt/新 epoch/结果。</td><td>新浮层/漂移即暂停；执行结果未知先观察不盲重试。</td></tr>
+              <tr><td>S8 · 外跳与后态</td><td>自然 popup、已知 URL 或真实 JS/Activity 转场。</td><td>ExternalObservation、来源/落地/回源；Readiness + Presentation。</td><td>循环耗尽终止该分支，子 Surface 不算覆盖，不伪造点击。</td></tr>
+              <tr><td>S9 · 事实提交</td><td>Artifact 已持久化且核验，动作与采集结果齐备。</td><td>拥有者事务写事实与 Outbox；Graph/Inspection 幂等消费。</td><td>丢唤醒可从 DB 重投；孤立 Blob 对账，不越权重做 UI 动作。</td></tr>
+              <tr><td>S10 · 规则判断</td><td>锁定规则版本、scope key、合法证据角色、封存 InputSet。</td><td>RuleExecution 或 EvidenceRequest；合法复用带来源。</td><td>fail / 不足 / 人工 / 技术错误分开；Judge 不碰设备。</td></tr>
+              <tr><td>S11 · 补采回路</td><td>证据需求、Live Session、预算、图路径、规则等价约束。</td><td>逐边验证 → Equivalence → 新 Capture/InputSet → 新尝试。</td><td>不可恢复的一次性/高风险状态明确不足或人工；不覆盖旧结论。</td></tr>
+              <tr><td>S12 · 最终收口</td><td>停止新动作，排空 Frontier/计划/外部面/规则/补采，冻结报告输入。</td><td>同 Run/Epoch 的 Gate、规则分布、分维度覆盖、资源释放结果。</td><td>预算耗尽不等于产品无功能；Gate 故障写 unavailable，不能借用旧 Run 的通过结论。</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <h3>动作与异步 Judge 如何接起来</h3>
+        <ol>
+          <li>当前 Capture + Presentation + candidate epoch 创建意图；Session 单写所有者负责每次设备动作。</li>
+          <li>Broker 校验范围/预算/风险，持久化 planned，再执行、记 Receipt、观察并验证后态。</li>
+          <li>先落 Artifact，再提交拥有者事实与 Outbox；数据库可重复投递不等于 UI 可重复点击。</li>
+          <li>静态规则证据齐备可先判断；关闭、点击有效性等必须等待 after 或合规时间序列。</li>
+          <li>Judge 仅声明缺证，Orchestrator 才能在 recovery 队列按图恢复与补采，重新检查授权和等价。</li>
+          <li>崩溃后先查命令收据与当前状态；未知副作用禁止盲重放。恢复属于可验证补偿，不是原子回滚。</li>
+          <li>停止新探索后给证据/规则/外部面留独立收口预算；晚到结果按 finalization epoch 校验。</li>
+          <li>报告固定输入可幂等重试；失败或取消也释放租约并报告释放结果，不能用“已释放”代替 Gate 验收。</li>
+        </ol>
+        <h3>四个具体场景</h3>
+        <div class="grid-2">
+          <article class="card brand"><h4>A · 导航型首页 + 启动广告</h4><p>先记录启动 Overlay，不伪造首页；前态后安全关闭，才识别导航/广告列表。详情/个人中心未找到先 unknown，菜单入候选。素材静态结论可依合同复用，各广告位仍保留交互覆盖。</p></article>
+          <article class="card orange"><h4>B · 版本更新“确定 / 取消”</h4><p>识别 update 而非广告，“确定”可能安装/重启。记录前态后仅执行获准取消；若不消失且规则要求可取消则 fail，若定位证据不足则补采/人工。不改 DOM 来宣称关闭成功。</p></article>
+          <article class="card red"><h4>C · JS 原标签外跳</h4><p>无可靠 href 就不猜 URL；获准真实点击后留转场与落地，有限回源。相同启动弹窗链重现触发熔断；之后若用 URL 旁路，仅证明落地内容，业务覆盖不增加。</p></article>
+          <article class="card green"><h4>D · 滚动找按钮 + 长页补采</h4><p>有界滚动后重观察/rebind，点击并验证新页面真实可见。每个长页原帧保留顺序/时间；下半段缺证时图恢复→等价校验→新帧→新 InputSet 重判，断档不得靠拼图抹平。</p></article>
+        </div>
+        <h3>本轮反馈新增的 12 类验收场景</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>样本 / 故障注入</th><th>必须得到的结果</th></tr></thead>
+            <tbody>
+              <tr><td>导航型产品无详情/个人中心；后续又发现反证</td><td>不预造节点；能力状态有证据，反证修订可追溯；未知不缩分母。</td></tr>
+              <tr><td>启动广告遮住全部入口、多层登录/充值/更新</td><td>Session/Capture 承接启动层，按真实语义/风险分类，不计作业务页。</td></tr>
+              <tr><td>倒计时、缺少关闭钮、取消无效、误点外跳</td><td>分开结算；可证明缺陷判 fail，不盲点、不无限等待。</td></tr>
+              <tr><td>底层详情 DOM + 顶层弹窗截图</td><td>层级门禁拒绝详情可见证据，保留合法弹窗证据。</td></tr>
+              <tr><td>启动隐藏/JS 派发诊断 fallback</td><td>后续所有 Writer/Manifest/InputSet 传递诊断标记，不能入自然规则证明。</td></tr>
+              <tr><td>首个慢请求、长轮询、网络 unavailable</td><td>无新请求不误判完成；不可观测不填零；需要网络的规则可说明不足。</td></tr>
+              <tr><td>天然新 Tab、JS 同标签跳转、POST/一次性 Token</td><td>选择不同策略，保留动作语义，不伪造旁路点击。</td></tr>
+              <tr><td>回源相同弹窗链跨重启反复出现</td><td>预算计数不被重置，有限终态且主任务可以正确收口。</td></tr>
+              <tr><td>同素材出现在不同页面/广告位</td><td>静态结果按合同复用，布局/关闭/有效性范围覆盖不丢失。</td></tr>
+              <tr><td>滚动中改变 DPR/方向、弹出新层、旧 bbox 失效</td><td>计划暂停重绑定；坐标变换可追溯，无旧点重放。</td></tr>
+              <tr><td>长页惰性加载、虚拟列表、拼接断档、DOM 截断</td><td>原帧和派生件区分，缺口可见，时间序列不冒充同帧。</td></tr>
+              <tr><td>规则晚到/补采耗尽/取消/最终 Gate 异常</td><td>同 Run/Epoch 输入封存、各项待办有终态、资源释放；不把技术错误写成通过。</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="small muted">以上为待实施验收场景，不代表已跑过。基础单元、持久化、Runtime、Shadow 和真实 H5/App 矩阵仍须完成；只有文档结构校验不能证明系统能力。</p>
+      </div>
+    </section>
+
+    <section id="final">
+      <div class="panel">
+        <h2>21. 冻结策略与下一步</h2>
+        <pre>exploration_mode        = bounded_discovery
+budget_initial          = coverage 70 / discovery 20 / recovery 10
+page_local_tab          = state_revision
+global_navigation_tab   = page_node when business contract changes
+popup_qc_target         = true
+popup_business_page     = false by default
+external_landing_cover  = false
+supplement_policy       = rule_declared
+shell_mode              = brokered_allowlist
+raw_bash                = forbidden
+page_graph_source        = immutable capture + action facts
+product_scope            = declared targets + evidence-backed applicability
+visible_target           = presentation + capture + layer/region
+formal_evidence          = rule-scoped readiness + natural provenance + manifest + sealed input set
+diagnostic_mutation      = isolated, never natural UI proof
+external_sidecar         = capability + policy + semantics conditional
+rule_frequency           = contract declared, never blanket advertising once</pre>
+        <div class="callout success">
+          <strong>推荐启动顺序：</strong>
+          先做动作事务、真实展示层和证据角色，收住关闭/回源失败；再做页面图影子写入；随后接产品评估、规则范围与 Command Broker；
+          最后才让 CLI/ADB 承担正式低风险动作和图路径补采。
+        </div>
+        <p>
+          完整实现级字段、协议、错误码、迁移、测试和代码影响范围见
+          <a href="./2026-09-02-bounded-exploration-page-state-graph-design.md">Markdown 详细设计文档</a>。
+        </p>
+        <p class="small muted">
+          本文是方案交付，不代表功能已经上线；代码测试、Shadow 对比、真实 H5/App 运行、规则结果和 Completion Gate
+          必须分别验收。
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <strong>Alioth 有限自主探索与可信证据优化方案 · v1.1 · 更新 2026-09-03</strong><br>
+      自包含离线 HTML，无外部脚本、字体或网络资源；适合浏览器评审、打印和归档。
+    </div>
+  </footer>
+</body>
+</html>

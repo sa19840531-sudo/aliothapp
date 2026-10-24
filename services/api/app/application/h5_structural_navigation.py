@@ -1,0 +1,41 @@
+"""兼容原应用层入口，结构导航合同统一由领域层维护。"""
+
+from services.api.app.domain.exploration.h5_structural_navigation import (
+    H5_BOTTOM_NAVIGATION_FAMILY_ADAPTIVE,
+    H5_BOTTOM_NAVIGATION_FAMILY_FLUTTER,
+    H5_BOTTOM_NAVIGATION_FAMILY_FOOTER_WRAP,
+    H5_BOTTOM_NAVIGATION_FAMILY_GENERIC_SPA,
+    H5_BOTTOM_NAVIGATION_FAMILY_PAGES_FOOT,
+    H5_BOTTOM_NAVIGATION_FAMILY_VANT,
+    H5_GENERIC_NAVIGATION_CONTAINER_CLASSES,
+    H5_GENERIC_NAVIGATION_ITEM_CLASSES,
+    h5_bottom_navigation_action_parameters,
+    h5_bottom_navigation_family,
+    h5_bottom_navigation_selector,
+    h5_flutter_bottom_navigation_label_hash,
+    h5_flutter_bottom_navigation_runtime_selector,
+    h5_match_bottom_navigation_target,
+    h5_match_flutter_bottom_navigation_runtime_selector,
+    h5_match_page_tab_target,
+    h5_page_tab_target,
+)
+
+__all__ = (
+    "H5_BOTTOM_NAVIGATION_FAMILY_ADAPTIVE",
+    "H5_BOTTOM_NAVIGATION_FAMILY_FLUTTER",
+    "H5_BOTTOM_NAVIGATION_FAMILY_FOOTER_WRAP",
+    "H5_BOTTOM_NAVIGATION_FAMILY_GENERIC_SPA",
+    "H5_BOTTOM_NAVIGATION_FAMILY_PAGES_FOOT",
+    "H5_BOTTOM_NAVIGATION_FAMILY_VANT",
+    "H5_GENERIC_NAVIGATION_CONTAINER_CLASSES",
+    "H5_GENERIC_NAVIGATION_ITEM_CLASSES",
+    "h5_bottom_navigation_action_parameters",
+    "h5_bottom_navigation_family",
+    "h5_bottom_navigation_selector",
+    "h5_flutter_bottom_navigation_label_hash",
+    "h5_flutter_bottom_navigation_runtime_selector",
+    "h5_match_bottom_navigation_target",
+    "h5_match_flutter_bottom_navigation_runtime_selector",
+    "h5_match_page_tab_target",
+    "h5_page_tab_target",
+)

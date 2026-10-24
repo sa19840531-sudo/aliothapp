@@ -1,0 +1,26 @@
+{
+  "task_id": "1ac805e7-066c-46d9-bf0c-f8572ceea234",
+  "sources": [
+    {
+      "capture_id": "3c0bc887-1367-41dd-a27e-9cf83bb6910c",
+      "artifact_id": "a76d0e9f-1560-46f1-982d-a6149c5fda29",
+      "checksum": "sha256:911ae0f484df9b6b2f481332b3c169197fb0aca86893e6953c76fbb7b5ca5614",
+      "projection": "保留全部van-tab真实节点、selector、同组事实、布局和命中证据；去掉无关素材"
+    },
+    {
+      "capture_id": "249afb37-14fa-4ea4-998f-ac37f2c1e258",
+      "artifact_id": "2dbd233b-f5c4-40e1-945e-0aed4e9915e9",
+      "checksum": "sha256:02265cfc461beb70e8db07111766de034ec0adfee973c7a89998d14b60130b83",
+      "projection": "保留全部van-tab真实节点、selector、同组事实、布局和命中证据；去掉无关素材"
+    },
+    {
+      "capture_id": "d2304a70-cde4-4ea7-8e74-275af3cba54e",
+      "artifact_id": "fe2b09a8-cd87-41f9-a37e-9798a138ddc5",
+      "checksum": "sha256:614d964cf0e067ac23676965a58e175cf3b23226d52d5160e545ad19348c4bc7",
+      "projection": "保留全部van-tab真实节点、selector、同组事实、布局和命中证据；去掉无关素材"
+    }
+  ],
+  "observation_packet_id": "3a8d67c4-c7ae-420f-a614-cd0e4dd7a96b",
+  "rule_inventory_sha256": "5145a849730d24eb07cbb7a6b3c04051919f3f32c9fb8ccc3b48d5455f53a51b",
+  "criteria_reconstruction": "从原任务冻结规则逐字段投影，摘要须与原超限Packet的criteria摘要完全一致"
+}

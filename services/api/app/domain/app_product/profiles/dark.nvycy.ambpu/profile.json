@@ -1,0 +1,107 @@
+{
+  "package_name": "dark.nvycy.ambpu",
+  "slug": "jinguo",
+  "display_name": "禁果短剧",
+  "resolution": [
+    1440,
+    3040
+  ],
+  "cloud_back_tap": [
+    1120,
+    2955
+  ],
+  "gesture_y_max": 2794,
+  "execution_policy": "agent_profile_only",
+  "popup_close_policy": "watcher_cascade",
+  "bottom_nav_policy": "semantic_icon_relative",
+  "bottom_nav_ordered_tabs": [
+    "首页",
+    "剧场",
+    "视频",
+    "社区",
+    "福利",
+    "我的"
+  ],
+  "taps": {
+    "entry": [
+      1244,
+      303
+    ],
+    "first_left_video": [
+      382,
+      1719
+    ],
+    "detail_page_back": [
+      48,
+      294
+    ],
+    "bottom_tab_theater": [
+      337,
+      2732
+    ],
+    "bottom_tab_2": [
+      659,
+      2794
+    ],
+    "bottom_tab_3": [
+      780,
+      2794
+    ],
+    "bottom_tab_4": [
+      890,
+      2794
+    ],
+    "me_tab": [
+      1297,
+      2734
+    ],
+    "wallet_page_back": [
+      53,
+      240
+    ]
+  },
+  "tap_priority_note": "底栏主路径=语意图标+相对六等分（jinguo_ui_tree_features）；taps.bottom_tab_* / me_tab 仅弱兜底",
+  "timing_rules": [],
+  "exploration_curriculum": [
+    {
+      "phase": "open_first",
+      "tap_key": "first_left_video",
+      "hint": "最新/列表左边第一部"
+    },
+    {
+      "phase": "detail_back",
+      "tap_key": "detail_page_back",
+      "hint": "详情左上返回箭头"
+    },
+    {
+      "phase": "bottom_nav",
+      "hint": "底栏巡检：首页→剧场→视频→社区→福利→我的；语意图标+相对槽位，禁止绝对px主路径"
+    },
+    {
+      "phase": "me_tab",
+      "tap_key": "me_tab",
+      "hint": "底栏「我的」（相对最右槽；me_tab 绝对点仅兜底）"
+    },
+    {
+      "phase": "popup",
+      "hint": "弹窗仍在：Watcher cascade；禁止 POPUP_CLOSE 脚本点"
+    }
+  ],
+  "popup_notes": {
+    "close_x": "弹窗仍在：点底部导航栏最右侧「<」（|||/Home/< 右边那个），不点弹窗圆 ×；禁止脚本 POPUP_CLOSE_*",
+    "policy": "watcher_cascade",
+    "target": "bottom_nav_right_back_chevron",
+    "startup": "semantic_skip_relative_top_right",
+    "bottom_nav": "semantic_icon_relative_six_slots"
+  },
+  "deprecated_product_script": "app_jinguo_script.py / jinguo.py 仍为产品编排主路径（无编排包才走 Agent）；关键落点在本 Profile，关窗用云手机 back",
+  "popup_close_by_type": {
+    "startup_skip": {
+      "action": "vision_skip",
+      "control_role": "skip",
+      "expected_state_hint": "tap_skip",
+      "target_hint": "开屏/首屏：语义进入/跳过 + 右上相对区；禁止 back/ENTRY_TAP",
+      "popup_close_policy": "startup_semantic_relative"
+    }
+  }
+}

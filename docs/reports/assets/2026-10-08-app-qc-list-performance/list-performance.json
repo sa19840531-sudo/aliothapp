@@ -1,0 +1,320 @@
+{
+  "date": "2026-10-08",
+  "environment": {
+    "source": "192.46.230.40 alioth-api PostgreSQL readonly diagnostics",
+    "snapshot": "same repeatable_read readonly transaction",
+    "jit": "off for old HEAD and candidate queries",
+    "cache": "warm after same-snapshot field comparison",
+    "timing_scope": "SQL only, not HTTP",
+    "statistics_version": "both queries use the same deployed rule-completion helper",
+    "baseline_source": "local HEAD prior to this change; excludes already-removed report_available duplicate projection"
+  },
+  "comparison": {
+    "tasks": {
+      "rows": 20,
+      "differences": [],
+      "metrics": {
+        "old": {
+          "timings_ms": [
+            464.76,
+            434.53,
+            436.08
+          ],
+          "planning_ms": 6.214,
+          "execution_ms": 428.005,
+          "shared_hit_blocks": 156104
+        },
+        "new": {
+          "timings_ms": [
+            416.26,
+            372.28,
+            361.35
+          ],
+          "planning_ms": 6.617,
+          "execution_ms": 380.637,
+          "shared_hit_blocks": 110336
+        }
+      }
+    },
+    "report_ready,generating,failed": {
+      "rows": 10,
+      "differences": [],
+      "metrics": {
+        "old": {
+          "timings_ms": [
+            1157.23,
+            1131.94,
+            1228.05
+          ],
+          "planning_ms": 21.635,
+          "execution_ms": 1200.601,
+          "shared_hit_blocks": 462864
+        },
+        "new": {
+          "timings_ms": [
+            270.09,
+            269.8,
+            254.61
+          ],
+          "planning_ms": 16.655,
+          "execution_ms": 244.82,
+          "shared_hit_blocks": 96790
+        }
+      }
+    },
+    "report_ready": {
+      "rows": 10,
+      "differences": []
+    },
+    "report_generating": {
+      "rows": 1,
+      "differences": []
+    },
+    "report_failed": {
+      "rows": 10,
+      "differences": []
+    },
+    "report_not_started": {
+      "rows": 10,
+      "differences": []
+    },
+    "platform_app_None": {
+      "rows": 20,
+      "differences": []
+    },
+    "platform_app_ready,generating,failed": {
+      "rows": 20,
+      "differences": []
+    },
+    "platform_h5_None": {
+      "rows": 20,
+      "differences": []
+    },
+    "platform_h5_ready,generating,failed": {
+      "rows": 20,
+      "differences": []
+    },
+    "platform_web_None": {
+      "rows": 20,
+      "differences": []
+    },
+    "platform_web_ready,generating,failed": {
+      "rows": 20,
+      "differences": []
+    },
+    "status_running": {
+      "rows": 1,
+      "differences": []
+    },
+    "status_canceling": {
+      "rows": 0,
+      "differences": []
+    },
+    "status_done": {
+      "rows": 0,
+      "differences": []
+    },
+    "status_review": {
+      "rows": 20,
+      "differences": []
+    },
+    "status_failed": {
+      "rows": 14,
+      "differences": []
+    },
+    "status_canceled": {
+      "rows": 17,
+      "differences": []
+    },
+    "page_2_None": {
+      "rows": 20,
+      "differences": []
+    },
+    "page_2_ready,generating,failed": {
+      "rows": 20,
+      "differences": []
+    },
+    "page_20_None": {
+      "rows": 0,
+      "differences": []
+    },
+    "page_20_ready,generating,failed": {
+      "rows": 0,
+      "differences": []
+    },
+    "scope_{'taskObjects:read:tenant'}_None": {
+      "rows": 20,
+      "differences": []
+    },
+    "scope_{'taskObjects:read:tenant'}_ready,generating,failed": {
+      "rows": 20,
+      "differences": []
+    },
+    "scope_{'taskObjects:read:own'}_None": {
+      "rows": 20,
+      "differences": []
+    },
+    "scope_{'taskObjects:read:own'}_ready,generating,failed": {
+      "rows": 20,
+      "differences": []
+    },
+    "scope_{'taskObjects:read:department'}_None": {
+      "rows": 20,
+      "differences": []
+    },
+    "scope_{'taskObjects:read:department'}_ready,generating,failed": {
+      "rows": 20,
+      "differences": []
+    },
+    "task_name": {
+      "rows": 1,
+      "differences": []
+    },
+    "department_name": {
+      "rows": 6,
+      "differences": []
+    },
+    "submitter_name": {
+      "rows": 20,
+      "differences": []
+    }
+  },
+  "strict_comparison": {
+    "case_count": 31,
+    "all_original_return_columns_compared": true,
+    "differences": 0
+  },
+  "deployed_service": {
+    "scope_origin": "report_task_submitter_current_database_role",
+    "role": "平台管理员",
+    "can_read_any": true,
+    "auth_user_projection_ms": 2.11,
+    "not_http_or_original_screenshot_viewer": true,
+    "tasks_ms": [
+      6235.14,
+      6079.02,
+      5874.24
+    ],
+    "tasks_serialize_ms": [
+      0.21,
+      0.26,
+      0.21
+    ],
+    "reports_ms": [
+      12358.64,
+      12442.07,
+      12311.74
+    ],
+    "reports_serialize_ms": [
+      0.05,
+      0.1,
+      0.05
+    ]
+  },
+  "validation": {
+    "focused_backend_tests": 136,
+    "isolated_postgresql_migration_head": "20260930_0130",
+    "ruff": "passed",
+    "git_diff_check": "passed",
+    "writes_to_production": false,
+    "deployed": false
+  },
+  "root_cause": [
+    "deployed list_tasks has no transaction-local JIT isolation, although local HEAD already has it",
+    "report-status branch computes complete rule counts for all matching tasks before pagination",
+    "placeholder replacement repeatedly queries same-task concluded executions"
+  ],
+  "limitations": [
+    "SQL benchmark is not end-to-end HTTP acceptance",
+    "production service remains unchanged",
+    "current screenshot viewer identity is unavailable; service timing uses current task submitter database permissions",
+    "production concurrency and memory/swap pressure may alter latency"
+  ],
+  "deployed_jit_comparison": {
+    "tasks": {
+      "on": {
+        "planning_ms": 22.699,
+        "execution_ms": 6235.065,
+        "wall_ms": 6275.26,
+        "jit": {
+          "Functions": 570,
+          "Options": {
+            "Inlining": true,
+            "Optimization": true,
+            "Expressions": true,
+            "Deforming": true
+          },
+          "Timing": {
+            "Generation": {
+              "Deform": 24.577,
+              "Total": 48.795
+            },
+            "Inlining": 123.035,
+            "Optimization": 3351.902,
+            "Emission": 2256.45,
+            "Total": 5780.182
+          }
+        },
+        "shared_hit_blocks": 156392,
+        "shared_read_blocks": 31
+      },
+      "off": {
+        "planning_ms": 8.457,
+        "execution_ms": 424.016,
+        "wall_ms": 441.03,
+        "jit": null,
+        "shared_hit_blocks": 156317,
+        "shared_read_blocks": 0
+      }
+    },
+    "reports": {
+      "on": {
+        "planning_ms": 17.582,
+        "execution_ms": 11727.798,
+        "wall_ms": 11758.27,
+        "jit": {
+          "Functions": 1215,
+          "Options": {
+            "Inlining": true,
+            "Optimization": true,
+            "Expressions": true,
+            "Deforming": true
+          },
+          "Timing": {
+            "Generation": {
+              "Deform": 30.253,
+              "Total": 62.12
+            },
+            "Inlining": 48.817,
+            "Optimization": 5810.797,
+            "Emission": 4576.901,
+            "Total": 10498.635
+          }
+        },
+        "shared_hit_blocks": 456006,
+        "shared_read_blocks": 7074
+      },
+      "off": {
+        "planning_ms": 17.493,
+        "execution_ms": 1224.05,
+        "wall_ms": 1255.58,
+        "jit": null,
+        "shared_hit_blocks": 461150,
+        "shared_read_blocks": 1930
+      }
+    }
+  },
+  "deployed_jit_comparison_conditions": {
+    "read_only": true,
+    "same_repeatable_read_snapshot": true,
+    "per_statement_timeout_seconds": 55,
+    "per_query_jit_variants": [
+      "on",
+      "off"
+    ],
+    "off_measured_after_on": true,
+    "buffer_read_counts_retained_to_show_cache_difference": true,
+    "repository_source_has_set_local_jit": false,
+    "repository_source_has_explicit_transaction": false
+  }
+}

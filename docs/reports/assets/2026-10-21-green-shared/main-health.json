@@ -1,0 +1,10 @@
+[
+  {
+    "endpoint": "/api/v1/health",
+    "status": 200
+  },
+  {
+    "endpoint": "/api/v1/readyz",
+    "status": 200
+  }
+]

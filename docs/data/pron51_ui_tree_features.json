@@ -1,0 +1,303 @@
+{
+  "schema_version": "app-ui-tree-features.v1",
+  "product_name": "51成人破解(91pron)",
+  "product_aliases": [
+    "51成人破解(91pron)",
+    "pron51"
+  ],
+  "playbook_id": "pron51",
+  "apk_hint": "F:\\apptest\\51成人破解(91pron)\\260827-153704.apk",
+  "package_name": "com.androidtjdg.hinrqo",
+  "package_hints": [
+    "com.androidtjdg.hinrqo",
+    "pron51",
+    "51成人破解(91pron)"
+  ],
+  "flow_order": [
+    "bottom_tabs"
+  ],
+  "collection": {
+    "device_slot": "qa-a",
+    "adb_endpoint": "172.104.172.119:30615",
+    "collected_at": "2026-09-17T16:00:02.907610+00:00",
+    "wm": {
+      "w": 1440,
+      "h": 3040
+    },
+    "evidence_dir": "F:\\aliothapp\\.tmp_apptest_uitree_qa_a\\pron51",
+    "frame_count": 8,
+    "status": "partial",
+    "partial_reasons": [
+      "age_gate_not_observed",
+      "startup_ad_not_observed",
+      "popup_ads_not_observed"
+    ],
+    "note": "qa-a 实机安装采集；缺相位标 not_observed，禁止臆造 bounds。"
+  },
+  "note": "51成人破解(91pron)（pron51）UI Tree；qa-a 实采；状态=partial；相位=bottom_tabs。",
+  "age_gate": {
+    "phase": "age_gate",
+    "must_screenshot_before_action": true,
+    "match_fields": [
+      "semantic_target",
+      "metadata.content_desc",
+      "metadata.text",
+      "metadata.label",
+      "metadata.ui_tree_text",
+      "metadata.accessibility_text",
+      "metadata.purpose",
+      "metadata.expected_state_hint"
+    ],
+    "action": "tap",
+    "priority": "before_startup_ad_and_popup_ads",
+    "status": "not_observed",
+    "context_markers": [],
+    "enter_button_texts": [
+      "我已满18岁",
+      "我年满18岁",
+      "我已满18岁-进入",
+      "我年满18岁-进入"
+    ],
+    "leave_button_texts": [
+      "未满18",
+      "离开",
+      "未成年"
+    ]
+  },
+  "startup_ad": {
+    "phase": "startup_ad",
+    "must_screenshot_before_action": true,
+    "page_types": [
+      "startup_ad"
+    ],
+    "page_states": [
+      "popup",
+      "overlay"
+    ],
+    "context_markers": [
+      "开屏",
+      "跳过",
+      "跳過",
+      "skip",
+      "广告"
+    ],
+    "close_button_texts": [
+      "跳过",
+      "跳過",
+      "skip",
+      "关闭",
+      "關閉",
+      "close"
+    ],
+    "action": "tap_skip_once",
+    "forbid": [
+      "点广告本体",
+      "点下载",
+      "点安装",
+      "点立即打开",
+      "外链取证"
+    ],
+    "close_zones": [],
+    "status": "not_observed"
+  },
+  "popup_ads": {
+    "phase": "popup_ads",
+    "must_screenshot_before_each_close": true,
+    "repeat_until_clear": true,
+    "page_states": [
+      "popup",
+      "overlay",
+      "modal",
+      "dialog"
+    ],
+    "context_markers": [
+      "弹窗",
+      "广告",
+      "公告",
+      "关闭",
+      "活动"
+    ],
+    "close_button_texts": [
+      "关闭",
+      "關閉",
+      "×",
+      "X",
+      "x",
+      "close",
+      "知道了",
+      "我知道了"
+    ],
+    "action": "tap_bottom_hollow_x",
+    "after_all_closed": "bottom_tabs",
+    "close_zones": [],
+    "status": "not_observed"
+  },
+  "bottom_navigation": {
+    "phase": "bottom_tabs",
+    "match_fields": [
+      "semantic_target",
+      "metadata.content_desc",
+      "metadata.text",
+      "metadata.label",
+      "metadata.resource_id",
+      "metadata.ui_tree_text",
+      "metadata.accessibility_text"
+    ],
+    "bounds": {
+      "min_top": 0.85,
+      "max_bottom": 1.02
+    },
+    "discovery_sources": [
+      "ui_tree",
+      "accessibility",
+      "vision",
+      "promoted_coverage",
+      "promoted_bottom_nav"
+    ],
+    "ordered_tabs": [
+      {
+        "index": 0,
+        "label": "视频",
+        "aliases": [
+          "视频"
+        ],
+        "center": {
+          "x": 0.2142,
+          "y": 0.8867
+        },
+        "normalized_bounds": {
+          "left": 0.1431,
+          "top": 0.8753,
+          "right": 0.2854,
+          "bottom": 0.898
+        },
+        "content_desc": "视频",
+        "text": null,
+        "source": "ui_tree_dump"
+      },
+      {
+        "index": 1,
+        "label": "抖阴",
+        "aliases": [
+          "抖阴"
+        ],
+        "center": {
+          "x": 0.3569,
+          "y": 0.8867
+        },
+        "normalized_bounds": {
+          "left": 0.2854,
+          "top": 0.8753,
+          "right": 0.4285,
+          "bottom": 0.898
+        },
+        "content_desc": "抖阴",
+        "text": null,
+        "source": "ui_tree_dump"
+      },
+      {
+        "index": 2,
+        "label": "海角",
+        "aliases": [
+          "海角"
+        ],
+        "center": {
+          "x": 0.5,
+          "y": 0.8867
+        },
+        "normalized_bounds": {
+          "left": 0.4285,
+          "top": 0.8753,
+          "right": 0.5715,
+          "bottom": 0.898
+        },
+        "content_desc": "海角",
+        "text": null,
+        "source": "ui_tree_dump"
+      },
+      {
+        "index": 3,
+        "label": "暗网",
+        "aliases": [
+          "暗网"
+        ],
+        "center": {
+          "x": 0.6431,
+          "y": 0.8867
+        },
+        "normalized_bounds": {
+          "left": 0.5715,
+          "top": 0.8753,
+          "right": 0.7146,
+          "bottom": 0.898
+        },
+        "content_desc": "暗网",
+        "text": null,
+        "source": "ui_tree_dump"
+      },
+      {
+        "index": 4,
+        "label": "吃瓜",
+        "aliases": [
+          "吃瓜"
+        ],
+        "center": {
+          "x": 0.7858,
+          "y": 0.8867
+        },
+        "normalized_bounds": {
+          "left": 0.7146,
+          "top": 0.8753,
+          "right": 0.8569,
+          "bottom": 0.898
+        },
+        "content_desc": "吃瓜",
+        "text": null,
+        "source": "ui_tree_dump"
+      },
+      {
+        "index": 5,
+        "label": "我的",
+        "aliases": [
+          "我的"
+        ],
+        "center": {
+          "x": 0.9285,
+          "y": 0.8867
+        },
+        "normalized_bounds": {
+          "left": 0.8569,
+          "top": 0.8753,
+          "right": 1.0,
+          "bottom": 0.898
+        },
+        "content_desc": "我的",
+        "text": null,
+        "source": "ui_tree_dump"
+      }
+    ],
+    "layout": {
+      "slot_count": 6,
+      "clickable_slot_indexes": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "forbidden_slot_indexes": [],
+      "slot_centers_norm": [
+        0.2142,
+        0.3569,
+        0.5,
+        0.6431,
+        0.7858,
+        0.9285
+      ],
+      "note": "qa-a 实采自 tab_我的；共 6 格"
+    },
+    "status": "observed",
+    "note": "底栏标签来自 UI Tree dump；未臆造禁止栏，需人工复核「我的」等。"
+  }
+}

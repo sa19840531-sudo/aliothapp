@@ -1,0 +1,49 @@
+{
+  "branch": "dev_2.0",
+  "baseline_commit": "2f34cd0874993eae84509fc201284a9941e8ceb1",
+  "committed": false,
+  "pushed": false,
+  "ruleset_published": false,
+  "database_migration_added": false,
+  "frontend_menu_or_route_changed": false,
+  "verified_source_files": 43,
+  "source_unchanged_during_final_run": true,
+  "backend": {
+    "test_files": 33,
+    "tests": 478,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "duration_seconds": 46.57,
+    "controlled_browser_cases": 24,
+    "isolated_pg_cases": 47
+  },
+  "frontend": {
+    "test_files": 7,
+    "tests": 114,
+    "passed": 114,
+    "failed": 0,
+    "skipped": 0
+  },
+  "ruff": "passed",
+  "git_diff_check": "passed",
+  "cleanup": {
+    "test_container_removed": true,
+    "test_data_storage": "tmpfs; no Docker database volume created",
+    "existing_container_ids_unchanged": true,
+    "existing_database_volumes_untouched": true,
+    "primary_service_shared_source_hot_reload_observed": true,
+    "main_health": [
+      {
+        "endpoint": "/api/v1/health",
+        "status": 200
+      },
+      {
+        "endpoint": "/api/v1/readyz",
+        "status": 200
+      }
+    ],
+    "temporary_port_25421_released": true
+  },
+  "acceptance_boundary": "受控浏览器、原件和独立PG回归，不代表真实三端业务验收；端及产品依赖见阶段报告"
+}

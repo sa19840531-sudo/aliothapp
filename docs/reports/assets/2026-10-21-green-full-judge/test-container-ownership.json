@@ -1,0 +1,10 @@
+{
+  "id": "8f153d6d1ddd318801463e73929aba5cd87c70452d2296fcab8b59ec1027df75",
+  "name": "/alioth-green-full-20261021-pg",
+  "label": "green-full-20261021",
+  "mounts": [],
+  "tmpfs": {
+    "/var/lib/postgresql/data": "rw"
+  },
+  "owned_verified": true
+}

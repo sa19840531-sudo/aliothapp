@@ -1,0 +1,190 @@
+x-alioth-python-image: &alioth-python-image
+  image: alioth-api:local
+  build:
+    context: ..
+    dockerfile: infra/docker/api/Dockerfile
+
+services:
+  alioth-postgres:
+    image: pgvector/pgvector:pg16
+    container_name: alioth-postgres
+    restart: unless-stopped
+    env_file:
+      - ${ALIOTH_ENV_FILE:-./env/.env.local}
+    ports:
+      - "${ALIOTH_POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - alioth_postgres_data:/var/lib/postgresql/data
+      - ./postgres/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$${POSTGRES_USER}\" -d \"$${POSTGRES_DB}\""]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - alioth
+
+  alioth-redis:
+    image: redis:7.2-alpine
+    container_name: alioth-redis
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    ports:
+      - "${ALIOTH_REDIS_PORT:-6379}:6379"
+    volumes:
+      - alioth_redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - alioth
+
+  alioth-initialize:
+    <<: *alioth-python-image
+    container_name: alioth-initialize
+    restart: "no"
+    env_file:
+      - path: ${ALIOTH_ENV_FILE:-./env/.env.local}
+      - path: ${ALIOTH_LOCAL_OVERRIDE_ENV_FILE:-../.env.local}
+        required: false
+    volumes:
+      - ..:/workspace
+    depends_on:
+      alioth-postgres:
+        condition: service_healthy
+    command: >
+      sh -c "python -m alembic -c services/api/migrations/alembic.ini upgrade head &&
+      python scripts/seed_first_ruleset.py &&
+      python scripts/seed_products.py &&
+      python scripts/seed_page_nav_alias.py &&
+      python scripts/seed_journey_definitions.py &&
+      python scripts/backfill_rule_display_metadata.py &&
+      python scripts/sync_capability_registry.py"
+    networks:
+      - alioth
+
+  alioth-api:
+    <<: *alioth-python-image
+    container_name: alioth-api
+    init: true
+    restart: unless-stopped
+    env_file:
+      - path: ${ALIOTH_ENV_FILE:-./env/.env.local}
+      - path: ${ALIOTH_LOCAL_OVERRIDE_ENV_FILE:-../.env.local}
+        required: false
+      - path: ${ALIOTH_APP_ONIRENT_ENV_FILE:-./env/.env.app-onirent}
+        required: false
+    ports:
+      - "${ALIOTH_API_BIND_HOST:-127.0.0.1}:${ALIOTH_API_PORT:-8000}:8000"
+    volumes:
+      - ..:/workspace
+    depends_on:
+      alioth-initialize:
+        condition: service_completed_successfully
+      alioth-postgres:
+        condition: service_healthy
+      alioth-redis:
+        condition: service_healthy
+    # reload 只盯服务端代码：App 质检的 Session 存在 api 进程内存里，进程一
+    # 重启，在跑的 App 任务立刻收 404 SESSION_NOT_FOUND 且不可恢复。测试目录
+    # 不被服务端 import，改测试没有理由把在跑的会话打断。
+    command: >
+      uvicorn services.api.app.main:app
+      --host 0.0.0.0
+      --port 8000
+      --reload
+      --reload-dir /workspace/services/api/app
+    networks:
+      - alioth
+
+  alioth-worker:
+    <<: *alioth-python-image
+    container_name: alioth-worker
+    init: true
+    restart: unless-stopped
+    env_file:
+      - path: ${ALIOTH_ENV_FILE:-./env/.env.local}
+      - path: ${ALIOTH_LOCAL_OVERRIDE_ENV_FILE:-../.env.local}
+        required: false
+      - path: ${ALIOTH_APP_ONIRENT_ENV_FILE:-./env/.env.app-onirent}
+        required: false
+    volumes:
+      - ..:/workspace
+    depends_on:
+      alioth-initialize:
+        condition: service_completed_successfully
+      alioth-redis:
+        condition: service_healthy
+    command: python -m services.api.app.worker
+    networks:
+      - alioth
+
+  alioth-devui:
+    build:
+      context: ..
+      dockerfile: infra/docker/devui/Dockerfile
+    container_name: alioth-devui
+    restart: unless-stopped
+    profiles:
+      - devui
+    env_file:
+      - path: ${ALIOTH_ENV_FILE:-./env/.env.local}
+      - path: ${ALIOTH_LOCAL_OVERRIDE_ENV_FILE:-../.env.local}
+        required: false
+    environment:
+      ALIOTH_API_BASE_URL: ${ALIOTH_DEVUI_API_BASE_URL:-http://alioth-api:8000/api/v1}
+      DEVUI_AUTH_TOKEN: ${DEVUI_AUTH_TOKEN:-change-me-local-only}
+    ports:
+      - "${ALIOTH_DEVUI_PORT:-8080}:8080"
+    volumes:
+      - ..:/workspace
+    depends_on:
+      - alioth-api
+      - alioth-worker
+    command:
+      - sh
+      - -c
+      - >
+        devui services/api/app/agents/devui_entities
+        --host 0.0.0.0
+        --port 8080
+        --mode developer
+        --auth-token "${DEVUI_AUTH_TOKEN:-change-me-local-only}"
+        --instrumentation
+    networks:
+      - alioth
+
+  alioth-web:
+    build:
+      context: ..
+      dockerfile: infra/docker/web/Dockerfile
+    container_name: alioth-web
+    restart: unless-stopped
+    env_file:
+      - ${ALIOTH_ENV_FILE:-./env/.env.local}
+    ports:
+      - "${ALIOTH_WEB_PORT:-5173}:5173"
+    volumes:
+      - ..:/workspace
+      - alioth_workstation_node_modules:/workspace/app/workstation/node_modules
+    working_dir: /workspace/${ALIOTH_WEB_APP_DIR:-app/workstation}
+    depends_on:
+      - alioth-api
+    command: >
+      sh -c "if [ -f package.json ];
+      then npm install && npm run dev -- --host 0.0.0.0 --port 5173;
+      else echo 'app/workstation 尚未初始化 Vue3/Vite 项目，alioth-web 容器已保留运行入口。' && tail -f /dev/null;
+      fi"
+    networks:
+      - alioth
+
+networks:
+  alioth:
+    name: alioth
+
+volumes:
+  alioth_postgres_data:
+  alioth_redis_data:
+  alioth_workstation_node_modules:

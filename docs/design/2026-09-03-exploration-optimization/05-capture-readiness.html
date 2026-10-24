@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="就绪判定 · 网络信号 · 时间证据；Alioth 七项探索优化专项设计。包含组件图、时序图、判断流程、算法、并发恢复与技术验收，不展开数据库表或具体数据结构。">
+  <meta name="color-scheme" content="light">
+  <title>专项五：截图时机与页面就绪判定设计 · Alioth</title>
+  <style>
+:root { --accent: #a33b50; --ink: #192b34; --muted: #526772; --line: #dfe6e8; --paper: #fff; --wash: #f3f6f7; color-scheme: light; }
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 24px; }
+body { margin: 0; color: var(--ink); background: var(--wash); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; -webkit-font-smoothing: antialiased; }
+a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+a:hover { text-decoration-thickness: 2px; }
+a:focus-visible, [tabindex]:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; }
+.skip { position: fixed; left: 16px; top: -100px; padding: 12px 18px; background: var(--paper); border: 2px solid var(--accent); z-index: 10; }
+.skip:focus { top: 12px; }
+.topbar { background: var(--paper); border-top: 5px solid var(--accent); border-bottom: 1px solid var(--line); }
+.topbar-inner { max-width: 1460px; margin: auto; padding: 22px 32px; display: flex; align-items: center; justify-content: space-between; gap: 18px; }
+.brand { text-decoration: none; color: var(--ink); display: flex; align-items: center; gap: 13px; }
+.brand-mark { width: 39px; height: 39px; background: var(--accent); color: #fff; display: grid; place-items: center; font-weight: 750; border-radius: 11px; }
+.brand strong { display: block; font-size: 16px; letter-spacing: .11em; }
+.brand small { display: block; color: var(--muted); font-size: 12px; margin-top: 4px; letter-spacing: .02em; }
+.top-meta { text-align: right; font-size: 12px; color: var(--muted); line-height: 1.8; }
+.layout { max-width: 1460px; margin: 30px auto 50px; padding: 0 32px; display: grid; grid-template-columns: 242px minmax(0, 1fr); gap: 30px; align-items: start; }
+.rail { position: sticky; top: 24px; max-height: calc(100vh - 48px); overflow-y: auto; padding: 4px 10px 12px 0; scrollbar-width: thin; }
+.rail-label { margin: 0 0 12px; font-size: 11px; font-weight: 750; letter-spacing: .13em; color: var(--muted); }
+.series { display: grid; gap: 4px; }
+.series-link { display: flex; gap: 12px; align-items: center; padding: 10px 12px; border: 1px solid transparent; border-radius: 9px; text-decoration: none; color: var(--muted); font-size: 13px; line-height: 1.35; }
+.series-link:hover { background: #e8eef0; text-decoration: none; }
+.series-link.active { background: var(--paper); border-color: var(--line); color: var(--accent); font-weight: 700; box-shadow: 0 3px 9px #20303a06; }
+.series-no { font-size: 11px; font-variant-numeric: tabular-nums; letter-spacing: .08em; opacity: .8; }
+.toc { margin-top: 26px; padding-top: 20px; border-top: 1px solid var(--line); display: grid; }
+.toc a { display: block; font-size: 12px; line-height: 1.55; color: var(--muted); padding: 6px 8px; text-decoration: none; border-left: 2px solid transparent; }
+.toc a:hover { border-left-color: var(--accent); color: var(--accent); background: #fff8; }
+.rail-note { margin: 20px 8px 0; color: var(--muted); font-size: 11px; line-height: 1.8; }
+.main-column { min-width: 0; }
+.doc-toolbar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 15px; padding: 0 3px; font-size: 12px; line-height: 1.5; color: var(--muted); }
+.breadcrumb { display: flex; flex-wrap: wrap; gap: 9px; align-items: center; }
+.breadcrumb a { text-decoration: none; }
+.toolbar-links { display: flex; gap: 17px; }
+.doc-paper { background: var(--paper); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; box-shadow: 0 12px 40px #152b3810; }
+.document-banner { border-bottom: 1px solid var(--line); padding: 21px 46px; display: flex; align-items: center; gap: 14px; background: linear-gradient(105deg, #f8fbfb, #fff); }
+.document-number { color: var(--accent); font-size: 30px; font-weight: 730; line-height: 1; letter-spacing: -.04em; font-variant-numeric: tabular-nums; }
+.document-kicker { font-size: 11px; letter-spacing: .13em; font-weight: 700; color: var(--accent); line-height: 1.7; }
+.document-subtitle { color: var(--muted); font-size: 12px; line-height: 1.7; margin-top: 2px; }
+.document-body { padding: 35px 46px 48px; font-size: 15px; line-height: 1.95; overflow-wrap: anywhere; }
+.document-body h1 { margin: 0 0 23px; font-size: clamp(26px, 2.5vw, 37px); line-height: 1.43; letter-spacing: -.025em; font-weight: 740; max-width: 950px; }
+.document-body h2 { font-size: 23px; line-height: 1.55; margin: 50px 0 18px; padding-top: 24px; border-top: 1px solid var(--line); color: var(--ink); letter-spacing: -.02em; }
+.document-body h3 { margin: 30px 0 12px; font-size: 18px; line-height: 1.65; color: var(--accent); }
+.document-body h4 { margin: 24px 0 10px; font-size: 16px; }
+.document-body h1, .document-body h2, .document-body h3 { scroll-margin-top: 24px; }
+.document-body p { margin: 0 0 16px; }
+.document-body blockquote { margin: 22px 0; padding: 17px 20px; border-left: 3px solid var(--accent); background: #f3f7f8; border-radius: 0 10px 10px 0; color: #3c5561; font-size: 14px; line-height: 1.85; }
+.document-body blockquote p { margin: 0 0 8px; }
+.document-body blockquote p:last-child { margin-bottom: 0; }
+.document-body h1 + blockquote { margin-bottom: 30px; }
+.document-body strong { font-weight: 680; color: #223e4b; }
+.document-body ul, .document-body ol { margin: 12px 0 22px; padding-left: 24px; }
+.document-body li { padding-left: 3px; margin: 7px 0; }
+.document-body li > p { margin-bottom: 7px; }
+.document-body code { padding: .1em .33em; border-radius: 4px; background: #edf2f4; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .86em; overflow-wrap: anywhere; }
+.document-body a code { background: none; padding: 0; }
+.document-body pre { padding: 20px; border: 1px solid var(--line); border-radius: 10px; overflow: auto; background: #f5f8f9; line-height: 1.7; white-space: pre-wrap; }
+.document-body pre code { padding: 0; background: none; }
+.document-body hr { border: 0; border-top: 1px solid var(--line); margin: 30px 0; }
+.table-scroll { overflow-x: auto; margin: 20px 0 25px; border: 1px solid var(--line); border-radius: 10px; background: #fff; scrollbar-width: thin; }
+table { width: 100%; min-width: 590px; border-collapse: collapse; text-align: left; font-size: 13px; line-height: 1.8; }
+thead { background: #ecf2f4; }
+th { padding: 13px 14px; font-weight: 680; color: #274350; vertical-align: top; border-bottom: 1px solid var(--line); }
+td { padding: 13px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+tr:last-child td { border-bottom: 0; }
+tbody tr:nth-child(even) { background: #f9fbfc; }
+tbody tr:hover { background: #f0f6f7; }
+td:first-child { font-weight: 530; }
+td p { margin: 0; }
+.doc-footer { margin-top: 22px; display: grid; grid-template-columns: 1fr auto 1fr; gap: 14px; padding: 20px 4px; border-top: 1px solid var(--line); }
+.doc-footer a { font-size: 13px; line-height: 1.65; text-decoration: none; }
+.doc-footer span { display: block; font-size: 11px; color: var(--muted); margin-bottom: 3px; }
+.doc-footer .next { text-align: right; }
+.doc-footer .back-top { text-align: center; }
+.page-note { text-align: center; color: var(--muted); font-size: 11px; line-height: 1.9; margin: 12px 0 20px; }
+@media (min-width: 1600px) { .document-body { font-size: 16px; } }
+@media (max-width: 1100px) { .layout { gap: 21px; grid-template-columns: 205px minmax(0, 1fr); padding: 0 22px; } .document-body { padding: 30px 30px 40px; } .document-banner { padding: 19px 30px; } }
+@media (max-width: 800px) { .topbar-inner { padding: 18px 20px; } .top-meta { font-size: 11px; } .layout { display: block; padding: 0 16px; margin-top: 19px; } .rail { position: static; max-height: none; overflow: visible; padding: 0; margin-bottom: 23px; } .series { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 5px; } .series-link { padding: 10px 8px; gap: 6px; font-size: 12px; border-color: var(--line); } .toc { margin-top: 15px; padding-top: 12px; grid-template-columns: repeat(2, minmax(0, 1fr)); max-height: 188px; overflow-y: auto; } .toc .rail-label { grid-column: 1/-1; margin-bottom: 5px; } .toc a { padding: 5px 7px; font-size: 11px; } .rail-note { display: none; } .doc-paper { border-radius: 12px; } .document-body { padding: 25px 24px 34px; } .document-banner { padding: 18px 24px; } .document-body h2 { font-size: 21px; margin-top: 38px; } }
+@media (max-width: 480px) { .top-meta { display: none; } .series { grid-template-columns: repeat(2, minmax(0, 1fr)); } .document-body { padding: 22px 18px 30px; font-size: 14px; } .document-banner { padding: 17px 18px; } .document-body h1 { font-size: 27px; } .document-body h2 { font-size: 20px; } .document-body h3 { font-size: 17px; } .doc-footer { gap: 10px; } .doc-footer a { font-size: 12px; } .doc-toolbar { font-size: 11px; } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+@media print { @page { size: A4; margin: 17mm 14mm; } body { background: #fff; font-size: 10pt; } .skip, .topbar, .rail, .doc-toolbar, .doc-footer, .page-note { display: none !important; } .layout { display: block; margin: 0; padding: 0; max-width: none; } .doc-paper { box-shadow: none; border: 0; border-radius: 0; overflow: visible; } .document-banner { padding: 0 0 11pt; margin-bottom: 14pt; background: #fff; } .document-body { padding: 0; font-size: 10pt; line-height: 1.65; } .document-body h1 { font-size: 23pt; } .document-body h2 { font-size: 16pt; margin-top: 24pt; padding-top: 13pt; break-after: avoid; } .document-body h3 { font-size: 12pt; break-after: avoid; } .document-body p, .document-body li { orphans: 3; widows: 3; } .table-scroll { overflow: visible; border-radius: 0; break-inside: auto; margin: 12pt 0; } table { min-width: 0; table-layout: fixed; font-size: 8.3pt; line-height: 1.55; } th, td { padding: 7pt 6pt; overflow-wrap: anywhere; } thead { display: table-header-group; } tr { break-inside: avoid; } .document-body blockquote { border: 1px solid #c4d0d5; border-left: 3px solid var(--accent); break-inside: avoid; font-size: 9pt; padding: 9pt 12pt; } a { color: inherit; text-decoration: underline; } }
+
+
+.technical-entry { margin:0 0 26px; padding:17px 20px; background:#edf6f3; border:1px solid #bbd9d0; border-radius:10px; font-size:13px; line-height:1.8; }
+.technical-entry strong { display:block; margin-bottom:9px; color:#1e6459; }
+.technical-entry div { display:flex; flex-wrap:wrap; gap:7px 16px; }
+.technical-entry p { margin:9px 0 0; color:#526c73; font-size:12px; }
+.technical-diagram { margin:25px -18px 30px; border:1px solid #d4e0e5; border-radius:11px; overflow:hidden; background:#fff; }
+.technical-diagram figcaption { padding:17px 18px 6px; font-weight:680; font-size:16px; color:#244453; }
+.technical-diagram .technical-legend { padding:0 18px 12px; margin:0; color:#58717e; font-size:11px; line-height:1.8; }
+.technical-controls { display:flex; gap:9px 15px; align-items:center; flex-wrap:wrap; border-block:1px solid #dbe5e9; padding:10px 12px; background:#f4f8fa; }
+.technical-controls[hidden],.technical-detail[hidden] { display:none; }
+.technical-controls label { display:flex; align-items:center; gap:7px; font-size:12px; flex:1; min-width:190px; }
+.technical-controls label select { min-width:0; flex:1; max-width:340px; }
+.technical-controls > div { display:flex; align-items:center; gap:5px; }
+.technical-controls button,.technical-controls select { font-family:inherit; font-size:12px; line-height:1.5; color:#254552; background:#fff; border:1px solid #bfd0d8; border-radius:6px; min-height:36px; padding:6px 9px; }
+.technical-controls button { cursor:pointer; }
+.technical-controls button:disabled { opacity:0.4; cursor:default; }
+.technical-controls output { min-width:40px; text-align:center; color:#5a707d; font-size:11px; font-variant-numeric:tabular-nums; }
+.technical-controls :focus-visible { outline:3px solid #34958a; outline-offset:3px; }
+.technical-viewport { overflow:auto; max-height:720px; scrollbar-width:thin; overscroll-behavior:contain; background:#fbfcfd; }
+.technical-viewport canvas { display:block; max-width:none; cursor:pointer; touch-action:pan-x pan-y; }
+.technical-diagram .technical-hint { margin:0; padding:9px 16px; border-top:1px solid #dbe5e9; color:#657b86; font-size:11px; }
+.technical-detail { border-top:1px solid #dbe5e9; background:#edf5f6; padding:13px 17px; font-size:13px; }
+.technical-detail strong { display:block; margin-bottom:6px; }
+.technical-detail p { margin:0; }
+.technical-source { border-top:1px solid #dbe5e9; padding:0 17px 10px; font-size:12px; }
+.technical-source summary { padding:11px 0; color:var(--accent); cursor:pointer; font-weight:600; }
+.technical-source pre { font-size:11px; margin:10px 0; }
+.technical-source ol { margin-top:4px; }
+@media (max-width:640px) {
+  .technical-diagram { margin-inline:-9px; }
+  .technical-controls label { flex-basis:100%; }
+  .technical-controls > div { flex-wrap:wrap; }
+  .technical-controls button,.technical-controls select { min-height:44px; }
+  .technical-viewport { max-height:570px; }
+}
+@media print {
+  .technical-entry,.technical-controls,.technical-hint,.technical-detail { display:none !important; }
+  .technical-diagram { margin:15pt 0; break-inside:avoid; }
+  .technical-viewport { max-height:none; overflow:visible; }
+  .technical-viewport canvas { max-width:100%; max-height:232mm; width:auto !important; height:auto !important; margin:auto; }
+  .technical-source { font-size:8pt; }
+}
+</style>
+<noscript><style>.technical-viewport,.technical-hint{display:none}</style></noscript>
+</head>
+<body>
+  <a class="skip" href="#document-top">跳到正文</a>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">衡</span><span><strong>ALIOTH · 玉衡</strong><small>有限自主探索 / 七项专项设计</small></span></a>
+      <div class="top-meta">TECHNICAL DESIGN · 2026.09.04<br>设计评审稿 · 不代表已实现或验收</div>
+    </div>
+  </header>
+  <div class="layout">
+    <aside class="rail" aria-label="文档导航">
+      <p class="rail-label">全系列 / 07 TOPICS</p>
+      <nav class="series" aria-label="七项专项导航"><a class="series-link" href="index.html"><span class="series-no">00</span><span>总览与闭环</span></a>
+<a class="series-link" href="01-controlled-exploration.html"><span class="series-no">01</span><span>受控探索</span></a>
+<a class="series-link" href="02-page-state-graph.html"><span class="series-no">02</span><span>页面状态图</span></a>
+<a class="series-link" href="03-targeted-recapture.html"><span class="series-no">03</span><span>精准补采</span></a>
+<a class="series-link" href="04-page-recognition.html"><span class="series-no">04</span><span>页面识别</span></a>
+<a class="series-link active" href="05-capture-readiness.html" aria-current="page"><span class="series-no">05</span><span>截图时机</span></a>
+<a class="series-link" href="06-interaction-precision.html"><span class="series-no">06</span><span>精准交互</span></a>
+<a class="series-link" href="07-trusted-evidence.html"><span class="series-no">07</span><span>可信证据</span></a></nav>
+      <nav class="toc" aria-label="本篇章节目录"><p class="rail-label">本篇目录 / 20 SECTIONS</p><a href="#section-1">1. 决策摘要与边界</a>
+<a href="#section-2">2. 问题 → 机制 → 收益 → 指标</a>
+<a href="#section-3">3. 现有基础与模块改动</a>
+<a href="#section-4">4. 职责边界</a>
+<a href="#section-5">5. 核心方案</a>
+<a href="#section-6">6. 标准流程</a>
+<a href="#section-7">7. 异常闭环</a>
+<a href="#section-8">8. H5/App 差异</a>
+<a href="#section-9">9. 其他专项协作</a>
+<a href="#section-10">10. 工作台与排障</a>
+<a href="#section-11">11. 安全、审计与权限</a>
+<a href="#section-12">12. 分期、兼容与回滚</a>
+<a href="#section-13">13. 验收场景和指标</a>
+<a href="#section-14">14. 团队反馈及待冻结参数</a>
+<a href="#section-15">15. 组件与接入点（技术深化）</a>
+<a href="#section-16">16. 时序与交接条件（技术深化）</a>
+<a href="#section-17">17. 算法与决策（技术深化）</a>
+<a href="#section-18">18. 超时、并发、幂等与失效（技术深化）</a>
+<a href="#section-19">19. 故障推演与技术验收（技术深化）</a>
+<a href="#section-20">20. 关联文档依据</a></nav>
+      <p class="rail-note">HTML 与 Markdown 正文一致。<br>离线 Canvas 技术图。无外部运行依赖。<br>浏览器查找可检索全文，打印可导出 PDF。</p>
+    </aside>
+    <main class="main-column">
+      <div class="doc-toolbar">
+        <div class="breadcrumb"><a href="index.html">设计文档集</a><span aria-hidden="true">/</span><span>截图时机</span></div>
+        <div class="toolbar-links"><a href="05-capture-readiness.md">Markdown 原稿</a><a href="../2026-09-02-bounded-exploration-optimization-solution.html">完整方案 v1.1</a></div>
+      </div>
+      <div class="doc-paper">
+        <div class="document-banner"><span class="document-number">05</span><div><div class="document-kicker">SPECIALIZED DESIGN / 方案与设计</div><div class="document-subtitle">就绪判定 · 网络信号 · 时间证据</div></div></div>
+        <article id="document-content" class="document-body" data-markdown-sha256="8c344d518ff7277be9152864277d73c28e7c4e453d313dfe9617416d24dcf563">
+<aside class="technical-entry"><strong>v1.1 技术深化 · 三张设计图 + 五章实现机制</strong><div><a href="#section-15">组件与接入</a><a href="#section-16">技术时序</a><a href="#section-17">算法与判断</a><a href="#section-18">并发与恢复</a><a href="#section-19">故障推演</a></div><p>保留原有方案和反馈；新增实现评审细节，不展开表设计或具体字段。</p></aside>
+<h1 id="document-top">专项五：截图时机与页面就绪判定设计</h1>
+<blockquote>
+<p>日期：2026-09-04
+版本：技术深化 v1.1
+状态：技术设计深化，尚未实施
+适用范围：H5/Web 与 App 的动作后观察、稳定性判定、证据角色选择和排障展示。
+设计边界：本稿不定义表设计、字段清单、具体 API 或 API 载荷；只定义可审计的行为、边界、协作职责和验收方式。
+关联稿件：同目录的 <a href="01-controlled-exploration.html">受控探索</a>、<a href="02-page-state-graph.html">页面状态图</a>、<a href="03-targeted-recapture.html">精准补采</a>、<a href="04-page-recognition.html">页面识别</a>、<a href="06-interaction-precision.html">交互精准度</a>、<a href="07-trusted-evidence.html">可信证据</a>。</p>
+</blockquote>
+<h2 id="section-1">1. 决策摘要与边界</h2>
+<p>Settle Oracle 的职责是回答“当前帧是否足以承担声明中的证据角色”，不是回答“页面是否看起来安静”。</p>
+<ol>
+<li><code>page_capture</code> 已有页面稳定等待、在途请求、DOM 变更、可见加载层、媒体和 Flutter 启动信号；本方案优先抽取并统一这些能力，不从零另造一套等待器。</li>
+<li>两到三秒没有新请求只能是一个可选的静默窗口。它不能覆盖仍在下载的关键请求、失败请求、缓存命中、本地渲染、长轮询、WebSocket、Service Worker 或未接入网络观测的运行面。</li>
+<li><code>ready</code> 需要由身份、可见层、核心结构、视觉或结构 quorum、动作专属后置条件共同决定；网络只在能力可用且规则要求时加入条件。若规则要求网络信号而能力不可用，必须进入证据不足或人工路径，不能跳过该必需信号后 stable 通过。</li>
+<li>身份前观测、采集、身份后观测必须能组成同一时间边界。身份漂移或产物时间错位时，原始证据仍可保留，但不能拼成稳定同帧事实。</li>
+<li>非稳定帧不是无价值数据。加载、动画、关闭失败、倒计时和错误状态可按规则进入时间序列或失败证据角色，但不得计为稳定业务到达。</li>
+<li>不可见不等于没有请求；网络不可用不等于请求数为零。能力缺口必须落到 readiness 诊断和最终报告中。</li>
+<li>正式证据不允许靠删除 DOM、改样式、强制点击或任意脚本派发制造“稳定”。现有受约束的遮挡隐藏和 JS fallback 只能是诊断路径，并传播污染标记。</li>
+</ol>
+<p>本稿不承诺更快的运行时间或更高的业务覆盖率；收益必须由真实 H5/App 矩阵实测。它也不把第三方网络拦截、证书绕过、验证码绕过或任意 APK 的 HTTPS 解密纳入默认能力。</p>
+<h2 id="section-2">2. 问题 → 机制 → 收益 → 指标</h2>
+<div class="table-scroll" role="region" aria-label="设计对照表，可横向滚动" tabindex="0"><table>
+<thead>
+<tr>
+<th>问题</th>
+<th>机制</th>
+<th>预期收益</th>
+<th>观察指标</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>快页面被固定等待拖慢，慢页面在首个安静窗口前被截取</td>
+<td>按动作类型采样，结合身份、结构、视觉和后置条件</td>
+<td>减少无效等待与过早 Capture</td>
+<td>首次可用 Capture 延迟、过早帧比例</td>
+</tr>
+<tr>
+<td>静默窗口掩盖慢请求或后台关键请求</td>
+<td>记录在途、完成、失败和能力等级；按规则识别关键请求</td>
+<td>降低“看似 ready、内容未到”的误判</td>
+<td>关键请求未完成误判率、网络不可见占比</td>
+</tr>
+<tr>
+<td>动态内容永远不静止</td>
+<td>结构 landmark、quorum、动态区域和有限时间序列</td>
+<td>允许可解释的动态证据</td>
+<td>稳定证据成功率、动态规则误拒率</td>
+</tr>
+<tr>
+<td>弹窗或顶层层级遮住核心内容</td>
+<td>单独评估 Presentation 与 readiness，先留前态</td>
+<td>防止底层 DOM 加顶层截图冒充同帧</td>
+<td>遮挡漏检率、错误底层通过数</td>
+</tr>
+<tr>
+<td>身份在采集期间漂移</td>
+<td>identity-before → artifacts → identity-after</td>
+<td>保持 PageState 与 Capture 的可追溯性</td>
+<td>漂移发现率、错帧进入正式输入数</td>
+</tr>
+<tr>
+<td>App 只有截图而 UI Tree/网络不可用</td>
+<td>能力分级和保守降级，不填充假信号</td>
+<td>把“不可观测”与“失败”区分开</td>
+<td>能力缺口完整率、人工接管准确率</td>
+</tr>
+</tbody></table></div>
+<p>指标用于比较方案，不直接构成 Completion Gate。Gate 仍要看同一 Run/Epoch 的覆盖、规则工作、证据充分性、失败和资源终态。</p>
+<h2 id="section-3">3. 现有基础与模块改动</h2>
+<h3 id="section-3-1">3.1 H5/Web 已有能力</h3>
+<ul>
+<li><a href="../../../services/api/app/infrastructure/browser/page_capture.py"><code>_wait_for_page_settle</code></a> 已按可见文本、核心内容、必要媒体、可见 loader、过渡、Flutter 启动和关键在途请求等待，并使用有界 deadline。</li>
+<li><a href="../../../services/api/app/infrastructure/browser/page_capture.py"><code>_install_page_state_monitor</code></a> 已通过 MutationObserver、路由事件、加载事件和资源计数形成会话内变更观察；它是现有 readiness 的底层基础，而不是正式证据本身。</li>
+<li><a href="../../../services/api/app/infrastructure/browser/page_capture.py"><code>_read_page_readiness</code></a> 已区分核心容器、当前视口媒体、阻断层、局部 loader、过渡和 Flutter bootstrap；它没有等待所有懒加载资源，边界需要在规则 profile 中声明。</li>
+<li><a href="../../../services/api/app/infrastructure/browser/page_capture.py"><code>_assess_page_inspection_readiness</code></a> 已在等待耗尽后区分 blocked 与 inspectable dynamic，并保留网络在途和动态原因；后续应把它提升为可被编排器与工作台复用的统一语义。</li>
+<li><a href="../../../services/api/app/infrastructure/browser/page_capture.py"><code>_attach_observers</code></a> 已记录 request、response、finished、failed 和内存中的 inflight；这支持被动观测，但不等于可以监听任意 App 网络。</li>
+<li><a href="../../../services/api/app/infrastructure/browser/page_capture.py"><code>_collect_artifacts</code></a> 已可按请求采集 DOM、可见文本、截图、UI snapshot、媒体状态及视觉导航视口帧；整页截图与视口截图的角色必须继续分开。</li>
+</ul>
+<h3 id="section-3-2">3.2 App 已有能力与缺口</h3>
+<ul>
+<li><a href="../../../services/api/app/infrastructure/device/android_surface_driver.py"><code>AndroidAdbSurfaceDriver.describe_capabilities</code></a> 将截图、UI Tree 和 UI snapshot 声明为可用，并固定 canonical 设备尺寸；UI Tree 的说明同时明确它只是运行时事实、不作为截图 Artifact 持久化。</li>
+<li><a href="../../../services/api/app/infrastructure/device/android_surface_driver.py"><code>observe_runtime_state</code></a> 通过受控 UI hierarchy dump 获取内存观察，失败时返回不可用事实，不静默伪造。</li>
+<li><a href="../../../services/api/app/infrastructure/device/android_surface_driver.py"><code>capture</code></a> 目前主要落一张 PNG，同时读取显示尺寸、前台身份和截图流水线耗时；没有与 H5 对等的页面 DOM、网络在途和稳定 quorum。</li>
+<li><a href="../../../services/api/app/infrastructure/device/android_runtime_observation.py"><code>AndroidRuntimeObservation</code></a> 支持可见、启用、可点击节点和点位命中判断，但它是当前 Runtime 内存观察，不能独立替代同帧截图或持久化证据。</li>
+<li>因此 App readiness 首期必须允许“截图 + 身份 + UIA/视觉可用性”的受限组合；ADB 已连接不能被解释为网络可见，更不能解释为任意 HTTPS 解密。</li>
+</ul>
+<h3 id="section-3-3">3.3 需要改动的边界</h3>
+<ol>
+<li>在现有 Capture 编排附近抽取统一 Oracle，保留旧等待结果作为兼容 fallback。</li>
+<li>为 H5 增加动作 profile 与能力分级的确定性计算；网络 Collector 只被动记录，不改写被测响应。</li>
+<li>为 App 增加截图前后身份与设备状态核对、短序列观察和能力缺口结算；不把 UIA XML 直接写成正式截图证据。</li>
+<li>让 Capture writer、Manifest、InputSet 和 Gate 消费同一 readiness 角色，而不是各自重新猜测。</li>
+<li>工作台只读展示 readiness 结论和原因，不在浏览器端重算稳定性或发设备动作。</li>
+</ol>
+<h3 id="section-3-4">3.4 高/中模块改动范围</h3>
+<ul>
+<li><strong>高影响模块</strong>：现有 Capture 编排/Collector、H5 <code>page_capture</code>、App Surface 观察与动作后 Capture、证据 Writer/Manifest/InputSet、Gate 消费路径。它们共同决定 readiness 是否能被正式证据信任。</li>
+<li><strong>中影响模块</strong>：任务详情的只读投影、规则配置的采集 profile、页面状态图/弹窗/外跳子流程、补采与排障日志。它们消费统一结论，不各自重算。</li>
+<li><strong>回归关注模块</strong>：历史任务读取、报告导出、前端局部失败提示和已有旧等待 fallback。它们保持兼容，但不能绕过身份、层级和诊断污染门禁。</li>
+</ul>
+<p>设计推论只借用官方能力的边界：Playwright 的 <a href="https://playwright.dev/docs/network" target="_blank" rel="noopener noreferrer">Network</a>、<a href="https://playwright.dev/docs/api/class-request" target="_blank" rel="noopener noreferrer">Request 生命周期</a> 支持被动观察方向，<a href="https://playwright.dev/docs/api/class-page#page-wait-for-load-state" target="_blank" rel="noopener noreferrer">页面就绪语义</a> 不支持把静默窗口单独当作业务 ready。它们不等于本项目已经实现全部门禁，也不承诺能看见任意 Web 网络。</p>
+<h2 id="section-4">4. 职责边界</h2>
+<h3 id="section-4-1">4.1 Oracle 负责什么</h3>
+<ul>
+<li>依据当前采集计划判断是否达到某一证据角色的最低条件。</li>
+<li>给出稳定、加载、转场、超时、身份漂移、产物错位和采集失败等可解释终态。</li>
+<li>聚合可见层、结构、视觉、动作后置条件与网络能力，不替代页面类型识别。</li>
+</ul>
+<h3 id="section-4-2">4.2 Oracle 不负责什么</h3>
+<ul>
+<li>不决定页面是否属于业务覆盖；由 PageNode/PageState 与页面识别负责。</li>
+<li>不选择下一个动作；由 Frontier/InteractionPlan 负责。</li>
+<li>不执行关闭、支付、登录、授权或重试；Runtime/Broker 负责，Judge 不操作设备。</li>
+<li>不把任意网络请求的成功状态解释为业务成功，也不负责凭证、代理或证书安装。</li>
+</ul>
+<h3 id="section-4-3">4.3 证据所有权</h3>
+<p>Capture collector 负责采集事实，writer 负责不可变留存，Manifest/InputSet 负责声明证据角色，Gate 负责最终组合。任一层都不得覆盖原始帧或把诊断产物改名为自然证据。</p>
+<h2 id="section-5">5. 核心方案</h2>
+<h3 id="section-5-1">5.1 Settle Oracle 的分层条件</h3>
+<p>将“可截图”拆成六个依赖层：</p>
+<ol>
+<li><strong>身份层</strong>：运行面、来源页面或 Activity/窗口仍是当前预期对象。</li>
+<li><strong>展示层</strong>：当前最上层可见，阻断弹窗、系统层和广告遮挡被识别；不可只看底层 DOM。</li>
+<li><strong>核心结构层</strong>：规则所需的核心 landmark、内容容器或 UIA/语义节点存在。</li>
+<li><strong>视觉/结构 quorum 层</strong>：连续有限样本满足稳定阈值；动态区域不强求全屏像素静止。</li>
+<li><strong>动作后置层</strong>：点击、滑动、返回、输入等意图的专属可观察效果已经出现。</li>
+<li><strong>网络条件层</strong>：只有 profile 声明需要且能力可用时，关键请求完成、失败或已满足允许的信号条件。</li>
+</ol>
+<p>六层中任一必需层未满足，不能返回对应的稳定证据角色；不需要的层必须显式说明“未纳入本 profile”，不能伪称通过。</p>
+<h3 id="section-5-2">5.2 采样与 quorum</h3>
+<ul>
+<li>合法 before 完成后，由外部 Runtime 执行动作；动作触发立即取 transition witness，避免只保留 settle 后帧而丢失转场。</li>
+<li>按平台和动作 profile 取有限样本，例如短间隔初样本和较长 deadline 内的补样本；默认时间点不是永久常数。</li>
+<li>稳定 quorum 比较身份、核心 landmark、可见文本/语义、loader/动画、Overlay 和动作后置条件。</li>
+<li>若页面含实时 Feed、视频、轮播或倒计时，使用结构与关键区域一致性；需要时附带有限时间序列。</li>
+<li>中间帧可以作为诊断或时间规则证据，但不自动升级为 stable。</li>
+</ul>
+<p>纯入口或被动 observe 没有动作触发，不编造 transition witness；它们只按入口/观察 profile 取合法 before 与后续样本。</p>
+<h3 id="section-5-3">5.3 动作 profile 对照</h3>
+<div class="table-scroll" role="region" aria-label="设计对照表，可横向滚动" tabindex="0"><table>
+<thead>
+<tr>
+<th>动作 profile</th>
+<th>可称为 ready 的最低组合</th>
+<th>单独什么不够</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>初始导航</td>
+<td>来源身份正确、核心入口可见、展示层已识别、结构/视觉达到 quorum；若规则声明网络依赖，关键请求还须完成或明确失败</td>
+<td>URL 已变化、DOM 有内容、短静默窗口或一张截图本身</td>
+</tr>
+<tr>
+<td>滚动</td>
+<td>目标容器明确，内容锚点/可见范围按计划变化，滚动后层级和身份一致，目标需要时重新绑定</td>
+<td>手势发送成功、scrollTop 改变、出现旧目标矩形</td>
+</tr>
+<tr>
+<td>关闭弹窗</td>
+<td>当前顶层 Overlay 已留前态，安全关闭动作有效，后态确认 Overlay 消失/换层且未误跳；底页需另行 ready</td>
+<td>点击命令成功、z-index 变小、底层 DOM 暴露、关闭一层就宣称底页到达</td>
+</tr>
+<tr>
+<td>局部 Tab</td>
+<td>目标 Tab/局部内容身份正确，选中状态和局部 landmark 稳定，未把局部更新误当整页导航</td>
+<td>文本出现、URL 不变、Tab click 成功或只截一张局部帧</td>
+</tr>
+<tr>
+<td>外部落地</td>
+<td>真实外部转场或规则允许的受限内容旁路已识别，landing 身份与可见层稳定，来源/回源关系可追溯</td>
+<td>已知 href 可打开、外部 URL 变化、外部页面首帧或 sidecar 打开本身</td>
+</tr>
+</tbody></table></div>
+<p>表中“ready”是该 profile 的证据角色就绪，不自动代表业务规则 pass 或业务覆盖增加。</p>
+<h3 id="section-5-4">5.4 网络信号的正确语义</h3>
+<p>网络观察至少区分开始、响应到达、完成、失败和当前在途。关键请求按规则依赖与当前展示层确定，广告素材在被测时不能因域名是广告域而排除。</p>
+<p>静默窗口只能在“没有未完成关键请求、静默持续达到 profile、所需响应条件满足”时作为辅助条件。心跳、统计、长轮询、WebSocket/SSE、缓存、Service Worker、本地计算和解码分别归类，不强行当作全量 idle。</p>
+<p>网络能力分为“在声明观测范围内完整”、部分、不可用三类。这里的完整只表示已声明范围内的生命周期可观测，不承诺浏览器能完整看见任意 Web 网络。部分或不可用必须进入 readiness 诊断和置信限制，绝不把它们归零成“没有请求”。</p>
+<h3 id="section-5-5">5.5 动态区域与 mask</h3>
+<ul>
+<li>mask 只用于比较派生结果中的噪声，不得遮住被测广告、关闭控件、核心内容或遮挡关系。</li>
+<li>原始截图和原始 UI/DOM 事实永远不改；mask、裁剪、压缩、派生摘要另存为诊断或比较产物，原图不因 mask 发生任何变化。</li>
+<li>动态区域超出容忍阈值时，转入有限时间序列或动态失败，不无限等待。</li>
+<li>规则若要求检验广告素材本身，广告素材区域不能被 mask 规避；它只能被标记为动态并改变证据角色。</li>
+</ul>
+<h3 id="section-5-6">5.6 三明治时间一致性</h3>
+<p>标准顺序是 identity-before → 原始截图与可得结构/文本 → identity-after。两侧身份不一致、Frame/窗口发生变化、Capture 间隔超阈值或页面 epoch 变化时，组合降级为漂移或时间序列。</p>
+<p>身份后检查不能被省略为“采集已经成功”。它是防止页面在截图与 DOM 之间切换的最后一道门。</p>
+<h3 id="section-5-7">5.7 Capture Readiness 与证据角色</h3>
+<ul>
+<li><strong>stable</strong>：身份、展示层、结构、quorum 和 profile 必需条件全部满足，可承担稳定页面/区域证据。</li>
+<li><strong>loading</strong>：核心证据不足且仍处于加载，保留可证明的加载事实。</li>
+<li><strong>transitional</strong>：动作效果或页面变化已观察，但未稳定到业务到达。</li>
+<li><strong>timeout</strong>：deadline 耗尽，按阻断原因与已有证据分别结算。</li>
+<li><strong>identity drift</strong>：采集前后不是同一运行面或同一页面状态。</li>
+<li><strong>artifact skew</strong>：产物之间无法证明同一时间边界。</li>
+<li><strong>capture failed</strong>：截图、结构或持久化失败，不能冒充业务状态。</li>
+</ul>
+<p>stable 不是规则 pass；loading/transitional 也不是自动拒收。Manifest 只说明它适合哪些声明角色，Gate 再根据规则合同判断。</p>
+<h3 id="section-5-8">5.8 Presentation 门禁</h3>
+<p>页面底层结构存在而顶层充值、登录、更新或广告层遮挡时，展示层不一致，底层详情不能通过。z-index 数值大小不是完整遮挡关系，需结合可见性、几何覆盖、pointer hit-test、top layer 和语义层判断。</p>
+<p>正式分支不删除 DOM、不强行把样式设为隐藏、不改 z-index、不 force click。既有受签名约束的 style-hide 与 JS dispatch fallback 如被启用，必须标为诊断污染，不能计入自然点击或自然稳定通过。</p>
+<h3 id="section-5-9">5.9 H5 的视觉 quorum</h3>
+<p>H5 结构可用时优先使用 DOM/AX/UI snapshot，视觉帧用于可见性、层级和最终展示校验。Flutter Web 有 Semantics 时使用语义覆盖；没有 Semantics 时降级到视觉并提高复核限制，不能因框架名称直接判定不可观测。</p>
+<h3 id="section-5-10">5.10 App 的最小 quorum</h3>
+<p>App 首期使用截图、前台 Package/Activity、屏幕尺寸/方向、可得 UIA 节点和连续帧变化组成受限 quorum。UIA 失败时记录 unavailable 并使用视觉降级，不生成虚假的空层级。网络不可见时只让不依赖网络的规则继续，依赖网络完成的规则进入证据不足或人工。</p>
+<h2 id="section-6">6. 标准流程</h2>
+<ol>
+<li>冻结任务、规则、运行面能力、设备/浏览器 profile 和本次采集计划。</li>
+<li>在进入页面或触发动作前注册被动观察器，完成合法 before，确认当前身份与展示层。</li>
+<li>若有动作，由外部 Runtime 执行；动作触发立即保存 transition witness。纯入口或被动采集不编造动作或 witness。</li>
+<li>在有界 deadline 内按 profile 轮询身份、核心 landmark、可见层、媒体、动画和请求生命周期。</li>
+<li>每轮更新稳定 quorum；发现新弹窗、路由变化、Activity 切换或目标漂移立即切换到重规划。</li>
+<li>达到对应角色条件后采集规范帧，并执行一次 identity-after；有动作时它是 after Capture，纯被动采集不编造动作后态。</li>
+<li>将稳定、动态、加载或失败角色写入统一 readiness 结论；原始帧与派生摘要保持可追溯。</li>
+<li>writer 验证产物和污染标记后提交事实；Judge 只消费事实，不在等待期间发动作。</li>
+<li>若未稳定但有规则可接受的时间证据，按声明角色继续；否则进入补采、人工或分支终态。</li>
+<li>将 readiness、能力缺口、Presentation 和后置条件显示在工作台，不用一个总百分比掩盖失败维度。</li>
+</ol>
+<h2 id="section-7">7. 异常闭环</h2>
+<h3 id="section-7-1">7.1 deadline 到期</h3>
+<p>保存最后一组原始帧、原因和时间线。若核心内容仍缺失，结算 loading/timeout；若已有可检查动态页面，结算 inspectable dynamic，并禁止升级为稳定业务到达。</p>
+<h3 id="section-7-2">7.2 请求未完成或失败</h3>
+<p>仍在途的关键请求阻止对应 stable；失败请求可证明失败事实，但不能当作成功加载。若规则要求网络而能力是 partial/unavailable，必须结算证据不足或人工，不能跳过必需信号；不依赖网络的规则仍可按自己的 profile 判断，不无限等待。</p>
+<h3 id="section-7-3">7.3 身份漂移与产物错位</h3>
+<p>丢弃当前组合的稳定资格，保留各自产物作为诊断/时间证据；重新获取当前身份和展示层后有界重采。不得把漂移前的 DOM 与漂移后的截图拼接。</p>
+<h3 id="section-7-4">7.4 动态永不静止</h3>
+<p>先判断规则是否允许时间序列；允许则记录有限连续帧和动态原因，不允许则返回 transitional/timeout。不要用扩大 mask 或无限延长 deadline 规避问题。</p>
+<h3 id="section-7-5">7.5 Overlay 阻断</h3>
+<p>readiness 先停在 Presentation 阻断，等待弹窗采集计划处理。关闭一层之后必须重新观察，关闭成功不等于已到达底页；倒计时、无按钮、无效果、取消失败、误跳和支付/更新确认分别结算。</p>
+<h3 id="section-7-6">7.6 截图或写入失败</h3>
+<p>区分截图失败、结构采集失败、网络观测失败、持久化失败。既有原始产物若完整可保留诊断角色，但不以空截图或空结构补齐必需证据。</p>
+<h3 id="section-7-7">7.7 Runtime 崩溃或重启</h3>
+<p>先观察当前 Surface 与动作 Receipt，再决定是否补采。未看到 completed 不代表动作没发生；对提交、支付、授权、安装等副作用不自动重试。Readiness 只负责观察结算，不负责回滚副作用。</p>
+<h3 id="section-7-8">7.8 晚到结果</h3>
+<p>回到同一 Run/Epoch 校验来源；晚到的 frame、网络事件或 Judge 结果不能改写已封存报告输入，也不能在已经结束的 Run 上自动继续补采。若仍需证据，必须创建新的受控任务/Run，并重新过风险、权限和预算门禁。</p>
+<h2 id="section-8">8. H5/App 差异</h2>
+<div class="table-scroll" role="region" aria-label="设计对照表，可横向滚动" tabindex="0"><table>
+<thead>
+<tr>
+<th>维度</th>
+<th>H5/Web</th>
+<th>App</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>主要结构</td>
+<td>DOM、AX、UI snapshot、可见文本</td>
+<td>UIA（可得时）与视觉帧</td>
+</tr>
+<tr>
+<td>网络</td>
+<td>Playwright 被动生命周期可用，按 Frame/Service Worker 能力降级</td>
+<td>ADB 不代表应用网络生命周期可用</td>
+</tr>
+<tr>
+<td>视口</td>
+<td>CSS viewport、DPR、frame、视觉视口和整页/视口角色</td>
+<td>设备尺寸、方向、系统栏和截图路径</td>
+</tr>
+<tr>
+<td>Flutter</td>
+<td>Semantics 可用时优先；不可用时视觉降级</td>
+<td>原生 Flutter UIA 可能缺失，不能假设有树</td>
+</tr>
+<tr>
+<td>证据重点</td>
+<td>页面身份、可见层、DOM/AX 与视觉同帧</td>
+<td>前台身份、屏幕稳定、UIA/视觉一致性</td>
+</tr>
+</tbody></table></div>
+<p>H5 的 Playwright Surface 当前暴露 DOM、截图、文本、UI snapshot、媒体和时间序列能力，但其 Surface manifest 目前声明同 context 新 Surface 与 surface pin 为 false，不能把通用多标签隔离能力写成现状。参见 <a href="../../../services/api/app/infrastructure/browser/surface_driver.py"><code>PlaywrightSurfaceDriverAdapter.describe_capabilities</code></a>。</p>
+<p>App 当前 driver 只在截图元数据中带设备显示与前台身份，不能把 H5 的 DOM readiness 直接移植到 Android。</p>
+<h2 id="section-9">9. 其他专项协作</h2>
+<ul>
+<li><strong>页面识别</strong>：决定核心 landmark、页型和动作后置条件的业务含义；Oracle 只判断这些条件是否被观察。</li>
+<li><strong>页面状态图</strong>：接收 stable PageState、transitional 状态和漂移/失败边；不把每一帧都提升为节点。</li>
+<li><strong>精准交互</strong>：提供动作来源 epoch、目标和预期后置条件；Oracle 返回效果和稳定性，支持下一步重绑。</li>
+<li><strong>专项六的弹窗子流程</strong>：先冻结适用采集计划与前态，再允许关闭与后态判定；不等待全部 Judge 完成才关闭。</li>
+<li><strong>精准补采</strong>：只追加新证据；沿图路径验证等价性，不能用 direct URL 或诊断帧补造自然到达。</li>
+<li><strong>可信证据</strong>：传播原始、派生、诊断、时间序列和污染角色；DOM 底层与顶层截图不合并成详情证据。</li>
+<li><strong>专项六的外跳子流程</strong>：source、landing、return 都重新执行 readiness；只有外部 landing 不计业务 coverage，source 仍按正常业务页规则计入，重复回源不新增覆盖。</li>
+<li><strong>工作台</strong>：读取只读投影，展示原因、能力缺口和可操作排障入口，不在前端重放 settle 算法。</li>
+</ul>
+<h2 id="section-10">10. 工作台与排障</h2>
+<p>现有任务详情已经以 <a href="../../../app/workstation/src/modules/tasks/pages/TaskDetailView.vue"><code>TaskDetailView.vue</code></a> 的并行只读加载承载时间线、截图、日志、App 阶段和质检工作项；readiness 应作为任务详情扩展，不新增主菜单或独立运行控制台。</p>
+<p>建议工作台按以下层次展示：</p>
+<ol>
+<li>当前页面/Overlay 的 readiness 状态和“为什么未 ready”。</li>
+<li>稳定 quorum 的人类可读摘要：身份、可见层、核心内容、动作后置、视觉/结构一致性。</li>
+<li>网络能力与关键请求分类，清楚标注“不可见”而非“无请求”。</li>
+<li>原始帧、时间序列、DOM/UIA/视觉派生证据及其角色；诊断证据单独显示。</li>
+<li>重采建议、阻断原因、可继续分支、人工复核入口和预算剩余。</li>
+</ol>
+<p>当前 <a href="../../../app/workstation/src/services/task-insight.api.ts"><code>task-insight.api.ts</code></a> 只有时间线、规则、统计、截图、日志、App 阶段和工作项读取；新增 readiness 只读投影应挂到同一任务详情加载链，并保留部分模块失败的降级提示。前端不写图、Receipt 或 readiness 事实。</p>
+<p>排障视图不得把“等待中”渲染成成功，也不得把网络不可用隐藏为 0。刷新只重新读取同一任务事实，不触发设备动作。</p>
+<h2 id="section-11">11. 安全、审计与权限</h2>
+<ul>
+<li>Collector 默认只观察，不修改请求、响应、DOM、样式、证书或设备代理。</li>
+<li>任何诊断 style-hide、JS dispatch 或强制路径都必须经过显式开关、来源 Capture 验签和污染传播；正式 Gate 不能消费其自然通过结果。</li>
+<li>网络日志只保留规则允许的必要摘要，凭证、秘密表单和敏感响应不进入普通 readiness 证据。</li>
+<li>外部页面和跨域资源遵守已冻结的域名、协议、重定向、时间和数据预算；旁路打开仍可能执行脚本和请求，不称为零副作用。</li>
+<li>App UIA/XML 与截图都遵守租约和任务权限；不可把模型生成的节点、文本或边界当作运行时事实。</li>
+<li>工作台只读权限与证据下载权限分离；短时文件授权不得扩展任务范围。</li>
+<li>审计记录策略版本、运行面能力、诊断开关和结算理由，但不记录秘密值。</li>
+</ul>
+<h2 id="section-12">12. 分期、兼容与回滚</h2>
+<h3 id="section-12-1">A：统一语义与影子计算</h3>
+<p>复用现有 H5 settle/readiness/网络观察；新增 Oracle 只并行计算并记录差异，不改变旧动作和 Gate。冻结 profile、关键请求分类、quorum 阈值、mask 规则和能力分级。</p>
+<h3 id="section-12-2">B：H5 受控切换</h3>
+<p>先将 H5 的动作后 Capture 接入统一角色和 Presentation 门禁，再扩大到滚动、外跳和 Flutter。旧结果作为对照保留，发现误拒或误放时才退回旧等待链；退回仍必须保留身份一致性、Presentation 层级和诊断污染门禁，不能因为新 Oracle 误拒就开放旧链自然通过。</p>
+<h3 id="section-12-3">C：App 受限接入</h3>
+<p>先接截图、前台身份、屏幕 profile 和 UIA 可用性；网络保持不可用/部分的真实标记。只对明确不依赖网络的规则启用 stable 组合，其他规则仍走证据不足或人工。</p>
+<h3 id="section-12-4">D：工作台与 Gate</h3>
+<p>工作台先展示差异与缺口，待真实矩阵验证后再让 Gate 读取新的角色。回滚只切换消费路径，不删除原始 Capture 或历史原因。</p>
+<h3 id="section-12-5">兼容原则</h3>
+<ul>
+<li>历史 Capture 没有 readiness 结论时显示“历史兼容”，不补造 stable。</li>
+<li>新投影缺失时保留现有时间线、截图和日志页面。</li>
+<li>Oracle 失败、网络 Collector 崩溃或前端读取失败都应退回可解释的旧结果/人工入口，不自动通过；旧等待链同样要继续执行身份、Presentation 和诊断污染门禁。</li>
+</ul>
+<h2 id="section-13">13. 验收场景和指标</h2>
+<div class="table-scroll" role="region" aria-label="设计对照表，可横向滚动" tabindex="0"><table>
+<thead>
+<tr>
+<th>场景</th>
+<th>必须看到的结果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>两秒无新请求但慢关键请求仍在途</td>
+<td>不返回稳定；显示关键请求未完成</td>
+</tr>
+<tr>
+<td>长轮询或 WebSocket 常驻</td>
+<td>按 profile 分类，不无限等待；结构/视觉满足时可有条件稳定</td>
+</tr>
+<tr>
+<td>网络完全不可见</td>
+<td>readiness 标记能力不可用；依赖网络的规则不冒充通过</td>
+</tr>
+<tr>
+<td>详情 DOM 已存在但顶层充值遮挡</td>
+<td>Presentation 阻断；底层详情不计稳定业务证据</td>
+</tr>
+<tr>
+<td>加载动画持续但已有可检验错误文案</td>
+<td>保留非稳定时间序列/失败证据，不能伪造稳定页</td>
+</tr>
+<tr>
+<td>身份在截图前后切换</td>
+<td>结算 identity drift，原始帧可诊断，禁止同帧组合</td>
+</tr>
+<tr>
+<td>Flutter 有 Semantics 与无 Semantics</td>
+<td>前者使用结构辅助，后者视觉降级并记录能力差异</td>
+</tr>
+<tr>
+<td>动态广告区域持续变化</td>
+<td>动态区域不遮被测内容；按规则保存有界序列或失败</td>
+</tr>
+<tr>
+<td>App UIA dump 失败</td>
+<td>返回 unavailable 并保留截图，不构造空树</td>
+</tr>
+<tr>
+<td>Capture 写入超时</td>
+<td>记录持久化失败；不以空产物满足必需角色</td>
+</tr>
+</tbody></table></div>
+<p>建议 A 只冻结指标口径，不冻结最终目标值：稳定角色的误放率、应稳定却超时的比例、关键请求误判率、identity drift 发现率、Presentation 漏检率、网络能力缺口完整率、诊断污染进入自然通过的数量、单任务平均额外等待和重采次数。所有目标值必须由 H5/App 真实矩阵建立基线后再定。</p>
+<h2 id="section-14">14. 团队反馈及待冻结参数</h2>
+<h3 id="section-14-1">已裁决反馈</h3>
+<ul>
+<li>“无新请求 2～3 秒即完成”改为网络辅助条件；必须同时观察未完成关键请求和完成/失败，沿用现有 H5 readiness。</li>
+<li>“外跳单开标签/进程”改为 Web 条件旁路；原生进程不能普遍克隆，源页与落地/回源必须分别结算。</li>
+<li>“删 DOM/改 z-index 后继续”不进入正式证据；现有受约束 style-hide/JS fallback 属诊断，污染需传播，但不能反推所有当前证据都已污染。</li>
+<li>“动态区域一律屏蔽”不采纳；广告与关闭控件仍是被测区域，原始图不可改。</li>
+<li>“非稳定帧全部拒收”不采纳；加载、动画、关闭失败时间序列可按声明角色使用。</li>
+</ul>
+<h3 id="section-14-2">A 待冻结</h3>
+<ol>
+<li>各动作 profile 的采样间隔、deadline、quorum 数量和容忍度。</li>
+<li>关键请求的规则/展示依赖分类、失败语义和长连接处理。</li>
+<li>H5 Frame/Service Worker 与 App UIA/视觉的能力等级及降级上限。</li>
+<li>动态区域的来源、审核方式、最大范围和时间序列上限。</li>
+<li>Presentation 阻断与稳定证据的组合门禁。</li>
+<li>诊断开关、污染标记、历史兼容和 Gate 切换窗口。</li>
+<li>真实矩阵中的目标值、人工复核条件和取消/崩溃后的资源收口时间。</li>
+</ol>
+<h2 id="section-15">15. 组件与接入点（技术深化）</h2>
+<p>本章只细化 Capture Readiness 的待实现接入，不表示统一 Oracle 已上线。现有 H5 <code>page_capture</code> 已经具备 DOM、loader、媒体、transition、critical inflight 等等待和观察能力；技术深化是抽取一致语义、补身份边界和证据角色，不是从零增加一个等待器。App 侧只按实际 Surface 能力接入，ADB 连接本身不提供任意 App 网络可观测。</p>
+<h3 id="section-15-1">15.1 组件职责</h3>
+<ul>
+<li><strong>采集计划协调器</strong>：读取动作类型、证据角色、风险、平台能力和有界 deadline，决定需要哪些观察与产物；不把所有规则都升级为等待网络空闲。</li>
+<li><strong>身份观察器</strong>：在正式采集前后读取 H5 页面/Frame 或 App 前台身份、窗口和设备显示状态，形成 identity-before 与 identity-after；它不把一张截图的元数据当成完整页面身份。</li>
+<li><strong>展示层观察器</strong>：判断当前顶层页面、Overlay、系统窗口、原生弹层和遮挡关系；目标是底页时，底层 DOM 或 UIA 被遮挡会阻止底页稳定角色，目标是 Overlay 时则按其自身可见区域与证据角色继续结算。</li>
+<li><strong>H5 现有 Settle 适配器</strong>：复用 <code>page_capture</code> 的核心容器、可见 loader、媒体、转场、Flutter bootstrap 和 critical inflight 观察，并将旧结果转换为统一 readiness 角色。</li>
+<li><strong>App 运行时观察适配器</strong>：读取截图、前台 Package/Activity、屏幕尺寸/方向和可得 UIA；UIA 失败返回 unavailable，不能制造空树或假装网络为空闲。</li>
+<li><strong>目标相关信号选择器</strong>：根据规则合同选核心 landmark、媒体、动作后置、必要请求和动态区域；无关心跳、统计和长连接不应阻止不依赖网络的规则。</li>
+<li><strong>连续采样器</strong>：使用单调时钟在稳定窗口内采集有限预览帧、结构摘要和状态样本，允许 profile 声明的采样抖动；不把单帧静止当作连续稳定。</li>
+<li><strong>正式产物采集器</strong>：在 quorum 满足后采集正式截图、结构和必要旁证；原始产物与预览帧分开，诊断帧不能伪装成正式证据。</li>
+<li><strong>Readiness Oracle</strong>：按身份、展示层、结构、视觉/结构 quorum、动作后置和可用网络条件结算 stable、loading、transitional、timeout、identity drift、artifact skew 或 capture failed。</li>
+<li><strong>Writer 与证据清单适配器</strong>：验证原始内容、时间边界、污染标记和持久化状态，再提交不可变产物；不覆盖已有帧、不用空产物补必需角色。</li>
+<li><strong>Gate/工作台投影器</strong>：只读消费 readiness、能力缺口、失败时间序列和复采建议；前端不重算 settle，不发设备动作。</li>
+</ul>
+<h3 id="section-15-2">15.2 现有代码接线</h3>
+<ol>
+<li>H5 接入点优先位于 <code>infrastructure/browser/page_capture.py</code> 的现有等待、readiness、Observer 与 artifact collector 周边，由协调器复用结果；旧等待链作为兼容对照，不被另写成平行实现。</li>
+<li>H5 <code>capture_runtime.py</code> 继续负责动作 Receipt、已提交动作的安全重试边界和动作后采集协调；Oracle 只观察和结算，不执行点击、关闭、支付或返回。</li>
+<li>App 接入 <code>android_surface_driver.py</code> 的 capture/observe 能力和 <code>android_runtime_observation.py</code> 的内存 UIA 事实；UIA 不作为截图 Artifact 持久化，也不能单独替代同帧截图。</li>
+<li>证据 writer、Manifest、InputSet 和 Gate 消费同一 readiness 角色；不允许各自依据“截图存在”“网络计数为零”重新猜测 stable。</li>
+<li>规则 profile 只声明目标相关信号和可接受证据角色；是否需要网络必须来自规则合同，能力不可用时结算证据不足或人工，不默认跳过必需信号。</li>
+<li>所有接线都保留诊断开关和污染传播；任何受约束的 style-hide、JS fallback 或强制路径不能进入自然稳定通过。</li>
+</ol>
+<h3 id="section-15-3">15.3 组件关系图</h3>
+<figure class="technical-diagram" data-technical-diagram="0" aria-labelledby="technical-title-1"><figcaption id="technical-title-1">技术图 01 · 组件职责与依赖</figcaption><p class="technical-legend">纵向阅读 · 菱形表示条件 · 虚线表示回流、事件或回执，以边上文字和正文为准。图均为设计目标。</p><div class="technical-controls" hidden><label>定位 <select aria-label="选择组件职责与依赖中的节点或消息"></select></label><div><button type="button" data-minus aria-label="缩小技术图">−</button><output>100%</output><button type="button" data-plus aria-label="放大技术图">＋</button><button type="button" data-fit>全图概览</button><button type="button" data-size>清晰原寸</button></div></div><div class="technical-viewport" role="region" tabindex="0" aria-label="组件职责与依赖，可上下和横向滚动"><canvas width="828" height="1831" role="img" aria-label="技术图 01 · 组件职责与依赖；完整关系见下方文字替代">技术图文字关系见下方。</canvas></div><p class="technical-hint">点击节点或消息查看交接关系；可缩放并在图内滚动。下方提供同源文字与 Mermaid 图源。</p><aside class="technical-detail" aria-live="polite" hidden></aside><details class="technical-source" open><summary>文字关系与 Mermaid 图源</summary><ol><li>采集计划协调器 / 动作与证据 profile — 计划 → 身份观察器 / before 与 after</li><li>身份观察器 / before 与 after — 身份事实 → 展示层观察器 / 页面与遮挡关系</li><li>展示层观察器 / 页面与遮挡关系 — 展示层 → H5 现有 Settle / DOM loader 媒体转场</li><li>展示层观察器 / 页面与遮挡关系 — 展示层 → App 运行时观察 / 截图 UIA 前台身份</li><li>H5 现有 Settle / DOM loader 媒体转场 — H5 观察 → 目标信号选择器 / 核心请求与后置条件</li><li>App 运行时观察 / 截图 UIA 前台身份 — App 观察 → 目标信号选择器 / 核心请求与后置条件</li><li>目标信号选择器 / 核心请求与后置条件 — 目标信号 → 连续采样器 / 窗口与采样抖动</li><li>连续采样器 / 窗口与采样抖动 — quorum → 正式产物采集器 / 预览与正式帧分离</li><li>正式产物采集器 / 预览与正式帧分离 — 正式产物 → Readiness Oracle / 角色与原因结算</li><li>身份观察器 / before 与 after — identity-after → Readiness Oracle / 角色与原因结算</li><li>Readiness Oracle / 角色与原因结算 — 角色与污染 → Writer 与清单 / 原始事实不可变</li><li>Writer 与清单 / 原始事实不可变 — 可消费事实 → Gate 与工作台 / 只读消费结论</li><li>Readiness Oracle / 角色与原因结算 — 未满足条件 → 补采调度器 / 不在 Oracle 内执行动作</li></ol><pre><code class="language-mermaid">flowchart TB
+  A[&quot;采集计划协调器&lt;br/&gt;动作与证据 profile&quot;]
+  B[&quot;身份观察器&lt;br/&gt;before 与 after&quot;]
+  C[&quot;展示层观察器&lt;br/&gt;页面与遮挡关系&quot;]
+  D[&quot;H5 现有 Settle&lt;br/&gt;DOM loader 媒体转场&quot;]
+  E[&quot;App 运行时观察&lt;br/&gt;截图 UIA 前台身份&quot;]
+  F[&quot;目标信号选择器&lt;br/&gt;核心请求与后置条件&quot;]
+  G[&quot;连续采样器&lt;br/&gt;窗口与采样抖动&quot;]
+  H[&quot;正式产物采集器&lt;br/&gt;预览与正式帧分离&quot;]
+  I[&quot;Readiness Oracle&lt;br/&gt;角色与原因结算&quot;]
+  J[&quot;Writer 与清单&lt;br/&gt;原始事实不可变&quot;]
+  K[&quot;Gate 与工作台&lt;br/&gt;只读消费结论&quot;]
+  L[&quot;补采调度器&lt;br/&gt;不在 Oracle 内执行动作&quot;]
+  A --&gt;|计划| B
+  B --&gt;|身份事实| C
+  C --&gt;|展示层| D
+  C --&gt;|展示层| E
+  D --&gt;|H5 观察| F
+  E --&gt;|App 观察| F
+  F --&gt;|目标信号| G
+  G --&gt;|quorum| H
+  H --&gt;|正式产物| I
+  B --&gt;|identity-after| I
+  I --&gt;|角色与污染| J
+  J --&gt;|可消费事实| K
+  I -.-&gt;|未满足条件| L
+</code></pre></details></figure>
+<p>图中的 H5 Settle 是已有能力的适配点，不是新等待器；App 分支明确只消费实际截图/UIA/前台能力。虚线表示失败或补采建议回到编排层，Oracle 不借机触发副作用动作。</p>
+<h3 id="section-15-4">15.4 证据角色接入</h3>
+<p>稳定页面或 Overlay 角色要求同一边界内的身份、目标区域、展示层、核心内容和 profile 必需后置条件；Overlay 遮住底页不妨碍 Overlay 自身成为合法稳定质检目标。动态/交互时间序列可以承担规则声明的过程证据，只有规则允许且证据完整时才结算失败；加载序列仍可保持 loading。预览帧用于定位转场，也可在规则声明时作为时间序列输入；正式帧用于承担声明的稳定证据，两者都不互相改名。</p>
+<h2 id="section-16">16. 时序与交接条件（技术深化）</h2>
+<h3 id="section-16-1">16.1 采集时序</h3>
+<p>标准交接为：冻结 profile 与运行面能力 → 已有动作 Receipt 或入口被动观测用途 → 一次 action-after/入口 Capture（其内部 identity-before → 连续采样与 artifacts → identity-after）→ readiness 结算 → writer 收口 → 既有编排回传 Runtime → Gate 消费。若流程包含真实动作，action-before Capture → 真实动作 → action-after Capture 的前后关系在正文约束；Oracle 只接收已有 Receipt 和采集请求，不授权设备动作，纯入口或被动 observe 不编造动作 Receipt。</p>
+<figure class="technical-diagram" data-technical-diagram="1" aria-labelledby="technical-title-2"><figcaption id="technical-title-2">技术图 02 · 调用时序与交接</figcaption><p class="technical-legend">纵向阅读 · 菱形表示条件 · 虚线表示回流、事件或回执，以边上文字和正文为准。图均为设计目标。</p><div class="technical-controls" hidden><label>定位 <select aria-label="选择调用时序与交接中的节点或消息"></select></label><div><button type="button" data-minus aria-label="缩小技术图">−</button><output>100%</output><button type="button" data-plus aria-label="放大技术图">＋</button><button type="button" data-fit>全图概览</button><button type="button" data-size>清晰原寸</button></div></div><div class="technical-viewport" role="region" tabindex="0" aria-label="调用时序与交接，可上下和横向滚动"><canvas width="1056" height="1472" role="img" aria-label="技术图 02 · 调用时序与交接；完整关系见下方文字替代">技术图文字关系见下方。</canvas></div><p class="technical-hint">点击节点或消息查看交接关系；可缩放并在图内滚动。下方提供同源文字与 Mermaid 图源。</p><aside class="technical-detail" aria-live="polite" hidden></aside><details class="technical-source" open><summary>文字关系与 Mermaid 图源</summary><ol><li>1. 运行编排 → Readiness Oracle：提交已有动作 Receipt 或入口用途</li><li>2. Readiness Oracle → H5/App Surface：读取目标信号与 Surface 能力</li><li>3. H5/App Surface → Readiness Oracle：返回目标信号和能力事实</li><li>4. Readiness Oracle → Capture 采集器：开始一次 action-after 或入口 Capture</li><li>5. Capture 采集器 → H5/App Surface：读取本次 Capture identity-before</li><li>6. H5/App Surface → Capture 采集器：返回 before 身份与展示层</li><li>7. Capture 采集器 → H5/App Surface：连续采样预览与目标信号</li><li>8. H5/App Surface → Capture 采集器：返回连续样本与动态原因</li><li>9. Capture 采集器 → H5/App Surface：采集本次 Capture 正式 artifacts</li><li>10. H5/App Surface → Capture 采集器：返回正式截图结构与旁证</li><li>11. Capture 采集器 → H5/App Surface：读取本次 Capture identity-after</li><li>12. H5/App Surface → Capture 采集器：返回 after 边界回执</li><li>13. Capture 采集器 → Readiness Oracle：返回同边界产物与时间序列</li><li>14. Readiness Oracle → 证据 Writer：提交 readiness 结算与角色原因</li><li>15. 证据 Writer → Readiness Oracle：确认不可变持久化收口</li><li>16. Readiness Oracle → 运行编排：交既有编排回传收口事实</li><li>17. 运行编排 → Readiness Oracle：登记既有编排结果</li></ol><pre><code class="language-mermaid">sequenceDiagram
+  participant R as 运行编排
+  participant O as Readiness Oracle
+  participant S as H5/App Surface
+  participant C as Capture 采集器
+  participant W as 证据 Writer
+  R-&gt;&gt;O:提交已有动作 Receipt 或入口用途
+  O-&gt;&gt;S:读取目标信号与 Surface 能力
+  S--&gt;&gt;O:返回目标信号和能力事实
+  O-&gt;&gt;C:开始一次 action-after 或入口 Capture
+  C-&gt;&gt;S:读取本次 Capture identity-before
+  S--&gt;&gt;C:返回 before 身份与展示层
+  C-&gt;&gt;S:连续采样预览与目标信号
+  S--&gt;&gt;C:返回连续样本与动态原因
+  C-&gt;&gt;S:采集本次 Capture 正式 artifacts
+  S--&gt;&gt;C:返回正式截图结构与旁证
+  C-&gt;&gt;S:读取本次 Capture identity-after
+  S--&gt;&gt;C:返回 after 边界回执
+  C--&gt;&gt;O:返回同边界产物与时间序列
+  O-&gt;&gt;W:提交 readiness 结算与角色原因
+  W--&gt;&gt;O:确认不可变持久化收口
+  O-&gt;&gt;R:交既有编排回传收口事实
+  R--&gt;&gt;O:登记既有编排结果
+</code></pre></details></figure>
+<p>图中只展开一次 action-after 或入口被动 Capture；该次 Capture 自己完整执行 identity-before → 连续采样/正式 artifacts → identity-after，不能把不同 Capture 的产物拼成跨动作帧。若流程包含真实动作，action-before Capture 先按同样三明治边界完成，既有 Runtime/动作执行器执行真实动作，再由已有 Receipt 触发图示的 action-after Capture；Oracle 只接收 Receipt 和采集请求，不授权设备动作。Gate/工作台只消费 Writer 已收口的事实；Readiness/Writer 结果回 Runtime 由既有编排调度，不由 Gate 下发分支决定。目标是 Overlay 时，即使它遮住底页，也按 Overlay 自身角色判定，不把采集一律标成阻断。</p>
+<h3 id="section-16-2">16.2 交接条件</h3>
+<ul>
+<li><strong>从身份到观察</strong>：身份属于当前 Run/Epoch，Surface 能力声明已读取；身份不明时只保存诊断，不采正式稳定角色。</li>
+<li><strong>从展示层到 settle</strong>：顶层可见层已识别，并按目标区域结算遮挡；底页被 Overlay 遮挡时底页角色不交接，Overlay 自身为目标时可按其区域继续交接。</li>
+<li><strong>从 settle 到连续窗口</strong>：核心 landmark 和动作后置条件可被采样，网络条件只按 profile 纳入；静默窗口不单独触发交接。</li>
+<li><strong>从连续窗口到正式帧</strong>：样本在允许的时间窗口内满足 quorum，动态区域没有掩盖目标，采集路径和身份没有漂移。</li>
+<li><strong>从正式帧到 after</strong>：所有正式 artifacts 记录后立即复核身份和展示层；任一产物时间错位都降级为 artifact skew。</li>
+<li><strong>从 Oracle 到 writer</strong>：角色、原因、能力缺口、污染和原始产物都可追溯；writer 失败不被空值补齐。</li>
+</ul>
+<h3 id="section-16-3">16.3 动作与被动采集分支</h3>
+<p>动作后采集携带动作来源、预期后置条件以及 Receipt 或明确的回执缺失事实；回执丢失不阻止只读核对。对于明确要求状态变化的动作，没有相应变化就保留 <code>transitional</code>、<code>timeout</code> 或可供失败判断的材料，而不是“动作调用成功所以 ready”。允许无变化的只读观察或状态检查按自身合同判定，不能一律要求页面变化。入口/定时采集没有动作来源，只依据入口 profile 产生 before 和时间样本。各分支共享身份、展示层和 Writer 门禁。</p>
+<h2 id="section-17">17. 算法与决策（技术深化）</h2>
+<h3 id="section-17-1">17.1 目标相关信号选择</h3>
+<p>信号选择先由证据角色和规则合同确定目标，再从 H5/App 能力中选择能证明目标的信号：核心 landmark、可见文本/语义、媒体状态、顶层遮挡、动作专属变化、请求生命周期或设备身份。不要收集所有信号再用数量制造确定性。</p>
+<ul>
+<li>不依赖网络的页面结构规则可以使用身份、展示层、结构和视觉 quorum；网络不可用不应让它变成“请求数为零”。</li>
+<li>规则要求关键请求时，只有在声明范围内能观测开始、响应、完成或失败，且关键请求已满足合同，才可把网络条件计入 stable；能力 partial/unavailable 进入证据不足或人工。</li>
+<li>H5 复用现有 DOM、loader、媒体、transition、critical inflight 结果，但 critical 的定义必须由 profile/规则提供；不等待无关统计、心跳、长连接至全局空闲。</li>
+<li>App 使用截图、前台身份、屏幕尺寸/方向和可得 UIA；ADB 连接、设备日志或单次 screencap 不自动提供任意 App HTTPS 生命周期。</li>
+<li>目标是广告时，广告素材、关闭控件和遮挡关系是被测区域，不能被动态 mask 规避；目标是页面结构时，动态内容可转入有限时间序列。</li>
+</ul>
+<h3 id="section-17-2">17.2 连续稳定窗口与采样抖动</h3>
+<p>稳定窗口使用单调时钟定义开始、结束和 deadline。profile 给出采样间隔、允许抖动、所需样本关系和可接受缺口；调度器只在窗口内取样，不把定时器恰好同时触发当作稳定证据。样本需要在身份、展示层、核心 landmark、动作后置和必要网络条件上形成 quorum；不同 profile 可以有不同组合，设计阶段不承诺统一时间或样本数字。</p>
+<p>quorum 不是多数信号投票：身份/归属、目标可见层、必需内容和角色指定后置是逐项硬条件。profile 可以在已验证能力范围内选择“结构稳定 + 视觉确认”或“连续视觉 + 独立前台身份”等组合，但不能用三个弱提示抵消一个硬条件失败。网络静默仅在被纳入的辅助或必需请求条件中使用。</p>
+<p>采样抖动用于避免与页面动画或批量请求固定同相，不是放宽稳定条件。发生新导航、Overlay、媒体首帧、核心文本变更或 Activity 切换时，当前窗口失效并重新规划。连续样本未稳定时，先检查规则是否声明动态/交互时间序列及其完整性；满足时可作为合法过程证据，只有能证明失败且规则允许时才结算失败，加载中的样本保持 loading，不一刀切为失败。</p>
+<h3 id="section-17-3">17.3 动态区域 mask 边界</h3>
+<p>mask 只作用于派生比较，不改原始截图、DOM、UIA 或媒体事实。mask 来源必须可解释（例如已识别的时钟、播放进度或非目标动画），边界以规则目标和遮挡关系校验；如果无法证明边界不覆盖广告、关闭控件、核心 landmark 或 Overlay 边缘，则不使用 mask，转入动态/人工路径。</p>
+<p>mask 不得扩大到“整屏”“目标容器”或任何未知区域来制造 quorum。动态区域与目标重叠时，优先保留原始连续帧并按声明的动态/交互时间序列或诊断角色处理；只有完整证据证明失败时才进入失败结论。广告素材本身、关闭动作和落地关系始终保持未屏蔽。派生差异摘要带有 mask 使用原因和能力限制，Gate 不能只看摘要。</p>
+<h3 id="section-17-4">17.4 正式帧、预览帧与身份边界</h3>
+<p>预览帧是采样窗口中的观察产物，用于判断转场是否发生、核心信号是否可得及是否需要正式采集；正式帧在条件满足后一次性采集并写入声明角色。预览帧不能代替正式帧，正式帧也不能抹掉预览中已出现的加载、遮挡或失败事实。</p>
+<p>正式采集严格执行 identity-before → artifacts → identity-after。身份变化、Frame/窗口切换、页面 epoch 变化或产物之间时间关系无法证明时，原始产物仍保留为诊断/时间证据，但不能合成 stable 同帧。身份后检查不是可选优化，而是提交门禁。</p>
+<h3 id="section-17-5">17.5 条件伪代码</h3>
+<pre><code class="language-text">函数结算采集(profile, 运行, surface):
+    before = 读取身份与展示层(surface)
+    如果 before.不可用 或 规则目标区域被其他关键层阻断:
+        保存 before
+        返回 阻断或未知(不采被遮目标的稳定帧，Overlay自身仍可另行采集)
+    信号计划 = 按规则合同选择目标相关信号(profile, surface能力)
+    预览 = 采集预览与连续样本(使用单调时钟和允许抖动)
+    如果 预览.发现身份或展示层漂移:
+        返回 身份漂移(保留全部原始帧)
+    如果 not 满足quorum(预览, 信号计划, profile):
+        如果 声明时间序列角色(profile) 且 顺序归属和必要边界完整(预览):
+            返回 合法时间序列(可支持动态或失败判断，但不在Oracle判产品结论)
+        返回 loading、transitional、超时或诊断
+    artifacts = 采集正式帧与结构(surface)
+    after = 读取身份与展示层(surface)
+    如果 not 同一边界(before, artifacts, after):
+        返回 artifact_skew或identity_drift(保留产物)
+    如果 not 满足动作后置与网络条件(artifacts, 信号计划):
+        返回 transitional或证据不足
+    返回 stable(仅绑定正式帧角色)
+</code></pre>
+<p>伪代码中的 quorum、抖动、deadline 和可接受角色由真实矩阵校准；网络不可用、UIA 不可用或动态不可静止都必须显式落到原因，动态/交互时间序列可在规则允许且证据完整时合法提交，不能转换成空集合、默认失败或默认成功。</p>
+<h3 id="section-17-6">17.6 判定图</h3>
+<figure class="technical-diagram" data-technical-diagram="2" aria-labelledby="technical-title-3"><figcaption id="technical-title-3">技术图 03 · 判定与异常流转</figcaption><p class="technical-legend">纵向阅读 · 菱形表示条件 · 虚线表示回流、事件或回执，以边上文字和正文为准。图均为设计目标。</p><div class="technical-controls" hidden><label>定位 <select aria-label="选择判定与异常流转中的节点或消息"></select></label><div><button type="button" data-minus aria-label="缩小技术图">−</button><output>100%</output><button type="button" data-plus aria-label="放大技术图">＋</button><button type="button" data-fit>全图概览</button><button type="button" data-size>清晰原寸</button></div></div><div class="technical-viewport" role="region" tabindex="0" aria-label="判定与异常流转，可上下和横向滚动"><canvas width="922" height="2130" role="img" aria-label="技术图 03 · 判定与异常流转；完整关系见下方文字替代">技术图文字关系见下方。</canvas></div><p class="technical-hint">点击节点或消息查看交接关系；可缩放并在图内滚动。下方提供同源文字与 Mermaid 图源。</p><aside class="technical-detail" aria-live="polite" hidden></aside><details class="technical-source" open><summary>文字关系与 Mermaid 图源</summary><ol><li>采集计划 / 动作与证据角色 — 冻结 profile → identity-before / 运行面与展示层</li><li>identity-before / 运行面与展示层 — 身份与层级 → 身份和展示层可接受？</li><li>身份和展示层可接受？ — 是 → 预览样本 / 捕获转场与加载</li><li>身份和展示层可接受？ — 否或阻断 → 角色提交与诊断 / 按合同保留原始</li><li>预览样本 / 捕获转场与加载 — 预览结果 → 连续窗口 / quorum与采样抖动</li><li>连续窗口 / quorum与采样抖动 — 窗口样本 → 目标相关信号 / 结构媒体网络后置</li><li>目标相关信号 / 结构媒体网络后置 — 信号结论 → 稳定条件与动作后置满足？</li><li>稳定条件与动作后置满足？ — 是 → 正式 artifacts / 预览与正式帧分离</li><li>稳定条件与动作后置满足？ — 未达稳定 → 时间序列角色核验 / 动态交互或失败</li><li>正式 artifacts / 预览与正式帧分离 — 正式采集 → identity-after 同一边界？</li><li>identity-after 同一边界？ — 是 → 稳定页面角色 / 可供规则消费</li><li>identity-after 同一边界？ — 否或错位 → 角色提交与诊断 / 按合同保留原始</li><li>时间序列角色核验 / 动态交互或失败 — 允许且证据完整 → 角色提交与诊断 / 按合同保留原始</li><li>时间序列角色核验 / 动态交互或失败 — 不允许或不完整 → 角色提交与诊断 / 按合同保留原始</li><li>稳定页面角色 / 可供规则消费 — 按角色提交 → 角色提交与诊断 / 按合同保留原始</li></ol><pre><code class="language-mermaid">flowchart TB
+  A[&quot;采集计划&lt;br/&gt;动作与证据角色&quot;]
+  B[&quot;identity-before&lt;br/&gt;运行面与展示层&quot;]
+  C{&quot;身份和展示层可接受？&quot;}
+  D[&quot;预览样本&lt;br/&gt;捕获转场与加载&quot;]
+  E[&quot;连续窗口&lt;br/&gt;quorum与采样抖动&quot;]
+  F[&quot;目标相关信号&lt;br/&gt;结构媒体网络后置&quot;]
+  G{&quot;稳定条件与动作后置满足？&quot;}
+  H[&quot;正式 artifacts&lt;br/&gt;预览与正式帧分离&quot;]
+  I{&quot;identity-after 同一边界？&quot;}
+  J[&quot;稳定页面角色&lt;br/&gt;可供规则消费&quot;]
+  K[&quot;时间序列角色核验&lt;br/&gt;动态交互或失败&quot;]
+  L[&quot;角色提交与诊断&lt;br/&gt;按合同保留原始&quot;]
+  A --&gt;|冻结 profile| B
+  B --&gt;|身份与层级| C
+  C --&gt;|是| D
+  C -.-&gt;|否或阻断| L
+  D --&gt;|预览结果| E
+  E --&gt;|窗口样本| F
+  F --&gt;|信号结论| G
+  G --&gt;|是| H
+  G -.-&gt;|未达稳定| K
+  H --&gt;|正式采集| I
+  I --&gt;|是| J
+  I -.-&gt;|否或错位| L
+  K --&gt;|允许且证据完整| L
+  K -.-&gt;|不允许或不完整| L
+  J --&gt;|按角色提交| L
+</code></pre></details></figure>
+<p>图中稳定页面角色只有一条完整路径：before、展示层、连续窗口、目标信号、正式帧和 after 全部通过。未达稳定条件先进入“时间序列角色核验”：规则允许且证据完整时提交合法动态/交互或失败候选材料，否则仅作 loading、诊断或补采输入。Oracle 判定的是 readiness 和材料用途，Writer/Manifest 校验后供 Judge 判断产品规则，Gate 消费既有完成事实；不是 Oracle 直接判产品失败，也不把稳定、时间序列和诊断互相改名。</p>
+<h2 id="section-18">18. 超时、并发、幂等与失效（技术深化）</h2>
+<h3 id="section-18-1">18.1 Deadline 预算</h3>
+<p>总 deadline 由入口/动作 profile 提供，编排器按 identity-before、展示层、预览与连续窗口、正式采集、identity-after、writer 收口分段预留预算；任何阶段不得无限等待下一请求。阶段预算不是跨平台承诺，必须在真实矩阵中校准，并留出身份复核和持久化余量。</p>
+<p>预算耗尽时：before 未完成结算身份未知；目标是底页且 Overlay 未结算时结算底页阻断，目标是 Overlay 时仍结算其已有的稳定或时间序列角色；连续窗口不足先核验声明的动态/交互时间序列，不能直接归为失败；正式采集或 after 失败结算 capture failed、artifact skew 或 identity drift。不得用上一页面的 stable、上一轮的请求状态或一张预览帧填空。</p>
+<h3 id="section-18-2">18.2 并发与幂等</h3>
+<ul>
+<li>同一 Surface 的活动采集只有在边界、profile、证据角色和 freshness 要求兼容时才可由同一 coordinator 合并；仅凭 Run/Epoch 或动作来源相同不能合并，不兼容请求必须排队并重新采集。</li>
+<li>预览采样可以并行读取不同模态，但正式 artifacts、identity-after 和 writer 提交必须按同一时间边界串行编排，防止截图与结构交叉。</li>
+<li>相同边界、profile、角色和 freshness 的输入重复到达时返回等价角色；信号、身份、时间边界、能力或角色要求变化时形成新采集，不复用旧 stable；新一轮观察不得沿用同一个请求代号作为去重身份。</li>
+<li>Writer 重试只重试幂等的持久化确认；若动作已提交或副作用可能发生，不能以“没有 after”自动重放动作。</li>
+<li>Gate 只消费 Writer 已收口的事实；收口后到达的网络事件、帧或写入回执只能作为晚到诊断，不能改写已消费角色或给 Runtime 下发分支。</li>
+</ul>
+<h3 id="section-18-3">18.3 失效条件</h3>
+<p>身份、展示层、页面 epoch、动作 Receipt、规则 profile、运行面能力、关键请求分类或 mask 审核任一变化，都会使受影响的连续窗口和正式稳定资格失效。失效不删除原始预览、正式帧、网络事件或失败序列，只禁止派生角色继续被消费。</p>
+<p>H5 的 Frame/Service Worker 能力变化、App UIA 从可用变为 unavailable、屏幕方向或尺寸变化、Overlay 出现/消失、关键媒体重新加载和请求失败重试，都需要重新确认目标信号。网络能力 partial/unavailable 不得缓存为“无请求”；稳定角色必须重新经过规则要求的能力门禁。</p>
+<h3 id="section-18-4">18.4 条件伪代码</h3>
+<pre><code class="language-text">函数接收采集请求(请求):
+    原子登记当前Surface的采集所有者:
+        如果 存在同一边界、profile、角色和freshness的已提交结论:
+            返回 已提交结论
+        如果 已有活动协调器:
+            如果 边界、profile、角色和freshness兼容:
+                返回 等待该次采集完成(不提前宣称收口)
+            返回 排队创建新采集尝试
+        如果 请求剩余deadline不足以完成after和writer:
+            返回 超时(保留预览和原因)
+        尝试 = 注册新采集边界与有期限的所有权
+    结果 = 无锁运行before、采样、正式帧、after与载荷留存(尝试)
+    获取短暂提交栅栏
+    try:
+        再次读取版本和边界
+        如果 所有权失效 或 运行不再接纳 或 边界在提交前失效:
+            保存原始产物为诊断
+            标记派生角色失效
+            返回 失效待补采
+        提交不可变角色
+    finally:
+        释放提交栅栏
+    返回 结果
+</code></pre>
+<p>采集、连续等待和慢速模型调用均在提交栅栏之外执行；栅栏只保护版本二次检查和不可变提交。任何失效只禁止派生角色被消费，原始事实仍可诊断；重新观察必须创建新的采集尝试身份，不能让原请求代号跨轮次去重。</p>
+<p>采集所有权贯穿观察窗口，与短事务锁是不同概念。整个尝试都需有 <code>finally</code>/租约到期回收，采集或载荷留存中途抛错也能结清所有权和预算；不能只释放最后的提交锁。慢阶段的载荷留存不等于正式事实已接纳，正式接纳仍经过提交栅栏。</p>
+<h2 id="section-19">19. 故障推演与技术验收（技术深化）</h2>
+<h3 id="section-19-1">19.1 故障重试矩阵</h3>
+<p>以下是行为矩阵，不是持久化表、字段清单或接口 JSON。重试必须受剩余预算、动作是否已提交、证据角色和平台能力约束。</p>
+<ul>
+<li><strong>现有 H5 settle 未达到</strong>：若仍可观察且关键条件未超时，可在同一窗口继续采样；保留 loader/媒体/critical inflight 原因；到 deadline 结算 loading、dynamic 或 timeout；不另造等待器。</li>
+<li><strong>静默窗口结束但关键请求在途</strong>：不认 stable；若规则允许且能力完整，继续按关键请求结算；能力 partial/unavailable 时转证据不足/人工，不把在途清零。</li>
+<li><strong>Overlay 或系统层阻断</strong>：目标是底页时保留底层结构和顶层前态，交互专项处理后重新观察；目标是 Overlay 时按其自身区域和角色继续结算，不以关闭命令成功认定底页 ready。</li>
+<li><strong>连续样本抖动/动态区域变化</strong>：不扩大 mask；先核验声明的动态/交互时间序列，规则允许且证据完整时保存合法序列，只有可证明失败时才结算失败，否则保留 loading/transitional/诊断；补采必须重新检查目标边界。</li>
+<li><strong>App UIA dump 失败</strong>：保留截图、前台身份和 unavailable 原因；若规则不依赖 UIA 可按视觉受限 profile 继续，否则证据不足/人工；不生成空 UIA。</li>
+<li><strong>ADB/网络能力不可见</strong>：不重试为“零请求”；仅在受支持的观察范围内重读能力；网络依赖规则不冒充通过，其他规则仍按自身信号判断。</li>
+<li><strong>identity-after 不一致</strong>：停止组合当前 artifacts；保留每份原始产物及时间线；重新建立新边界后有界补采；不把漂移前后拼接。</li>
+<li><strong>正式截图或 writer 失败</strong>：只重试未提交且可证明幂等的采集/写入；保留预览与失败原因；缺失的必需正式角色不以空内容填补。</li>
+<li><strong>动作已提交但 after 条件未完成</strong>：记录 committed 事实和失败后置；禁止自动重放可能有副作用的动作；等待新的受控观察或人工决定。</li>
+<li><strong>并发重复或晚到回执</strong>：仅对相同边界、profile、角色和 freshness 兼容的请求合并；不兼容请求排队重采；晚到回执只作诊断，不重复写正式角色、不改已收口报告、不增加虚假 coverage。</li>
+</ul>
+<h3 id="section-19-2">19.2 技术验收条件</h3>
+<p>验收应覆盖快页面、慢关键请求、常驻长连接、持续动画、遮挡弹层、H5 Flutter、UIA 可用/不可用 App、网络不可见 App、动作已提交但后置失败和 writer 超时。通过条件包括：</p>
+<ol>
+<li>H5 复用已有 DOM/loader/媒体/transition/critical inflight settle，并能解释各信号是否满足；两到三秒静默不能单独放行。</li>
+<li>每个正式角色都有 identity-before、artifacts、identity-after 的同一边界证明；错位时原始产物保留但不进入稳定页面用途。</li>
+<li>预览帧与正式帧用途分开；加载保持 loading，动态/交互时间序列在规则允许且证据完整时可合法提交，只有可证明失败的序列才结算失败，任何序列都不被渲染成稳定页面证据。</li>
+<li>mask 不覆盖广告、关闭控件、核心 landmark 或遮挡边缘；原始截图、结构和 UIA 事实保持不变。</li>
+<li>App ADB/UIA 能力缺口如实呈现；ADB 连接不被解释为任意网络可观测，网络依赖规则在能力不足时进入证据不足/人工。</li>
+<li>并发重复不会产生两份正式采集；动作副作用已提交时不会因 after 缺失而自动重放。</li>
+<li>deadline、identity drift、artifact skew、capture failed 和晚到事件有独立原因与可恢复入口，Gate 不把它们折叠成成功或“无请求”。</li>
+</ol>
+<h3 id="section-19-3">19.3 待确认点与实施状态</h3>
+<p>实施前需要冻结各动作 profile 的预算分配、连续窗口与采样抖动、目标相关请求分类、动态 mask 审核边界、H5 Frame/Service Worker 与 App UIA 能力等级、预览/正式帧保留策略、失败时间序列上限、幂等写入窗口和人工接管条件。阈值、时间和目标值须由真实 H5/App 矩阵校准，本稿不作统一承诺。</p>
+<p>本稿为技术设计深化 v1.1，产品能力尚未实施；规则、运行时与数据链路仍待按本稿验收后接入。</p>
+<h2 id="section-20">20. 关联文档依据</h2>
+<ul>
+<li>总设计第 15 节“Settle Oracle 与截图时机”、第 18 节“可信证据链”、第 23 节“Completion Gate 扩展”、第 24 节“安全与威胁模型”、第 28–29 节测试与验收。</li>
+<li>总设计第 35.1、35.2、35.3 节对网络、动态帧、层级、Flutter 和诊断隔离的裁决；第 36.1–36.6 节对身份前后观测、动作后 Capture、异常闭环和真实验收场景的串联。</li>
+<li>H5 现有运行时：<a href="../../../services/api/app/infrastructure/browser/page_capture.py"><code>page_capture.py</code></a>、<a href="../../../services/api/app/infrastructure/browser/capture_runtime.py"><code>capture_runtime.py</code></a>。</li>
+<li>App 现有运行时：<a href="../../../services/api/app/infrastructure/device/android_surface_driver.py"><code>android_surface_driver.py</code></a>、<a href="../../../services/api/app/infrastructure/device/android_runtime_observation.py"><code>android_runtime_observation.py</code></a>。</li>
+<li>H5 视觉与坐标能力：<a href="../../../services/api/app/domain/exploration/h5_visual_navigation.py"><code>h5_visual_navigation.py</code></a>、<a href="../../../services/api/app/infrastructure/browser/h5_visual_navigation_runtime.py"><code>h5_visual_navigation_runtime.py</code></a>。</li>
+<li>工作台现有入口：<a href="../../../app/workstation/src/modules/tasks/pages/TaskDetailView.vue"><code>TaskDetailView.vue</code></a>、<a href="../../../app/workstation/src/services/task-insight.api.ts"><code>task-insight.api.ts</code></a>。</li>
+<li>同目录设计稿：<a href="02-page-state-graph.html">页面状态图</a>、<a href="03-targeted-recapture.html">精准补采</a>、<a href="06-interaction-precision.html">精准交互</a>、<a href="07-trusted-evidence.html">可信证据</a>。</li>
+</ul>
+<p>交付判断：Readiness 只有在真实 H5/App 矩阵和故障验收通过后方可接入；当前产品能力尚未实施。</p>
+
+        </article>
+      </div>
+      <nav class="doc-footer" aria-label="前后篇导航"><a href="04-page-recognition.html"><span>上一篇</span>页面识别</a>
+<a class="back-top" href="#document-top"><span>本篇</span>返回顶部 ↑</a>
+<a class="next" href="06-interaction-precision.html"><span>下一篇</span>精准交互</a></nav>
+      <p class="page-note">正文按 Markdown 原稿生成 · 保留既有控制面 · 收益需基线与真实 H5 / App 验证<br>本篇不含表设计、字段定义或具体数据结构。</p>
+    </main>
+  </div>
+<script type="application/json" id="technical-diagram-data">[{"kind":"flow","width":828,"height":1831,"nodes":[{"id":"A","label":"采集计划协调器\n动作与证据 profile","shape":"box","w":292,"lines":["采集计划协调器","动作与证据 profile"],"h":88,"x":211,"y":48},{"id":"B","label":"身份观察器\nbefore 与 after","shape":"box","w":292,"lines":["身份观察器","before 与 after"],"h":88,"x":211,"y":227},{"id":"C","label":"展示层观察器\n页面与遮挡关系","shape":"box","w":292,"lines":["展示层观察器","页面与遮挡关系"],"h":88,"x":324.7775001525879,"y":406},{"id":"D","label":"H5 现有 Settle\nDOM loader 媒体转场","shape":"box","w":292,"lines":["H5 现有 Settle","DOM loader 媒体转场"],"h":88,"x":491.7775001525879,"y":585},{"id":"E","label":"App 运行时观察\n截图 UIA 前台身份","shape":"box","w":292,"lines":["App 运行时观察","截图 UIA 前台身份"],"h":88,"x":157.7775001525879,"y":585},{"id":"F","label":"目标信号选择器\n核心请求与后置条件","shape":"box","w":292,"lines":["目标信号选择器","核心请求与后置条件"],"h":88,"x":324.7775001525879,"y":764},{"id":"G","label":"连续采样器\n窗口与采样抖动","shape":"box","w":292,"lines":["连续采样器","窗口与采样抖动"],"h":88,"x":324.7775001525879,"y":943},{"id":"H","label":"正式产物采集器\n预览与正式帧分离","shape":"box","w":292,"lines":["正式产物采集器","预览与正式帧分离"],"h":88,"x":324.7775001525879,"y":1122},{"id":"I","label":"Readiness Oracle\n角色与原因结算","shape":"box","w":292,"lines":["Readiness Oracle","角色与原因结算"],"h":88,"x":211,"y":1301},{"id":"J","label":"Writer 与清单\n原始事实不可变","shape":"box","w":292,"lines":["Writer 与清单","原始事实不可变"],"h":88,"x":44,"y":1480},{"id":"K","label":"Gate 与工作台\n只读消费结论","shape":"box","w":292,"lines":["Gate 与工作台","只读消费结论"],"h":88,"x":44,"y":1659},{"id":"L","label":"补采调度器\n不在 Oracle 内执行动作","shape":"box","w":292,"lines":["补采调度器","不在 Oracle 内执行动作"],"h":88,"x":378,"y":1480}],"edges":[{"id":"edge-0","from":"A","to":"B","dashed":false,"label":"计划","lines":["计划"],"points":[[357,136],[357,181.5],[357,227]],"labelX":357,"labelY":181.5,"labelW":40,"labelH":26},{"id":"edge-1","from":"B","to":"C","dashed":false,"label":"身份事实","lines":["身份事实"],"points":[[412.93530733758513,315],[470.7775001525879,360.5],[470.7775001525879,406]],"labelX":470.7775001525879,"labelY":360.5,"labelW":64,"labelH":26},{"id":"edge-2","from":"C","to":"D","dashed":false,"label":"展示层","lines":["展示层"],"points":[[552.8780588118058,494],[637.7775001525879,539.5],[637.7775001525879,585]],"labelX":637.7775001525879,"labelY":539.5,"labelW":52,"labelH":26},{"id":"edge-3","from":"C","to":"E","dashed":false,"label":"展示层","lines":["展示层"],"points":[[388.67694149337,494],[303.7775001525879,539.5],[303.7775001525879,585]],"labelX":303.7775001525879,"labelY":539.5,"labelW":52,"labelH":26},{"id":"edge-4","from":"D","to":"F","dashed":false,"label":"H5 观察","lines":["H5 观察"],"points":[[637.7775001525879,673],[637.7775001525879,718.5],[552.8780588118058,764]],"labelX":637.7775001525879,"labelY":718.5,"labelW":61.220001220703125,"labelH":26},{"id":"edge-5","from":"E","to":"F","dashed":false,"label":"App 观察","lines":["App 观察"],"points":[[303.7775001525879,673],[303.7775001525879,718.5],[388.67694149337,764]],"labelX":303.7775001525879,"labelY":718.5,"labelW":68.52000045776367,"labelH":26},{"id":"edge-6","from":"F","to":"G","dashed":false,"label":"目标信号","lines":["目标信号"],"points":[[470.7775001525879,852],[470.7775001525879,897.5],[470.7775001525879,943]],"labelX":470.7775001525879,"labelY":897.5,"labelW":64,"labelH":26},{"id":"edge-7","from":"G","to":"H","dashed":false,"label":"quorum","lines":["quorum"],"points":[[470.7775001525879,1031],[470.7775001525879,1076.5],[470.7775001525879,1122]],"labelX":470.7775001525879,"labelY":1076.5,"labelW":62.41999816894531,"labelH":26},{"id":"edge-8","from":"H","to":"I","dashed":false,"label":"正式产物","lines":["正式产物"],"points":[[470.7775001525879,1210],[470.7775001525879,1255.5],[412.93530733758513,1301]],"labelX":470.7775001525879,"labelY":1255.5,"labelW":64,"labelH":26},{"id":"edge-9","from":"B","to":"I","dashed":false,"label":"identity-after","lines":["identity-after"],"points":[[230.40782122905028,315],[99.5,360.5],[99.5,450],[99.5,539.5],[99.5,629],[99.5,718.5],[99.5,808],[99.5,897.5],[99.5,987],[99.5,1076.5],[99.5,1166],[99.5,1255.5],[230.40782122905028,1301]],"labelX":99.5,"labelY":808,"labelW":93.11000061035156,"labelH":26},{"id":"edge-10","from":"I","to":"J","dashed":false,"label":"角色与污染","lines":["角色与污染"],"points":[[274.8994413407821,1389],[190,1434.5],[190,1480]],"labelX":190,"labelY":1434.5,"labelW":76,"labelH":26},{"id":"edge-11","from":"J","to":"K","dashed":false,"label":"可消费事实","lines":["可消费事实"],"points":[[190,1568],[190,1613.5],[190,1659]],"labelX":190,"labelY":1613.5,"labelW":76,"labelH":26},{"id":"edge-12","from":"I","to":"L","dashed":true,"label":"未满足条件","lines":["未满足条件"],"points":[[439.1005586592179,1389],[524,1434.5],[524,1480]],"labelX":524,"labelY":1434.5,"labelW":76,"labelH":26}],"source":"flowchart TB\n  A[\"采集计划协调器\u003cbr/>动作与证据 profile\"]\n  B[\"身份观察器\u003cbr/>before 与 after\"]\n  C[\"展示层观察器\u003cbr/>页面与遮挡关系\"]\n  D[\"H5 现有 Settle\u003cbr/>DOM loader 媒体转场\"]\n  E[\"App 运行时观察\u003cbr/>截图 UIA 前台身份\"]\n  F[\"目标信号选择器\u003cbr/>核心请求与后置条件\"]\n  G[\"连续采样器\u003cbr/>窗口与采样抖动\"]\n  H[\"正式产物采集器\u003cbr/>预览与正式帧分离\"]\n  I[\"Readiness Oracle\u003cbr/>角色与原因结算\"]\n  J[\"Writer 与清单\u003cbr/>原始事实不可变\"]\n  K[\"Gate 与工作台\u003cbr/>只读消费结论\"]\n  L[\"补采调度器\u003cbr/>不在 Oracle 内执行动作\"]\n  A -->|计划| B\n  B -->|身份事实| C\n  C -->|展示层| D\n  C -->|展示层| E\n  D -->|H5 观察| F\n  E -->|App 观察| F\n  F -->|目标信号| G\n  G -->|quorum| H\n  H -->|正式产物| I\n  B -->|identity-after| I\n  I -->|角色与污染| J\n  J -->|可消费事实| K\n  I -.->|未满足条件| L","title":"技术图 01 · 组件职责与依赖"},{"kind":"sequence","width":1056,"height":1472,"participants":[{"id":"R","label":"运行编排","x":108,"y":38,"w":180,"h":64,"lines":["运行编排"]},{"id":"O","label":"Readiness Oracle","x":318,"y":38,"w":180,"h":64,"lines":["Readiness Oracle"]},{"id":"S","label":"H5/App Surface","x":528,"y":38,"w":180,"h":64,"lines":["H5/App Surface"]},{"id":"C","label":"Capture 采集器","x":738,"y":38,"w":180,"h":64,"lines":["Capture 采集器"]},{"id":"W","label":"证据 Writer","x":948,"y":38,"w":180,"h":64,"lines":["证据 Writer"]}],"events":[{"kind":"message","from":"R","to":"O","dashed":false,"label":"提交已有动作 Receipt 或入口用途","lines":["提交已有动作 Receipt 或入","口用途"],"number":1,"id":"event-0","x1":108,"x2":318,"self":false,"y":180,"textX":213,"textY":138,"points":[[108,180],[318,180]],"hitLeft":96,"hitRight":330},{"kind":"message","from":"O","to":"S","dashed":false,"label":"读取目标信号与 Surface 能力","lines":["读取目标信号与 Surface 能","力"],"number":2,"id":"event-1","x1":318,"x2":528,"self":false,"y":268,"textX":423,"textY":226,"points":[[318,268],[528,268]],"hitLeft":306,"hitRight":540},{"kind":"message","from":"S","to":"O","dashed":true,"label":"返回目标信号和能力事实","lines":["返回目标信号和能力事实"],"number":3,"id":"event-2","x1":528,"x2":318,"self":false,"y":335,"textX":423,"textY":314,"points":[[528,335],[318,335]],"hitLeft":306,"hitRight":540},{"kind":"message","from":"O","to":"C","dashed":false,"label":"开始一次 action-after 或入口 Capture","lines":["开始一次 action-after 或入口 Capture"],"number":4,"id":"event-3","x1":318,"x2":738,"self":false,"y":402,"textX":528,"textY":381,"points":[[318,402],[738,402]],"hitLeft":306,"hitRight":750},{"kind":"message","from":"C","to":"S","dashed":false,"label":"读取本次 Capture identity-before","lines":["读取本次 Capture","identity-before"],"number":5,"id":"event-4","x1":738,"x2":528,"self":false,"y":490,"textX":633,"textY":448,"points":[[738,490],[528,490]],"hitLeft":516,"hitRight":750},{"kind":"message","from":"S","to":"C","dashed":true,"label":"返回 before 身份与展示层","lines":["返回 before 身份与展示层"],"number":6,"id":"event-5","x1":528,"x2":738,"self":false,"y":557,"textX":633,"textY":536,"points":[[528,557],[738,557]],"hitLeft":516,"hitRight":750},{"kind":"message","from":"C","to":"S","dashed":false,"label":"连续采样预览与目标信号","lines":["连续采样预览与目标信号"],"number":7,"id":"event-6","x1":738,"x2":528,"self":false,"y":624,"textX":633,"textY":603,"points":[[738,624],[528,624]],"hitLeft":516,"hitRight":750},{"kind":"message","from":"S","to":"C","dashed":true,"label":"返回连续样本与动态原因","lines":["返回连续样本与动态原因"],"number":8,"id":"event-7","x1":528,"x2":738,"self":false,"y":691,"textX":633,"textY":670,"points":[[528,691],[738,691]],"hitLeft":516,"hitRight":750},{"kind":"message","from":"C","to":"S","dashed":false,"label":"采集本次 Capture 正式 artifacts","lines":["采集本次 Capture 正式","artifacts"],"number":9,"id":"event-8","x1":738,"x2":528,"self":false,"y":779,"textX":633,"textY":737,"points":[[738,779],[528,779]],"hitLeft":516,"hitRight":750},{"kind":"message","from":"S","to":"C","dashed":true,"label":"返回正式截图结构与旁证","lines":["返回正式截图结构与旁证"],"number":10,"id":"event-9","x1":528,"x2":738,"self":false,"y":846,"textX":633,"textY":825,"points":[[528,846],[738,846]],"hitLeft":516,"hitRight":750},{"kind":"message","from":"C","to":"S","dashed":false,"label":"读取本次 Capture identity-after","lines":["读取本次 Capture","identity-after"],"number":11,"id":"event-10","x1":738,"x2":528,"self":false,"y":934,"textX":633,"textY":892,"points":[[738,934],[528,934]],"hitLeft":516,"hitRight":750},{"kind":"message","from":"S","to":"C","dashed":true,"label":"返回 after 边界回执","lines":["返回 after 边界回执"],"number":12,"id":"event-11","x1":528,"x2":738,"self":false,"y":1001,"textX":633,"textY":980,"points":[[528,1001],[738,1001]],"hitLeft":516,"hitRight":750},{"kind":"message","from":"C","to":"O","dashed":true,"label":"返回同边界产物与时间序列","lines":["返回同边界产物与时间序列"],"number":13,"id":"event-12","x1":738,"x2":318,"self":false,"y":1068,"textX":528,"textY":1047,"points":[[738,1068],[318,1068]],"hitLeft":306,"hitRight":750},{"kind":"message","from":"O","to":"W","dashed":false,"label":"提交 readiness 结算与角色原因","lines":["提交 readiness 结算与角色原因"],"number":14,"id":"event-13","x1":318,"x2":948,"self":false,"y":1135,"textX":633,"textY":1114,"points":[[318,1135],[948,1135]],"hitLeft":306,"hitRight":960},{"kind":"message","from":"W","to":"O","dashed":true,"label":"确认不可变持久化收口","lines":["确认不可变持久化收口"],"number":15,"id":"event-14","x1":948,"x2":318,"self":false,"y":1202,"textX":633,"textY":1181,"points":[[948,1202],[318,1202]],"hitLeft":306,"hitRight":960},{"kind":"message","from":"O","to":"R","dashed":false,"label":"交既有编排回传收口事实","lines":["交既有编排回传收口事实"],"number":16,"id":"event-15","x1":318,"x2":108,"self":false,"y":1269,"textX":213,"textY":1248,"points":[[318,1269],[108,1269]],"hitLeft":96,"hitRight":330},{"kind":"message","from":"R","to":"O","dashed":true,"label":"登记既有编排结果","lines":["登记既有编排结果"],"number":17,"id":"event-16","x1":108,"x2":318,"self":false,"y":1336,"textX":213,"textY":1315,"points":[[108,1336],[318,1336]],"hitLeft":96,"hitRight":330}],"source":"sequenceDiagram\n  participant R as 运行编排\n  participant O as Readiness Oracle\n  participant S as H5/App Surface\n  participant C as Capture 采集器\n  participant W as 证据 Writer\n  R->>O:提交已有动作 Receipt 或入口用途\n  O->>S:读取目标信号与 Surface 能力\n  S-->>O:返回目标信号和能力事实\n  O->>C:开始一次 action-after 或入口 Capture\n  C->>S:读取本次 Capture identity-before\n  S-->>C:返回 before 身份与展示层\n  C->>S:连续采样预览与目标信号\n  S-->>C:返回连续样本与动态原因\n  C->>S:采集本次 Capture 正式 artifacts\n  S-->>C:返回正式截图结构与旁证\n  C->>S:读取本次 Capture identity-after\n  S-->>C:返回 after 边界回执\n  C-->>O:返回同边界产物与时间序列\n  O->>W:提交 readiness 结算与角色原因\n  W-->>O:确认不可变持久化收口\n  O->>R:交既有编排回传收口事实\n  R-->>O:登记既有编排结果","title":"技术图 02 · 调用时序与交接"},{"kind":"flow","width":922,"height":2130,"nodes":[{"id":"A","label":"采集计划\n动作与证据角色","shape":"box","w":292,"lines":["采集计划","动作与证据角色"],"h":88,"x":306.5,"y":48},{"id":"B","label":"identity-before\n运行面与展示层","shape":"box","w":292,"lines":["identity-before","运行面与展示层"],"h":88,"x":306.5,"y":227},{"id":"C","label":"身份和展示层可接受？","shape":"decision","w":300,"lines":["身份和展示层可接受？"],"h":128,"x":302.5,"y":406},{"id":"D","label":"预览样本\n捕获转场与加载","shape":"box","w":292,"lines":["预览样本","捕获转场与加载"],"h":88,"x":415,"y":625},{"id":"E","label":"连续窗口\nquorum与采样抖动","shape":"box","w":292,"lines":["连续窗口","quorum与采样抖动"],"h":88,"x":415,"y":804},{"id":"F","label":"目标相关信号\n结构媒体网络后置","shape":"box","w":292,"lines":["目标相关信号","结构媒体网络后置"],"h":88,"x":415,"y":983},{"id":"G","label":"稳定条件与动作后置满足？","shape":"decision","w":300,"lines":["稳定条件与动作后置满足？"],"h":128,"x":411,"y":1162},{"id":"H","label":"正式 artifacts\n预览与正式帧分离","shape":"box","w":292,"lines":["正式 artifacts","预览与正式帧分离"],"h":88,"x":582,"y":1381},{"id":"I","label":"identity-after 同一边界？","shape":"decision","w":300,"lines":["identity-after 同一边界？"],"h":128,"x":578,"y":1560},{"id":"J","label":"稳定页面角色\n可供规则消费","shape":"box","w":292,"lines":["稳定页面角色","可供规则消费"],"h":88,"x":475.5,"y":1779},{"id":"K","label":"时间序列角色核验\n动态交互或失败","shape":"box","w":292,"lines":["时间序列角色核验","动态交互或失败"],"h":88,"x":141.5,"y":1779},{"id":"L","label":"角色提交与诊断\n按合同保留原始","shape":"box","w":292,"lines":["角色提交与诊断","按合同保留原始"],"h":88,"x":250.5,"y":1958}],"edges":[{"id":"edge-0","from":"A","to":"B","dashed":false,"label":"冻结 profile","lines":["冻结 profile"],"points":[[452.5,136],[452.5,181.5],[452.5,227]],"labelX":452.5,"labelY":181.5,"labelW":82.12000274658203,"labelH":26},{"id":"edge-1","from":"B","to":"C","dashed":false,"label":"身份与层级","lines":["身份与层级"],"points":[[452.5,315],[452.5,360.5],[452.5,406]],"labelX":452.5,"labelY":360.5,"labelW":76,"labelH":26},{"id":"edge-2","from":"C","to":"D","dashed":false,"label":"是","lines":["是"],"points":[[497.07186871496424,514.9826693482819],[561,579.5],[561,625]],"labelX":561,"labelY":579.5,"labelW":28,"labelH":26},{"id":"edge-3","from":"C","to":"L","dashed":true,"label":"否或阻断","lines":["否或阻断"],"points":[[363.3018064707189,495.9421040941734],[76,579.5],[76,669],[76,758.5],[76,848],[76,937.5],[76,1027],[76,1116.5],[76,1226],[76,1335.5],[76,1425],[76,1514.5],[76,1624],[76,1733.5],[76,1823],[76,1912.5],[250.5,1961.229329173167]],"labelX":76,"labelY":1226,"labelW":64,"labelH":26},{"id":"edge-4","from":"D","to":"E","dashed":false,"label":"预览结果","lines":["预览结果"],"points":[[561,713],[561,758.5],[561,804]],"labelX":561,"labelY":758.5,"labelW":64,"labelH":26},{"id":"edge-5","from":"E","to":"F","dashed":false,"label":"窗口样本","lines":["窗口样本"],"points":[[561,892],[561,937.5],[561,983]],"labelX":561,"labelY":937.5,"labelW":64,"labelH":26},{"id":"edge-6","from":"F","to":"G","dashed":false,"label":"信号结论","lines":["信号结论"],"points":[[561,1071],[561,1116.5],[561,1162]],"labelX":561,"labelY":1116.5,"labelW":64,"labelH":26},{"id":"edge-7","from":"G","to":"H","dashed":false,"label":"是","lines":["是"],"points":[[620.1303064950392,1264.7710692287833],[728,1335.5],[728,1381]],"labelX":728,"labelY":1335.5,"labelW":28,"labelH":26},{"id":"edge-8","from":"G","to":"K","dashed":true,"label":"未达稳定","lines":["未达稳定"],"points":[[483.61487223319284,1256.9823454861623],[287.5,1335.5],[287.5,1425],[287.5,1514.5],[287.5,1624],[287.5,1733.5],[287.5,1779]],"labelX":287.5,"labelY":1514.5,"labelW":64,"labelH":26},{"id":"edge-9","from":"H","to":"I","dashed":false,"label":"正式采集","lines":["正式采集"],"points":[[728,1469],[728,1514.5],[728,1560]],"labelX":728,"labelY":1514.5,"labelW":64,"labelH":26},{"id":"edge-10","from":"I","to":"J","dashed":false,"label":"是","lines":["是"],"points":[[684.0087775913257,1669.230411772299],[621.5,1733.5],[621.5,1779]],"labelX":621.5,"labelY":1733.5,"labelW":28,"labelH":26},{"id":"edge-11","from":"I","to":"L","dashed":true,"label":"否或错位","lines":["否或错位"],"points":[[771.9912224086743,1669.230411772299],[834.5,1733.5],[834.5,1823],[834.5,1912.5],[542.5,1972.1666666666667]],"labelX":834.5,"labelY":1823,"labelW":64,"labelH":26},{"id":"edge-12","from":"K","to":"L","dashed":false,"label":"允许且证据完整","lines":["允许且证据完整"],"points":[[341.08659217877096,1867],[396.5,1912.5],[396.5,1958]],"labelX":396.5,"labelY":1912.5,"labelW":100,"labelH":26},{"id":"edge-13","from":"K","to":"L","dashed":true,"label":"不允许或不完整","lines":["不允许或不完整"],"points":[[256.036312849162,1867],[223.5,1912.5],[311.44972067039106,1958]],"labelX":223.5,"labelY":1912.5,"labelW":100,"labelH":26},{"id":"edge-14","from":"J","to":"L","dashed":false,"label":"按角色提交","lines":["按角色提交"],"points":[[621.5,1867],[621.5,1912.5],[507.1145251396648,1958]],"labelX":621.5,"labelY":1912.5,"labelW":76,"labelH":26}],"source":"flowchart TB\n  A[\"采集计划\u003cbr/>动作与证据角色\"]\n  B[\"identity-before\u003cbr/>运行面与展示层\"]\n  C{\"身份和展示层可接受？\"}\n  D[\"预览样本\u003cbr/>捕获转场与加载\"]\n  E[\"连续窗口\u003cbr/>quorum与采样抖动\"]\n  F[\"目标相关信号\u003cbr/>结构媒体网络后置\"]\n  G{\"稳定条件与动作后置满足？\"}\n  H[\"正式 artifacts\u003cbr/>预览与正式帧分离\"]\n  I{\"identity-after 同一边界？\"}\n  J[\"稳定页面角色\u003cbr/>可供规则消费\"]\n  K[\"时间序列角色核验\u003cbr/>动态交互或失败\"]\n  L[\"角色提交与诊断\u003cbr/>按合同保留原始\"]\n  A -->|冻结 profile| B\n  B -->|身份与层级| C\n  C -->|是| D\n  C -.->|否或阻断| L\n  D -->|预览结果| E\n  E -->|窗口样本| F\n  F -->|信号结论| G\n  G -->|是| H\n  G -.->|未达稳定| K\n  H -->|正式采集| I\n  I -->|是| J\n  I -.->|否或错位| L\n  K -->|允许且证据完整| L\n  K -.->|不允许或不完整| L\n  J -->|按角色提交| L","title":"技术图 03 · 判定与异常流转"}]</script>
+<script id="technical-canvas-core">/* 同一绘图核心用于离线原生 Canvas 校验和文档阅读；不依赖网络、DOM 或业务运行时。 */
+(function(root) {
+  "use strict";
+  const fonts='"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif';
+  function rounded(ctx,x,y,w,h,r) {
+    ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();
+  }
+  function arrow(ctx,points,dashed,selected,dim) {
+    ctx.save();ctx.globalAlpha=dim?0.28:1;ctx.strokeStyle=selected?"#12695f":dashed?"#866ca4":"#617f91";ctx.fillStyle=ctx.strokeStyle;ctx.lineWidth=selected?2.7:1.7;ctx.lineJoin="round";ctx.lineCap="round";ctx.setLineDash(dashed?[7,5]:[]);
+    ctx.beginPath();ctx.moveTo(points[0][0],points[0][1]);for(const point of points.slice(1))ctx.lineTo(point[0],point[1]);ctx.stroke();ctx.setLineDash([]);
+    const end=points[points.length-1],previous=points[points.length-2],angle=Math.atan2(end[1]-previous[1],end[0]-previous[0]);
+    ctx.beginPath();ctx.moveTo(end[0],end[1]);ctx.lineTo(end[0]-9*Math.cos(angle-0.4),end[1]-9*Math.sin(angle-0.4));ctx.lineTo(end[0]-9*Math.cos(angle+0.4),end[1]-9*Math.sin(angle+0.4));ctx.closePath();ctx.fill();ctx.restore();
+  }
+  function centeredLines(ctx,lines,x,y,lineHeight,color,size,bold) {
+    ctx.save();ctx.font=(bold?"600 ":"")+size+"px "+fonts;ctx.fillStyle=color;ctx.textAlign="center";ctx.textBaseline="middle";
+    lines.forEach(function(line,index){ctx.fillText(line,x,y+index*lineHeight);});ctx.restore();
+  }
+  function flow(ctx,graph,selected) {
+    for(const edge of graph.edges) arrow(ctx,edge.points,edge.dashed,edge.id===selected || edge.from===selected || edge.to===selected,Boolean(selected && edge.id!==selected && edge.from!==selected && edge.to!==selected));
+    for(const edge of graph.edges) {
+      if(!edge.label)continue;
+      ctx.save();rounded(ctx,edge.labelX-edge.labelW/2,edge.labelY-edge.labelH/2,edge.labelW,edge.labelH,5);ctx.fillStyle="#fbfcfd";ctx.fill();
+      centeredLines(ctx,edge.lines,edge.labelX,edge.labelY-(edge.lines.length-1)*9,18,edge.dashed?"#775a99":"#476474",12,false);ctx.restore();
+    }
+    for(const node of graph.nodes) {
+      const isSelected=node.id===selected,decision=node.shape==="decision",limited=/(拒绝|隔离|禁止|失败|不足|人工|终结)/.test(node.label);
+      const accent=decision?"#9c6423":limited?"#876746":"#266d83";
+      ctx.save();
+      if(decision) {ctx.beginPath();ctx.moveTo(node.x+node.w/2,node.y);ctx.lineTo(node.x+node.w,node.y+node.h/2);ctx.lineTo(node.x+node.w/2,node.y+node.h);ctx.lineTo(node.x,node.y+node.h/2);ctx.closePath();}
+      else rounded(ctx,node.x,node.y,node.w,node.h,11);
+      ctx.fillStyle=isSelected?"#e6f3ee":decision?"#fff5e5":limited?"#f8f3eb":"#eef5f9";ctx.fill();ctx.strokeStyle=isSelected?"#12695f":decision?"#d5b17c":limited?"#cfbca2":"#aac6d4";ctx.lineWidth=isSelected?2.7:1.15;ctx.stroke();
+      if(!decision){ctx.fillStyle=accent;rounded(ctx,node.x+12,node.y+18,4,node.h-36,2);ctx.fill();}
+      centeredLines(ctx,node.lines,node.x+node.w/2,node.y+node.h/2-(node.lines.length-1)*12.5,25,"#213a46",16,false);
+      ctx.restore();
+    }
+  }
+  function sequence(ctx,graph,selected) {
+    for(const participant of graph.participants) {
+      ctx.save();ctx.strokeStyle="#c6d2d9";ctx.lineWidth=1.2;ctx.setLineDash([4,5]);ctx.beginPath();ctx.moveTo(participant.x,participant.y+participant.h);ctx.lineTo(participant.x,graph.height-57);ctx.stroke();ctx.setLineDash([]);
+      rounded(ctx,participant.x-participant.w/2,participant.y,participant.w,participant.h,9);ctx.fillStyle="#edf4fa";ctx.fill();ctx.strokeStyle="#aac1d4";ctx.stroke();
+      centeredLines(ctx,participant.lines,participant.x,participant.y+participant.h/2-(participant.lines.length-1)*10.5,21,"#23465b",15,true);
+      rounded(ctx,participant.x-participant.w/2,graph.height-58,participant.w,40,7);ctx.fillStyle="#f0f5f8";ctx.fill();ctx.strokeStyle="#c6d2d9";ctx.stroke();
+      centeredLines(ctx,[participant.label],participant.x,graph.height-38,20,"#617984",12,false);ctx.restore();
+    }
+    for(const event of graph.events) {
+      if(event.kind==="note") {
+        ctx.save();rounded(ctx,event.x,event.y,event.w,event.h,7);ctx.fillStyle="#fff7e8";ctx.fill();ctx.strokeStyle="#dac394";ctx.stroke();
+        centeredLines(ctx,event.lines,event.x+event.w/2,event.y+event.h/2-(event.lines.length-1)*10.5,21,"#7a613b",14,false);ctx.restore();continue;
+      }
+      const active=event.id===selected;
+      if(active){ctx.fillStyle="#eaf4ef";ctx.fillRect(24,event.textY-15,graph.width-48,event.y-event.textY+(event.self?49:24));}
+      arrow(ctx,event.points,event.dashed,active,Boolean(selected && !active));
+      const lineWidth=Math.max.apply(null,event.lines.map(function(line){ctx.font="14px "+fonts;return ctx.measureText(line).width;}))+14;
+      ctx.fillStyle=active?"#eaf4ef":"#fbfcfd";ctx.fillRect(event.textX-lineWidth/2,event.textY-11,lineWidth,event.lines.length*21);
+      centeredLines(ctx,event.lines,event.textX,event.textY,21,event.dashed?"#795d99":"#2b5265",14,false);
+      ctx.save();ctx.beginPath();ctx.arc(Math.min(event.x1,event.x2)-17,event.y,10,0,Math.PI*2);ctx.fillStyle=active?"#12695f":"#e4edf2";ctx.fill();centeredLines(ctx,[String(event.number)],Math.min(event.x1,event.x2)-17,event.y,16,active?"#fff":"#547381",10,true);ctx.restore();
+    }
+  }
+  function draw(ctx,graph,selected) {
+    ctx.save();ctx.clearRect(0,0,graph.width,graph.height);ctx.fillStyle="#fbfcfd";ctx.fillRect(0,0,graph.width,graph.height);
+    ctx.fillStyle="#dfe8ed";for(let x=18;x<graph.width;x+=24)for(let y=18;y<graph.height;y+=24){ctx.beginPath();ctx.arc(x,y,0.6,0,Math.PI*2);ctx.fill();}
+    if(graph.kind==="sequence")sequence(ctx,graph,selected);else flow(ctx,graph,selected);
+    ctx.restore();
+  }
+  function items(graph) {
+    if(graph.kind==="sequence")return graph.events.filter(function(event){return event.kind==="message";}).map(function(event){
+      const byId=new Map(graph.participants.map(function(participant){return[participant.id,participant.label];}));
+      return {id:event.id,label:String(event.number).padStart(2,"0")+" "+event.label,detail:byId.get(event.from)+" → "+byId.get(event.to)+"："+event.label+(event.dashed?"；虚线回执/消息，具体语义以正文为准。":"；交接条件及失败分支见图后正文。"),x:event.textX,y:event.textY};
+    });
+    return graph.nodes.map(function(node){
+      const incoming=graph.edges.filter(function(edge){return edge.to===node.id;}).map(function(edge){return graph.nodes.find(function(item){return item.id===edge.from;}).label.replace(/\n/g," / ")+"："+(edge.label||"交接");});
+      const outgoing=graph.edges.filter(function(edge){return edge.from===node.id;}).map(function(edge){return(edge.label||"交接")+" → "+graph.nodes.find(function(item){return item.id===edge.to;}).label.replace(/\n/g," / ");});
+      const detail=graph.relationDiagram?"关联到本对象："+(incoming.join("；")||"本图归属入口")+"。本对象关联："+(outgoing.join("；")||"其他约束见正文")+"。箭头表达引用或包含，不是执行时序。":"进入："+(incoming.join("；")||"流程入口")+"。继续："+(outgoing.join("；")||"本图终点，终态约束见正文")+"。";
+      return {id:node.id,label:node.label.replace(/\n/g," / "),detail:detail,x:node.x+node.w/2,y:node.y};
+    });
+  }
+  function hit(graph,x,y) {
+    if(graph.kind==="sequence")return graph.events.find(function(event){return event.kind==="message" && x>=event.hitLeft && x<=event.hitRight && y>=event.textY-15 && y<=event.y+(event.self?32:12);})?.id || null;
+    return graph.nodes.find(function(node){
+      if(node.shape==="decision")return Math.abs(x-node.x-node.w/2)/(node.w/2)+Math.abs(y-node.y-node.h/2)/(node.h/2)<=1;
+      return x>=node.x && x<=node.x+node.w && y>=node.y && y<=node.y+node.h;
+    })?.id || null;
+  }
+  root.AliothTechnicalCanvas=Object.freeze({draw:draw,items:items,hit:hit,fonts:fonts});
+})(globalThis);
+</script>
+<script id="technical-canvas-interface">/* 文档交互只控制阅读状态；不会请求网络、访问设备或改变业务数据。 */
+(function() {
+  "use strict";
+  const core=globalThis.AliothTechnicalCanvas,data=JSON.parse(document.getElementById("technical-diagram-data").textContent),states=[];
+  for(const figure of document.querySelectorAll("[data-technical-diagram]")) {
+    const graph=data[figure.dataset.technicalDiagram],canvas=figure.querySelector("canvas"),viewport=figure.querySelector(".technical-viewport"),ctx=canvas.getContext("2d");
+    if(!ctx)continue;
+    const picker=figure.querySelector("select"),output=figure.querySelector("output"),detail=figure.querySelector(".technical-detail");
+    const choices=core.items(graph),state={figure,canvas,ctx,viewport,graph,scale:1,selected:null,manual:false};states.push(state);
+    const all=document.createElement("option");all.value="";all.textContent=graph.kind==="sequence"?"查看全部消息":"查看全部组件 / 节点";picker.append(all);
+    for(const item of choices){const option=document.createElement("option");option.value=item.id;option.textContent=item.label;picker.append(option);}
+    function paint() {
+      // 高分屏大图限制单张位图面积，避免放大时无界申请内存；CSS 阅读比例不受影响。
+      const ratio=Math.min(window.devicePixelRatio||1,2,Math.sqrt(16000000/(graph.width*graph.height*state.scale*state.scale)));
+      canvas.width=Math.ceil(graph.width*state.scale*ratio);canvas.height=Math.ceil(graph.height*state.scale*ratio);
+      canvas.style.width=graph.width*state.scale+"px";canvas.style.height=graph.height*state.scale+"px";
+      ctx.setTransform(ratio*state.scale,0,0,ratio*state.scale,0,0);core.draw(ctx,graph,state.selected);
+      output.textContent=Math.round(state.scale*100)+"%";
+      figure.querySelector("[data-minus]").disabled=state.scale<=0.2;figure.querySelector("[data-plus]").disabled=state.scale>=1.6;
+    }
+    function fit(readable) {
+      const target=Math.min(1,(Math.max(260,viewport.clientWidth)-1)/graph.width);
+      state.scale=readable?Math.max(0.8,target):Math.max(0.2,target);viewport.scrollLeft=0;viewport.scrollTop=0;paint();
+    }
+    function select(id,jump) {
+      const item=choices.find(function(value){return value.id===id;});state.selected=item?item.id:null;picker.value=item?item.id:"";
+      detail.hidden=!item;detail.replaceChildren();
+      if(item){const heading=document.createElement("strong"),paragraph=document.createElement("p");heading.textContent=item.label;paragraph.textContent=item.detail;detail.append(heading,paragraph);if(jump){viewport.scrollTop=Math.max(0,(item.y-36)*state.scale);viewport.scrollLeft=Math.max(0,item.x*state.scale-viewport.clientWidth/2);}}
+      paint();
+    }
+    function zoom(delta) {
+      state.manual=true;const previous=state.scale,cx=(viewport.scrollLeft+viewport.clientWidth/2)/previous,cy=(viewport.scrollTop+viewport.clientHeight/2)/previous;
+      state.scale=Math.max(0.2,Math.min(1.6,Math.round((state.scale+delta)*100)/100));paint();viewport.scrollLeft=Math.max(0,cx*state.scale-viewport.clientWidth/2);viewport.scrollTop=Math.max(0,cy*state.scale-viewport.clientHeight/2);
+    }
+    canvas.addEventListener("click",function(event){const bounds=canvas.getBoundingClientRect();select(core.hit(graph,(event.clientX-bounds.left)*graph.width/bounds.width,(event.clientY-bounds.top)*graph.height/bounds.height),false);});
+    picker.addEventListener("change",function(){select(picker.value,true);});
+    figure.querySelector("[data-minus]").addEventListener("click",function(){zoom(-0.1);});
+    figure.querySelector("[data-plus]").addEventListener("click",function(){zoom(0.1);});
+    figure.querySelector("[data-fit]").addEventListener("click",function(){state.manual=true;fit(false);});
+    figure.querySelector("[data-size]").addEventListener("click",function(){state.manual=true;state.scale=1;paint();});
+    figure.querySelector(".technical-controls").hidden=false;figure.querySelector(".technical-source").open=false;
+    state.paint=paint;state.fit=fit;fit(true);
+  }
+  let frame=0;
+  window.addEventListener("resize",function(){cancelAnimationFrame(frame);frame=requestAnimationFrame(function(){for(const state of states)state.manual?state.paint():state.fit(true);});});
+  if(document.fonts && document.fonts.ready)document.fonts.ready.then(function(){for(const state of states)state.paint();});
+  window.addEventListener("beforeprint",function(){for(const state of states){state.previousScale=state.scale;state.scale=1;state.paint();}});
+  window.addEventListener("afterprint",function(){for(const state of states){state.scale=state.previousScale||state.scale;state.paint();}});
+  document.documentElement.dataset.technicalCanvasReady=String(states.length);
+})();
+</script>
+</body>
+</html>

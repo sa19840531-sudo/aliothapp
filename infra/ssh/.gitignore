@@ -1,0 +1,7 @@
+﻿# 私钥严禁入库；仅公钥与说明可提交
+alioth-linode-tunnel
+*.pem
+id_*
+!*.pub
+!.gitignore
+!README.md

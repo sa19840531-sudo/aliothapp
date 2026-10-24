@@ -1,0 +1,835 @@
+{
+  "provenance": {
+    "task_id": "3ad88563-0c8c-4449-97d6-68390c2fd7e6",
+    "capture_id": "5f1c0815-a923-4c1a-9f6a-d9dc42aaec35",
+    "snapshot_sha256": "def99213a4d1a17d341370a36da1f198f0f6d30267228bee3298d0c5c3b89af5",
+    "screenshot_sha256": "bb54c7ccb77f915c79da16bacf2fb63fff2ba1393d760142e3b910eff45398c4",
+    "original_element_count": 118,
+    "selection": "原样保留关闭键、父节点、弹层与普查遮罩；其他元素省略"
+  },
+  "snapshot": {
+    "h5_modal_census_selectors": [
+      "#app > div:nth-of-type(6) > div > div:nth-of-type(1) > div:nth-of-type(1)"
+    ],
+    "h5_modal_census_truncated": false,
+    "url": "https://tt.uod839.com/#/appcenter",
+    "viewport": {
+      "width": 390,
+      "height": 844,
+      "device_pixel_ratio": 1,
+      "scroll_x": 0,
+      "scroll_y": 0,
+      "visual_viewport_width": 390,
+      "visual_viewport_height": 844,
+      "visual_viewport_offset_left": 0,
+      "visual_viewport_offset_top": 0,
+      "visual_viewport_page_left": 0,
+      "visual_viewport_page_top": 0,
+      "visual_viewport_scale": 1,
+      "flutter_host_transform": [
+        1,
+        0,
+        0,
+        1,
+        0,
+        0
+      ]
+    },
+    "document": {
+      "time_origin_ms": 1792402462882.1,
+      "flutter_root_present": false,
+      "history_length": 2,
+      "history_api_observed": true,
+      "spa_root_present": true,
+      "navigation_type": "navigate",
+      "scroll_width": 390,
+      "scroll_height": 844,
+      "fullscreen": false,
+      "active_element": "#TT"
+    },
+    "element_limit_reached": true,
+    "elements": [
+      {
+        "selector": "#app > div:nth-of-type(6) > div > div:nth-of-type(1) > div:nth-of-type(2) > div > i",
+        "tag": "i",
+        "media_parent_tag": null,
+        "role": null,
+        "aria_modal": false,
+        "dismiss_semantics": null,
+        "h5_modal_sibling_panel_selector": null,
+        "h5_modal_action_semantics": null,
+        "h5_modal_safe_outside": null,
+        "form_associated": null,
+        "stateful_control_in_subtree": false,
+        "h5_modal_ancestor_selectors": [],
+        "text": "",
+        "aria_label": null,
+        "title": null,
+        "aria_selected": null,
+        "aria_current": null,
+        "parent_semantics_selector": null,
+        "parent_semantics_aria_label": null,
+        "parent_semantics_tappable": false,
+        "class_tokens": [
+          "van-icon",
+          "van-icon-close"
+        ],
+        "parent_class_tokens": [
+          "ad-dialog"
+        ],
+        "parent_selector": "#app > div:nth-of-type(6) > div > div:nth-of-type(1) > div:nth-of-type(2) > div",
+        "ancestor_class_tokens": [
+          "ad-dialog",
+          "van-popup",
+          "van-popup--center",
+          "flex-container"
+        ],
+        "structural_navigation_kind": null,
+        "web_recommend_ad_close_direct_chain": false,
+        "navigation_payload_in_subtree": false,
+        "rect": {
+          "x": 172,
+          "y": 588.38,
+          "width": 46,
+          "height": 46
+        },
+        "hit_bounds": {
+          "x": 172,
+          "y": 588.38,
+          "width": 46,
+          "height": 46
+        },
+        "visual_bounds": {
+          "x": 172,
+          "y": 588.38,
+          "width": 46,
+          "height": 46
+        },
+        "viewport_coverage": 0.00642848462753676,
+        "visible": true,
+        "effective_z_index": 2002,
+        "fixed_or_sticky_ancestor": true,
+        "positioned_ancestor_z_indices": [
+          {
+            "depth": 2,
+            "position": "fixed",
+            "z_index": 2002
+          }
+        ],
+        "within_navigation": false,
+        "within_pagination": false,
+        "within_breadcrumb": false,
+        "within_footer": false,
+        "is_advertisement": true,
+        "repeat_group_size": 8,
+        "within_repeated_structure": true,
+        "style": {
+          "display": "block",
+          "visibility": "visible",
+          "opacity": "1",
+          "position": "relative",
+          "z_index": "auto",
+          "pointer_events": "auto",
+          "overflow": "visible",
+          "overflow_x": "visible",
+          "overflow_y": "visible",
+          "font_family": "vant-icon",
+          "font_size": "46px",
+          "font_weight": "400",
+          "font_style": "normal",
+          "text_transform": "none",
+          "text_overflow": "clip",
+          "white_space": "normal",
+          "webkit_line_clamp": "none",
+          "line_clamp": null,
+          "object_fit": "fill"
+        },
+        "text_metrics": {
+          "scroll_width": 46,
+          "client_width": 46,
+          "offset_width": 46,
+          "scroll_height": 46,
+          "client_height": 46,
+          "offset_height": 46,
+          "horizontal_overflow": false,
+          "vertical_overflow": false,
+          "text_overflow_ellipsis": false,
+          "line_clamp": "none"
+        },
+        "href": null,
+        "href_resource_summary": null,
+        "external": null,
+        "target": null,
+        "rel": null,
+        "onclick": "",
+        "data_route": "",
+        "data_href": "",
+        "data_url": "",
+        "data_uri": "",
+        "router_to": "",
+        "src": null,
+        "src_resource_summary": null,
+        "alt": null,
+        "type": null,
+        "name": null,
+        "placeholder": null,
+        "accept": null,
+        "interactive": false,
+        "inactive_launch_shell": false,
+        "content_editable": false,
+        "read_only": null,
+        "disabled": null,
+        "checked": null,
+        "hit_test": {
+          "center_target": "#app > div:nth-of-type(6) > div > div:nth-of-type(1) > div:nth-of-type(2) > div > i",
+          "center_hit_element": "#app > div:nth-of-type(6) > div > div:nth-of-type(1) > div:nth-of-type(2) > div > i",
+          "center_target_class_tokens": [
+            "van-icon",
+            "van-icon-close"
+          ],
+          "center_target_ancestor_class_tokens": [
+            "ad-dialog",
+            "van-popup",
+            "van-popup--center",
+            "flex-container"
+          ],
+          "center_target_inactive_launch_shell": false,
+          "center_hits_target": true,
+          "visual_occlusion_detected": false,
+          "topmost": true,
+          "pointer_interception": true
+        }
+      },
+      {
+        "selector": "#app > div:nth-of-type(6) > div > div:nth-of-type(1) > div:nth-of-type(1)",
+        "tag": "div",
+        "media_parent_tag": null,
+        "role": null,
+        "aria_modal": false,
+        "dismiss_semantics": null,
+        "h5_modal_sibling_panel_selector": null,
+        "h5_modal_action_semantics": null,
+        "h5_modal_safe_outside": null,
+        "form_associated": null,
+        "stateful_control_in_subtree": false,
+        "h5_modal_ancestor_selectors": [],
+        "text": "",
+        "aria_label": null,
+        "title": null,
+        "aria_selected": null,
+        "aria_current": null,
+        "parent_semantics_selector": null,
+        "parent_semantics_aria_label": null,
+        "parent_semantics_tappable": false,
+        "class_tokens": [
+          "van-overlay"
+        ],
+        "parent_class_tokens": [],
+        "parent_selector": "#app > div:nth-of-type(6) > div > div:nth-of-type(1)",
+        "ancestor_class_tokens": [
+          "flex-container",
+          "van-overflow-hidden",
+          "in-app",
+          "desktop",
+          "portrait",
+          "webp",
+          "safe-top-page-owned",
+          "safe-bottom"
+        ],
+        "structural_navigation_kind": null,
+        "web_recommend_ad_close_direct_chain": false,
+        "navigation_payload_in_subtree": false,
+        "rect": {
+          "x": 0,
+          "y": 0,
+          "width": 390,
+          "height": 844
+        },
+        "hit_bounds": {
+          "x": 0,
+          "y": 0,
+          "width": 390,
+          "height": 844
+        },
+        "visual_bounds": {
+          "x": 0,
+          "y": 0,
+          "width": 390,
+          "height": 844
+        },
+        "viewport_coverage": 1,
+        "visible": true,
+        "effective_z_index": 2001,
+        "fixed_or_sticky_ancestor": true,
+        "positioned_ancestor_z_indices": [
+          {
+            "depth": 0,
+            "position": "fixed",
+            "z_index": 2001
+          }
+        ],
+        "within_navigation": false,
+        "within_pagination": false,
+        "within_breadcrumb": false,
+        "within_footer": false,
+        "is_advertisement": false,
+        "repeat_group_size": 8,
+        "within_repeated_structure": true,
+        "style": {
+          "display": "block",
+          "visibility": "visible",
+          "opacity": "1",
+          "position": "fixed",
+          "z_index": "2001",
+          "pointer_events": "auto",
+          "overflow": "visible",
+          "overflow_x": "visible",
+          "overflow_y": "visible",
+          "font_family": "-apple-system, BlinkMacSystemFont, \"Helvetica Neue\", Helvetica, \"Segoe UI\", Arial, Roboto, \"PingFang SC\", miui, \"Hiragino Sans GB\", \"Microsoft Yahei\", sans-seri",
+          "font_size": "12px",
+          "font_weight": "400",
+          "font_style": "normal",
+          "text_transform": "none",
+          "text_overflow": "clip",
+          "white_space": "normal",
+          "webkit_line_clamp": "none",
+          "line_clamp": null,
+          "object_fit": "fill"
+        },
+        "text_metrics": {
+          "scroll_width": 390,
+          "client_width": 390,
+          "offset_width": 390,
+          "scroll_height": 844,
+          "client_height": 844,
+          "offset_height": 844,
+          "horizontal_overflow": false,
+          "vertical_overflow": false,
+          "text_overflow_ellipsis": false,
+          "line_clamp": "none"
+        },
+        "href": null,
+        "href_resource_summary": null,
+        "external": null,
+        "target": null,
+        "rel": null,
+        "onclick": "",
+        "data_route": "",
+        "data_href": "",
+        "data_url": "",
+        "data_uri": "",
+        "router_to": "",
+        "src": null,
+        "src_resource_summary": null,
+        "alt": null,
+        "type": null,
+        "name": null,
+        "placeholder": null,
+        "accept": null,
+        "interactive": false,
+        "inactive_launch_shell": false,
+        "content_editable": false,
+        "read_only": null,
+        "disabled": null,
+        "checked": null,
+        "hit_test": {
+          "center_target": "#app > div:nth-of-type(6) > div > div:nth-of-type(1) > div:nth-of-type(2) > div > div > img",
+          "center_hit_element": "#app > div:nth-of-type(6) > div > div:nth-of-type(1) > div:nth-of-type(2) > div > div > img",
+          "center_target_class_tokens": [],
+          "center_target_ancestor_class_tokens": [
+            "ad",
+            "ad-dialog",
+            "van-popup",
+            "van-popup--center",
+            "flex-container"
+          ],
+          "center_target_inactive_launch_shell": false,
+          "center_hits_target": false,
+          "visual_occlusion_detected": false,
+          "topmost": false,
+          "pointer_interception": false
+        },
+        "h5_modal_media_identity": []
+      },
+      {
+        "selector": "#app > div:nth-of-type(6) > div > div:nth-of-type(1) > div:nth-of-type(2)",
+        "tag": "div",
+        "media_parent_tag": null,
+        "role": null,
+        "aria_modal": false,
+        "dismiss_semantics": null,
+        "h5_modal_sibling_panel_selector": null,
+        "h5_modal_action_semantics": null,
+        "h5_modal_safe_outside": null,
+        "form_associated": null,
+        "stateful_control_in_subtree": false,
+        "h5_modal_ancestor_selectors": [],
+        "text": "",
+        "aria_label": null,
+        "title": null,
+        "aria_selected": null,
+        "aria_current": null,
+        "parent_semantics_selector": null,
+        "parent_semantics_aria_label": null,
+        "parent_semantics_tappable": false,
+        "class_tokens": [
+          "van-popup",
+          "van-popup--center"
+        ],
+        "parent_class_tokens": [],
+        "parent_selector": "#app > div:nth-of-type(6) > div > div:nth-of-type(1)",
+        "ancestor_class_tokens": [
+          "flex-container",
+          "van-overflow-hidden",
+          "in-app",
+          "desktop",
+          "portrait",
+          "webp",
+          "safe-top-page-owned",
+          "safe-bottom"
+        ],
+        "structural_navigation_kind": null,
+        "web_recommend_ad_close_direct_chain": false,
+        "navigation_payload_in_subtree": false,
+        "rect": {
+          "x": 39,
+          "y": 209.62,
+          "width": 312,
+          "height": 424.77
+        },
+        "hit_bounds": {
+          "x": 39,
+          "y": 209.62,
+          "width": 312,
+          "height": 424.77
+        },
+        "visual_bounds": {
+          "x": 39,
+          "y": 209.62,
+          "width": 312,
+          "height": 424.77
+        },
+        "viewport_coverage": 0.4026255924170616,
+        "visible": true,
+        "effective_z_index": 2002,
+        "fixed_or_sticky_ancestor": true,
+        "positioned_ancestor_z_indices": [
+          {
+            "depth": 0,
+            "position": "fixed",
+            "z_index": 2002
+          }
+        ],
+        "within_navigation": false,
+        "within_pagination": false,
+        "within_breadcrumb": false,
+        "within_footer": false,
+        "is_advertisement": false,
+        "repeat_group_size": 8,
+        "within_repeated_structure": true,
+        "style": {
+          "display": "block",
+          "visibility": "visible",
+          "opacity": "1",
+          "position": "fixed",
+          "z_index": "2002",
+          "pointer_events": "auto",
+          "overflow": "auto",
+          "overflow_x": "auto",
+          "overflow_y": "auto",
+          "font_family": "-apple-system, BlinkMacSystemFont, \"Helvetica Neue\", Helvetica, \"Segoe UI\", Arial, Roboto, \"PingFang SC\", miui, \"Hiragino Sans GB\", \"Microsoft Yahei\", sans-seri",
+          "font_size": "12px",
+          "font_weight": "400",
+          "font_style": "normal",
+          "text_transform": "none",
+          "text_overflow": "clip",
+          "white_space": "normal",
+          "webkit_line_clamp": "none",
+          "line_clamp": null,
+          "object_fit": "fill"
+        },
+        "text_metrics": {
+          "scroll_width": 312,
+          "client_width": 312,
+          "offset_width": 312,
+          "scroll_height": 425,
+          "client_height": 425,
+          "offset_height": 425,
+          "horizontal_overflow": false,
+          "vertical_overflow": false,
+          "text_overflow_ellipsis": false,
+          "line_clamp": "none"
+        },
+        "href": null,
+        "href_resource_summary": null,
+        "external": null,
+        "target": null,
+        "rel": null,
+        "onclick": "",
+        "data_route": "",
+        "data_href": "",
+        "data_url": "",
+        "data_uri": "",
+        "router_to": "",
+        "src": null,
+        "src_resource_summary": null,
+        "alt": null,
+        "type": null,
+        "name": null,
+        "placeholder": null,
+        "accept": null,
+        "interactive": false,
+        "inactive_launch_shell": false,
+        "content_editable": false,
+        "read_only": null,
+        "disabled": null,
+        "checked": null,
+        "hit_test": {
+          "center_target": "#app > div:nth-of-type(6) > div > div:nth-of-type(1) > div:nth-of-type(2) > div > div > img",
+          "center_hit_element": "#app > div:nth-of-type(6) > div > div:nth-of-type(1) > div:nth-of-type(2) > div > div > img",
+          "center_target_class_tokens": [],
+          "center_target_ancestor_class_tokens": [
+            "ad",
+            "ad-dialog",
+            "van-popup",
+            "van-popup--center",
+            "flex-container"
+          ],
+          "center_target_inactive_launch_shell": false,
+          "center_hits_target": true,
+          "visual_occlusion_detected": false,
+          "topmost": true,
+          "pointer_interception": true
+        }
+      }
+    ],
+    "truncated": true,
+    "truncated_reason": "logical_surface_size_reservation"
+  },
+  "detection": {
+    "reason": "URL 为 appcenter，DOM 含 tt-appcenter-page、tabbar、应用网格与底部导航（导航/视频/短视频/暗网/社区/我的），主体为多业务入口聚合的稳定首页；截图中央有全屏推广弹层与关闭按钮，底层业务仍可辨认。",
+    "page_url": "https://tt.uod839.com/#/appcenter",
+    "page_type": "home",
+    "confidence": 0.9,
+    "page_state": "popup",
+    "schema_version": "page-detection.v2",
+    "logical_surface": {
+      "shadow": false,
+      "state_signals": {
+        "loading": false,
+        "tab_key": "main > div > div > div:nth-of-type(3) > div > div:nth-of-type(1) > div > div:nth-of-type(1)",
+        "obstructions": [
+          {
+            "tag": "i",
+            "role": "",
+            "label": "",
+            "checked": false,
+            "classes": [
+              "van-icon",
+              "van-icon-close"
+            ],
+            "disabled": false,
+            "rect_bucket": {
+              "x": 7,
+              "y": 25,
+              "width": 2,
+              "height": 2
+            },
+            "navigation_kind": ""
+          },
+          {
+            "tag": "div",
+            "role": "",
+            "label": "",
+            "checked": false,
+            "classes": [
+              "van-overlay"
+            ],
+            "disabled": false,
+            "rect_bucket": {
+              "x": 0,
+              "y": 0,
+              "width": 16,
+              "height": 35
+            },
+            "navigation_kind": ""
+          },
+          {
+            "tag": "div",
+            "role": "",
+            "label": "",
+            "checked": false,
+            "classes": [
+              "van-popup",
+              "van-popup--center"
+            ],
+            "disabled": false,
+            "rect_bucket": {
+              "x": 2,
+              "y": 9,
+              "width": 13,
+              "height": 18
+            },
+            "navigation_kind": ""
+          }
+        ],
+        "selected_tab": "官方推荐",
+        "scroll_bucket": "top",
+        "active_element": "#TT",
+        "obstruction_count": "2-5",
+        "semantics_coverage": {
+          "level": "semantics_sparse",
+          "degraded_reasons": [
+            "usable_semantics_nodes_missing"
+          ],
+          "usable_node_count": 0,
+          "ocr_text_char_count": 0,
+          "semantic_text_char_count": 0,
+          "semantic_ocr_text_coverage": null
+        }
+      },
+      "render_profile": {
+        "kind": "dom_spa",
+        "status": "confirmed",
+        "signals": [
+          "history_api_observed",
+          "spa_root_present"
+        ],
+        "confidence": 0.94
+      },
+      "degraded_reasons": [],
+      "evidence_quality": "high",
+      "evidence_sources": [
+        "dom",
+        "document"
+      ],
+      "identity_signals": {
+        "route": "sha256:c4472fc4c99e6b9640fc1b9607c7391049df3c21e16bec27a457a1efdbd916e6",
+        "cardinality": {
+          "controls": "0",
+          "headings": "0",
+          "navigation": "6-20"
+        },
+        "page_heading": [],
+        "document_title": null,
+        "main_structure": [
+          {
+            "tag": "div",
+            "role": "tab",
+            "classes": [
+              "van-tab",
+              "reversal_left"
+            ],
+            "rect_bucket": null
+          },
+          {
+            "tag": "div",
+            "role": "tab",
+            "classes": [
+              "van-tab",
+              "reversal_right"
+            ],
+            "rect_bucket": null
+          },
+          {
+            "tag": "div",
+            "role": "tab",
+            "classes": [
+              "van-tab"
+            ],
+            "rect_bucket": null
+          }
+        ],
+        "semantics_root": null,
+        "stable_controls": [],
+        "active_navigation": []
+      },
+      "protocol_version": "logical_surface.v1",
+      "document_identity": "sha256:11b900e7ca6db004d28d150ee37bc6b5391e22f8df434d4fae67f82009a528f7",
+      "page_type_binding": {
+        "page_type": "home",
+        "reason_code": "logical_transition_untrusted",
+        "render_profile": "dom_spa",
+        "coverage_allowed": false,
+        "confidence_source": "model_self_report",
+        "identity_fingerprint": "sha256:e10e6970509b82cd27615dd27421d963df03d4c5e98e11795da82068a39e3f34",
+        "page_type_confidence": 0.9,
+        "rule_matching_allowed": false
+      },
+      "state_fingerprint": "sha256:f101d658a024b65b8639a383cd287a91180aea0a1e23e4eeed3bb4cc87353c40",
+      "confidence_domains": {
+        "page_type_confidence": 0.9,
+        "render_profile_confidence": 0.94
+      },
+      "semantics_coverage": {
+        "level": "semantics_sparse",
+        "degraded_reasons": [
+          "usable_semantics_nodes_missing"
+        ],
+        "usable_node_count": 0,
+        "ocr_text_char_count": 0,
+        "semantic_text_char_count": 0,
+        "semantic_ocr_text_coverage": null
+      },
+      "identity_fingerprint": "sha256:e10e6970509b82cd27615dd27421d963df03d4c5e98e11795da82068a39e3f34",
+      "native_main_structure": [
+        {
+          "tag": "div",
+          "role": "",
+          "basis": "native_main_shell",
+          "depth": 1,
+          "classes": [
+            "flex-container",
+            "tt-appcenter-page"
+          ],
+          "rect_bucket": null
+        },
+        {
+          "tag": "main",
+          "role": "",
+          "basis": "native_main_shell",
+          "depth": 0,
+          "classes": [
+            "tt-page-shell__body"
+          ],
+          "rect_bucket": null
+        }
+      ]
+    },
+    "page_capture_id": "5f1c0815-a923-4c1a-9f6a-d9dc42aaec35",
+    "detection_status": "recognized",
+    "candidate_actions": [
+      {
+        "action": "click",
+        "target": "关闭当前弹窗",
+        "purpose": "关闭当前遮挡弹窗并在同一浏览器会话重新采集",
+        "risk_level": "low",
+        "target_keywords": [
+          "popup_dismissal",
+          "close_control",
+          "overlay_ad_close"
+        ],
+        "navigation_depth": 0,
+        "obstruction_signature": "h5-obstruction:ced46e5eaa745a63cde0d6420ab3d245e78c7bb03ba7e116b46c9e5355f3083e",
+        "obstruction_capability": "overlay_ad_close",
+        "expected_next_page_type": "home"
+      }
+    ],
+    "confidence_source": "model_self_report",
+    "obstruction_facts": {
+      "kind": "blocking_overlay",
+      "blocking": true,
+      "schema_version": "h5-obstruction-fact.v1",
+      "modal_census_count": 1,
+      "notification_count": 0,
+      "modal_census_complete": true,
+      "blocking_element_count": 1,
+      "full_viewport_gate_count": 0,
+      "snapshot_evidence_status": "incomplete",
+      "trusted_safe_action_available": true,
+      "obstruction_without_safe_action": false
+    },
+    "evidence_artifact_ids": [
+      "8219cd46-a075-40c0-8116-550d95065515",
+      "a1cb7e8a-db59-4a43-a16f-72447dd4bee8",
+      "4a917296-1044-4d40-8da0-2767febbe924",
+      "acc514e5-132a-48ca-bb35-4eb467933bb0"
+    ]
+  },
+  "pipeline_timings": [
+    {
+      "capture_id": "5f1c0815-a923-4c1a-9f6a-d9dc42aaec35",
+      "timings_ms": {
+        "dom": 304846.044,
+        "total": 332686.616,
+        "screenshot": 141.822,
+        "stable_wait": 15359.007,
+        "ui_snapshot": 11844.578,
+        "visible_text": 240.941,
+        "artifact_collection": 317288.798
+      }
+    },
+    {
+      "capture_id": "8282c82f-76ee-423a-98a8-43f8a3c03b0d",
+      "timings_ms": {
+        "dom": 303853.956,
+        "total": 330894.841,
+        "screenshot": 177.328,
+        "stable_wait": 14658.182,
+        "ui_snapshot": 11470.235,
+        "visible_text": 214.15,
+        "artifact_collection": 316199.602
+      }
+    },
+    {
+      "capture_id": "82916363-12e2-4d6a-bc98-aa17675495ff",
+      "timings_ms": {
+        "dom": 307934.517,
+        "total": 336563.431,
+        "screenshot": 167.788,
+        "stable_wait": 15648.968,
+        "ui_snapshot": 12107.738,
+        "visible_text": 249.041,
+        "artifact_collection": 320867.175
+      }
+    },
+    {
+      "capture_id": "90f18aa4-2428-4141-ae3a-3d71d0e61b93",
+      "timings_ms": {
+        "dom": 2.794,
+        "total": 15230.681,
+        "stable_wait": 15169.358,
+        "ui_snapshot": 36.092,
+        "visible_text": 2.686,
+        "artifact_collection": 51.218
+      }
+    }
+  ],
+  "recovery_intent": {
+    "purpose": "恢复丢失的 H5 浏览器会话并重建可信基线",
+    "task_id": "3ad88563-0c8c-4449-97d6-68390c2fd7e6",
+    "deadline": "2026-10-19T11:04:05.738936+00:00",
+    "intent_id": "h5-browser-recovery:exploration-work:02a54715c7721a78f581ee5354a9d41cc1608266450f4821d3cf66008168c645:action:1",
+    "parameters": {
+      "failure_stage": "action",
+      "viewport_width": 390,
+      "destination_url": "https://tt.uod839.com/#/appcenter",
+      "viewport_height": 844,
+      "h5_browser_recovery": true,
+      "recovery_source_session_id": "h5:f55480fb-6520-4850-ad2a-608bee18f424"
+    },
+    "risk_level": "low",
+    "session_id": "h5:f55480fb-6520-4850-ad2a-608bee18f424:recovery:7f86d005c912070b1f38",
+    "action_type": "navigate",
+    "surface_kind": "web",
+    "capture_profile": {
+      "after": {
+        "role": "after_action",
+        "artifact_types": [
+          "screenshot",
+          "dom",
+          "visible_text",
+          "ui_snapshot",
+          "action_trace"
+        ],
+        "inherit_parent_semantics": false
+      },
+      "before": {
+        "role": "before_action",
+        "artifact_types": [
+          "screenshot",
+          "dom",
+          "visible_text",
+          "ui_snapshot"
+        ],
+        "inherit_parent_semantics": false
+      },
+      "profile_id": "h5-v2-state-transition.v1",
+      "protocol_version": "capture-profile.v1"
+    },
+    "idempotency_key": "h5-browser-recovery:exploration-work:02a54715c7721a78f581ee5354a9d41cc1608266450f4821d3cf66008168c645:action:1",
+    "semantic_target": "https://tt.uod839.com/#/appcenter",
+    "protocol_version": "action-intent.v1",
+    "source_capture_id": "5f1c0815-a923-4c1a-9f6a-d9dc42aaec35"
+  }
+}

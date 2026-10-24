@@ -1,0 +1,252 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "alioth"
+version = "0.1.0"
+description = "Alioth AI automated quality inspection platform"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "agent-framework-core==1.10.0",
+    "agent-framework-openai==1.10.0",
+    "alembic>=1.13,<2.0",
+    "asyncpg>=0.29,<1.0",
+    "fastapi>=0.115,<1.0",
+    "greenlet>=3.0,<4.0",
+    "idna>=3.0,<4.0",
+    "minio>=7.2,<8.0",
+    "numpy>=1.26,<3.0",
+    "opencv-python-headless>=4.10,<5.0",
+    "pillow>=10.0,<13.0",
+    "playwright>=1.62,<1.63",
+    "pyee>=13,<14",
+    "pydantic>=2.7,<3.0",
+    "pyjwt>=2.8,<3.0",
+    "python-dotenv>=1.0,<2.0",
+    "python-multipart>=0.0.9,<1.0",
+    "redis>=5.0,<6.0",
+    "sqlalchemy>=2.0,<3.0",
+    "uvicorn[standard]>=0.30,<1.0",
+    "cryptography>=42,<51",
+]
+
+[project.optional-dependencies]
+dev = [
+    "fakeredis>=2.20,<3.0",
+    "httpx>=0.27,<1.0",
+    "pytest>=8.2,<9.0",
+    "pytest-asyncio>=0.24,<1.0",
+    "ruff>=0.6,<1.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["services/api/tests"]
+pythonpath = ["."]
+asyncio_mode = "auto"
+
+[tool.setuptools.packages.find]
+include = ["services*"]
+
+[tool.setuptools.package-data]
+"services.api.app.infrastructure.device" = ["android/*.jar", "android/*.java"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+extend-exclude = [
+    # 历史 Airtest 脚本与采集资产保留作节奏参考，不作为 Python 主线质量门禁。
+    "services/api/app/untitled.air",
+    "services/api/resources/recording",
+    # 一次性现场诊断脚本含环境探测命令，不进入应用质量门禁。
+    "scripts/_*.py",
+]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.ruff.lint.isort]
+# mobile_demo_*.py 被 gitignore，CI 工作區沒有該檔。
+# 不標成 first-party 時，ruff 會把它當第三方，和已入庫的 services 模組拆組，本機與流水線排序相反。
+known-first-party = ["services"]
+
+[tool.ruff.lint.per-file-ignores]
+"services/api/migrations/versions/*.py" = ["E501"]
+# 旧版 Agent 提示词包含面向模型的长行，保留原文并单独隔离该静态规则。
+"services/api/app/api/v1/mobile_demo_agent_ad_capture.py" = ["E501"]
+# Mobile Demo 内嵌 HTML/JavaScript 与历史原型长行保持原文，其他规则仍执行。
+"services/api/app/api/v1/mobile_demo.py" = ["E501"]
+# 体验平台报告模板：CSS/JS 逐字节移植自平台编辑器，不可折行
+"services/api/app/application/experience_report_export.py" = ["E501"]
+# 以下为历史设备适配、OpenAPI/HTML 模板和兼容性测试中的长字面量。
+# 继续执行 F/I/UP/B 等规则，只隔离物理行宽，避免一次性重排影响设备脚本语义。
+"services/api/app/agents/explorer/maf_agent.py" = ["E501"]
+"services/api/app/agents/runtime/progress_observer.py" = ["E501"]
+"services/api/app/api/v1/app_qc_openapi.py" = ["E501"]
+"services/api/app/api/v1/swagger_html.py" = ["E501"]
+"services/api/app/api/v1/xingyu_official/openapi.py" = ["E501"]
+"services/api/app/application/app_script_curriculum.py" = ["E501"]
+"services/api/app/application/xingyu_runtime/device_bridge.py" = ["E501"]
+"services/api/app/infrastructure/db/app_bootstrap_repository.py" = ["E501"]
+"services/api/app/infrastructure/db/evidence_exit_gate_repository.py" = ["E501"]
+"services/api/app/infrastructure/device/adb_ops.py" = ["E501"]
+"services/api/app/infrastructure/device/backend.py" = ["E501"]
+"services/api/app/infrastructure/device/google_emulator.py" = ["E501"]
+"services/api/app/infrastructure/device/ldplayer.py" = ["E501"]
+"services/api/app/infrastructure/device/morelogin_adb.py" = ["E501"]
+"services/api/app/infrastructure/device/redroid.py" = ["E501"]
+"services/api/tests/test_cloud_phone_install.py" = ["E501"]
+"services/api/tests/test_google_emulator_backend.py" = ["E501"]
+"services/api/tests/test_ldplayer_adb_serial.py" = ["E501"]
+"services/api/tests/test_ldplayer_adb_switch.py" = ["E501"]
+"services/api/tests/test_ldplayer_profiles.py" = ["E501"]
+"services/api/tests/test_morelogin_adb_refresh.py" = ["E501"]
+"services/api/tests/test_xingyu_official.py" = ["E501"]
+"scripts/deploy-alioth-to-vmware.py" = ["E501"]
+"scripts/merge_env_snippet.py" = ["E501"]
+"scripts/remote-diagnose-redroid-apk.py" = ["E501"]
+"scripts/remote-install-redroid.py" = ["E501"]
+"scripts/run-docker-emulator-on-ub-vm.py" = ["E501"]
+# --- gate-e501-begin ---
+# 存量中文契约／长 SQL／提示词字面量：只隔离 E501 行宽，其余 F/I/UP/B 仍强制。
+# 不关闭 E501 规则本身；新增未列入文件仍受行宽约束。
+"scripts/run_lab_milestone_ladder.py" = ["E501"]
+"scripts/run_r0_lab_m7_baseline.py" = ["E501"]
+"scripts/web_acceptance_dimensions.py" = ["E501"]
+"scripts/web_v2_live_evidence.py" = ["E501"]
+"scripts/web_v2_six_site_shadow.py" = ["E501"]
+"scripts/web_v2_three_site_live_validation.py" = ["E501"]
+"services/api/app/agents/runtime/inspection_work_item_execution.py" = ["E501"]
+"services/api/app/api/v1/cost_reports.py" = ["E501"]
+"services/api/app/api/v1/departments.py" = ["E501"]
+"services/api/app/api/v1/llm_providers.py" = ["E501"]
+"services/api/app/api/v1/operations.py" = ["E501"]
+"services/api/app/api/v1/products.py" = ["E501"]
+"services/api/app/api/v1/rules.py" = ["E501"]
+"services/api/app/application/aggregate_rule_config.py" = ["E501"]
+"services/api/app/application/app_command_broker.py" = ["E501"]
+"services/api/app/application/app_coverage_page_seek.py" = ["E501"]
+"services/api/app/application/app_episode_state_contract.py" = ["E501"]
+"services/api/app/application/app_evidence_role_contract.py" = ["E501"]
+"services/api/app/application/app_exploration_flow_contract.py" = ["E501"]
+"services/api/app/application/app_exploration_grayscale.py" = ["E501"]
+"services/api/app/application/app_interaction_runtime.py" = ["E501"]
+"services/api/app/application/app_visual_close_calibration.py" = ["E501"]
+"services/api/app/application/exploration_dispatch_guard.py" = ["E501"]
+"services/api/app/application/h5_inspection_publication.py" = ["E501"]
+"services/api/app/application/h5_live_inspection_publish.py" = ["E501"]
+"services/api/app/application/inspection_handoff.py" = ["E501"]
+"services/api/app/application/observation_packet.py" = ["E501"]
+"services/api/app/application/report_insight.py" = ["E501"]
+"services/api/app/application/rule_judge.py" = ["E501"]
+"services/api/app/application/rule_sandbox.py" = ["E501"]
+"services/api/app/application/spreadsheet.py" = ["E501"]
+"services/api/app/application/task_insight.py" = ["E501"]
+"services/api/app/application/web_evidence_bundle.py" = ["E501"]
+"services/api/app/application/web_final_report_binding.py" = ["E501"]
+"services/api/app/application/web_live_inspection_publish.py" = ["E501"]
+"services/api/app/application/web_logical_page.py" = ["E501"]
+"services/api/app/application/web_page_inspection_notification.py" = ["E501"]
+"services/api/app/application/xingyu_runtime/action_normalize.py" = ["E501"]
+"services/api/app/domain/iam/access_scope.py" = ["E501"]
+"services/api/app/domain/page/discrimination_guide.py" = ["E501"]
+"services/api/app/infrastructure/app_runtime/fake.py" = ["E501"]
+"services/api/app/infrastructure/app_vision/llm.py" = ["E501"]
+"services/api/app/infrastructure/browser/web_native_structure.py" = ["E501"]
+"services/api/app/infrastructure/db/department_cost_repository.py" = ["E501"]
+"services/api/app/infrastructure/db/department_repository.py" = ["E501"]
+"services/api/app/infrastructure/db/h5_inspection_publication_repository.py" = ["E501"]
+"services/api/app/infrastructure/db/inspection_work_item_repository.py" = ["E501"]
+"services/api/app/infrastructure/db/llm_provider_repository.py" = ["E501"]
+"services/api/app/infrastructure/db/operations_repository.py" = ["E501"]
+"services/api/app/infrastructure/db/product_repository.py" = ["E501"]
+"services/api/app/infrastructure/db/task_draft_repository.py" = ["E501"]
+"services/api/app/infrastructure/db/task_finalization_repository.py" = ["E501"]
+"services/api/app/infrastructure/db/task_insight_repository.py" = ["E501"]
+"services/api/app/infrastructure/db/tenant_repository.py" = ["E501"]
+"services/api/app/infrastructure/db/web_assessment_evidence_repository.py" = ["E501"]
+"services/api/app/infrastructure/db/web_capability_revision_repository.py" = ["E501"]
+"services/api/app/infrastructure/db/web_capture_evidence_repository.py" = ["E501"]
+"services/api/app/infrastructure/db/web_capture_identity.py" = ["E501"]
+"services/api/app/infrastructure/db/web_completion_gate_sql.py" = ["E501"]
+"services/api/app/infrastructure/db/web_evidence_sequence_repository.py" = ["E501"]
+"services/api/app/infrastructure/db/web_interaction_sequence_facts.py" = ["E501"]
+"services/api/app/infrastructure/db/web_logical_target_repository.py" = ["E501"]
+"services/api/app/infrastructure/db/web_payload_readiness_repository.py" = ["E501"]
+"services/api/app/infrastructure/db/web_report_explanation_repository.py" = ["E501"]
+"services/api/app/infrastructure/db/web_sequence_binding_reader.py" = ["E501"]
+"services/api/app/infrastructure/db/web_sequence_classification_wait.py" = ["E501"]
+"services/api/app/infrastructure/db/web_sequence_committed_source.py" = ["E501"]
+"services/api/app/infrastructure/db/web_sequence_contract_terminalization.py" = ["E501"]
+"services/api/app/infrastructure/db/web_sequence_finalization.py" = ["E501"]
+"services/api/app/infrastructure/db/web_sequence_input_set_repository.py" = ["E501"]
+"services/api/app/infrastructure/db/web_sequence_legacy_source.py" = ["E501"]
+"services/api/app/infrastructure/db/web_sequence_pending_publication.py" = ["E501"]
+"services/api/app/infrastructure/db/web_sequence_publication_claim.py" = ["E501"]
+"services/api/app/infrastructure/db/web_sequence_publication_processor.py" = ["E501"]
+"services/api/app/infrastructure/db/web_sequence_result_projection.py" = ["E501"]
+"services/api/app/infrastructure/db/web_sequence_work_binding.py" = ["E501"]
+"services/api/app/infrastructure/db/workstation_dashboard_repository.py" = ["E501"]
+"services/api/app/infrastructure/device/cloud_phone_vendor.py" = ["E501"]
+"services/api/app/infrastructure/device/onirent_adb_tunnel.py" = ["E501"]
+"services/api/app/infrastructure/llm_gateway/semantic_rule_judge.py" = ["E501"]
+"services/api/app/worker.py" = ["E501"]
+"services/api/tests/test_access_scope_department.py" = ["E501"]
+"services/api/tests/test_adb_process_cleanup.py" = ["E501"]
+"services/api/tests/test_app_visual_bottom_nav_calibration.py" = ["E501"]
+"services/api/tests/test_department_cost_api.py" = ["E501"]
+"services/api/tests/test_department_scope_api.py" = ["E501"]
+"services/api/tests/test_departments_api.py" = ["E501"]
+"services/api/tests/test_evidence_presentation.py" = ["E501"]
+"services/api/tests/test_fake_app_runtime.py" = ["E501"]
+"services/api/tests/test_h5_live_inspection_publish.py" = ["E501"]
+"services/api/tests/test_llm_providers_api.py" = ["E501"]
+"services/api/tests/test_maf_explorer_agent.py" = ["E501"]
+"services/api/tests/test_operations_api.py" = ["E501"]
+"services/api/tests/test_products_api.py" = ["E501"]
+"services/api/tests/test_products_import_xlsx_api.py" = ["E501"]
+"services/api/tests/test_report_insight.py" = ["E501"]
+"services/api/tests/test_rule_judge.py" = ["E501"]
+"services/api/tests/test_rule_judge_evidence_gap.py" = ["E501"]
+"services/api/tests/test_rule_tools.py" = ["E501"]
+"services/api/tests/test_spreadsheet.py" = ["E501"]
+"services/api/tests/test_surface_capability_manifest.py" = ["E501"]
+"services/api/tests/test_task_insight_service.py" = ["E501"]
+"services/api/tests/test_web_capability_revision_postgres.py" = ["E501"]
+"services/api/tests/test_web_capture_evidence_repository.py" = ["E501"]
+"services/api/tests/test_web_coverage_snapshot.py" = ["E501"]
+"services/api/tests/test_web_discovery_authorization_postgres.py" = ["E501"]
+"services/api/tests/test_web_discovery_deadline_postgres.py" = ["E501"]
+"services/api/tests/test_web_evidence_bundle.py" = ["E501"]
+"services/api/tests/test_web_exploration_budget_ledger_migration.py" = ["E501"]
+"services/api/tests/test_web_exploration_budget_ledger_postgres_integration.py" = ["E501"]
+"services/api/tests/test_web_final_report_binding.py" = ["E501"]
+"services/api/tests/test_web_interaction_sequence_postgres.py" = ["E501"]
+"services/api/tests/test_web_lifecycle_recovery_pg.py" = ["E501"]
+"services/api/tests/test_web_live_inspection_publish.py" = ["E501"]
+"services/api/tests/test_web_local_structure.py" = ["E501"]
+"services/api/tests/test_web_logical_target_reuse.py" = ["E501"]
+"services/api/tests/test_web_neutral_browser_consumption_postgres.py" = ["E501"]
+"services/api/tests/test_web_page_inspection_notification.py" = ["E501"]
+"services/api/tests/test_web_page_type_assessment.py" = ["E501"]
+"services/api/tests/test_web_primary_content_capture_postgres.py" = ["E501"]
+"services/api/tests/test_web_report_explanation_postgres.py" = ["E501"]
+"services/api/tests/test_web_runtime_discovery_postgres.py" = ["E501"]
+"services/api/tests/test_web_sequence_batch_contract_postgres.py" = ["E501"]
+"services/api/tests/test_web_sequence_classification_wait_postgres.py" = ["E501"]
+"services/api/tests/test_web_sequence_judge.py" = ["E501"]
+"services/api/tests/test_web_sequence_migration_postgres.py" = ["E501"]
+"services/api/tests/test_web_sequence_runtime_postgres.py" = ["E501"]
+"services/api/tests/test_web_sequence_selection_postgres.py" = ["E501"]
+"services/api/tests/test_web_sequence_semantic_reuse.py" = ["E501"]
+"services/api/tests/test_web_six_site_shadow_fixtures.py" = ["E501"]
+"services/api/tests/test_web_v2_formal_report_e2e.py" = ["E501"]
+"services/api/tests/test_workstation_products_api.py" = ["E501"]
+"services/api/tests/test_workstation_prototype_alignment_api.py" = ["E501"]
+"services/api/tests/web_payload_pg_audit_support.py" = ["E501"]
+"services/api/tests/web_retry_identity_support.py" = ["E501"]
+"services/api/tests/web_sequence_consumer_pg_support.py" = ["E501"]
+"services/api/tests/web_sequence_pg_support.py" = ["E501"]
+"services/api/tests/web_sequence_runtime_pg_support.py" = ["E501"]
+# --- gate-e501-end ---

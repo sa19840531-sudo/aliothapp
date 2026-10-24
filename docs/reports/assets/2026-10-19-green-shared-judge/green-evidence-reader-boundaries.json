@@ -1,0 +1,56 @@
+{
+  "scope": "green-rule-contract.v2",
+  "input_kinds": [
+    "green_interaction_stability.v1",
+    "green_temporal_rules.v1"
+  ],
+  "reader_technical_limits": {
+    "max_frozen_input_captures": 32,
+    "max_single_original_bytes": 16777216,
+    "max_total_original_bytes": 134217728,
+    "on_capacity_exceeded": "拒绝整个输入，不返回可用Capture或Action，不截取早期样本；记录技术缺口",
+    "business_threshold": false,
+    "selection_capacity": "不扩大现有sealer或采集容量，不重新计算清单完整性，只读已存质量及版本"
+  },
+  "source_boundaries": [
+    "现有HAR仅event/method/url/status，未生产唯一RequestId、模块身份、响应JSON与原生点击时钟绑定",
+    "现有temporal_trace仅单窗口monotonic采样及可见文字，不能拼跨时钟过程",
+    "media_state及检查点播放器事实不能代替广告/正片身份、真实结束关闭、预加载和首帧原图链",
+    "既有App同包、截图或剪贴板不构成WebView承接强来源",
+    "局部DOM几何和已截断元素列表不证明完整导航分组/初始文字范围"
+  ],
+  "result_boundary": "当前只贯通只读证据核验及明确分项缺项，没有可用生产器的业务分项不生成pass或fail；102缺范围/政策/三风险判读为材料缺证，不伪造语义复核",
+  "current_components": {
+    "passed": 21,
+    "warnings": 2,
+    "log": "green-evidence-components-final.log"
+  },
+  "earlier_isolated_postgres": {
+    "passed": 6,
+    "log": "green-evidence-module-regression.log",
+    "fixture_notice": "真实独立PG只读事务及原件存储；业务台账、动作和图像是受控夹具",
+    "final_combined_regression": "等待root统一执行，不与同时占用数据库的测试并行"
+  },
+  "files": [
+    {
+      "path": "services/api/app/application/green_evidence_contracts.py",
+      "sha256": "fc431f3bc4e2b6f970d3afcfcfd9c788f5a470a9a52c50e9957278a196138c25"
+    },
+    {
+      "path": "services/api/app/application/green_rule_evidence.py",
+      "sha256": "68b68e7de545a8b81dd9164724259b17fe9a4b71a2d8b4b529269049c557bc88"
+    },
+    {
+      "path": "services/api/app/infrastructure/db/green_process_evidence.py",
+      "sha256": "f26af1fa95c5aa601f90fdfa364073a6f3e97f9cf67eee02f4d5e65673d1ab39"
+    },
+    {
+      "path": "services/api/tests/test_green_process_evidence.py",
+      "sha256": "796849ce2e3021358dda6228de4173bb7917d90ce8e0139f0ffdc4355a644885"
+    },
+    {
+      "path": "services/api/tests/test_green_process_evidence_postgres.py",
+      "sha256": "651e0b2ad40689e62c9fcaf696f02607e905a0b82b677492ea861ede8da663ad"
+    }
+  ]
+}

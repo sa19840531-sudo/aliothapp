@@ -1,0 +1,38 @@
+﻿原表行号,系统,问题原文,提出人,原表完成状态,截图显示文字,截图实际链接
+2,管理后台,在新增分公司时，公司编码字段去掉【改成后端默认生成，保证唯一】、列表以及筛选项均不用展示公司编码，公司名称不可重复；,朱加贝,已完成,自动化质检平台问题收集,https://docs.google.com/document/d/1koTuxHaGVzKSRmwuvSJfc5WqdJ7WsmaBT-j-xTk_VQo/edit?usp=sharing
+3,管理后台,菜单-工作台，平均执行时长：指自动化质检任务从创建开始执行到执行完成的平均时长，目前展示数值为：61分40s，排查指标计算维度是否正常，感觉太大了,朱加贝,已完成,,
+4,管理后台,"质检任务执行开始展示5%，然后直接跳到95%，就完成了；耗时34s，实际一条规则没质检完成；从报告页未看出来原因；产品地址：https://dys18.com/
+任务编号：1e0436d6-e1e0-448f-8ac2-ddd66d9b6468",朱加贝,已完成,,
+5,管理后台,"任务中心菜单-全部任务列表，任务状态、报告状态、操作三列间隔太大，导致用户在不滑动的情况下最右侧只能看到任务状态。
+将选中、任务名称、操作列分别固定在左右两侧不随列表左右滑动，其他列在页面上左右滑动；",朱加贝,已完成,,
+6,管理后台,任务列表-执行中的任务展示进度99%，详情展示任务执行进度58%；,朱加贝,已完成,,
+7,管理后台,任务中心-全部任务列表，执行中的任务点击取消，提示：任务运行记录不存在；,朱加贝,未完成,,
+8,管理后台,任务中心-全部任务列表，显示2个任务排队中，一个任务执行中，排队中的任务点击开始执行提示等待消费；排查下现在的任务执行并行策略，一个执行中的就会导致其他两个任务排队，这样满足不了实际使用场景；,朱加贝,未完成,,
+9,管理后台,报告中心-报告列表，规则结果汇总模块，感叹号的作用：用户不太理解各个质检状态的含义，点击查看注释，现在没有展示注释，只是具体规则列表展示出来了；具体正确效果查看原型标注：http://129.226.154.34/automation-qc-2/report-detail.html,朱加贝,已完成,,
+10,管理后台,报告中心-规则执行结果列表：表头跟1期质检规则集质检增加间距，如截图所示,朱加贝,已完成,,
+16,部门平台,"规则执行状态与质检结果混淆。未执行、未识别页面等规则也进入“通过/未通过/不适用”的人工判定流程,容易误以为系统已完成检测。建议将“未执行/无法判定”单独展示,仅对实际执行完成的规则进入结果判定。",雪花,已完成,ScreenShot_2026-09-28_194239_654.png,https://drive.google.com/file/d/1N-g8JudgP4QJcDZfjus6Z_ElsJfbjo-E/view?usp=sharing
+17,管理后台,"在第2页进入详情后用浏览器返回,列表却回到第1页,分页状态没有被保留。",雪花,已完成,ScreenShot_2026-09-29_152443_899.png,https://drive.google.com/file/d/1-T3MmHyTRiDIo6vdgHNiADkkqzSzb_Wj/view?usp=sharing
+18,部门平台,"产品进入首页会出现弹窗，自动质检无法成功关闭时，会导致后续页面无法继续探索和检测，最终造成页面覆盖不完整。优化弹窗识别及关闭机制，支持多种处理方式
+兜底方案：建议新增**“人工接管/继续执行”**功能。当自动化无法继续时，任务先暂停并提示人工处理；人工完成弹窗关闭或异常处理后，可点击“继续质检”，从当前节点继续自动执行，同时保留之前已经完成的检测结果和执行进度，避免整次任务重新开始。",雪花,未完成,ScreenShot_2026-09-29_154648_106.png,https://drive.google.com/file/d/1sQYyzGS3UjA6QMETzSoZA_qND7Bek9lo/view?usp=sharing
+19,部门平台,"当前任务列表列较多,信息列较多,右侧操作区超出可视范围,用户需要拖动底部滚动条才能看到查看详情和查看报告等高频操作按钮,影响操作效率。优化列表列宽与信息布局,适当收纳次要字段,将操作区域固定于可视区域,以减少横向滚动,提升任务处理效率。",雪花,已完成,2026-09-30 10.50.09.jpg,https://drive.google.com/file/d/1dE2rfCrPrcY9PyBYOXIImW3COsAj7VWB/view?usp=sharing
+20,部门平台,"任务状态未及时同步,导致执行状态及操作入口异常。任务详情页仍显示执行中95%,但用户点击取消任务后,系统提示任务运行记录不存在或已进入终态,说明页面状态与实际任务状态不一致。'建议是:'任务进入终态或异常结束后,应及时同步并刷新详情页状态,隐藏不可用操作,并明确标识已终止、执行异常等真实状态",雪花,未完成,"ScreenShot_2026-09-30_110307_605.png
+ScreenShot_2026-09-30_110330_691.png",https://drive.google.com/file/d/1RJG2NR0Rh46sVzlaMRFMbFSZkhyAT0f1/view?usp=sharing
+21,部门平台,"报告状态信息表达不完整,容易误判已完成。报告列表统一显示“成功”,部分报告通过率为“-”、问题数量为“0”,但详情中仍存在待人工确认项,例如21条,报告暂不能导出。用户在列表批量查看时容易误以为报告已完整完成,需要逐个进入详情才能发现仍有未确认内容。建议:将报告状态由单一“成功”调整为流程型状态,根据实际进度展示“生成中、待人工确认(含数量)、已完成、生成失败、质检未完整完成”等状态。",雪花,已完成,ScreenShot112101_229.png,https://drive.google.com/file/d/1glgpne2sQqoIEebSfParIzh-5nt9b5Gi/view?usp=sharing
+22,部门平台,"规则明细列表过长仅靠搜索,后续维护效率可能下降,建议增加筛选条件,比如按风险等级、规则来源、适用页面等进行筛选。",雪花,未完成,ScreenShot__112736_257.png,https://drive.google.com/file/d/1zTFZyqxwxU4fAnUL5zStbOzfjQRqsLxa/view?usp=sharing
+23,部门平台,"规则集点击无响应,无法查看明细。点击每一期规则集无反应,看不到对应规则内容。无法核对当期适用规则,影响质检前准备和执行准确性。建议:点击规则集应能展开或跳转查看该期规则明细,确保可核对内容。",雪花,未完成,ScreenShot__113157_370.png,https://drive.google.com/file/d/1Sc6JveyMnbhOjaA7o8Vpwb9v9jD4fapN/view?usp=sharing
+24,管理后台,"分公司/部门无法删除。目前仅支持编辑和停用,不能删除无效部门。无效数据堆积,管理不便。增加删除功能,无关联可删除,有关联则限制并提示关联情况。",雪花,未完成,ScreenShot__115327_516.png,https://drive.google.com/file/d/1QkuhLtx9G9Sdddw9urYmEVxAwh1E5h6_/view?usp=sharing
+25,管理后台,"任务列表缺少任务详情查看能力。列表没有详情入口,点击任务名称也无响应,用户无法查看任务执行进度、结果和异常原因,碰到执行失败或待复核时也无法快速定位问题。建议支持点击任务名称或增加“查看详情”入口,进入详情页查看完整信息",雪花,已完成,ScreenShot__121222_156.png,https://drive.google.com/file/d/19Pw5_uMor2A4JteghZVQYm2dCgKTnWBi/view?usp=sharing
+26,部门平台,报告详情页面-规则执行结果列表展开，【所属页面】没有文案描述写明，截图证据也是空的无法查看，把未执行质检的规则混合在【未通过】列表一起,王维,未完成,截屏2026-09-28 17.28.31.png   ,https://drive.google.com/file/d/16R28zuLRLVdo8YkQ7khn70CXjXoJZCKg/view?usp=sharing
+27,部门平台,报告中心详情页面-人工规则确认列表，截图证据有图，展示无法查看,王维,未完成,截屏2026-09-28 17.31.56.png,https://drive.google.com/file/d/1ojgUafA2ReFz3UwpJJlvxsCU3zgNXKfJ/view?usp=sharing
+28,部门平台,导出的质检报告规范、问题、优化建议描述不够准确，且右侧缺少研发回复区域,王维,未完成,截屏2026-09-28 17.37.58.png,https://drive.google.com/file/d/1uttrsOHVGqwT2N5tmLhE43P2fC0ZGCUU/view?usp=sharing
+29,管理后台,任务中心创建产品排队超过12分钟仍然未开始，排队机制不稳定，严重影响产品质检效率,王维,未完成,截屏2026-09-29 21.14.33.png,https://drive.google.com/file/d/1B1LagTngZFrdNAwdbovqMIfgEUjEdDKM/view?usp=sharing
+30,部门平台,质检任务运行结束后点击查看报告，部分需要人工判定的内容无判定截图，无法追溯判定依据。建议优化质检报告展示逻辑，对需人工判定的内容自动附上判定过程截图或关键证据截图，支持质检员回溯复核，同时记录判定时间与操作人，确保判定流程可追溯。,戴泽,未完成,自动化质检平台问题1,https://drive.google.com/file/d/1u61oyEQMeSdnOKpqzYQzCyVl9i0ki1sT/view?usp=drive_link
+31,部门平台,"任务列表右侧操作入口未常驻固定，不同任务状态的""取消""操作入口位置不一，统一任务列表操作入口布局，将""取消""等操作按钮固定于右侧常驻位置，确保不同任务状态的操作入口一致，提升操作效率。",戴泽,未完成,自动化质检平台问题2,https://drive.google.com/file/d/1PeBKt-572N4JqJrinqY2N_6-5kxrN-gL/view?usp=drive_link
+32,管理后台,任务中心汇聚多名人员提交的差异化状态任务，建议增加删除及筛选功能，支持按人员名称、部门、产品类型（H5/Web）、任务状态等维度快速筛选，提升任务管理效率。,戴泽,未完成,自动化质检平台问题3,https://drive.google.com/file/d/1JnxupGB5TLJIHn7sH4DyqJfpFU-D_k3R/view?usp=drive_link
+33,部门平台,任务列表与任务详情内的进度百分比不一致。,戴泽,未完成,自动化质检平台问题4,https://drive.google.com/file/d/1l0JpZDfozC99SZac_Guq531PUNhliQL9/view?usp=drive_link
+34,部门平台,任务执行异常，单个任务执行时长已超42小时，执行效率不足以满足需求。建议对异常执行状态的任务进行预警提示，并提供取消或重新发起任务的快捷入口。,戴泽,未完成,自动化质检平台问题5,https://drive.google.com/file/d/16DfQo_hASjdUL9GHkm66lSZ_PYkUj1Jy/view?usp=drive_link
+35,部门平台,测试结果要不就是本产品不适用，要不就是证据不足待人工确认。唯一一个能通过的是广告按钮可以点击关闭，并且看到一个通过截图网页应该都没进去，给通过了。,李科特,未完成,https://drive.google.com/file/d/1pbasBVFlqu24OVPrTfK3nfBYeNRagPPt/view?usp=drive_link,https://drive.google.com/file/d/1pbasBVFlqu24OVPrTfK3nfBYeNRagPPt/view?usp=drive_link
+36,部门平台,测试结果整体截图太少，无论是通过的，不通过的，人工判定的，都需要截图甚至可以多张截图，这样方便些报告的人去复核。,李科特,未完成,https://drive.google.com/file/d/1nUaFov3LwC69Uwaqn1wQkZr0YrHOXyHx/view?usp=drive_link,https://drive.google.com/file/d/1nUaFov3LwC69Uwaqn1wQkZr0YrHOXyHx/view?usp=drive_link
+37,部门平台,我看整体的产品测试结果，只是在首页弹窗广告部分停留截图，没有向更深的页面去进行质检截图。,李科特,未完成,https://drive.google.com/file/d/1xcEgAcznrSQBaQGRxZUZfJB0Hf6zVizP/view?usp=drive_link,https://drive.google.com/file/d/1xcEgAcznrSQBaQGRxZUZfJB0Hf6zVizP/view?usp=drive_link
+39,部门平台,测试结果截图，可以考虑做成点击可以放大缩小的，这样复核的时候可以清楚一些。,江浩,未完成,https://drive.google.com/file/d/10R7rXRROUcPrtLnSu-SXzuulsFfrx97Y/view?usp=drive_link,https://drive.google.com/file/d/10R7rXRROUcPrtLnSu-SXzuulsFfrx97Y/view?usp=drive_link
+40,部门平台,任务中心全部任务，如果不尝试按了下鼠标中间，还不知道后面还有操作这一列，可以优化一下。,江浩,未完成,https://drive.google.com/file/d/1TO5z8ou5kvo4plUl2fO9qkUflSHsUdVs/view?usp=drive_link,https://drive.google.com/file/d/1TO5z8ou5kvo4plUl2fO9qkUflSHsUdVs/view?usp=drive_link

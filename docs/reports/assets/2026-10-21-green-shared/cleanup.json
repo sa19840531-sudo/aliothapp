@@ -1,0 +1,18 @@
+{
+  "test_container_removed": true,
+  "test_data_storage": "tmpfs; no Docker database volume created",
+  "existing_container_ids_unchanged": true,
+  "existing_database_volumes_untouched": true,
+  "primary_service_shared_source_hot_reload_observed": true,
+  "main_health": [
+    {
+      "endpoint": "/api/v1/health",
+      "status": 200
+    },
+    {
+      "endpoint": "/api/v1/readyz",
+      "status": 200
+    }
+  ],
+  "temporary_port_25421_released": true
+}

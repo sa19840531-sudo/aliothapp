@@ -1,0 +1,18 @@
+{
+  "changed_previous_files": [
+    "app/workstation/src/modules/tasks/components/GreenRuleResultDetails.test.ts",
+    "app/workstation/src/modules/tasks/components/GreenRuleResultDetails.vue",
+    "app/workstation/src/modules/tasks/components/greenRuleResultDetails.ts",
+    "app/workstation/src/modules/tasks/pages/greenTaskResultDisplay.test.ts",
+    "app/workstation/src/types/task-insight.ts",
+    "services/api/app/application/green_rule_result_projection.py",
+    "services/api/app/infrastructure/db/green_rule_results.py",
+    "services/api/app/infrastructure/db/task_insight_repository.py",
+    "services/api/tests/test_green_rule_result_projection.py",
+    "services/api/tests/test_green_rule_results_postgres.py"
+  ],
+  "new_source_files": [
+    "tests/frontend-e2e/specs/workstation/green-missing-rule-results.spec.ts"
+  ],
+  "exploration_or_collection_changes": false
+}

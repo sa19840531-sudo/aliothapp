@@ -1,0 +1,56 @@
+# ONIRENT 为主：关闭 MoreLogin 开机／ADB 刷新（compose 覆盖曾把这两项强制成 1）
+# 本地仍用 .env.local 的 DB/Redis；双端口 8010=mobile-demo、8020=app-qc
+x-alioth-docker-db: &alioth-docker-db
+  ALIOTH_DATABASE_URL: postgresql+asyncpg://alioth:alioth-local-password@alioth-postgres:5432/alioth
+  ALIOTH_REDIS_URL: redis://alioth-redis:6379/0
+  ALIOTH_MOBILE_DEMO_ENABLED: "1"
+  ALIOTH_MOBILE_DEMO_ALLOW_NON_LOOPBACK: "1"
+  ALIOTH_MOBILE_DEMO_HOST_EXECUTOR: http://host.docker.internal:8765
+  ALIOTH_DEVICE_BACKEND: cloud_phone
+  ALIOTH_AGENT_RUN_STATE_STORE_BACKEND: postgres
+  ALIOTH_APP_QC_ENABLED: "true"
+  ALIOTH_XINGYU_OFFICIAL_ALLOW_NON_LOOPBACK: "1"
+  # ONIRENT 直连 ADB：禁止再走 MoreLogin Local／Open API 开机与刷新
+  ALIOTH_CLOUD_PHONE_VENDOR: onirent
+  ALIOTH_CLOUD_PHONE_MORELOGIN_API: adb
+  ALIOTH_MORELOGIN_ADB_AUTO_REFRESH: "0"
+  ALIOTH_MORELOGIN_ADB_AUTO_ENABLE: "0"
+  ALIOTH_MORELOGIN_ADB_AUTO_POWER_ON: "0"
+  ALIOTH_MORELOGIN_ADB_AUTO_POWER_OFF: "0"
+  ALIOTH_MORELOGIN_CLOUDPHONE_ID: ""
+  ALIOTH_DEVICE_POOL_MORELOGIN_ENV_IDS: ""
+  ALIOTH_MORELOGIN_LOCAL_API: ""
+  ALIOTH_MORELOGIN_OPEN_API: ""
+  ALIOTH_MORELOGIN_API_ID: ""
+  ALIOTH_MORELOGIN_API_KEY: ""
+  # 历史 localhost 隧道改写保留；ONIRENT 公网 host:port 不受影响
+  ALIOTH_CLOUD_PHONE_ADB_LOOPBACK_HOST: host.docker.internal
+  ANDROID_HOME: /opt/android-sdk
+  ANDROID_SDK_ROOT: /opt/android-sdk
+  PATH: /opt/android-sdk/platform-tools:/usr/local/bin:/usr/local/sbin:/usr/sbin:/usr/bin:/sbin:/bin
+
+services:
+  alioth-initialize:
+    environment:
+      <<: *alioth-docker-db
+
+  alioth-api:
+    environment:
+      <<: *alioth-docker-db
+    ports:
+      - "0.0.0.0:8020:8000"
+      - "0.0.0.0:8010:8000"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  alioth-worker:
+    environment:
+      <<: *alioth-docker-db
+      ALIOTH_OFFICIAL_APP_API_BASE_URL: http://alioth-api:8000
+      ALIOTH_XINGYU_OFFICIAL_BASE_URL: http://alioth-api:8000
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  alioth-web:
+    ports:
+      - "0.0.0.0:5176:5173"

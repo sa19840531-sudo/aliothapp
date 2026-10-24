@@ -1,0 +1,548 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Alioth H5 五站顺序探索详细报告，line_loading 按默认流程覆盖口径统计">
+  <title>Alioth H5 五站顺序探索详细报告</title>
+  <style>
+    :root {
+      --navy: #102a43;
+      --navy-deep: #071c2e;
+      --blue: #1769aa;
+      --blue-soft: #eaf4fb;
+      --teal: #087f8c;
+      --green: #16836b;
+      --green-soft: #e9f7f2;
+      --amber: #a96300;
+      --amber-soft: #fff5df;
+      --red: #b53c39;
+      --red-soft: #fff0ef;
+      --ink: #162b3d;
+      --muted: #607589;
+      --line: #d9e4ec;
+      --paper: #ffffff;
+      --canvas: #f4f7fa;
+      --shadow: 0 12px 32px rgba(16, 42, 67, .08);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--canvas);
+      color: var(--ink);
+      font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", Arial, sans-serif;
+      font-size: 15px;
+      line-height: 1.7;
+    }
+    a { color: var(--blue); text-decoration: none; overflow-wrap: anywhere; }
+    a:hover { text-decoration: underline; }
+    code {
+      padding: 2px 6px;
+      border-radius: 5px;
+      background: #edf4f8;
+      color: #174b70;
+      font-family: Consolas, "SFMono-Regular", monospace;
+      font-size: .9em;
+      overflow-wrap: anywhere;
+    }
+    .wrap { width: min(1240px, calc(100% - 36px)); margin: 0 auto; }
+
+    header {
+      position: relative;
+      overflow: hidden;
+      padding: 52px 0 45px;
+      color: #fff;
+      background:
+        radial-gradient(circle at 88% 10%, rgba(65, 192, 202, .32), transparent 28%),
+        linear-gradient(125deg, var(--navy-deep) 0%, var(--navy) 58%, #0f5f78 100%);
+    }
+    header::after {
+      content: "";
+      position: absolute;
+      right: -80px;
+      bottom: -130px;
+      width: 380px;
+      height: 380px;
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 50%;
+      box-shadow: 0 0 0 42px rgba(255,255,255,.035), 0 0 0 86px rgba(255,255,255,.025);
+    }
+    .eyebrow { margin: 0 0 10px; color: #9fdce3; font-weight: 800; letter-spacing: .15em; }
+    h1 { margin: 0; font-size: clamp(30px, 4.2vw, 48px); line-height: 1.2; letter-spacing: .01em; }
+    .subtitle { max-width: 900px; margin: 16px 0 0; color: #d8eaf2; font-size: 17px; }
+    .header-meta { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 25px; }
+    .header-meta span {
+      padding: 6px 11px;
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 999px;
+      background: rgba(255,255,255,.08);
+      color: #eef8fb;
+      font-size: 13px;
+    }
+
+    main { padding: 30px 0 50px; }
+    .metrics { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 13px; margin-bottom: 22px; }
+    .metric, .card {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+    }
+    .metric { padding: 18px; border-top: 4px solid var(--blue); }
+    .metric.highlight { border-top-color: var(--green); background: linear-gradient(155deg, #fff 35%, var(--green-soft)); }
+    .metric-value { display: block; color: var(--navy); font-size: 27px; font-weight: 850; line-height: 1.2; }
+    .metric-label { display: block; margin-top: 6px; color: var(--muted); font-size: 13px; }
+
+    .card { margin: 18px 0; padding: 26px 28px; }
+    .card-accent { border-left: 5px solid var(--green); }
+    h2 { margin: 0 0 16px; color: var(--navy); font-size: 23px; line-height: 1.35; }
+    h3 { margin: 25px 0 11px; color: var(--navy); font-size: 18px; line-height: 1.4; }
+    h4 { margin: 18px 0 7px; color: #294b64; font-size: 15px; }
+    p { margin: 9px 0; }
+    ul, ol { margin: 8px 0; padding-left: 22px; }
+    li { margin: 5px 0; }
+    .lead { font-size: 17px; color: #294b64; }
+    .callout {
+      margin: 15px 0;
+      padding: 15px 18px;
+      border-radius: 10px;
+      background: var(--green-soft);
+      border: 1px solid #bfe5d8;
+      color: #19594b;
+    }
+    .callout.warning { background: var(--amber-soft); border-color: #efdbac; color: #76500e; }
+    .callout.danger { background: var(--red-soft); border-color: #efc9c7; color: #7f302e; }
+
+    .legend { display: flex; flex-wrap: wrap; gap: 12px; margin: 10px 0 16px; color: var(--muted); font-size: 13px; }
+    .legend span { display: inline-flex; align-items: center; gap: 6px; }
+    .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; }
+    .dot.flow { background: var(--teal); }
+    .dot.detected { background: var(--green); }
+    .dot.missing { background: #bbc8d2; }
+
+    .table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; }
+    table { width: 100%; border-collapse: collapse; background: #fff; font-size: 13px; }
+    th, td { padding: 10px 11px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+    th { background: #edf4f8; color: #27485f; font-weight: 800; white-space: nowrap; }
+    tr:last-child td { border-bottom: 0; }
+    tbody tr:hover { background: #f8fbfd; }
+    .center { text-align: center; }
+    .yes { color: var(--green); font-weight: 800; }
+    .flow-yes { color: var(--teal); font-weight: 800; }
+    .no { color: #8998a5; }
+    .warn { color: var(--amber); font-weight: 750; }
+    .fail { color: var(--red); font-weight: 750; }
+    .nowrap { white-space: nowrap; }
+
+    .site-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 17px; }
+    .site-card {
+      padding: 22px;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      box-shadow: 0 8px 22px rgba(16,42,67,.055);
+    }
+    .site-card.full { grid-column: 1 / -1; }
+    .site-head { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; margin-bottom: 8px; }
+    .site-no {
+      flex: 0 0 auto;
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      background: var(--navy);
+      color: #fff;
+      font-weight: 850;
+    }
+    .site-title { flex: 1; min-width: 0; }
+    .site-title h3 { margin: 0 0 2px; font-size: 17px; }
+    .site-title a { font-size: 13px; }
+    .coverage-pill {
+      flex: 0 0 auto;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: var(--green-soft);
+      color: var(--green);
+      font-weight: 850;
+      font-size: 13px;
+    }
+    .ids { margin: 12px 0; padding: 10px 12px; border-radius: 8px; background: #f5f8fa; color: var(--muted); font-size: 12px; }
+    .mini-metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 12px 0; }
+    .mini-metrics div { padding: 9px; border: 1px solid var(--line); border-radius: 8px; background: #fbfdfe; }
+    .mini-metrics strong { display: block; color: var(--navy); font-size: 15px; }
+    .mini-metrics span { color: var(--muted); font-size: 11px; }
+    .timeline { margin: 12px 0 0; padding: 0; list-style: none; counter-reset: step; }
+    .timeline li { position: relative; margin: 0; padding: 0 0 13px 29px; counter-increment: step; }
+    .timeline li::before {
+      content: counter(step);
+      position: absolute;
+      left: 0;
+      top: 2px;
+      display: grid;
+      place-items: center;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--blue-soft);
+      color: var(--blue);
+      font-size: 11px;
+      font-weight: 850;
+    }
+    .timeline li::after { content: ""; position: absolute; left: 9px; top: 24px; bottom: 1px; width: 1px; background: var(--line); }
+    .timeline li:last-child::after { display: none; }
+    .time { color: var(--muted); font-size: 12px; white-space: nowrap; }
+
+    .bars { display: grid; gap: 11px; }
+    .bar-row { display: grid; grid-template-columns: 150px 1fr 110px; gap: 12px; align-items: center; }
+    .bar-label { color: #294b64; font-size: 13px; }
+    .bar-track { height: 10px; border-radius: 99px; background: #e8eef2; overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--blue), var(--teal)); }
+    .bar-value { color: var(--muted); font-size: 12px; text-align: right; }
+
+    .priority { display: inline-block; min-width: 36px; padding: 3px 7px; border-radius: 5px; color: #fff; text-align: center; font-size: 11px; font-weight: 850; }
+    .p0 { background: var(--red); }
+    .p1 { background: var(--amber); }
+    .p2 { background: var(--blue); }
+    .footnote { color: var(--muted); font-size: 12px; }
+
+    footer { padding: 20px 0 30px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; }
+
+    @media (max-width: 980px) {
+      .metrics { grid-template-columns: repeat(3, 1fr); }
+      .site-grid { grid-template-columns: 1fr; }
+      .site-card.full { grid-column: auto; }
+    }
+    @media (max-width: 650px) {
+      .wrap { width: min(100% - 22px, 1240px); }
+      header { padding: 38px 0 32px; }
+      .metrics { grid-template-columns: repeat(2, 1fr); }
+      .card { padding: 21px 17px; }
+      .site-head { flex-wrap: wrap; }
+      .mini-metrics { grid-template-columns: repeat(2, 1fr); }
+      .bar-row { grid-template-columns: 105px 1fr; }
+      .bar-value { grid-column: 2; text-align: left; }
+    }
+    @media print {
+      @page { size: A4 landscape; margin: 10mm; }
+      body { background: #fff; font-size: 11px; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .wrap { width: 100%; }
+      header { padding: 22px 0; }
+      h1 { font-size: 30px; }
+      main { padding: 16px 0; }
+      .metrics { grid-template-columns: repeat(5, 1fr); gap: 7px; }
+      .metric, .card, .site-card { box-shadow: none; }
+      .metric { padding: 11px; }
+      .metric-value { font-size: 19px; }
+      .card { padding: 17px; break-inside: avoid; page-break-inside: avoid; }
+      .site-card { break-inside: avoid; page-break-inside: avoid; }
+      .site-grid { grid-template-columns: repeat(2, 1fr); }
+      .site-card.full { grid-column: 1 / -1; }
+      a { color: inherit; }
+      h2, h3 { break-after: avoid; page-break-after: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <p class="eyebrow">ALIOTH｜H5 V2 EXPLORER</p>
+      <h1>五站顺序探索详细报告</h1>
+      <p class="subtitle">基于 2026-08-30 实际 Worker 运行、页面 Capture、页面类型判定、探索动作及导航知识库审计数据汇总。</p>
+      <div class="header-meta">
+        <span>报告日期：2026-08-30</span>
+        <span>执行方式：Docker 启动，不 build</span>
+        <span>扫描模式：full</span>
+        <span>状态：探索报告，不含修复</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="metrics" aria-label="关键指标">
+      <article class="metric highlight"><span class="metric-value">12 / 13</span><span class="metric-label">五站联合覆盖，92.3%</span></article>
+      <article class="metric"><span class="metric-value">5</span><span class="metric-label">按顺序完成探索的 H5 站点</span></article>
+      <article class="metric"><span class="metric-value">69</span><span class="metric-label">探索动作，64 完成 / 5 阻断</span></article>
+      <article class="metric"><span class="metric-value">133</span><span class="metric-label">页面 Capture 总数</span></article>
+      <article class="metric"><span class="metric-value">0</span><span class="metric-label">向量命中；426 次查询尝试</span></article>
+    </section>
+
+    <section class="card card-accent">
+      <h2>1. 结论与统计口径</h2>
+      <p class="lead"><strong>修正后的五站联合覆盖为 12/13（92.3%），唯一未覆盖的目标类型是 <code>ranking</code>。</strong></p>
+      <div class="callout">
+        <strong><code>line_loading</code> 口径修正：</strong>H5 普通探索打开网址时已经进入线路加载生命周期，因此五个站点均按“默认流程覆盖”计入。该项不要求数据库中必须存在一条独立的 <code>qc_page_capture.page_type=line_loading</code> 识别记录。
+      </div>
+      <p>为避免证据混淆，本报告将覆盖证据分为两类：<strong>流程覆盖</strong>仅用于 <code>line_loading</code>；其余页面类型仍按实际 Capture 与页面类型判定结果统计。站点 5 除默认的 <code>line_loading</code> 外没有形成其他有效页型覆盖。</p>
+      <ul>
+        <li>Docker 容器以现有镜像启动，未执行 build；API、Worker、PostgreSQL、Redis 均处于可运行状态。</li>
+        <li>认证后依次提交五个 <code>scan_mode=full</code> 任务；认证令牌及密码未写入报告。</li>
+        <li>五个任务最终均进入 <code>review/failed</code>，表示探索链路存在未闭合问题，不等同于没有产生有效页面覆盖。</li>
+        <li>当前运行时页型目录 v14 不包含 <code>ranking</code>，但包含额外的 <code>post_publish</code>、<code>guide_page</code>；这是目标验收口径与运行目录的结构性差异。</li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>2. 页面类型覆盖矩阵</h2>
+      <div class="legend">
+        <span><i class="dot flow"></i>流程默认覆盖</span>
+        <span><i class="dot detected"></i>实际页面判定覆盖</span>
+        <span><i class="dot missing"></i>未覆盖</span>
+      </div>
+      <div class="table-wrap">
+        <table aria-label="五站页面类型覆盖矩阵">
+          <thead>
+            <tr>
+              <th>页面类型</th>
+              <th class="center">站点 1<br>dxbb...</th>
+              <th class="center">站点 2<br>dvg...</th>
+              <th class="center">站点 3<br>d24...</th>
+              <th class="center">站点 4<br>d3j...</th>
+              <th class="center">站点 5<br>d8z...</th>
+              <th>联合结果</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><code>line_loading</code></td><td class="center flow-yes">● 默认</td><td class="center flow-yes">● 默认</td><td class="center flow-yes">● 默认</td><td class="center flow-yes">● 默认</td><td class="center flow-yes">● 默认</td><td class="flow-yes">流程覆盖</td></tr>
+            <tr><td><code>startup_ad</code></td><td class="center yes">✓</td><td class="center yes">✓</td><td class="center yes">✓</td><td class="center yes">✓</td><td class="center no">—</td><td class="yes">覆盖</td></tr>
+            <tr><td><code>home</code></td><td class="center yes">✓</td><td class="center yes">✓</td><td class="center yes">✓</td><td class="center yes">✓</td><td class="center no">—</td><td class="yes">覆盖</td></tr>
+            <tr><td><code>content_list</code></td><td class="center yes">✓</td><td class="center yes">✓</td><td class="center yes">✓</td><td class="center no">—</td><td class="center no">—</td><td class="yes">覆盖</td></tr>
+            <tr><td><code>content_detail</code></td><td class="center no">—</td><td class="center no">—</td><td class="center no">—</td><td class="center yes">✓</td><td class="center no">—</td><td class="yes">覆盖</td></tr>
+            <tr><td><code>video_list</code></td><td class="center no">—</td><td class="center no">—</td><td class="center yes">✓</td><td class="center yes">✓</td><td class="center no">—</td><td class="yes">覆盖</td></tr>
+            <tr><td><code>video_detail</code></td><td class="center yes">✓</td><td class="center yes">✓</td><td class="center no">—</td><td class="center no">—</td><td class="center no">—</td><td class="yes">覆盖</td></tr>
+            <tr><td><code>ranking</code></td><td class="center no">—</td><td class="center no">—</td><td class="center no">—</td><td class="center no">—</td><td class="center no">—</td><td class="fail">未覆盖</td></tr>
+            <tr><td><code>profile</code></td><td class="center yes">✓</td><td class="center yes">✓</td><td class="center yes">✓</td><td class="center yes">✓</td><td class="center no">—</td><td class="yes">覆盖</td></tr>
+            <tr><td><code>settings</code></td><td class="center yes">✓</td><td class="center yes">✓</td><td class="center no">—</td><td class="center yes">✓</td><td class="center no">—</td><td class="yes">覆盖</td></tr>
+            <tr><td><code>payment</code></td><td class="center yes">✓</td><td class="center no">—</td><td class="center no">—</td><td class="center yes">✓</td><td class="center no">—</td><td class="yes">覆盖</td></tr>
+            <tr><td><code>post_list</code></td><td class="center yes">✓</td><td class="center yes">✓</td><td class="center yes">✓</td><td class="center yes">✓</td><td class="center no">—</td><td class="yes">覆盖</td></tr>
+            <tr><td><code>activity</code></td><td class="center yes">✓</td><td class="center yes">✓</td><td class="center no">—</td><td class="center yes">✓</td><td class="center no">—</td><td class="yes">覆盖</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="footnote">单站修正覆盖：站点 1 为 10/13；站点 2 为 9/13；站点 3 为 7/13；站点 4 为 10/13；站点 5 为 1/13。分母固定使用用户指定的 13 类。</p>
+    </section>
+
+    <section class="card">
+      <h2>3. 五站执行总览</h2>
+      <div class="table-wrap">
+        <table aria-label="五站任务总览">
+          <thead><tr><th>#</th><th>目标网址</th><th>Task / Run</th><th>耗时</th><th>动作</th><th>Capture</th><th>AI 调用 / Token</th><th>覆盖</th><th>终止状态</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>1</td><td><a href="https://dxbbmcw6gltgg.cloudfront.net/?devTest=123">dxbbmcw6gltgg.cloudfront.net</a></td>
+              <td><code>0eacca80-de9f-4b5a-bfc5-895febe85e73</code><br><code>3835d865-87cf-4eaa-8e5b-1561b543f202</code></td>
+              <td class="nowrap">14m14s</td><td>14 / 14 完成</td><td>28</td><td>42 / 1,040,082</td><td class="yes">10/13</td><td><code>task_frontier_blocked</code></td>
+            </tr>
+            <tr>
+              <td>2</td><td><a href="https://dvgsyzqus02v5.cloudfront.net/?devTest=1">dvgsyzqus02v5.cloudfront.net</a></td>
+              <td><code>2d1e0c78-5522-4cdd-aea7-1430142d3b9a</code><br><code>aa74e83b-3e0c-49be-b016-c261d6eb014b</code></td>
+              <td class="nowrap">17m47s</td><td>13 完成 / 4 阻断</td><td>30</td><td>34 / 849,715</td><td class="yes">9/13</td><td><code>h5_coverage_scope_unready_without_inventory</code></td>
+            </tr>
+            <tr>
+              <td>3</td><td><a href="http://d24jdtq5qz8ff4.cloudfront.net">d24jdtq5qz8ff4.cloudfront.net</a></td>
+              <td><code>a1f72083-95a9-4091-98a4-03c67d61c4bd</code><br><code>68390e28-1a4c-45a3-84d4-dc18f46d1042</code></td>
+              <td class="nowrap">11m38s</td><td>8 完成 / 1 阻断</td><td>17</td><td>17 / 699,359</td><td class="yes">7/13</td><td>活动遮挡，Frontier 无安全候选</td>
+            </tr>
+            <tr>
+              <td>4</td><td><a href="http://d3jsxm6ahe66k1.cloudfront.net">d3jsxm6ahe66k1.cloudfront.net</a></td>
+              <td><code>46779884-3a02-46a1-9397-7476db032225</code><br><code>76c62422-125f-4a0b-890e-54b24e75f58b</code></td>
+              <td class="nowrap">29m10s</td><td>28 / 28 完成</td><td>56</td><td>51 / 2,595,790</td><td class="yes">10/13</td><td><code>h5_coverage_scope_unready_without_inventory</code></td>
+            </tr>
+            <tr>
+              <td>5</td><td><a href="https://d8zz39epttv3v.cloudfront.net/?/?devTest=123">d8zz39epttv3v.cloudfront.net</a></td>
+              <td><code>8ef0400f-476f-4073-a47c-9ebffea7a5fa</code><br><code>f9bc8893-a231-47c1-9f1b-58bc7f208768</code></td>
+              <td class="nowrap">20.688s</td><td>1 / 1 完成</td><td>2</td><td>1 / 17,269</td><td class="flow-yes">1/13</td><td><code>h5_coverage_scope_unready_without_inventory</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>4. 逐站探索过程与结果</h2>
+      <div class="site-grid">
+        <article class="site-card full">
+          <div class="site-head">
+            <span class="site-no">1</span>
+            <div class="site-title"><h3>dxbbmcw6gltgg.cloudfront.net</h3><a href="https://dxbbmcw6gltgg.cloudfront.net/?devTest=123">https://dxbbmcw6gltgg.cloudfront.net/?devTest=123</a></div>
+            <span class="coverage-pill">10 / 13</span>
+          </div>
+          <div class="ids">Task：0eacca80-de9f-4b5a-bfc5-895febe85e73　Run：3835d865-87cf-4eaa-8e5b-1561b543f202</div>
+          <div class="mini-metrics"><div><strong>854.209s</strong><span>运行耗时</span></div><div><strong>14 / 14</strong><span>完成动作</span></div><div><strong>28</strong><span>Capture</span></div><div><strong>23 / 27</strong><span>检查成功 / 总数</span></div></div>
+          <h4>按执行顺序</h4>
+          <ol class="timeline">
+            <li>打开目标网址并完成首帧采集。<span class="time">13.356s</span></li>
+            <li>识别并关闭 <code>startup_ad</code>。<span class="time">14.366s</span></li>
+            <li>进入 <code>/home</code>，循环清理首页阻断弹窗，稳定识别为 <code>home</code>，置信度 0.93。<span class="time">34.927s</span></li>
+            <li>从无遮挡列表标题进入 <code>/movieDetails?...</code>，识别为 <code>video_detail</code>；页面为“立即解锁”状态，按规则记录后退出。<span class="time">12.117s</span></li>
+            <li>返回首页。<span class="time">22.827s</span></li>
+            <li>点击底部 AI 入口进入 <code>/aiUndress2</code>，识别为 <code>content_list</code>，置信度 0.93。<span class="time">20.047s</span></li>
+            <li>点击社区进入 <code>/community</code>，识别为 <code>post_list</code>，置信度 0.95。<span class="time">11.580s</span></li>
+            <li>点击“我的”进入 <code>/mine</code>，先识别到阻断弹窗，再循环关闭，稳定识别为 <code>profile</code>，置信度 0.96。<span class="time">13.013s + 29.644s</span></li>
+            <li>从 Profile 进入签到 <code>/task_sign_day</code>，识别为 <code>activity</code>，置信度 0.93。<span class="time">8.932s</span></li>
+            <li>返回 Profile 后进入会员中心 <code>/member?id=...</code>，识别为 <code>payment</code>，置信度 0.93。<span class="time">11.500s + 4.828s</span></li>
+            <li>再次返回 Profile，进入 <code>/setting</code>，识别为 <code>settings</code>，置信度 0.96。<span class="time">6.167s + 2.891s</span></li>
+          </ol>
+          <p><strong>未覆盖：</strong><code>content_detail</code>、<code>video_list</code>、<code>ranking</code>。<strong>终止：</strong><code>failed/incomplete</code>，Frontier 进入 <code>task_frontier_blocked</code>。</p>
+        </article>
+
+        <article class="site-card full">
+          <div class="site-head">
+            <span class="site-no">2</span>
+            <div class="site-title"><h3>dvgsyzqus02v5.cloudfront.net</h3><a href="https://dvgsyzqus02v5.cloudfront.net/?devTest=1">https://dvgsyzqus02v5.cloudfront.net/?devTest=1</a></div>
+            <span class="coverage-pill">9 / 13</span>
+          </div>
+          <div class="ids">Task：2d1e0c78-5522-4cdd-aea7-1430142d3b9a　Run：aa74e83b-3e0c-49be-b016-c261d6eb014b</div>
+          <div class="mini-metrics"><div><strong>1067.056s</strong><span>运行耗时</span></div><div><strong>13 / 17</strong><span>完成动作</span></div><div><strong>30</strong><span>Capture</span></div><div><strong>21 / 26</strong><span>检查成功 / 总数</span></div></div>
+          <h4>按执行顺序</h4>
+          <ol class="timeline">
+            <li>打开站点、关闭启动广告并循环清理首页弹窗。<span class="time">11.080s + 15.293s + 23.026s</span></li>
+            <li>识别无遮挡标题并点击进入 <code>/movieDetails</code>；多模态接口连续两次 HTTP 500 后重试，最终记录 <code>video_detail</code>，但置信度落为 0.0000，页面为解锁阻断状态。<span class="time">25.070s</span></li>
+            <li>返回后进入 AI 页面，识别为 <code>content_list</code>。<span class="time">13.731s + 10.145s</span></li>
+            <li>进入社区，识别为 <code>post_list</code>。<span class="time">11.945s</span></li>
+            <li>进入“我的”并关闭弹窗，识别为 <code>profile</code>。<span class="time">6.891s + 27.540s</span></li>
+            <li>进入签到页，识别为 <code>activity</code>。<span class="time">7.689s</span></li>
+            <li>返回 Profile 后尝试会员中心，连续四次因为 <code>PROFILE_PAYMENT_TARGET_NOT_FOUND</code> 阻断，置信度分别约 0.053、0.066、0.074、0.045。<span class="time">共 4 次阻断</span></li>
+            <li>设置入口点击成功，识别为 <code>settings</code>。<span class="time">5.645s</span></li>
+          </ol>
+          <p><strong>未覆盖：</strong><code>content_detail</code>、<code>video_list</code>、<code>ranking</code>、<code>payment</code>。<strong>终止：</strong><code>h5_coverage_scope_unready_without_inventory</code>。</p>
+        </article>
+
+        <article class="site-card full">
+          <div class="site-head">
+            <span class="site-no">3</span>
+            <div class="site-title"><h3>d24jdtq5qz8ff4.cloudfront.net</h3><a href="http://d24jdtq5qz8ff4.cloudfront.net">http://d24jdtq5qz8ff4.cloudfront.net</a></div>
+            <span class="coverage-pill">7 / 13</span>
+          </div>
+          <div class="ids">Task：a1f72083-95a9-4091-98a4-03c67d61c4bd　Run：68390e28-1a4c-45a3-84d4-dc18f46d1042</div>
+          <div class="mini-metrics"><div><strong>698.010s</strong><span>运行耗时</span></div><div><strong>8 / 9</strong><span>完成动作</span></div><div><strong>17</strong><span>Capture</span></div><div><strong>15 / 16</strong><span>检查成功 / 总数</span></div></div>
+          <h4>按执行顺序</h4>
+          <ol class="timeline">
+            <li>打开根 URL，处理 <code>startup_ad</code>，进入首页后循环清理弹窗。<span class="time">11.759s + 25.255s + 46.581s</span></li>
+            <li>点击底部视频入口进入 <code>/home-video</code>，按新增 URL 判定识别为 <code>video_list</code>，置信度 0.96。<span class="time">21.313s</span></li>
+            <li>点击“AI 女友”进入 <code>/ai</code>，识别为 <code>content_list</code>，置信度 0.93。<span class="time">14.775s</span></li>
+            <li>点击“广场”进入 <code>/square</code>，识别为 <code>post_list</code>，置信度 0.93。<span class="time">9.955s</span></li>
+            <li>点击“我的”进入 <code>/mine</code>，识别为 <code>profile</code>，但页面仍存在活动弹窗。<span class="time">16.740s</span></li>
+            <li>关闭弹窗动作因 <code>POPUP_DISMISSAL_NOT_FOUND</code> 阻断；随后重新观察，但遮挡仍在，无法安全识别签到、设置或会员中心入口。<span class="time">3.233s + 阻断</span></li>
+          </ol>
+          <p><strong>未覆盖：</strong><code>content_detail</code>、<code>video_detail</code>、<code>ranking</code>、<code>settings</code>、<code>payment</code>、<code>activity</code>。<strong>终止：</strong>Frontier 没有可执行候选，但页面仍存在活动遮挡。</p>
+        </article>
+
+        <article class="site-card full">
+          <div class="site-head">
+            <span class="site-no">4</span>
+            <div class="site-title"><h3>d3jsxm6ahe66k1.cloudfront.net</h3><a href="http://d3jsxm6ahe66k1.cloudfront.net">http://d3jsxm6ahe66k1.cloudfront.net</a></div>
+            <span class="coverage-pill">10 / 13</span>
+          </div>
+          <div class="ids">Task：46779884-3a02-46a1-9397-7476db032225　Run：76c62422-125f-4a0b-890e-54b24e75f58b</div>
+          <div class="mini-metrics"><div><strong>1750.080s</strong><span>运行耗时</span></div><div><strong>28 / 28</strong><span>完成动作</span></div><div><strong>56</strong><span>Capture</span></div><div><strong>44 / 49</strong><span>检查成功 / 总数</span></div></div>
+          <h4>按执行顺序</h4>
+          <ol class="timeline">
+            <li>启动广告包含倒计时，先重新观察后关闭；随后识别并清理首层弹窗。<span class="time">4.244s + 11.092s</span></li>
+            <li>进入首页并再次关闭阻断弹窗，首个稳定首页置信度仅 0.42。<span class="time">33.192s</span></li>
+            <li>点击底部第 3 项进入 <code>/DarkWeb</code>，识别为 <code>video_list</code>，页面为受限状态，置信度 0.93。<span class="time">15.086s</span></li>
+            <li>返回时再次经过启动广告与弹窗清理。<span class="time">20.481s + 12.056s + 33.717s</span></li>
+            <li>在 <code>pages-foot-box</code> 底部导航中点击 Community，进入 <code>/Community</code>，识别为 <code>post_list</code>，置信度 0.94。<span class="time">11.119s</span></li>
+            <li>点击 Mine 进入 Profile 并关闭阻断弹窗；通过 OCR/结构入口进入 <code>/Mine/agent?index=1</code>，识别为 <code>activity</code>，置信度 0.93。<span class="time">18.634s + 15.528s + 13.294s</span></li>
+            <li>返回 Profile 的过程中再次处理启动广告和弹窗；进入 <code>/mine/vip</code>，识别为 <code>payment</code>，置信度 0.96。<span class="time">14.174s + 12.695s + 41.446s + 8.613s</span></li>
+            <li>再次恢复 Profile、处理启动广告和弹窗后进入 <code>/Mine/seting</code>，识别为 <code>settings</code>，置信度 0.96。<span class="time">17.130s + 11.977s + 42.024s + 7.951s</span></li>
+            <li>导航回 Community，处理启动广告及弹窗，从无遮挡帖子标题进入 <code>/Community/postDetail?id=691743</code>，截图和 DOM 后识别为 <code>content_detail</code>，置信度 0.96。<span class="time">14.133s + 9.468s + 35.586s + 3.721s</span></li>
+            <li>最后返回 Mine 并再次处理启动广告/弹窗；点击 Featured 后回到根首页，识别为 <code>home</code>，置信度 0.62，未形成预期的 <code>content_list</code>。<span class="time">16.419s + 12.668s + 42.390s + 26.227s</span></li>
+          </ol>
+          <p><strong>未覆盖：</strong><code>content_list</code>、<code>video_detail</code>、<code>ranking</code>。<strong>特点：</strong>启动广告重复出现 7 次、Profile 相关 Capture 8 次，恢复路径成本较高。<strong>终止：</strong><code>h5_coverage_scope_unready_without_inventory</code>。</p>
+        </article>
+
+        <article class="site-card full">
+          <div class="site-head">
+            <span class="site-no">5</span>
+            <div class="site-title"><h3>d8zz39epttv3v.cloudfront.net（精确输入 URL）</h3><a href="https://d8zz39epttv3v.cloudfront.net/?/?devTest=123">https://d8zz39epttv3v.cloudfront.net/?/?devTest=123</a></div>
+            <span class="coverage-pill">1 / 13</span>
+          </div>
+          <div class="ids">Task：8ef0400f-476f-4073-a47c-9ebffea7a5fa　Run：f9bc8893-a231-47c1-9f1b-58bc7f208768</div>
+          <div class="mini-metrics"><div><strong>20.688s</strong><span>运行耗时</span></div><div><strong>1 / 1</strong><span>完成动作</span></div><div><strong>2</strong><span>Capture</span></div><div><strong>0</strong><span>有效页型判定</span></div></div>
+          <h4>按执行顺序</h4>
+          <ol class="timeline">
+            <li>打开用户给出的精确 URL，按 H5 生命周期已完成 <code>line_loading</code> 默认流程覆盖。</li>
+            <li>DOM 标题为“抖阴精选”，应用根节点为空；页面只有一个全屏 <code>#SplashScreenID &gt; img</code>，图片源为 <code>/startup.jpg</code>，覆盖 100% 视口。</li>
+            <li>该节点没有可交互控件、没有可见文字，页面元素总数为 1；Worker 未将其判为 <code>startup_ad</code>，也没有进入重新观察或广告关闭循环。</li>
+            <li>因此本任务除默认流程的 <code>line_loading</code> 外，不计任何业务页型覆盖，并快速以 inventory 未就绪结束。</li>
+          </ol>
+          <div class="callout warning"><strong>关键差异：</strong>根地址 <code>https://d8zz39epttv3v.cloudfront.net/</code> 与本次精确输入 <code>/?/?devTest=123</code> 的入口行为不同。本报告只对本次精确输入任务负责。</div>
+        </article>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>5. Worker 执行效果</h2>
+      <div class="bars" aria-label="Worker 关键比率">
+        <div class="bar-row"><span class="bar-label">动作完成率</span><span class="bar-track"><span class="bar-fill" style="width:92.8%"></span></span><span class="bar-value">64 / 69，92.8%</span></div>
+        <div class="bar-row"><span class="bar-label">页面检查成功率</span><span class="bar-track"><span class="bar-fill" style="width:87.3%"></span></span><span class="bar-value">103 / 118，87.3%</span></div>
+        <div class="bar-row"><span class="bar-label">联合页型覆盖率</span><span class="bar-track"><span class="bar-fill" style="width:92.3%"></span></span><span class="bar-value">12 / 13，92.3%</span></div>
+      </div>
+      <h3>执行观察</h3>
+      <ul>
+        <li>69 个动作中 64 个完成、5 个阻断；所有非终态动作与检查项最终均已收口为 0，没有遗留运行中的工作项。</li>
+        <li>五站共触发 145 次模型调用，累计约 5,202,215 Token；站点 4 因重复启动广告、弹窗清理和 Profile 恢复占用最高。</li>
+        <li>本批次没有任何一次点击超过 60 秒；最长单次动作是站点 3 的弹窗清理 46.581 秒。单纯把点击超时提高到 180 秒不会解决本批次的主要问题。</li>
+        <li>标题点击、CSS 选择器、底部导航与确定性路由均有成功案例；失败更集中在目标唯一性、弹窗结构不可证明和页面状态恢复，而不是浏览器“无法点击”。</li>
+        <li>五个 Run 最终都进入 review/failed，说明“覆盖证据已产生”与“任务完成门禁通过”目前仍未统一。</li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>6. 向量导航知识库应用审计</h2>
+      <div class="table-wrap">
+        <table aria-label="向量导航知识库统计">
+          <thead><tr><th>检查项</th><th>实际结果</th><th>判断</th></tr></thead>
+          <tbody>
+            <tr><td>pgvector 扩展</td><td>版本 0.8.4</td><td class="yes">数据库能力可用</td></tr>
+            <tr><td>导航别名向量</td><td><code>page_nav_alias_embedding</code> 共 132 行</td><td class="yes">知识数据存在</td></tr>
+            <tr><td>Embedding 模型</td><td><code>alioth-local-nav-alias-v1</code></td><td>运行配置存在</td></tr>
+            <tr><td>向量检索尝试</td><td>426 次</td><td class="yes">探索流程真实调用</td></tr>
+            <tr><td>向量命中</td><td>0 次</td><td class="fail">未对本轮决策产生贡献</td></tr>
+            <tr><td>静态别名命中</td><td>296 次</td><td class="warn">实际决策仍由静态规则主导</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout warning"><strong>结论：</strong>向量库已接入、已配置、也确实被查询，但本轮向量命中为 0，因此不能表述为“向量库帮助进入了某个页面”。当前只可确认它参与了候选检索流程，实际导航贡献仍为静态别名。</div>
+    </section>
+
+    <section class="card">
+      <h2>7. 阻断问题与后续修复优先级</h2>
+      <div class="table-wrap">
+        <table aria-label="阻断问题优先级">
+          <thead><tr><th>优先级</th><th>问题</th><th>证据与影响</th><th>建议边界</th></tr></thead>
+          <tbody>
+            <tr><td><span class="priority p0">P0</span></td><td>全屏 Splash 未进入启动广告处理</td><td>站点 5 只有全屏 <code>/startup.jpg</code>，Worker 没有分类、重观察或关闭动作，业务探索为 0。</td><td>增加“全屏静态 Splash + 空应用根节点”的受控启动广告/加载状态判定，并设置重观察预算。</td></tr>
+            <tr><td><span class="priority p0">P0</span></td><td>Profile 阻断弹窗无法关闭</td><td>站点 3 在 <code>/mine</code> 触发 <code>POPUP_DISMISSAL_NOT_FOUND</code>，签到、设置、会员中心全部被截断。</td><td>扩充“请截图保存”等弹窗关闭证据；只在可证明关闭控件时点击，并循环验证弹窗消失。</td></tr>
+            <tr><td><span class="priority p1">P1</span></td><td>完成门禁与真实覆盖脱节</td><td>五站均产生覆盖，但所有 Run 最终都是 review/failed；站点 1、4 已覆盖 10 类仍未正常完成。</td><td>按运行时可用页型目录和终态 Frontier 收口；区分“无候选正常结束”与“证据不足失败”。</td></tr>
+            <tr><td><span class="priority p1">P1</span></td><td>目标 13 类与页型目录不一致</td><td><code>ranking</code> 不在当前目录 v14，却仍在验收分母中，导致理论上无法由当前目录闭环。</td><td>明确恢复 <code>ranking</code>，或在验收合同中标记 N/A；不可通过伪造识别补齐。</td></tr>
+            <tr><td><span class="priority p1">P1</span></td><td>会员中心入口重复尝试</td><td>站点 2 对不存在或不可证明的 payment 入口连续阻断 4 次。</td><td>相同页面指纹、相同目标类型、相同错误码命中后去重，直接推进下一未探索类型。</td></tr>
+            <tr><td><span class="priority p2">P2</span></td><td>重复启动广告与恢复成本高</td><td>站点 4 启动广告 Capture 7 次，Profile Capture 8 次，耗时 29m10s、Token 259 万。</td><td>为同会话广告关闭建立短期状态，并在可信同源恢复时减少重复识别。</td></tr>
+            <tr><td><span class="priority p2">P2</span></td><td>向量检索零命中</td><td>426 次查询、0 次向量命中，静态别名命中 296 次。</td><td>先审计查询文本、向量数据和阈值分布；不得仅为制造命中而无证据降低阈值。</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="footnote">本报告只给出修复边界和优先级，没有实施代码修复、数据库迁移或前端菜单/路由修改。</p>
+    </section>
+
+    <section class="card">
+      <h2>8. 最终验收结论</h2>
+      <ol>
+        <li><code>line_loading</code> 已按用户确认修正为五站默认流程覆盖。</li>
+        <li>五站联合覆盖 13 个目标类型中的 12 个，覆盖率 <strong>92.3%</strong>；只缺 <code>ranking</code>。</li>
+        <li>站点 1 和站点 4 覆盖最完整，均为 10/13；站点 5 受全屏 Splash 阻断，仅有默认 <code>line_loading</code> 覆盖。</li>
+        <li>Worker 的常规点击时间并未达到 60 秒，主要障碍是页面状态判定、弹窗关闭证据、候选去重和完成门禁。</li>
+        <li>向量导航知识库已被查询，但没有向量命中；本轮页面探索仍由静态别名和确定性结构主导。</li>
+        <li>本轮为报告输出：未 build、未修复业务代码、未提交 Git。</li>
+      </ol>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">Alioth H5 五站顺序探索详细报告｜2026-08-30｜UTF-8 单文件 HTML｜可直接浏览与 A4 横向打印</div>
+  </footer>
+</body>
+</html>

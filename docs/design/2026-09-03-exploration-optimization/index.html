@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="七项设计 · 共同边界 · 实施依赖；Alioth 七项探索优化专项设计。包含组件图、时序图、判断流程、算法、并发恢复与技术验收，不展开数据库表或具体数据结构。">
+  <meta name="color-scheme" content="light">
+  <title>Alioth 七项探索优化：专项设计文档集 · Alioth</title>
+  <style>
+:root { --accent: #176257; --ink: #192b34; --muted: #526772; --line: #dfe6e8; --paper: #fff; --wash: #f3f6f7; color-scheme: light; }
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 24px; }
+body { margin: 0; color: var(--ink); background: var(--wash); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; -webkit-font-smoothing: antialiased; }
+a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+a:hover { text-decoration-thickness: 2px; }
+a:focus-visible, [tabindex]:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; }
+.skip { position: fixed; left: 16px; top: -100px; padding: 12px 18px; background: var(--paper); border: 2px solid var(--accent); z-index: 10; }
+.skip:focus { top: 12px; }
+.topbar { background: var(--paper); border-top: 5px solid var(--accent); border-bottom: 1px solid var(--line); }
+.topbar-inner { max-width: 1460px; margin: auto; padding: 22px 32px; display: flex; align-items: center; justify-content: space-between; gap: 18px; }
+.brand { text-decoration: none; color: var(--ink); display: flex; align-items: center; gap: 13px; }
+.brand-mark { width: 39px; height: 39px; background: var(--accent); color: #fff; display: grid; place-items: center; font-weight: 750; border-radius: 11px; }
+.brand strong { display: block; font-size: 16px; letter-spacing: .11em; }
+.brand small { display: block; color: var(--muted); font-size: 12px; margin-top: 4px; letter-spacing: .02em; }
+.top-meta { text-align: right; font-size: 12px; color: var(--muted); line-height: 1.8; }
+.layout { max-width: 1460px; margin: 30px auto 50px; padding: 0 32px; display: grid; grid-template-columns: 242px minmax(0, 1fr); gap: 30px; align-items: start; }
+.rail { position: sticky; top: 24px; max-height: calc(100vh - 48px); overflow-y: auto; padding: 4px 10px 12px 0; scrollbar-width: thin; }
+.rail-label { margin: 0 0 12px; font-size: 11px; font-weight: 750; letter-spacing: .13em; color: var(--muted); }
+.series { display: grid; gap: 4px; }
+.series-link { display: flex; gap: 12px; align-items: center; padding: 10px 12px; border: 1px solid transparent; border-radius: 9px; text-decoration: none; color: var(--muted); font-size: 13px; line-height: 1.35; }
+.series-link:hover { background: #e8eef0; text-decoration: none; }
+.series-link.active { background: var(--paper); border-color: var(--line); color: var(--accent); font-weight: 700; box-shadow: 0 3px 9px #20303a06; }
+.series-no { font-size: 11px; font-variant-numeric: tabular-nums; letter-spacing: .08em; opacity: .8; }
+.toc { margin-top: 26px; padding-top: 20px; border-top: 1px solid var(--line); display: grid; }
+.toc a { display: block; font-size: 12px; line-height: 1.55; color: var(--muted); padding: 6px 8px; text-decoration: none; border-left: 2px solid transparent; }
+.toc a:hover { border-left-color: var(--accent); color: var(--accent); background: #fff8; }
+.rail-note { margin: 20px 8px 0; color: var(--muted); font-size: 11px; line-height: 1.8; }
+.main-column { min-width: 0; }
+.doc-toolbar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 15px; padding: 0 3px; font-size: 12px; line-height: 1.5; color: var(--muted); }
+.breadcrumb { display: flex; flex-wrap: wrap; gap: 9px; align-items: center; }
+.breadcrumb a { text-decoration: none; }
+.toolbar-links { display: flex; gap: 17px; }
+.doc-paper { background: var(--paper); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; box-shadow: 0 12px 40px #152b3810; }
+.document-banner { border-bottom: 1px solid var(--line); padding: 21px 46px; display: flex; align-items: center; gap: 14px; background: linear-gradient(105deg, #f8fbfb, #fff); }
+.document-number { color: var(--accent); font-size: 30px; font-weight: 730; line-height: 1; letter-spacing: -.04em; font-variant-numeric: tabular-nums; }
+.document-kicker { font-size: 11px; letter-spacing: .13em; font-weight: 700; color: var(--accent); line-height: 1.7; }
+.document-subtitle { color: var(--muted); font-size: 12px; line-height: 1.7; margin-top: 2px; }
+.document-body { padding: 35px 46px 48px; font-size: 15px; line-height: 1.95; overflow-wrap: anywhere; }
+.document-body h1 { margin: 0 0 23px; font-size: clamp(26px, 2.5vw, 37px); line-height: 1.43; letter-spacing: -.025em; font-weight: 740; max-width: 950px; }
+.document-body h2 { font-size: 23px; line-height: 1.55; margin: 50px 0 18px; padding-top: 24px; border-top: 1px solid var(--line); color: var(--ink); letter-spacing: -.02em; }
+.document-body h3 { margin: 30px 0 12px; font-size: 18px; line-height: 1.65; color: var(--accent); }
+.document-body h4 { margin: 24px 0 10px; font-size: 16px; }
+.document-body h1, .document-body h2, .document-body h3 { scroll-margin-top: 24px; }
+.document-body p { margin: 0 0 16px; }
+.document-body blockquote { margin: 22px 0; padding: 17px 20px; border-left: 3px solid var(--accent); background: #f3f7f8; border-radius: 0 10px 10px 0; color: #3c5561; font-size: 14px; line-height: 1.85; }
+.document-body blockquote p { margin: 0 0 8px; }
+.document-body blockquote p:last-child { margin-bottom: 0; }
+.document-body h1 + blockquote { margin-bottom: 30px; }
+.document-body strong { font-weight: 680; color: #223e4b; }
+.document-body ul, .document-body ol { margin: 12px 0 22px; padding-left: 24px; }
+.document-body li { padding-left: 3px; margin: 7px 0; }
+.document-body li > p { margin-bottom: 7px; }
+.document-body code { padding: .1em .33em; border-radius: 4px; background: #edf2f4; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .86em; overflow-wrap: anywhere; }
+.document-body a code { background: none; padding: 0; }
+.document-body pre { padding: 20px; border: 1px solid var(--line); border-radius: 10px; overflow: auto; background: #f5f8f9; line-height: 1.7; white-space: pre-wrap; }
+.document-body pre code { padding: 0; background: none; }
+.document-body hr { border: 0; border-top: 1px solid var(--line); margin: 30px 0; }
+.table-scroll { overflow-x: auto; margin: 20px 0 25px; border: 1px solid var(--line); border-radius: 10px; background: #fff; scrollbar-width: thin; }
+table { width: 100%; min-width: 590px; border-collapse: collapse; text-align: left; font-size: 13px; line-height: 1.8; }
+thead { background: #ecf2f4; }
+th { padding: 13px 14px; font-weight: 680; color: #274350; vertical-align: top; border-bottom: 1px solid var(--line); }
+td { padding: 13px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+tr:last-child td { border-bottom: 0; }
+tbody tr:nth-child(even) { background: #f9fbfc; }
+tbody tr:hover { background: #f0f6f7; }
+td:first-child { font-weight: 530; }
+td p { margin: 0; }
+.doc-footer { margin-top: 22px; display: grid; grid-template-columns: 1fr auto 1fr; gap: 14px; padding: 20px 4px; border-top: 1px solid var(--line); }
+.doc-footer a { font-size: 13px; line-height: 1.65; text-decoration: none; }
+.doc-footer span { display: block; font-size: 11px; color: var(--muted); margin-bottom: 3px; }
+.doc-footer .next { text-align: right; }
+.doc-footer .back-top { text-align: center; }
+.page-note { text-align: center; color: var(--muted); font-size: 11px; line-height: 1.9; margin: 12px 0 20px; }
+@media (min-width: 1600px) { .document-body { font-size: 16px; } }
+@media (max-width: 1100px) { .layout { gap: 21px; grid-template-columns: 205px minmax(0, 1fr); padding: 0 22px; } .document-body { padding: 30px 30px 40px; } .document-banner { padding: 19px 30px; } }
+@media (max-width: 800px) { .topbar-inner { padding: 18px 20px; } .top-meta { font-size: 11px; } .layout { display: block; padding: 0 16px; margin-top: 19px; } .rail { position: static; max-height: none; overflow: visible; padding: 0; margin-bottom: 23px; } .series { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 5px; } .series-link { padding: 10px 8px; gap: 6px; font-size: 12px; border-color: var(--line); } .toc { margin-top: 15px; padding-top: 12px; grid-template-columns: repeat(2, minmax(0, 1fr)); max-height: 188px; overflow-y: auto; } .toc .rail-label { grid-column: 1/-1; margin-bottom: 5px; } .toc a { padding: 5px 7px; font-size: 11px; } .rail-note { display: none; } .doc-paper { border-radius: 12px; } .document-body { padding: 25px 24px 34px; } .document-banner { padding: 18px 24px; } .document-body h2 { font-size: 21px; margin-top: 38px; } }
+@media (max-width: 480px) { .top-meta { display: none; } .series { grid-template-columns: repeat(2, minmax(0, 1fr)); } .document-body { padding: 22px 18px 30px; font-size: 14px; } .document-banner { padding: 17px 18px; } .document-body h1 { font-size: 27px; } .document-body h2 { font-size: 20px; } .document-body h3 { font-size: 17px; } .doc-footer { gap: 10px; } .doc-footer a { font-size: 12px; } .doc-toolbar { font-size: 11px; } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+@media print { @page { size: A4; margin: 17mm 14mm; } body { background: #fff; font-size: 10pt; } .skip, .topbar, .rail, .doc-toolbar, .doc-footer, .page-note { display: none !important; } .layout { display: block; margin: 0; padding: 0; max-width: none; } .doc-paper { box-shadow: none; border: 0; border-radius: 0; overflow: visible; } .document-banner { padding: 0 0 11pt; margin-bottom: 14pt; background: #fff; } .document-body { padding: 0; font-size: 10pt; line-height: 1.65; } .document-body h1 { font-size: 23pt; } .document-body h2 { font-size: 16pt; margin-top: 24pt; padding-top: 13pt; break-after: avoid; } .document-body h3 { font-size: 12pt; break-after: avoid; } .document-body p, .document-body li { orphans: 3; widows: 3; } .table-scroll { overflow: visible; border-radius: 0; break-inside: auto; margin: 12pt 0; } table { min-width: 0; table-layout: fixed; font-size: 8.3pt; line-height: 1.55; } th, td { padding: 7pt 6pt; overflow-wrap: anywhere; } thead { display: table-header-group; } tr { break-inside: avoid; } .document-body blockquote { border: 1px solid #c4d0d5; border-left: 3px solid var(--accent); break-inside: avoid; font-size: 9pt; padding: 9pt 12pt; } a { color: inherit; text-decoration: underline; } }
+
+
+.technical-entry { margin:0 0 26px; padding:17px 20px; background:#edf6f3; border:1px solid #bbd9d0; border-radius:10px; font-size:13px; line-height:1.8; }
+.technical-entry strong { display:block; margin-bottom:9px; color:#1e6459; }
+.technical-entry div { display:flex; flex-wrap:wrap; gap:7px 16px; }
+.technical-entry p { margin:9px 0 0; color:#526c73; font-size:12px; }
+.technical-diagram { margin:25px -18px 30px; border:1px solid #d4e0e5; border-radius:11px; overflow:hidden; background:#fff; }
+.technical-diagram figcaption { padding:17px 18px 6px; font-weight:680; font-size:16px; color:#244453; }
+.technical-diagram .technical-legend { padding:0 18px 12px; margin:0; color:#58717e; font-size:11px; line-height:1.8; }
+.technical-controls { display:flex; gap:9px 15px; align-items:center; flex-wrap:wrap; border-block:1px solid #dbe5e9; padding:10px 12px; background:#f4f8fa; }
+.technical-controls[hidden],.technical-detail[hidden] { display:none; }
+.technical-controls label { display:flex; align-items:center; gap:7px; font-size:12px; flex:1; min-width:190px; }
+.technical-controls label select { min-width:0; flex:1; max-width:340px; }
+.technical-controls > div { display:flex; align-items:center; gap:5px; }
+.technical-controls button,.technical-controls select { font-family:inherit; font-size:12px; line-height:1.5; color:#254552; background:#fff; border:1px solid #bfd0d8; border-radius:6px; min-height:36px; padding:6px 9px; }
+.technical-controls button { cursor:pointer; }
+.technical-controls button:disabled { opacity:0.4; cursor:default; }
+.technical-controls output { min-width:40px; text-align:center; color:#5a707d; font-size:11px; font-variant-numeric:tabular-nums; }
+.technical-controls :focus-visible { outline:3px solid #34958a; outline-offset:3px; }
+.technical-viewport { overflow:auto; max-height:720px; scrollbar-width:thin; overscroll-behavior:contain; background:#fbfcfd; }
+.technical-viewport canvas { display:block; max-width:none; cursor:pointer; touch-action:pan-x pan-y; }
+.technical-diagram .technical-hint { margin:0; padding:9px 16px; border-top:1px solid #dbe5e9; color:#657b86; font-size:11px; }
+.technical-detail { border-top:1px solid #dbe5e9; background:#edf5f6; padding:13px 17px; font-size:13px; }
+.technical-detail strong { display:block; margin-bottom:6px; }
+.technical-detail p { margin:0; }
+.technical-source { border-top:1px solid #dbe5e9; padding:0 17px 10px; font-size:12px; }
+.technical-source summary { padding:11px 0; color:var(--accent); cursor:pointer; font-weight:600; }
+.technical-source pre { font-size:11px; margin:10px 0; }
+.technical-source ol { margin-top:4px; }
+@media (max-width:640px) {
+  .technical-diagram { margin-inline:-9px; }
+  .technical-controls label { flex-basis:100%; }
+  .technical-controls > div { flex-wrap:wrap; }
+  .technical-controls button,.technical-controls select { min-height:44px; }
+  .technical-viewport { max-height:570px; }
+}
+@media print {
+  .technical-entry,.technical-controls,.technical-hint,.technical-detail { display:none !important; }
+  .technical-diagram { margin:15pt 0; break-inside:avoid; }
+  .technical-viewport { max-height:none; overflow:visible; }
+  .technical-viewport canvas { max-width:100%; max-height:232mm; width:auto !important; height:auto !important; margin:auto; }
+  .technical-source { font-size:8pt; }
+}
+</style>
+<noscript><style>.technical-viewport,.technical-hint{display:none}</style></noscript>
+</head>
+<body>
+  <a class="skip" href="#document-top">跳到正文</a>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">衡</span><span><strong>ALIOTH · 玉衡</strong><small>有限自主探索 / 七项专项设计</small></span></a>
+      <div class="top-meta">TECHNICAL DESIGN · 2026.09.04<br>设计评审稿 · 不代表已实现或验收</div>
+    </div>
+  </header>
+  <div class="layout">
+    <aside class="rail" aria-label="文档导航">
+      <p class="rail-label">全系列 / 07 TOPICS</p>
+      <nav class="series" aria-label="七项专项导航"><a class="series-link active" href="index.html" aria-current="page"><span class="series-no">00</span><span>总览与闭环</span></a>
+<a class="series-link" href="01-controlled-exploration.html"><span class="series-no">01</span><span>受控探索</span></a>
+<a class="series-link" href="02-page-state-graph.html"><span class="series-no">02</span><span>页面状态图</span></a>
+<a class="series-link" href="03-targeted-recapture.html"><span class="series-no">03</span><span>精准补采</span></a>
+<a class="series-link" href="04-page-recognition.html"><span class="series-no">04</span><span>页面识别</span></a>
+<a class="series-link" href="05-capture-readiness.html"><span class="series-no">05</span><span>截图时机</span></a>
+<a class="series-link" href="06-interaction-precision.html"><span class="series-no">06</span><span>精准交互</span></a>
+<a class="series-link" href="07-trusted-evidence.html"><span class="series-no">07</span><span>可信证据</span></a></nav>
+      <nav class="toc" aria-label="本篇章节目录"><p class="rail-label">本篇目录 / 10 SECTIONS</p><a href="#section-1">1. 七篇文档与阅读入口</a>
+<a href="#section-2">2. 文档边界与已确认决策</a>
+<a href="#section-3">3. 七项分别解决什么</a>
+<a href="#section-4">4. 整体流程怎样串成闭环</a>
+<a href="#section-5">5. 贯穿示例与失败出口</a>
+<a href="#section-6">6. 团队反馈覆盖索引</a>
+<a href="#section-7">7. 实施依赖与代码改动口径</a>
+<a href="#section-8">8. 评审与验收使用方式</a>
+<a href="#section-9">9. 与既有完整方案的关系</a>
+<a href="#section-10">10. 技术深化导航：每篇新增什么</a></nav>
+      <p class="rail-note">HTML 与 Markdown 正文一致。<br>离线 Canvas 技术图。无外部运行依赖。<br>浏览器查找可检索全文，打印可导出 PDF。</p>
+    </aside>
+    <main class="main-column">
+      <div class="doc-toolbar">
+        <div class="breadcrumb"><a href="index.html">设计文档集</a><span aria-hidden="true">/</span><span>总览与闭环</span></div>
+        <div class="toolbar-links"><a href="README.md">Markdown 原稿</a><a href="../2026-09-02-bounded-exploration-optimization-solution.html">完整方案 v1.1</a></div>
+      </div>
+      <div class="doc-paper">
+        <div class="document-banner"><span class="document-number">00</span><div><div class="document-kicker">SERIES OVERVIEW / 方案与设计</div><div class="document-subtitle">七项设计 · 共同边界 · 实施依赖</div></div></div>
+        <article id="document-content" class="document-body" data-markdown-sha256="783fc79e7aa4ce43202326164df70b832c471f4a7c8c60ecf280bb1c1e1cc93a">
+
+<h1 id="document-top">Alioth 七项探索优化：专项设计文档集</h1>
+<blockquote>
+<p>更新：2026-09-04 · 版本：文档集 v1.2（专项二增补数据关系） · 状态：设计评审稿，尚未实施。</p>
+<p>本文档集将已讨论的七项优化拆为七篇可独立评审的设计，每篇提供内容一致的 HTML 与 Markdown。</p>
+<p>深度到技术组件、代码接入点、调用时序、关键算法、并发幂等、故障推演与验收；每篇保留 3 张技术图，专项二另增 1 张概念数据结构关系图，共 22 张。仍不展开数据库表、字段类型或接口载荷。</p>
+</blockquote>
+<h2 id="section-1">1. 七篇文档与阅读入口</h2>
+<div class="table-scroll" role="region" aria-label="设计对照表，可横向滚动" tabindex="0"><table>
+<thead>
+<tr>
+<th>编号</th>
+<th>专项</th>
+<th>主要回答的问题</th>
+<th>HTML</th>
+<th>Markdown</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>01</td>
+<td>受控 CLI、ADB 与 Skills 的有限自主探索</td>
+<td>怎样给 AI 足够灵活性，同时保留权限、预算、会话和证据控制？</td>
+<td><a href="01-controlled-exploration.html">HTML</a></td>
+<td><a href="01-controlled-exploration.md">Markdown</a></td>
+</tr>
+<tr>
+<td>02</td>
+<td>页面状态图与树形投影</td>
+<td>怎样记录页面、状态、路径和探索进度，避免重复与覆盖失真？</td>
+<td><a href="02-page-state-graph.html">HTML</a></td>
+<td><a href="02-page-state-graph.md">Markdown</a></td>
+</tr>
+<tr>
+<td>03</td>
+<td>基于页面图的精准补采</td>
+<td>缺证时怎样快速找回目标，并证明补的是规则允许的状态？</td>
+<td><a href="03-targeted-recapture.html">HTML</a></td>
+<td><a href="03-targeted-recapture.md">Markdown</a></td>
+</tr>
+<tr>
+<td>04</td>
+<td>产品能力、页面类型与规则适用识别</td>
+<td>怎样减少类型漂移、模板误套和规则错配，同时控制重复判断？</td>
+<td><a href="04-page-recognition.html">HTML</a></td>
+<td><a href="04-page-recognition.md">Markdown</a></td>
+</tr>
+<tr>
+<td>05</td>
+<td>截图时机与页面就绪判定</td>
+<td>什么时候可以截图、可以用于什么证据、等待失败如何结算？</td>
+<td><a href="05-capture-readiness.html">HTML</a></td>
+<td><a href="05-capture-readiness.md">Markdown</a></td>
+</tr>
+<tr>
+<td>06</td>
+<td>交互精准度、弹窗处理与外跳恢复</td>
+<td>怎样先滚后点、避免误触、验证关闭，并从外跳中有界恢复？</td>
+<td><a href="06-interaction-precision.html">HTML</a></td>
+<td><a href="06-interaction-precision.md">Markdown</a></td>
+</tr>
+<tr>
+<td>07</td>
+<td>可见层一致、可追溯的可信证据留存</td>
+<td>怎样保证页面和数据对应，长图/DOM 可追溯，规则与报告不误用证据？</td>
+<td><a href="07-trusted-evidence.html">HTML</a></td>
+<td><a href="07-trusted-evidence.md">Markdown</a></td>
+</tr>
+</tbody></table></div>
+<p>本目录的 <a href="index.html">HTML 总览</a> 可作为评审入口。HTML 内嵌样式、图布局与 Canvas 阅读脚本，打开时无需构建、CDN、外部字体或网络资源；支持缩放、定位节点/消息、查看交接关系和浏览器打印。脚本不可用时仍有完整文字关系与图源。
+Markdown 是内容维护源，包含 Mermaid 组件图、时序图和决策图；HTML 是同内容阅读版，不能只更新其中一份。生成与维护说明见 <a href="_tools/README.md">_tools/README.md</a>。
+新增入口：<a href="02-page-state-graph.html#section-5-10">页面状态图的数据结构与关系 · 第 5.10 节</a>，解释页面、状态、转场、观察、弹窗实例、候选和投影的数量及引用约束。
+同步配套：<a href="../2026-09-03-exploration-flow-comparison.html">现有流程与优化方案：竖向 Canvas 对比</a>：按阶段对齐 H5 / App，说明节点差异、闭环与代码依据。</p>
+<h2 id="section-2">2. 文档边界与已确认决策</h2>
+<p>每篇保留原有第 1–14 章：决策与非目标、现状问题与收益、当前基础与改动、职责、核心机制、标准流程、异常闭环、平台差异、跨篇协作、工作台、安全、分期回滚、验收和反馈；新增第 15–19 章技术深化，依据顺延为第 20 章。
+本次是文档与离线阅读工具完善，不是业务代码实施、规则启用、设备测试或上线证明。图中组件表示职责切面，可以落在现有模块内，不意味着拆出同等数量的新服务。</p>
+<p>六项产品决定保持不变：</p>
+<ol>
+<li>探索是有限度自由发现：优先必检目标和证据缺口，再按预算发现新入口。</li>
+<li>局部 Tab、筛选和展开默认是同一页面的状态版本；实质改变业务职责、路由或返回语义时再判断是否新页面。</li>
+<li>弹窗也是质检目标，但通常不作为业务页面节点；独立支付路由仍是页面，内联二维码仍可只是区域。</li>
+<li>外部广告落地默认只留外跳证据，不计业务页面覆盖；源业务页和可信回源按自身事实处理。</li>
+<li>补采按规则声明原状态、等价状态、当前新观察或人工；登录、支付等高风险场景从严，不能运行中放宽。</li>
+<li>正式 Agent 只有有限 Shell 能力；权限由服务端与执行隔离强制保障，不靠 Skill 提示词自律。</li>
+</ol>
+<p>共同术语只用于表达职责：Frontier 是候选动作队列；页面图是事实投影；树是展示或恢复视图；Capture 是一次观察；Manifest 判断证据质量；InputSet 冻结一次判断的实际输入；Gate 判断本次运行的完成条件。
+这些术语不等于本文件定义了新数据库表或具体实现对象。</p>
+<h2 id="section-3">3. 七项分别解决什么</h2>
+<div class="table-scroll" role="region" aria-label="设计对照表，可横向滚动" tabindex="0"><table>
+<thead>
+<tr>
+<th>专项</th>
+<th>最直接解决的问题</th>
+<th>对整体链路的提升</th>
+<th>不能独自保证</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>01 受控探索</td>
+<td>自定义 Tool 僵硬、难组合、重复读取和无界漫游</td>
+<td>用稳定受控能力承接灵活策略</td>
+<td>命令成功不保证页面到达</td>
+</tr>
+<tr>
+<td>02 页面状态图</td>
+<td>已有 Frontier 路径/恢复事实分散、统一身份和进度投影不足</td>
+<td>可解释去重、导航、覆盖与恢复依据</td>
+<td>图上存在不保证现在能恢复</td>
+</tr>
+<tr>
+<td>03 精准补采</td>
+<td>缺证后盲找、错状态补证、重跑覆盖旧结论</td>
+<td>缺口定位、验证式恢复和追加判断</td>
+<td>同页或同类型不保证等价</td>
+</tr>
+<tr>
+<td>04 精准识别</td>
+<td>页型漂移、导航型产品误套模板、规则错配</td>
+<td>更准确的目标理解与可审计规则范围</td>
+<td>高置信度不证明当前层可见</td>
+</tr>
+<tr>
+<td>05 就绪判定</td>
+<td>截图过早、错帧、固定等待和网络误判</td>
+<td>提高首份可用证据比例，保留真实加载失败</td>
+<td>就绪不等于规则通过</td>
+</tr>
+<tr>
+<td>06 精准交互</td>
+<td>误点广告、滚后坐标过期、弹窗循环与外跳中断</td>
+<td>可验证动作、安全关闭及有界回源</td>
+<td>控件消失不一定是正确关闭</td>
+</tr>
+<tr>
+<td>07 可信证据</td>
+<td>错层、错数据、长图/DOM 失真、结论不可追溯</td>
+<td>正式输入和最终报告可信、复核成本可控</td>
+<td>文件质量通过不等于产品质检通过</td>
+</tr>
+</tbody></table></div>
+<p>收益目标在同一任务目标、规则、环境、账号状态和预算下验证；既比较准确性与覆盖，也比较耗时、动作数、Token 和人工成本。
+本文不沿用未经实测的点击率、提速比例或节省百分比作为承诺。</p>
+<h2 id="section-4">4. 整体流程怎样串成闭环</h2>
+<blockquote>
+<p>冻结任务 → 受管运行面 → 入口与可见层观察 → 弹窗前态/安全处理 → 产品与页型识别 → 可信图与规则范围 → 证据和候选分流 → 有界动作 → 就绪与后置验证 → 规则判断 → 图路径补采 → 同运行收口与报告。</p>
+</blockquote>
+<div class="table-scroll" role="region" aria-label="设计对照表，可横向滚动" tabindex="0"><table>
+<thead>
+<tr>
+<th>步骤</th>
+<th>主责</th>
+<th>进入与继续条件</th>
+<th>失败如何结束或恢复</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1. 冻结目标和范围</td>
+<td>现有任务控制面 + 专项 01、04</td>
+<td>规则、必检目标、账号、预算、设备/业务范围明确</td>
+<td>配置冲突或缺授权先明确阻断，不启动危险动作</td>
+</tr>
+<tr>
+<td>2. 获取运行面与能力</td>
+<td>专项 01</td>
+<td>租约有效，执行与观察能力经过探测</td>
+<td>不可用明确降级，不将不可观测当零数据</td>
+</tr>
+<tr>
+<td>3. 保存入口真实观察</td>
+<td>专项 05、07</td>
+<td>截图和可得结构可追溯，知道当前显示哪一层</td>
+<td>业务底页未知可以保留，不伪造首页</td>
+</tr>
+<tr>
+<td>4. 处理阻断层</td>
+<td>专项 06、07</td>
+<td>先冻结适用采集计划并保存前态，再执行允许的关闭</td>
+<td>倒计时、无按钮、无效果、误跳、危险确认分别结算</td>
+</tr>
+<tr>
+<td>5. 识别产品和当前页型</td>
+<td>专项 04</td>
+<td>基于可见内容与受信声明，允许未知和冲突</td>
+<td>缺证不自动改为不适用，不缩小冻结必检分母</td>
+</tr>
+<tr>
+<td>6. 更新可信图与规则范围</td>
+<td>专项 02、04</td>
+<td>页面身份、状态和到达证明成立；规则条件未被绕过</td>
+<td>候选或失败仅留诊断，不新增业务覆盖</td>
+</tr>
+<tr>
+<td>7. 分流证据与候选</td>
+<td>专项 01、07</td>
+<td>合法证据可封存送 Judge；菜单/链接/视觉形成候选</td>
+<td>证据不足留缺口，候选不计已到达</td>
+</tr>
+<tr>
+<td>8. 有界调度和动作</td>
+<td>专项 01、06</td>
+<td>必检、恢复、自由发现预算合理；每步重新校验目标</td>
+<td>陈旧、越权、模糊或副作用未知时先停动作</td>
+</tr>
+<tr>
+<td>9. 后置与外跳观察</td>
+<td>专项 05、06、07</td>
+<td>验证动作效果、当前层与就绪；外跳保存来源/落地/回源</td>
+<td>回源循环共享预算，外部不扩展业务覆盖</td>
+</tr>
+<tr>
+<td>10. 规则判断与复用</td>
+<td>专项 04、07 + 现有 Judge</td>
+<td>只消费封存且适用的材料；复用有具体合同和来源</td>
+<td>fail、缺证、人工、技术失败分别保留</td>
+</tr>
+<tr>
+<td>11. 缺口恢复与补采</td>
+<td>专项 03，调用 01、02、05–07</td>
+<td>双门禁、逐边验证、规则等价与时效都满足</td>
+<td>原状态无法证明就不足/人工，不能改采新状态填旧洞</td>
+</tr>
+<tr>
+<td>12. 收口、Gate 与释放</td>
+<td>现有控制面 + 专项 07</td>
+<td>停发新动作，排空或终结工作，冻结同 Run/Epoch 输入</td>
+<td>Gate 故障单独报告，失败和取消也执行受控清理</td>
+</tr>
+</tbody></table></div>
+<p>Rule Judge 可以与探索并行消费已经封存的静态证据，但始终不直接操作设备。
+需要动作结果的规则必须等待后态或合法时间序列；关闭弹窗不必等待所有静态规则判断完毕。
+图、规则工作与前端投影可以异步更新，但均从同一批不可变事实追溯，不能各自成为新权威。</p>
+<p>UI 动作不具备数据库式原子回滚。动作后崩溃或回执丢失时先观察真实运行面；重试写入不代表可以重试点击。
+最终报告固定本次运行与执行阶段，晚到结果不能改写已封存输入，也不能借用其他 Run 的成功结论。</p>
+<p>动作观察的新鲜度版本与报告所属的运行阶段是不同概念：逐边恢复会产生新观察，并不要求所有帧属于同一瞬间。各次观察必须属于允许的运行链，后续结果只有通过阶段接纳检查才能消费，已封存报告仍不可改写。</p>
+<h2 id="section-5">5. 贯穿示例与失败出口</h2>
+<h3 id="section-5-1">5.1 导航首页被启动广告挡住</h3>
+<p>先保存广告前态，不创建假首页。安全关闭后观察到导航与广告列表，专项四识别当前内容和暂定产品能力，专项二记录真实入口。
+菜单进入候选队列，静态广告素材规则按合同复用，广告位、关闭和有效交互仍保留各自范围。
+若广告关不掉，证据充分且规则要求可关闭可判失败；不能用删 DOM 后的底页宣告探索成功。</p>
+<h3 id="section-5-2">5.2 虚拟列表先滚动再点击</h3>
+<p>专项一选择有价值候选，专项六定位容器、有界滚动，专项五观察新帧，随后重新绑定目标再点击。
+只有实际详情在当前层可见且后置成立，专项二才建立成功转场；旧坐标和命令退出码不计到达。
+详情较长时专项七保存原帧序列。Judge 缺下半页内容，专项三先判断能否就地补帧，再考虑图路径恢复。</p>
+<h3 id="section-5-3">5.3 广告在原标签执行 JS 外跳</h3>
+<p>没有可靠 href 时不能静态猜落地。允许的真实动作产生来源、转场和落地证据；天然新标签优先保留源页，原标签外跳则有限观察并回源。
+回源反复弹出同一启动层，共享循环预算并明确结束；不通过重启无限重试。
+另开已知 URL 只能补充获准的内容观察，不能替代原按钮有效性证明。</p>
+<h3 id="section-5-4">5.4 原登录或支付状态已无法恢复</h3>
+<p>相同标题、URL 或页面类型不证明用户、价格、一次性上下文一致。
+规则要求精确原状态而无法证明时，原缺口保持不足或转人工；只有规则原先独立允许新的当前事实评估，才能另建新请求和新结论。
+新结论不能覆盖旧失败，也不能让旧精确补采缺口消失。</p>
+<h2 id="section-6">6. 团队反馈覆盖索引</h2>
+<div class="table-scroll" role="region" aria-label="设计对照表，可横向滚动" tabindex="0"><table>
+<thead>
+<tr>
+<th>反馈</th>
+<th>裁决要点</th>
+<th>主责文档</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>lichuan 1：产品页型前置、导航与弹窗分开</td>
+<td>先入口观察再评估；三类语义独立，不先猜首页</td>
+<td>04、02</td>
+</tr>
+<tr>
+<td>lichuan 2：弹窗分类补全，核心是关不掉</td>
+<td>统一观察，多类语义；保存前态、安全关闭、后态和失败判断</td>
+<td>06、07、04</td>
+</tr>
+<tr>
+<td>lichuan 3：网络 2～3 秒无新请求</td>
+<td>辅助信号，考虑未完成/失败请求与能力缺口</td>
+<td>05、01</td>
+</tr>
+<tr>
+<td>lichuan 4：外跳单开标签/进程</td>
+<td>条件旁路，不能普遍克隆 JS、POST 或原生进程</td>
+<td>06、01、07</td>
+</tr>
+<tr>
+<td>lichuan 5：证据痛点在层级、删 DOM、Flutter</td>
+<td>层级门禁优先；不以删改页面制造正式通过；按 Semantics 能力降级</td>
+<td>07、05、04</td>
+</tr>
+<tr>
+<td>lichuan 6：广告首页一次、有效性每页</td>
+<td>按具体规则粒度复用，不全类降频，不丢位置与交互覆盖</td>
+<td>04、07</td>
+</tr>
+<tr>
+<td>lichuan 7：纯爬虫局限</td>
+<td>混合候选发现，JS 路由实际交互验证</td>
+<td>01、02</td>
+</tr>
+<tr>
+<td>qingyunke 1：长图、DOM 格式化和压缩</td>
+<td>原图/序列/派生分开，存储与 Token 优化分开</td>
+<td>07、05</td>
+</tr>
+<tr>
+<td>qingyunke 2：连贯操作</td>
+<td>有界滚动、观察、重绑和点击，禁止盲串</td>
+<td>06、01</td>
+</tr>
+<tr>
+<td>qingyunke 3：各种广告/公告/支付/提示统一归类</td>
+<td>统一处理协议，不全部叫广告或浮层</td>
+<td>04、06、02</td>
+</tr>
+<tr>
+<td>qingyunke 4：首页收导航定义一级点</td>
+<td>候选优先发现，位置不等于页型或已到达页面</td>
+<td>01、02、04</td>
+</tr>
+<tr>
+<td>qingyunke 5：坐标与分辨率</td>
+<td>适用坐标变换全部可追溯，无物理点不编造</td>
+<td>06、07</td>
+</tr>
+<tr>
+<td>qingyunke 6：UA/分辨率与人机校验</td>
+<td>冻结可复现环境，挑战明确阻断，不承诺绕过</td>
+<td>01、06</td>
+</tr>
+<tr>
+<td>qingyunke 7：视觉/DOM 优先级与直接 URL</td>
+<td>按平台实际能力；直接 URL 不证明真实点击链</td>
+<td>04、01、06</td>
+</tr>
+</tbody></table></div>
+<h2 id="section-7">7. 实施依赖与代码改动口径</h2>
+<p>七篇独立评审，但不是七个互不相关的开发包。共同依赖是动作协调、Capture、规则输入和最终 Gate。
+各篇标注的高/中影响描述的是涉及链路与风险，不是代码行重写比例；同一模块在多篇出现只能计算一次。</p>
+<p>建议顺序：</p>
+<ol>
+<li>建立当前任务/规则/证据基线，冻结风险、识别、状态等价和验收口径。</li>
+<li>优先加强专项 05、06、07 的动作、层级与证据正确性，专项 02 同时只读影子投影。</li>
+<li>串联专项 04 的入口识别、能力解释和规则范围，保证分母与类型身份分离。</li>
+<li>专项 01 先做只读影子适配，再以单一动作所有者低风险灰度；不得同时双写设备动作。</li>
+<li>专项 03 在图、就绪和证据门禁达标后启用精准恢复；所有请求有界且可终结。</li>
+<li>分批完善工作台、跨端真实验收与旧专项分支收敛，保留回退能力和不可变历史。</li>
+</ol>
+<p>复用范围：任务、租户与权限、租约、现有 Driver、Frontier、Catalog、Capture、Manifest、InputSet、规则执行和工作台任务入口。
+重点改造范围：探索调度与执行适配、图和恢复、识别/规则计划、就绪/目标绑定、证据质量与工作台诊断。
+不重建范围：平台整体架构、账号租户体系、前端主菜单路由、第二套规则引擎或独立爬虫控制面。</p>
+<h2 id="section-8">8. 评审与验收使用方式</h2>
+<p>产品评审重点看每篇第 1、2、6、7、14 节：是否真正解决问题，失败结果是否可接受。
+研发评审先看第 15–19 节的三类图、算法、执行/提交边界与故障矩阵，再回查第 3–5、8–9、11–12 节的现有基础、依赖和回滚。
+测试与运营重点看第 10、13、18–19 节：能否从工作台复核、如何注入故障、重试有没有副作用、终态是否诚实。</p>
+<p>HTML 静态结构、导航和内容一致性检查只验证文档产物，不验证产品能力。
+后续实施仍需按真实 H5/App、Flutter 有/无语义、网络不可见、外跳、长页、弹窗循环、取消和崩溃矩阵验证。
+实现完成、测试通过、真实设备验收、Completion Gate 和上线状态分别报告，不能互相替代。</p>
+<h2 id="section-9">9. 与既有完整方案的关系</h2>
+<p>本系列沿用并细化 2026-09-03 整合的六项决策和 14 条团队反馈，不撤销原完整方案。
+若阅读目的为逐项技术评审，优先使用这七篇；需要跨专项历史推导或更低层的持久化讨论时，再查看原总设计。本轮仍未展开表和字段。</p>
+<ul>
+<li><a href="../2026-09-02-bounded-exploration-optimization-solution.html">既有完整方案 v1.1：HTML</a></li>
+<li><a href="../2026-09-02-bounded-exploration-page-state-graph-design.md">既有实现级详细设计 v1.1：Markdown</a></li>
+<li><a href="../README.md">设计文档总索引</a></li>
+</ul>
+<p>当前代码依据来自 2026-09-03 对 dev_1.5 工作区相关链路的只读检查，以及 2026-09-04 的技术接入复核；基准提交仍为 c9dfb7c73。新技术流程不代表方案能力已落入该提交。
+每篇 HTML 与 Markdown 保持相同正文和验收边界，后续更新应同步两种格式。</p>
+<h2 id="section-10">10. 技术深化导航：每篇新增什么</h2>
+<p>每篇第 15 章说明组件及代码接线，第 16 章画调用时序，第 17 章画判断/异常流并给出算法，第 18 章约束并发与恢复，第 19 章给出故障推演和技术验收。所有示意伪代码只说明行为，不冒充已存在的接口。</p>
+<div class="table-scroll" role="region" aria-label="设计对照表，可横向滚动" tabindex="0"><table>
+<thead>
+<tr>
+<th>专项与技术入口</th>
+<th>组件 / 时序关注点</th>
+<th>核心技术决策与故障边界</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="01-controlled-exploration.html#section-15">01 受控探索 · 第 15 章</a></td>
+<td>Planner → Broker → 唯一 Runtime → Provider → 新观察</td>
+<td>命令解析、冻结策略双检、引用生命周期、预算预留与结算；未知动作不可换 Driver 重放</td>
+</tr>
+<tr>
+<td><a href="02-page-state-graph.html#section-15">02 页面状态图 · 第 15 章</a> · <a href="02-page-state-graph.html#section-5-10">数据关系 · 第 5.10 节</a></td>
+<td>页面—状态—观察分层与关系基数；已接纳观察 → 图投影 → 路径视图</td>
+<td>身份冲突隔离、可信边条件、入口/Overlay/外跳分流、乱序重建；图不接管覆盖权威</td>
+</tr>
+<tr>
+<td><a href="03-targeted-recapture.html#section-15">03 精准补采 · 第 15 章</a></td>
+<td>规则缺口 → 门禁/选路 → 逐边观察执行 → 新证据与新判断</td>
+<td>声明类型不能隐式降级、风险优先选路、独立实际状态验证、请求合并与在途排空</td>
+</tr>
+<tr>
+<td><a href="04-page-recognition.html#section-15">04 页面识别 · 第 15 章</a></td>
+<td>真实入口/可见层 → 产品能力 → 统一指南 → 规则范围</td>
+<td>正反证和相邻候选、冲突消歧、指南/评估缓存分层、冻结版本与规则复用</td>
+</tr>
+<tr>
+<td><a href="05-capture-readiness.html#section-15">05 截图时机 · 第 15 章</a></td>
+<td>既有 settle → 目标信号/连续样本 → 正式采集 → 身份后检</td>
+<td>关键请求、动态区域、预览/正式帧、采集窗口、deadline 与合法时间序列；不凭网络静默判完成</td>
+</tr>
+<tr>
+<td><a href="06-interaction-precision.html#section-15">06 精准交互 · 第 15 章</a></td>
+<td>语义目标 → 几何/命中 → 单步动作 → 新后态 → 意图后置</td>
+<td>坐标空间换算、滚动重绑、嵌套层、条件外跳隔离、有界回源；写入幂等不等于点击幂等</td>
+</tr>
+<tr>
+<td><a href="07-trusted-evidence.html#section-15">07 可信证据 · 第 15 章</a></td>
+<td>Capture → 对象/PG → Manifest → InputSet → Judge/Gate</td>
+<td>多 Writer 一致校验、按角色接纳、层级与时间对齐、长图派生、Outbox 恢复、封存竞争</td>
+</tr>
+</tbody></table></div>
+<p>建议一轮技术评审只回答四个问题：谁有权推进；交接凭什么成立；失败时什么可以重试；最终哪个事实证明完成。然后用各篇第 19 章逐项构造验证案例。</p>
+
+        </article>
+      </div>
+      <nav class="doc-footer" aria-label="前后篇导航"><a href="../README.md"><span>返回</span>设计文档总索引</a>
+<a class="back-top" href="#document-top"><span>本篇</span>返回顶部 ↑</a>
+<a class="next" href="01-controlled-exploration.html"><span>下一篇</span>受控探索</a></nav>
+      <p class="page-note">正文按 Markdown 原稿生成 · 保留既有控制面 · 收益需基线与真实 H5 / App 验证<br>本篇不含表设计、字段定义或具体数据结构。</p>
+    </main>
+  </div>
+
+</body>
+</html>

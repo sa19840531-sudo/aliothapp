@@ -1,0 +1,268 @@
+{
+  "verified_at": "2026-09-10 22:10:37 UTC",
+  "stage": "code review handoff; real target acceptance remains incomplete",
+  "branch": "codex/web-v2-qingyunke-development-plan",
+  "head": "968566da87d0fecbb13c6abebae13d684e656341",
+  "source_scope_count": 253,
+  "source_drift_count": 0,
+  "net_review_count": 11,
+  "final_review_findings": {
+    "addressed": [
+      "I1",
+      "I2",
+      "I3"
+    ],
+    "open_critical": 0,
+    "open_important": 0,
+    "new_minor": 0,
+    "previous_deferred_minor": 4
+  },
+  "related_test_result": {
+    "source": "final-fix1-report.md",
+    "command_scope": "8 direct test entry points; not whole repository or six live sites",
+    "passed": 223,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "warnings": 2,
+    "seconds": 45.59,
+    "exit_code": 0
+  },
+  "git_diff_check": {
+    "exit_code": 0,
+    "lf_crlf_warning_lines": 114,
+    "whitespace_errors": 0
+  },
+  "rulings": {
+    "count": 36,
+    "all_bodies_and_anchors_match": true,
+    "details": [
+      {
+        "n": 1,
+        "line": 89,
+        "matched": true
+      },
+      {
+        "n": 2,
+        "line": 90,
+        "matched": true
+      },
+      {
+        "n": 3,
+        "line": 91,
+        "matched": true
+      },
+      {
+        "n": 4,
+        "line": 146,
+        "matched": true
+      },
+      {
+        "n": 5,
+        "line": 147,
+        "matched": true
+      },
+      {
+        "n": 6,
+        "line": 148,
+        "matched": true
+      },
+      {
+        "n": 7,
+        "line": 149,
+        "matched": true
+      },
+      {
+        "n": 8,
+        "line": 181,
+        "matched": true
+      },
+      {
+        "n": 9,
+        "line": 194,
+        "matched": true
+      },
+      {
+        "n": 10,
+        "line": 203,
+        "matched": true
+      },
+      {
+        "n": 11,
+        "line": 218,
+        "matched": true
+      },
+      {
+        "n": 12,
+        "line": 219,
+        "matched": true
+      },
+      {
+        "n": 13,
+        "line": 55,
+        "matched": true
+      },
+      {
+        "n": 14,
+        "line": 56,
+        "matched": true
+      },
+      {
+        "n": 15,
+        "line": 57,
+        "matched": true
+      },
+      {
+        "n": 16,
+        "line": 58,
+        "matched": true
+      },
+      {
+        "n": 17,
+        "line": 75,
+        "matched": true
+      },
+      {
+        "n": 18,
+        "line": 76,
+        "matched": true
+      },
+      {
+        "n": 19,
+        "line": 78,
+        "matched": true
+      },
+      {
+        "n": 20,
+        "line": 79,
+        "matched": true
+      },
+      {
+        "n": 21,
+        "line": 81,
+        "matched": true
+      },
+      {
+        "n": 22,
+        "line": 29,
+        "matched": true
+      },
+      {
+        "n": 23,
+        "line": 31,
+        "matched": true
+      },
+      {
+        "n": 24,
+        "line": 34,
+        "matched": true
+      },
+      {
+        "n": 25,
+        "line": 35,
+        "matched": true
+      },
+      {
+        "n": 26,
+        "line": 39,
+        "matched": true
+      },
+      {
+        "n": 27,
+        "line": 12,
+        "matched": true
+      },
+      {
+        "n": 28,
+        "line": 25,
+        "matched": true
+      },
+      {
+        "n": 29,
+        "line": 241,
+        "matched": true
+      },
+      {
+        "n": 30,
+        "line": 243,
+        "matched": true
+      },
+      {
+        "n": 31,
+        "line": 245,
+        "matched": true
+      },
+      {
+        "n": 32,
+        "line": 248,
+        "matched": true
+      },
+      {
+        "n": 33,
+        "line": 251,
+        "matched": true
+      },
+      {
+        "n": 34,
+        "line": 255,
+        "matched": true
+      },
+      {
+        "n": 35,
+        "line": 271,
+        "matched": true
+      },
+      {
+        "n": 36,
+        "line": 272,
+        "matched": true
+      }
+    ]
+  },
+  "unverified": [
+    "full six-site allowed scope and real human review",
+    "same-version whole-branch all-green",
+    "new local_absent scenarios' report generation and persistent binding",
+    "arbitrary coordinated database changes to frozen selection",
+    "main database migration and deployment"
+  ],
+  "known_unresolved_shared_tests": 7,
+  "git_actions": "no add/commit/push; checkout preserved",
+  "temporary_directories_retained": [
+    "D:/project/Python/alioth/final-fix1-live-green",
+    "D:/project/Python/alioth/final-fix1-live-green2",
+    "D:/project/Python/alioth/final-fix1-live-red"
+  ],
+  "document_hashes": [
+    {
+      "path": "docs\\reports\\2026-09-09-web-gap-execution\\delivery-summary.md",
+      "sha256": "ddb8c9a7c95d7f7c99416808202811f747fc8bc26390807b322d018dbec8f63e",
+      "lf_chars": 6497
+    },
+    {
+      "path": "docs\\reports\\2026-09-09-web-gap-execution\\final-review.md",
+      "sha256": "624ed884b41b1a3061f2ee91471742154df52d5cea43bb7226693cb067fa90ff",
+      "lf_chars": 18953
+    },
+    {
+      "path": "docs\\reports\\2026-09-09-web-gap-execution\\final-fix1-review.md",
+      "sha256": "30eaf8858ef45ed9714779c6a3bbec1966eddbd011baa291dd0936ced82e883b",
+      "lf_chars": 7308
+    },
+    {
+      "path": "docs\\reports\\2026-09-09-web-gap-execution\\final-fix1-report.md",
+      "sha256": "20166aabe263af2eabfc05c581a70c81187464d5eeb8f7347cae37cafbf9ea24",
+      "lf_chars": 12269
+    },
+    {
+      "path": "docs\\reports\\2026-09-09-web-gap-execution\\final-fix1-review-package.md",
+      "sha256": "680a341bdff014a9333da27ac6f81510a241b9532badd68bf2e36356182f84e7",
+      "lf_chars": 53840
+    },
+    {
+      "path": "docs\\reports\\2026-09-09-web-gap-execution\\rulings-summary.md",
+      "sha256": "c38d78ce69ae7bdb47115a2c71d81309c831bfa2440ac652173e6af11523e861",
+      "lf_chars": 12240
+    }
+  ]
+}

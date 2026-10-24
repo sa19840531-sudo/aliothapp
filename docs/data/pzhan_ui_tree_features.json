@@ -1,0 +1,178 @@
+{
+  "schema_version": "app-ui-tree-features.v1",
+  "product_name": "P站",
+  "product_aliases": [
+    "P站",
+    "pzhan"
+  ],
+  "playbook_id": "pzhan",
+  "apk_hint": "F:\\apptest\\P站\\260716-112203.apk",
+  "package_name": "com.defaultns.base",
+  "package_hints": [
+    "com.defaultns.base",
+    "pzhan",
+    "P站"
+  ],
+  "flow_order": [
+    "startup_ad"
+  ],
+  "collection": {
+    "device_slot": "qa-a",
+    "adb_endpoint": "172.104.172.119:30615",
+    "collected_at": "2026-09-17T16:36:40.983169+00:00",
+    "wm": {
+      "w": 1440,
+      "h": 3040
+    },
+    "evidence_dir": "F:\\aliothapp\\.tmp_apptest_uitree_qa_a\\pzhan",
+    "frame_count": 14,
+    "status": "partial",
+    "partial_reasons": [
+      "age_gate_not_observed",
+      "popup_ads_not_observed",
+      "bottom_tabs_not_observed"
+    ],
+    "note": "qa-a 实机安装采集；缺相位标 not_observed，禁止臆造 bounds。"
+  },
+  "note": "P站（pzhan）UI Tree；qa-a 实采；状态=partial；相位=startup_ad。",
+  "age_gate": {
+    "phase": "age_gate",
+    "must_screenshot_before_action": true,
+    "match_fields": [
+      "semantic_target",
+      "metadata.content_desc",
+      "metadata.text",
+      "metadata.label",
+      "metadata.ui_tree_text",
+      "metadata.accessibility_text",
+      "metadata.purpose",
+      "metadata.expected_state_hint"
+    ],
+    "action": "tap",
+    "priority": "before_startup_ad_and_popup_ads",
+    "status": "not_observed",
+    "context_markers": [],
+    "enter_button_texts": [
+      "我已满18岁",
+      "我年满18岁",
+      "我已满18岁-进入",
+      "我年满18岁-进入"
+    ],
+    "leave_button_texts": [
+      "未满18",
+      "离开",
+      "未成年"
+    ]
+  },
+  "startup_ad": {
+    "phase": "startup_ad",
+    "must_screenshot_before_action": true,
+    "page_types": [
+      "startup_ad"
+    ],
+    "page_states": [
+      "popup",
+      "overlay"
+    ],
+    "context_markers": [
+      "开屏",
+      "跳过",
+      "跳過",
+      "skip",
+      "广告"
+    ],
+    "close_button_texts": [
+      "跳过",
+      "跳過",
+      "skip",
+      "关闭",
+      "關閉",
+      "close"
+    ],
+    "action": "tap_skip_once",
+    "forbid": [
+      "点广告本体",
+      "点下载",
+      "点安装",
+      "点立即打开",
+      "外链取证"
+    ],
+    "close_zones": [
+      {
+        "normalized_bounds": {
+          "left": 1.5764,
+          "top": 0.1497,
+          "right": 1.8958,
+          "bottom": 0.2368
+        },
+        "center": {
+          "x": 1.7361,
+          "y": 0.1933
+        },
+        "content_desc": "跳过",
+        "text": null,
+        "source": "ui_tree_dump",
+        "name": "top_right_skip"
+      }
+    ],
+    "status": "observed",
+    "note": "qa-a 实采自 t01"
+  },
+  "popup_ads": {
+    "phase": "popup_ads",
+    "must_screenshot_before_each_close": true,
+    "repeat_until_clear": true,
+    "page_states": [
+      "popup",
+      "overlay",
+      "modal",
+      "dialog"
+    ],
+    "context_markers": [
+      "弹窗",
+      "广告",
+      "公告",
+      "关闭",
+      "活动"
+    ],
+    "close_button_texts": [
+      "关闭",
+      "關閉",
+      "×",
+      "X",
+      "x",
+      "close",
+      "知道了",
+      "我知道了"
+    ],
+    "action": "tap_bottom_hollow_x",
+    "after_all_closed": "bottom_tabs",
+    "close_zones": [],
+    "status": "not_observed"
+  },
+  "bottom_navigation": {
+    "phase": "bottom_tabs",
+    "match_fields": [
+      "semantic_target",
+      "metadata.content_desc",
+      "metadata.text",
+      "metadata.label",
+      "metadata.resource_id",
+      "metadata.ui_tree_text",
+      "metadata.accessibility_text"
+    ],
+    "bounds": {
+      "min_top": 0.85,
+      "max_bottom": 1.02
+    },
+    "discovery_sources": [
+      "ui_tree",
+      "accessibility",
+      "vision",
+      "promoted_coverage",
+      "promoted_bottom_nav"
+    ],
+    "ordered_tabs": [],
+    "status": "not_observed"
+  }
+}

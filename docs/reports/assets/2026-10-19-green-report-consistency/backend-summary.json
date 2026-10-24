@@ -1,0 +1,11 @@
+{
+  "files": 89,
+  "elapsed_seconds": 166.7,
+  "exit_code": 0,
+  "source_files": 82,
+  "source_stable": false,
+  "tests": 1618,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 3
+}

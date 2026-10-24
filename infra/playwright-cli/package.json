@@ -1,0 +1,8 @@
+{
+  "name": "alioth-playwright-cli-runtime",
+  "private": true,
+  "description": "Alioth 受控浏览器命令运行环境",
+  "dependencies": {
+    "@playwright/cli": "0.1.19"
+  }
+}

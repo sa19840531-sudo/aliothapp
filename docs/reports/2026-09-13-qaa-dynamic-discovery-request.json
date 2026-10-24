@@ -1,0 +1,24 @@
+{
+  "task_name": "hjll3.3.0 qa-a R27 有限自由探索去定制复测",
+  "target": {
+    "platform": "app",
+    "source": {
+      "type": "build_ref",
+      "platform_build_ref": "app-build:eb62d564-5bdf-498b-9c0f-35d33ae98a8a"
+    },
+    "package_name": "dark.wwcskrpojs.ebjhyebjbl",
+    "device": {
+      "backend": "cloud_phone",
+      "profile_id": "qa-a"
+    },
+    "exploration_target": {
+      "applicability_mode": "dynamic_discovery",
+      "max_actions": 330,
+      "device_capability_template": "android_visual_readonly_v1"
+    }
+  },
+  "channel": "api",
+  "scan_mode": "full",
+  "timeout_minutes": 180,
+  "remark": "已修复自动产品画像、底栏模板过滤和插值、不同栏目标签互认、模型前固定巡栏限制；依据当前截图与UIA发现真实入口，由有限探索调度覆盖、发现与恢复。无固定页面名单、固定页面数量或人工必达栏目。保留180分钟与330动作资源预算，不购买付费。"
+}

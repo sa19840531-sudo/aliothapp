@@ -1,0 +1,680 @@
+[
+  {
+    "schema_version": "journey-dsl.v1",
+    "definition_id": "player-playback-seek-episode",
+    "version": 1,
+    "name": "播放器：进播→控件截帧→seek→切集→退出再进",
+    "description": "覆盖 alioth_44 进度条、ops_3 播放、ops_9 切集、alioth_43 退出再进。多帧观察用 wait+capture 代替 timed_capture 动作动词。",
+    "surface_kinds": ["web", "android", "ios"],
+    "extensions": {
+      "rule_codes": ["alioth_44", "alioth_ops_3", "alioth_ops_9", "alioth_43"],
+      "app_har_fallback": "screenshot",
+      "notes": "App 缺 HAR 时用截图；播放控件唤醒后采一帧进度。"
+    },
+    "steps": [
+      {
+        "id": "enter-player",
+        "type": "action",
+        "operation": "tap",
+        "semantic_target": "内容播放入口",
+        "retry": {"max_attempts": 2, "backoff_ms": 500, "retry_on": ["target_not_found"]}
+      },
+      {
+        "id": "wait-player-stable",
+        "type": "wait",
+        "condition": "surface_stable",
+        "duration_ms": 3000
+      },
+      {
+        "id": "wake-controls",
+        "type": "action",
+        "operation": "tap",
+        "semantic_target": "播放器画面中心",
+        "required": false
+      },
+      {
+        "id": "capture-progress-frame",
+        "type": "capture",
+        "role": "player_scrub_series",
+        "artifact_types": ["screenshot", "ui_snapshot", "media_state"],
+        "reason": "alioth_44／ops_3：控件唤醒后采进度条与播放态一帧"
+      },
+      {
+        "id": "seek-media",
+        "type": "action",
+        "operation": "seek_media",
+        "arguments": {"purpose": "拖动播放进度条采集进度证据"}
+      },
+      {
+        "id": "capture-after-seek",
+        "type": "capture",
+        "role": "post_action",
+        "artifact_types": ["screenshot", "media_state", "action_trace"],
+        "reason": "seek 后留证"
+      },
+      {
+        "id": "switch-episode",
+        "type": "action",
+        "operation": "tap",
+        "semantic_target": "第2集",
+        "retry": {"max_attempts": 2, "backoff_ms": 500, "retry_on": ["target_not_found"]}
+      },
+      {
+        "id": "wait-episode-switch",
+        "type": "wait",
+        "condition": "surface_stable",
+        "duration_ms": 3000
+      },
+      {
+        "id": "capture-episode-2",
+        "type": "capture",
+        "role": "post_action",
+        "artifact_types": ["screenshot", "media_state", "action_trace"],
+        "reason": "ops_9：切集后确认集数变化"
+      },
+      {
+        "id": "assert-episode-visible",
+        "type": "assert",
+        "assertion": "element_visible",
+        "semantic_target": "第2集",
+        "evidence_keys": ["screenshot", "ui_snapshot"]
+      },
+      {
+        "id": "exit-player",
+        "type": "action",
+        "operation": "back"
+      },
+      {
+        "id": "wait-after-exit",
+        "type": "wait",
+        "condition": "surface_stable",
+        "duration_ms": 2000
+      },
+      {
+        "id": "reenter-player",
+        "type": "action",
+        "operation": "tap",
+        "semantic_target": "内容播放入口"
+      },
+      {
+        "id": "capture-reenter",
+        "type": "capture",
+        "role": "post_action",
+        "artifact_types": ["screenshot", "media_state"],
+        "reason": "alioth_43：退出再进播放页"
+      }
+    ]
+  },
+  {
+    "schema_version": "journey-dsl.v1",
+    "definition_id": "payment-checkout-chain",
+    "version": 1,
+    "name": "支付链：进档→选档→拉起支付→收银台／外跳金额",
+    "description": "覆盖 ops_4 进支付、ops_5 拉起支付、ops_11 收银台／外跳金额。自动化不点确认付款。App 用 checkout_chain_step；Web 扫码页即收银台。",
+    "surface_kinds": ["web", "android", "ios"],
+    "extensions": {
+      "rule_codes": ["alioth_ops_4", "alioth_ops_5", "alioth_ops_11"],
+      "app_capture_roles": ["checkout_chain_step"],
+      "web_cashier_note": "Web 多为扫码，落地页即收银台",
+      "app_har_fallback": "screenshot",
+      "stop_before": "confirm_pay"
+    },
+    "steps": [
+      {
+        "id": "enter-payment",
+        "type": "action",
+        "operation": "tap",
+        "semantic_target": "开通会员入口"
+      },
+      {
+        "id": "wait-tier-list",
+        "type": "wait",
+        "condition": "element_visible",
+        "semantic_target": "会员档位列表"
+      },
+      {
+        "id": "capture-tier-list",
+        "type": "capture",
+        "role": "checkout_chain_step",
+        "artifact_types": ["screenshot", "ui_snapshot"],
+        "reason": "ops_4：进支付／档位页；App step_key=cart_or_sku"
+      },
+      {
+        "id": "select-tier",
+        "type": "action",
+        "operation": "tap",
+        "semantic_target": "会员档位"
+      },
+      {
+        "id": "capture-confirm-order",
+        "type": "capture",
+        "role": "checkout_chain_step",
+        "artifact_types": ["screenshot"],
+        "reason": "选档后确认页；App step_key=confirm_order"
+      },
+      {
+        "id": "trigger-pay",
+        "type": "action",
+        "operation": "tap",
+        "semantic_target": "立即支付"
+      },
+      {
+        "id": "wait-cashier",
+        "type": "wait",
+        "condition": "surface_stable",
+        "duration_ms": 4000
+      },
+      {
+        "id": "capture-cashier",
+        "type": "capture",
+        "role": "checkout_chain_step",
+        "artifact_types": ["screenshot", "action_trace"],
+        "reason": "ops_11：收银台或外跳支付金额截图；App step_key=in_app_cashier；缺 HAR 用截图"
+      },
+      {
+        "id": "assert-amount-visible",
+        "type": "assert",
+        "assertion": "element_visible",
+        "semantic_target": "支付金额",
+        "evidence_keys": ["screenshot"]
+      }
+    ]
+  },
+  {
+    "schema_version": "journey-dsl.v1",
+    "definition_id": "comment-post-and-refresh",
+    "version": 1,
+    "name": "评论：定位区→发评→采首评→刷新",
+    "description": "覆盖 alioth_31 发评后刷新可见。",
+    "surface_kinds": ["web", "android", "ios"],
+    "extensions": {
+      "rule_codes": ["alioth_31"],
+      "app_har_fallback": "screenshot"
+    },
+    "steps": [
+      {
+        "id": "open-comment-area",
+        "type": "action",
+        "operation": "tap",
+        "semantic_target": "评论入口"
+      },
+      {
+        "id": "wait-comment-box",
+        "type": "wait",
+        "condition": "element_visible",
+        "semantic_target": "评论输入框"
+      },
+      {
+        "id": "input-comment",
+        "type": "action",
+        "operation": "input",
+        "semantic_target": "评论输入框",
+        "arguments": {"text": "质检评论样本"}
+      },
+      {
+        "id": "submit-comment",
+        "type": "action",
+        "operation": "tap",
+        "semantic_target": "发送评论"
+      },
+      {
+        "id": "capture-primary-comment",
+        "type": "capture",
+        "role": "post_action",
+        "artifact_types": ["screenshot", "ui_snapshot"],
+        "reason": "采主评／首评"
+      },
+      {
+        "id": "refresh-comments",
+        "type": "action",
+        "operation": "refresh"
+      },
+      {
+        "id": "capture-after-refresh",
+        "type": "capture",
+        "role": "post_action",
+        "artifact_types": ["screenshot"],
+        "reason": "刷新后确认评论仍可见"
+      },
+      {
+        "id": "assert-comment-visible",
+        "type": "assert",
+        "assertion": "element_visible",
+        "semantic_target": "质检评论样本",
+        "evidence_keys": ["screenshot", "ui_snapshot"]
+      }
+    ]
+  },
+  {
+    "schema_version": "journey-dsl.v1",
+    "definition_id": "comment-rate-limit-burst",
+    "version": 1,
+    "name": "评论：连续发 4 条触发限流页",
+    "description": "覆盖 alioth_29 连续发评限流。",
+    "surface_kinds": ["web", "android", "ios"],
+    "extensions": {
+      "rule_codes": ["alioth_29"],
+      "burst_count": 4
+    },
+    "steps": [
+      {
+        "id": "open-comment-area",
+        "type": "action",
+        "operation": "tap",
+        "semantic_target": "评论入口"
+      },
+      {
+        "id": "post-1",
+        "type": "action",
+        "operation": "input",
+        "semantic_target": "评论输入框",
+        "arguments": {"text": "限流样本1"}
+      },
+      {
+        "id": "send-1",
+        "type": "action",
+        "operation": "tap",
+        "semantic_target": "发送评论"
+      },
+      {
+        "id": "post-2",
+        "type": "action",
+        "operation": "input",
+        "semantic_target": "评论输入框",
+        "arguments": {"text": "限流样本2"}
+      },
+      {
+        "id": "send-2",
+        "type": "action",
+        "operation": "tap",
+        "semantic_target": "发送评论"
+      },
+      {
+        "id": "post-3",
+        "type": "action",
+        "operation": "input",
+        "semantic_target": "评论输入框",
+        "arguments": {"text": "限流样本3"}
+      },
+      {
+        "id": "send-3",
+        "type": "action",
+        "operation": "tap",
+        "semantic_target": "发送评论"
+      },
+      {
+        "id": "post-4",
+        "type": "action",
+        "operation": "input",
+        "semantic_target": "评论输入框",
+        "arguments": {"text": "限流样本4"}
+      },
+      {
+        "id": "send-4",
+        "type": "action",
+        "operation": "tap",
+        "semantic_target": "发送评论"
+      },
+      {
+        "id": "capture-rate-limit",
+        "type": "capture",
+        "role": "post_action",
+        "artifact_types": ["screenshot", "ui_snapshot"],
+        "reason": "连续 4 评后采限流／冷却页"
+      },
+      {
+        "id": "assert-rate-limit",
+        "type": "assert",
+        "assertion": "element_visible",
+        "semantic_target": "评论过于频繁",
+        "evidence_keys": ["screenshot"],
+        "required": false
+      }
+    ]
+  },
+  {
+    "schema_version": "journey-dsl.v1",
+    "definition_id": "publish-upload-limit",
+    "version": 1,
+    "name": "发布：进发布页→采上传限制说明→进相册",
+    "description": "覆盖 alioth_45。不实际上传／发布。",
+    "surface_kinds": ["web", "android", "ios"],
+    "extensions": {
+      "rule_codes": ["alioth_45"],
+      "stop_before": "confirm_publish"
+    },
+    "steps": [
+      {
+        "id": "enter-publish",
+        "type": "action",
+        "operation": "tap",
+        "semantic_target": "发布入口"
+      },
+      {
+        "id": "wait-publish-page",
+        "type": "wait",
+        "condition": "surface_stable",
+        "duration_ms": 2000
+      },
+      {
+        "id": "capture-upload-limit",
+        "type": "capture",
+        "role": "post_action",
+        "artifact_types": ["screenshot", "ui_snapshot"],
+        "reason": "采上传限制／格式说明文案"
+      },
+      {
+        "id": "enter-album",
+        "type": "action",
+        "operation": "tap",
+        "semantic_target": "相册入口"
+      },
+      {
+        "id": "capture-album",
+        "type": "capture",
+        "role": "post_action",
+        "artifact_types": ["screenshot"],
+        "reason": "进入相册后留证，不选图上传"
+      }
+    ]
+  },
+  {
+    "schema_version": "journey-dsl.v1",
+    "definition_id": "ad-outbound-landing-return",
+    "version": 1,
+    "name": "广告落地：素材→点击→落地→返回",
+    "description": "覆盖 alioth_17。App 已有 ad_outbound_source／landing／return。验收需重复约 10 次找素材与落地不同步证据。",
+    "surface_kinds": ["web", "android", "ios"],
+    "extensions": {
+      "rule_codes": ["alioth_17"],
+      "app_capture_roles": [
+        "ad_outbound_source",
+        "ad_outbound_landing",
+        "ad_outbound_return"
+      ],
+      "verification_repeats": 10,
+      "verification_note": "重复执行约 10 次，找素材与落地页未形成同步动作对的证据"
+    },
+    "steps": [
+      {
+        "id": "capture-ad-source",
+        "type": "capture",
+        "role": "ad_outbound_source",
+        "artifact_types": ["screenshot", "ui_snapshot"],
+        "reason": "开屏／插屏广告素材帧"
+      },
+      {
+        "id": "click-ad",
+        "type": "action",
+        "operation": "tap",
+        "semantic_target": "广告素材可点区域"
+      },
+      {
+        "id": "wait-landing",
+        "type": "wait",
+        "condition": "surface_stable",
+        "duration_ms": 4000
+      },
+      {
+        "id": "capture-landing",
+        "type": "capture",
+        "role": "ad_outbound_landing",
+        "artifact_types": ["screenshot", "action_trace"],
+        "reason": "广告落地页"
+      },
+      {
+        "id": "return-from-landing",
+        "type": "action",
+        "operation": "back"
+      },
+      {
+        "id": "capture-return",
+        "type": "capture",
+        "role": "ad_outbound_return",
+        "artifact_types": ["screenshot", "action_trace"],
+        "reason": "从落地返回业务页"
+      }
+    ]
+  },
+  {
+    "schema_version": "journey-dsl.v1",
+    "definition_id": "startup-to-home",
+    "version": 1,
+    "name": "开屏→首页",
+    "description": "覆盖 alioth_24 开屏到首页稳定业务页。",
+    "surface_kinds": ["web", "android", "ios"],
+    "extensions": {
+      "rule_codes": ["alioth_24"]
+    },
+    "steps": [
+      {
+        "id": "capture-startup",
+        "type": "capture",
+        "role": "observation",
+        "artifact_types": ["screenshot", "temporal_trace"],
+        "reason": "开屏／加载态"
+      },
+      {
+        "id": "tap-skip",
+        "type": "action",
+        "operation": "tap",
+        "semantic_target": "跳过",
+        "required": false
+      },
+      {
+        "id": "wait-home",
+        "type": "wait",
+        "condition": "surface_stable",
+        "duration_ms": 3000
+      },
+      {
+        "id": "capture-home",
+        "type": "capture",
+        "role": "post_action",
+        "artifact_types": ["screenshot", "ui_snapshot"],
+        "reason": "到达首页"
+      },
+      {
+        "id": "assert-home",
+        "type": "assert",
+        "assertion": "element_visible",
+        "semantic_target": "主页",
+        "evidence_keys": ["screenshot"],
+        "required": false
+      }
+    ]
+  },
+  {
+    "schema_version": "journey-dsl.v1",
+    "definition_id": "popup-multi-frame-sequence",
+    "version": 1,
+    "name": "弹窗多帧序列关闭",
+    "description": "覆盖 alioth_22 多帧弹窗序列。",
+    "surface_kinds": ["web", "android", "ios"],
+    "extensions": {
+      "rule_codes": ["alioth_22"]
+    },
+    "steps": [
+      {
+        "id": "capture-popup-1",
+        "type": "capture",
+        "role": "observation",
+        "artifact_types": ["screenshot"],
+        "reason": "弹窗帧1"
+      },
+      {
+        "id": "dismiss-1",
+        "type": "action",
+        "operation": "tap",
+        "semantic_target": "关闭弹窗"
+      },
+      {
+        "id": "wait-between",
+        "type": "wait",
+        "condition": "duration",
+        "duration_ms": 1500
+      },
+      {
+        "id": "capture-popup-2",
+        "type": "capture",
+        "role": "observation",
+        "artifact_types": ["screenshot"],
+        "reason": "弹窗帧2（若仍有）",
+        "required": false
+      },
+      {
+        "id": "dismiss-2",
+        "type": "action",
+        "operation": "tap",
+        "semantic_target": "关闭弹窗",
+        "required": false
+      },
+      {
+        "id": "capture-cleared",
+        "type": "capture",
+        "role": "post_action",
+        "artifact_types": ["screenshot", "ui_snapshot"],
+        "reason": "弹窗序列清完后业务页"
+      }
+    ]
+  },
+  {
+    "schema_version": "journey-dsl.v1",
+    "definition_id": "share-link-clipboard-or-external",
+    "version": 1,
+    "name": "分享链接：剪贴板或外跳",
+    "description": "覆盖 ops_6。优先 set_clipboard，必要时 open_external。",
+    "surface_kinds": ["web", "android", "ios"],
+    "extensions": {
+      "rule_codes": ["alioth_ops_6"]
+    },
+    "steps": [
+      {
+        "id": "open-share",
+        "type": "action",
+        "operation": "tap",
+        "semantic_target": "分享"
+      },
+      {
+        "id": "copy-link",
+        "type": "action",
+        "operation": "set_clipboard",
+        "semantic_target": "复制链接",
+        "required": false
+      },
+      {
+        "id": "capture-share",
+        "type": "capture",
+        "role": "post_action",
+        "artifact_types": ["screenshot", "action_trace"],
+        "reason": "分享面板／复制后留证"
+      },
+      {
+        "id": "open-external-fallback",
+        "type": "action",
+        "operation": "open_external",
+        "semantic_target": "分享到外部应用",
+        "required": false
+      }
+    ]
+  },
+  {
+    "schema_version": "journey-dsl.v1",
+    "definition_id": "official-group-entrances",
+    "version": 1,
+    "name": "官方群入口逐一点开",
+    "description": "覆盖 ops_7。任务级汇总，每个入口点开看一眼即返回。",
+    "surface_kinds": ["web", "android", "ios"],
+    "extensions": {
+      "rule_codes": ["alioth_ops_7"],
+      "aggregation": "task_level"
+    },
+    "steps": [
+      {
+        "id": "open-group-1",
+        "type": "action",
+        "operation": "tap",
+        "semantic_target": "官方群入口"
+      },
+      {
+        "id": "capture-group-1",
+        "type": "capture",
+        "role": "post_action",
+        "artifact_types": ["screenshot"],
+        "reason": "官方群落地页1"
+      },
+      {
+        "id": "back-group-1",
+        "type": "action",
+        "operation": "back"
+      },
+      {
+        "id": "open-group-2",
+        "type": "action",
+        "operation": "tap",
+        "semantic_target": "官方群入口备选",
+        "required": false
+      },
+      {
+        "id": "capture-group-2",
+        "type": "capture",
+        "role": "post_action",
+        "artifact_types": ["screenshot"],
+        "reason": "官方群落地页2",
+        "required": false
+      },
+      {
+        "id": "back-group-2",
+        "type": "action",
+        "operation": "back",
+        "required": false
+      }
+    ]
+  },
+  {
+    "schema_version": "journey-dsl.v1",
+    "definition_id": "comic-page-turn",
+    "version": 1,
+    "name": "漫画翻页阅读",
+    "description": "覆盖 ops_10。无 media_state 要求，以截图证明翻页。",
+    "surface_kinds": ["web", "android", "ios"],
+    "extensions": {
+      "rule_codes": ["alioth_ops_10"],
+      "no_media_state": true
+    },
+    "steps": [
+      {
+        "id": "enter-comic",
+        "type": "action",
+        "operation": "tap",
+        "semantic_target": "漫画阅读入口"
+      },
+      {
+        "id": "capture-page-1",
+        "type": "capture",
+        "role": "post_action",
+        "artifact_types": ["screenshot"],
+        "reason": "漫画第1页"
+      },
+      {
+        "id": "turn-page",
+        "type": "action",
+        "operation": "tap",
+        "semantic_target": "下一页"
+      },
+      {
+        "id": "wait-page-2",
+        "type": "wait",
+        "condition": "surface_stable",
+        "duration_ms": 1500
+      },
+      {
+        "id": "capture-page-2",
+        "type": "capture",
+        "role": "post_action",
+        "artifact_types": ["screenshot", "action_trace"],
+        "reason": "漫画第2页，证明翻页"
+      }
+    ]
+  }
+]

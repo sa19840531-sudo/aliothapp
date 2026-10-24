@@ -1,0 +1,944 @@
+{
+  "action": "dry_run",
+  "manifest": {
+    "ruleset": {
+      "ruleset_code": "alioth_green_ruleset",
+      "name": "绿色八条规则",
+      "version": 4,
+      "status": "draft",
+      "description": "绿色规则三端实施规范第4版；新规则默认关闭。",
+      "source_type": "spreadsheet",
+      "source_ref": "https://docs.google.com/spreadsheets/d/1BzFpZYqmELVvo58VYFng2Qw8XwF29iYVH3Eri9XK12M/edit?gid=1730171659"
+    },
+    "rules": [
+      {
+        "rule_code": "alioth_green_102",
+        "name": "内容安全三类风险与实际覆盖检查",
+        "description": "来源：9月新增规则优先级物理第13行，规范102。保留原图、可识别文字、内容范围及实际覆盖、广告排除来源。不得猜精确年龄；年龄或类别不确定进入复核。普通战争、枪械元素不能单独证明涉恐；具体红线政策引用受控版本。",
+        "category": "compliance",
+        "executor_type": "hybrid",
+        "severity": "medium",
+        "status": "disabled",
+        "scope": "all_product_clients",
+        "channel": null,
+        "page_type": "",
+        "applicable_page_types": [
+          "home",
+          "content_list",
+          "video_list",
+          "post_list"
+        ],
+        "url_pattern": "",
+        "steps": [],
+        "check_point": "首页及一级目录中的等价首页、首页所有内容列表；其他内容列表前两屏按原文19:9范围扣除固定功能和导航。排除广告，图文联合，涉未、涉政、涉恐独立输出结果、置信度、触发证据和复核建议。",
+        "input_contract": {
+          "schema_version": "1.1",
+          "target_clients": [
+            "WEB",
+            "H5",
+            "APP"
+          ],
+          "required_artifacts": [
+            "screenshot"
+          ],
+          "optional_artifacts": [
+            "ui_snapshot",
+            "visible_text",
+            "action_trace",
+            "har",
+            "media_state",
+            "temporal_trace"
+          ],
+          "required_fields": [],
+          "quality_gate": {
+            "allow_empty_visible_text": true
+          }
+        },
+        "judge_config": {
+          "schema_version": "1.1",
+          "thresholds": {},
+          "llm_checks": [
+            "首页及一级目录中的等价首页、首页所有内容列表；其他内容列表前两屏按原文19:9范围扣除固定功能和导航。排除广告，图文联合，涉未、涉政、涉恐独立输出结果、置信度、触发证据和复核建议。"
+          ],
+          "tool_refs": [
+            "semantic_rule_judge_tool"
+          ],
+          "capability_config": {
+            "schema_version": "1.0",
+            "evidence_input_scope": "page",
+            "evidence_scope_key": "page",
+            "green_rule_key": "102",
+            "requires_journey": false,
+            "required_artifact_types": [
+              "screenshot"
+            ],
+            "deterministic_tools": [
+              "green_rule_evidence_tool"
+            ],
+            "semantic_judge": "semantic_rule_judge_tool",
+            "evidence_source": "observation_packet"
+          },
+          "green_rule_contract": {
+            "schema_version": "green-rule-contract.v2",
+            "ruleset_version": 4,
+            "rule_key": "102",
+            "source_row": 13,
+            "source_spec": "102",
+            "input_kind": "page",
+            "subchecks": [
+              "minor_safety",
+              "political_safety",
+              "terrorism_safety",
+              "content_scope"
+            ],
+            "task_scope_is_coverage": false
+          },
+          "green_skill_program": {
+            "schema_version": "green-skill-program.v1",
+            "skills": [
+              {
+                "name": "green-content-safety",
+                "version": "1.0.0",
+                "body": "---\nname: green-content-safety\ndescription: 按显式green-rule-contract.v2判读既有截图与文字中的三类内容风险及覆盖，不代替UGC分类规程，不执行采集或外部动作。\nmetadata:\n  version: 1.0.0\n---\n\n# 内容安全与实际覆盖判读\n\n仅在冻结规则显式声明本程序时读取，具体规则正文、适用范围、受控政策版本和人工复核策略均以该Task保存的规则合同为准，不从当前磁盘替换历史正文。\n\n1. 只读取正式Task、Run、Session、Epoch及同一业务内容范围内已有的截图、可识别文字、Manifest和原件身份。核对实际覆盖与完整性；未采到不等于内容安全。\n2. 按冻结合同检查首页、一级目录中的等价首页、首页内容列表及其他内容列表的前两屏范围；按原文19:9范围扣除固定功能与导航。不得用缩略图、自报摘要或局部样本冒充完整覆盖。\n3. 排除广告须有可追溯来源，不能由模型见到广告样式就任意剔除。范围或排除依据缺失时明确记录证据缺口。\n4. 图文联合判读；涉未、涉政、涉恐分别输出状态、置信度、实际触发证据和复核建议，不以一项通过抵销其他风险或缺证。\n5. 不猜测精确年龄。年龄、类别或政策含义不确定时保留manual_review，并交给原复核事务。普通战争、枪械等元素不能单独证明涉恐。\n6. 具体红线必须引用规则中冻结的受控政策版本。没有政策依据不得由模型发明红线或自定通过阈值；已有明确反例与尚缺材料分别保留。\n7. 只复用现有截图、文字和语义Gateway；实际模型调用绑定正式消费者Task与Run及用量审计。结论交由既有结果Writer、复核、报告和完成事务，不另建结果表。\n8. 本Skill不扩大UGC输入风险规程，不授权采集、点击、登录、弱网、支付或联系客户。公开结果按字段白名单脱敏，保留原件回溯但不暴露存储路径、敏感响应或凭据。\n",
+                "sha256": "db50f70a3c357068f4924f59395db6fd7b9dd92f2428113c4b831210b93f327e"
+              }
+            ],
+            "combined_body": "# 冻结 Skill 1：green-content-safety\n版本：1.0.0\nSHA256：db50f70a3c357068f4924f59395db6fd7b9dd92f2428113c4b831210b93f327e\n\n---\nname: green-content-safety\ndescription: 按显式green-rule-contract.v2判读既有截图与文字中的三类内容风险及覆盖，不代替UGC分类规程，不执行采集或外部动作。\nmetadata:\n  version: 1.0.0\n---\n\n# 内容安全与实际覆盖判读\n\n仅在冻结规则显式声明本程序时读取，具体规则正文、适用范围、受控政策版本和人工复核策略均以该Task保存的规则合同为准，不从当前磁盘替换历史正文。\n\n1. 只读取正式Task、Run、Session、Epoch及同一业务内容范围内已有的截图、可识别文字、Manifest和原件身份。核对实际覆盖与完整性；未采到不等于内容安全。\n2. 按冻结合同检查首页、一级目录中的等价首页、首页内容列表及其他内容列表的前两屏范围；按原文19:9范围扣除固定功能与导航。不得用缩略图、自报摘要或局部样本冒充完整覆盖。\n3. 排除广告须有可追溯来源，不能由模型见到广告样式就任意剔除。范围或排除依据缺失时明确记录证据缺口。\n4. 图文联合判读；涉未、涉政、涉恐分别输出状态、置信度、实际触发证据和复核建议，不以一项通过抵销其他风险或缺证。\n5. 不猜测精确年龄。年龄、类别或政策含义不确定时保留manual_review，并交给原复核事务。普通战争、枪械等元素不能单独证明涉恐。\n6. 具体红线必须引用规则中冻结的受控政策版本。没有政策依据不得由模型发明红线或自定通过阈值；已有明确反例与尚缺材料分别保留。\n7. 只复用现有截图、文字和语义Gateway；实际模型调用绑定正式消费者Task与Run及用量审计。结论交由既有结果Writer、复核、报告和完成事务，不另建结果表。\n8. 本Skill不扩大UGC输入风险规程，不授权采集、点击、登录、弱网、支付或联系客户。公开结果按字段白名单脱敏，保留原件回溯但不暴露存储路径、敏感响应或凭据。\n",
+            "sha256": "461eec06325b225cef18860dd00bcbce8a6b98d8f3b3f008bbafb33c8cf3dcbe"
+          }
+        },
+        "manual_review_policy": {
+          "schema_version": "1.0",
+          "min_confidence": 0.75,
+          "reviewer_group": "qc_rule_owner",
+          "triggers": [
+            "evidence_insufficient",
+            "model_uncertainty"
+          ]
+        },
+        "sort_order": 10
+      },
+      {
+        "rule_code": "alioth_green_s72",
+        "name": "空数据与加载失败呈现检查",
+        "description": "来源：9月新增规则优先级物理第14行，规范S72。唯一关联真实请求结果与模块呈现。空态可以有插图或引导；普通刷新功能存在本身不证明状态错误。HTTP200、空白截图不能单独证明空数据；未知保留未验证。",
+        "category": "visual",
+        "executor_type": "hybrid",
+        "severity": "medium",
+        "status": "disabled",
+        "scope": "all_product_clients",
+        "channel": null,
+        "page_type": "",
+        "applicable_page_types": [
+          "home",
+          "content_list",
+          "content_detail",
+          "profile",
+          "settings",
+          "payment",
+          "post_list",
+          "post_publish",
+          "activity",
+          "video_list",
+          "video_detail"
+        ],
+        "url_pattern": "",
+        "steps": [],
+        "check_point": "同一模块、同次请求周期，真实空数据有暂无数据类说明；加载失败应引导刷新或重试，不能把失败显示为空。",
+        "input_contract": {
+          "schema_version": "1.1",
+          "target_clients": [
+            "WEB",
+            "H5",
+            "APP"
+          ],
+          "required_artifacts": [
+            "screenshot"
+          ],
+          "optional_artifacts": [
+            "ui_snapshot",
+            "visible_text",
+            "action_trace",
+            "har",
+            "media_state",
+            "temporal_trace"
+          ],
+          "required_fields": [],
+          "quality_gate": {
+            "allow_empty_visible_text": true
+          }
+        },
+        "judge_config": {
+          "schema_version": "1.1",
+          "thresholds": {},
+          "llm_checks": [
+            "同一模块、同次请求周期，真实空数据有暂无数据类说明；加载失败应引导刷新或重试，不能把失败显示为空。"
+          ],
+          "tool_refs": [
+            "semantic_rule_judge_tool"
+          ],
+          "capability_config": {
+            "schema_version": "1.0",
+            "evidence_input_scope": "task",
+            "evidence_scope_key": "green_temporal_rules.v1",
+            "green_rule_key": "s72",
+            "requires_journey": false,
+            "required_artifact_types": [
+              "screenshot"
+            ],
+            "deterministic_tools": [
+              "green_rule_evidence_tool"
+            ],
+            "semantic_judge": "semantic_rule_judge_tool",
+            "evidence_source": "observation_packet"
+          },
+          "green_rule_contract": {
+            "schema_version": "green-rule-contract.v2",
+            "ruleset_version": 4,
+            "rule_key": "s72",
+            "source_row": 14,
+            "source_spec": "S72",
+            "input_kind": "green_temporal_rules.v1",
+            "subchecks": [
+              "empty_state_meaning",
+              "load_failure_meaning"
+            ],
+            "task_scope_is_coverage": false
+          },
+          "green_skill_program": {
+            "schema_version": "green-skill-program.v1",
+            "skills": [
+              {
+                "name": "visual-rule",
+                "version": "sha256:43f120ab74404520ff5116b23b3e4572c4e561f0b402fdaeffeea20ebf1e0441",
+                "body": "---\r\nname: visual-rule\r\ndescription: 视觉呈现类质检 Skill。适用于 candidate_rules_tool 返回 category=visual，且检查点涉及已渲染页面的媒体显示、布局完整性、空白或兜底状态、视觉错误、静态或多帧变化等场景；指导 Main Agent 使用 page_capture_tool、deterministic_assertion_tool、rule_judge_tool 与结果写回 Tool，不内置规则编号、阈值或数据库规则内容。\r\n---\r\n\r\n# visual-rule\r\n\r\n## 职责与适用场景\r\n\r\n仅处理 `candidate_rules_tool` 返回的 `category=visual` 候选规则，常见能力场景包括：\r\n\r\n- 图片、视频封面、图标等媒体元素的清晰度、比例、裁切、边界和遮挡观测。\r\n- 页面模块、占位、骨架屏、缺省态、错误态和布局完整性观测。\r\n- 需要对静态截图、DOM 几何摘要或多帧页面变化进行复核的视觉问题。\r\n- 页面可见技术异常与渲染结果之间的交叉核对。\r\n\r\n这些场景只用于判断“是否加载本 Skill”和“选择什么 Tool”。实际检查点、通过/失败条件、阈值、严重度、适用页面和复核策略必须逐条读取数据库候选规则。\r\n\r\n不处理文案语义（交给 `text-rule`）、广告素材或广告行为（交给 `ad-rule`）、需要改变业务状态的交互验证（交给 `interaction-rule`）。\r\n\r\n## 动态规则输入\r\n\r\n对本批每条候选规则读取并原样保留：\r\n\r\n- `rule_id`、`rule_code`、`name`、`category`、`severity`。\r\n- `check_point`、`steps`、`input_contract`、`judge_config`、`manual_review_policy`。\r\n- `execution_route` 及其中的判定策略、所需输入字段、证据类型和 Tool 路由。\r\n\r\nSkill 不保存任何具体规则编号或固定判定值。候选规则缺少完成判定所需的数据库配置时，不得凭经验补齐，应按执行路由阻断或人工复核处理。\r\n\r\n## 可用 Tool\r\n\r\n| Tool | 视觉质检用途 | 使用条件 |\r\n| --- | --- | --- |\r\n| `page_capture_tool` | 读取当前页面采集已有的 DOM、可见文本、截图、网络与控制台摘要 | 当前版本页面探索不主动调用 `page_capture_tool` 补采；视觉类默认只读 |\r\n| `deterministic_assertion_tool` | 执行正则、文本包含、数值比较、DOM 存在性等可复现辅助断言 | 仅使用候选规则 `judge_config` 给出的模式、操作符或期望值；不能自造视觉阈值 |\r\n| `rule_judge_tool` | 执行单条已就绪的数据库确定性规则 | 仅当 `execution_route.rule_engine_ready=true` 且路由指定该 Tool |\r\n| `rule_judge_batch_tool` | 批量执行同一页面已就绪的确定性视觉规则 | 同一页面的确定性候选超过一条时优先使用 |\r\n| `record_rule_execution_tool` | 写回单条候选或补偿批量失败项 | 使用候选结果中的动态规则标识 |\r\n| `record_rule_executions_batch_tool` | 批量写回同一页面多条视觉规则结果 | 多规则页面优先使用，共享当前 `page_capture_id` |\r\n\r\n未在 Capability Manifest 注册的 OCR、截图差异或专用视觉 Tool 不得假设可用。候选规则强依赖缺失能力或当前证据缺件时，直接写 `evidence_insufficient` 或按数据库策略转 `manual_review`。\r\n\r\n## 执行流程\r\n\r\n1. 从 `execution_plan.batches` 取得 visual 批次，核对每条规则的动态字段，不在 Skill 中查找规则编号。\r\n2. 按 `input_contract.required_artifacts` 和 `quality_gate` 检查当前页面采集，只复用已有产物；时序或闪烁证据缺失时直接写 `evidence_insufficient`。\r\n3. 先从 DOM、可见文本、网络摘要和截图提取与 `check_point` 对应的结构化观测；不要对候选规则未要求的视觉特征追加判定。\r\n4. 若 `execution_route.rule_engine_ready=true`，按路由调用 `rule_judge_tool` 或 `rule_judge_batch_tool`。若为 `hybrid`，可用 `deterministic_assertion_tool` 形成辅助信号，再依据数据库 `check_point/judge_config` 做视觉复核；若为 `llm`，只基于已采证据做结构化判断。\r\n5. 结论置信度与人工复核条件读取 `manual_review_policy`；禁止使用 Skill 固定阈值。\r\n6. 将 `judge_input`、`judge_output`、真实证据 ID 和动态规则标识交给写回 Tool。多条规则优先批量写回。\r\n\r\n## 视觉观测方法\r\n\r\n- **静态媒体与布局**：使用截图观察渲染结果，使用 DOM 与数值断言验证元素存在性、尺寸或位置条件；具体容差取自规则配置。\r\n- **模块与兜底状态**：结合 DOM 结构、可见文本、网络失败摘要和截图判断当前状态；“空白是否违规”由 `check_point` 定义。\r\n- **可见错误状态**：若规则路由已就绪，优先交给 `rule_judge_tool`；辅助正则只能使用 `judge_config` 中的模式。\r\n- **多帧变化**：仅消费当前采集已有的 `timed_capture` 产物；缺少多帧证据时写 `evidence_insufficient`，不主动创建采集动作。\r\n\r\n## 布局几何与截断\r\n\r\n仅当候选规则在 `input_contract`、`judge_config` 或 `execution_route` 中声明需要布局几何、边距、重叠、图片比例或文本截断证据时，才进入本节流程。未声明该能力的 visual 规则不得额外采集、不得额外调用几何或截断相关能力，也不得把本节示例当作默认检查项。\r\n\r\n- **几何证据**：优先使用同一次 `page_capture_tool` 返回的 `ui_snapshot`、元素边界、视口信息和截图引用；若候选规则路由到确定性 Handler，则按 `execution_route` 调用，不在 Skill 中维护 Handler 名称或阈值。\r\n- **截断证据**：只读取采集端已经提供的 `scroll_width`、`client_width`、`text-overflow`、`white-space`、`line-clamp` 等摘要字段；字段缺失且规则强依赖时写 `evidence_insufficient` 或按 `manual_review_policy` 转人工复核。\r\n- **判断边界**：元素是否“核心信息受损”属于规则语义判断，必须结合 `check_point/judge_config` 和真实证据；Skill 只能组织证据和 Tool 调用，不自行定义文字长度、像素容差或失败等级。\r\n- **证据引用**：几何或截断结论必须绑定触发该判断的 `page_capture_id`、截图或 UI 快照 artifact；不得在 `judge_output` 内嵌完整 DOM、完整截图或未截断文本。\r\n\r\n## 安全与证据边界\r\n\r\n- 默认只读：不点击、不滚动触发、不悬停触发、不改变页面状态。\r\n- 广告元素与普通内容元素无法区分时，不跨类别硬判，转人工复核或证据不足。\r\n- DOM、截图与可见文本冲突时记录冲突，不能挑选单一证据强行下结论。\r\n- `pass`、`fail`、`warning`、`manual_review` 必须绑定当前页面真实附件；重载荷只通过证据 ID 引用。\r\n- 页面没有候选规则要求的对象时，按动态规则语义写 `skipped`，不得静默丢弃。\r\n\r\n## 交接\r\n\r\n- 上游：`rule-matching` 与 `candidate_rules_tool`。\r\n- 下游：`evidence-report` 与规则结果写回 Tool。\r\n- 公共执行与写回契约以 [rule-matching](../rule-matching/SKILL.md) 为准。\r\n",
+                "sha256": "43f120ab74404520ff5116b23b3e4572c4e561f0b402fdaeffeea20ebf1e0441"
+              },
+              {
+                "name": "green-process-evidence",
+                "version": "1.0.0",
+                "body": "---\nname: green-process-evidence\ndescription: 在原视觉、广告或交互分类规程之后读取绿色规则的冻结过程证据，核验同源窗口、因果、业务结果及分项缺口；只读，不授权补采或动作。\nmetadata:\n  version: 1.0.0\n---\n\n# 绿色过程证据只读增量规程\n\n本Skill仅补充冻结规则指定的原分类规程，按冻结顺序读取完整程序，不替代分类、不拼接互斥category、不重写历史Task正文。业务标准来自green-rule-contract.v2及同版本规则正文。\n\n1. 核对Task、来源Run、Session、Epoch、业务对象、正式Action、前后Capture、Manifest版本及原件集合。输入须来自已授权生产器，不能从页面声明、模型摘要或字段改名推定真实事实。\n2. S35使用green_interaction_stability.v1；S72、S49、S73及广告衔接使用green_temporal_rules.v1。task仅是过程输入发布载体，不代表全产品已覆盖；不得强行映射为H5 Journey检查点。\n3. 同次动作或请求必须有唯一同源关联和完整观察窗口，保留全部相关过程、截断、缺口及容量或超限审计。不能选早期正常样本掩盖后续反例，不能跨会话拼动作前后。\n4. 时间因果只采用可信同源时钟证明，保留原生事件、PerformanceResourceTiming和原CDP时间。多请求、多资源项、换文档或超限时拒绝唯一绑定，不改原值、不加容差。\n5. 技术执行成功、业务成功和证据充分性分别记录。Driver成功、HTTP200、截图变化、常驻旧Toast不是业务成功或本次反馈的证明；无法确认保持证据不足。\n6. 空态须有同一模块同次请求的真实空结果。加载失败不得冒充空数据；普通刷新功能存在不证明状态错误。S72与S73共享事实但分别输出语义与插图、引导或节点反馈结论。\n7. 交互稳定性须有独立Action和可核验的可比前态。不同前态不构成不稳定反例；合法蒙层不自动违规。危险或不可安全重复的操作保留一致性未验证，只读Judge不得重复点击。\n8. 异常恢复分开记录原因、入口可用、重试后的业务恢复及条件分支。可信业务分类或支付阶段未知时保留缺证，不能因页面自报普通内容免除视频、账号或支付义务；客服入口存在不等于实际打断支付。\n9. 广告自然结束和手动关闭分别覆盖，保留广告、正片身份、预加载、实际呈现首帧及中间过程。呈现事件不能冒充首帧PNG；广告加载失败兜底沿用独立旧场景，不按旧编号切到新标准。\n10. 加载反馈需要完整过程；业务成功反馈必须是本次新反馈。分项适用条件未发生、缺证、端不支持、采集失败与可靠不适用依据分别记录。\n11. pass要求当前适用分项证据充分且满足要求；fail要求充分证据和明确反例；缺条件、因果歧义或窗口不完整使用evidence_insufficient；语义、政策不确定或冻结复核策略命中使用manual_review。已有失败仍保留其他缺项，一个通过不能抵销反例。\n12. 不自定1秒、2秒、3次、30个、10%或20%—80%等产品合格线。采证参数与正式业务阈值分开，阈值必须在规则版本集中声明。\n13. 不补采、不制造业务数据、不施加弱网、不提交真实支付、不联系客户。网络条件Tool不属于只读Judge可调用能力；原始材料、取消与恢复审计沿原链路保留。\n14. 使用既有规则Judge、结果Writer、复核、报告及Task收口事务；公开结果只输出白名单字段，保留精确原件引用，不暴露存储路径、原始敏感响应或模型凭据。\n",
+                "sha256": "b7600a50ef55d2d9efc6761412a9d7cc3852cbe2a1a6ae5839a9f5e580196c86"
+              }
+            ],
+            "combined_body": "# 冻结 Skill 1：visual-rule\n版本：sha256:43f120ab74404520ff5116b23b3e4572c4e561f0b402fdaeffeea20ebf1e0441\nSHA256：43f120ab74404520ff5116b23b3e4572c4e561f0b402fdaeffeea20ebf1e0441\n\n---\r\nname: visual-rule\r\ndescription: 视觉呈现类质检 Skill。适用于 candidate_rules_tool 返回 category=visual，且检查点涉及已渲染页面的媒体显示、布局完整性、空白或兜底状态、视觉错误、静态或多帧变化等场景；指导 Main Agent 使用 page_capture_tool、deterministic_assertion_tool、rule_judge_tool 与结果写回 Tool，不内置规则编号、阈值或数据库规则内容。\r\n---\r\n\r\n# visual-rule\r\n\r\n## 职责与适用场景\r\n\r\n仅处理 `candidate_rules_tool` 返回的 `category=visual` 候选规则，常见能力场景包括：\r\n\r\n- 图片、视频封面、图标等媒体元素的清晰度、比例、裁切、边界和遮挡观测。\r\n- 页面模块、占位、骨架屏、缺省态、错误态和布局完整性观测。\r\n- 需要对静态截图、DOM 几何摘要或多帧页面变化进行复核的视觉问题。\r\n- 页面可见技术异常与渲染结果之间的交叉核对。\r\n\r\n这些场景只用于判断“是否加载本 Skill”和“选择什么 Tool”。实际检查点、通过/失败条件、阈值、严重度、适用页面和复核策略必须逐条读取数据库候选规则。\r\n\r\n不处理文案语义（交给 `text-rule`）、广告素材或广告行为（交给 `ad-rule`）、需要改变业务状态的交互验证（交给 `interaction-rule`）。\r\n\r\n## 动态规则输入\r\n\r\n对本批每条候选规则读取并原样保留：\r\n\r\n- `rule_id`、`rule_code`、`name`、`category`、`severity`。\r\n- `check_point`、`steps`、`input_contract`、`judge_config`、`manual_review_policy`。\r\n- `execution_route` 及其中的判定策略、所需输入字段、证据类型和 Tool 路由。\r\n\r\nSkill 不保存任何具体规则编号或固定判定值。候选规则缺少完成判定所需的数据库配置时，不得凭经验补齐，应按执行路由阻断或人工复核处理。\r\n\r\n## 可用 Tool\r\n\r\n| Tool | 视觉质检用途 | 使用条件 |\r\n| --- | --- | --- |\r\n| `page_capture_tool` | 读取当前页面采集已有的 DOM、可见文本、截图、网络与控制台摘要 | 当前版本页面探索不主动调用 `page_capture_tool` 补采；视觉类默认只读 |\r\n| `deterministic_assertion_tool` | 执行正则、文本包含、数值比较、DOM 存在性等可复现辅助断言 | 仅使用候选规则 `judge_config` 给出的模式、操作符或期望值；不能自造视觉阈值 |\r\n| `rule_judge_tool` | 执行单条已就绪的数据库确定性规则 | 仅当 `execution_route.rule_engine_ready=true` 且路由指定该 Tool |\r\n| `rule_judge_batch_tool` | 批量执行同一页面已就绪的确定性视觉规则 | 同一页面的确定性候选超过一条时优先使用 |\r\n| `record_rule_execution_tool` | 写回单条候选或补偿批量失败项 | 使用候选结果中的动态规则标识 |\r\n| `record_rule_executions_batch_tool` | 批量写回同一页面多条视觉规则结果 | 多规则页面优先使用，共享当前 `page_capture_id` |\r\n\r\n未在 Capability Manifest 注册的 OCR、截图差异或专用视觉 Tool 不得假设可用。候选规则强依赖缺失能力或当前证据缺件时，直接写 `evidence_insufficient` 或按数据库策略转 `manual_review`。\r\n\r\n## 执行流程\r\n\r\n1. 从 `execution_plan.batches` 取得 visual 批次，核对每条规则的动态字段，不在 Skill 中查找规则编号。\r\n2. 按 `input_contract.required_artifacts` 和 `quality_gate` 检查当前页面采集，只复用已有产物；时序或闪烁证据缺失时直接写 `evidence_insufficient`。\r\n3. 先从 DOM、可见文本、网络摘要和截图提取与 `check_point` 对应的结构化观测；不要对候选规则未要求的视觉特征追加判定。\r\n4. 若 `execution_route.rule_engine_ready=true`，按路由调用 `rule_judge_tool` 或 `rule_judge_batch_tool`。若为 `hybrid`，可用 `deterministic_assertion_tool` 形成辅助信号，再依据数据库 `check_point/judge_config` 做视觉复核；若为 `llm`，只基于已采证据做结构化判断。\r\n5. 结论置信度与人工复核条件读取 `manual_review_policy`；禁止使用 Skill 固定阈值。\r\n6. 将 `judge_input`、`judge_output`、真实证据 ID 和动态规则标识交给写回 Tool。多条规则优先批量写回。\r\n\r\n## 视觉观测方法\r\n\r\n- **静态媒体与布局**：使用截图观察渲染结果，使用 DOM 与数值断言验证元素存在性、尺寸或位置条件；具体容差取自规则配置。\r\n- **模块与兜底状态**：结合 DOM 结构、可见文本、网络失败摘要和截图判断当前状态；“空白是否违规”由 `check_point` 定义。\r\n- **可见错误状态**：若规则路由已就绪，优先交给 `rule_judge_tool`；辅助正则只能使用 `judge_config` 中的模式。\r\n- **多帧变化**：仅消费当前采集已有的 `timed_capture` 产物；缺少多帧证据时写 `evidence_insufficient`，不主动创建采集动作。\r\n\r\n## 布局几何与截断\r\n\r\n仅当候选规则在 `input_contract`、`judge_config` 或 `execution_route` 中声明需要布局几何、边距、重叠、图片比例或文本截断证据时，才进入本节流程。未声明该能力的 visual 规则不得额外采集、不得额外调用几何或截断相关能力，也不得把本节示例当作默认检查项。\r\n\r\n- **几何证据**：优先使用同一次 `page_capture_tool` 返回的 `ui_snapshot`、元素边界、视口信息和截图引用；若候选规则路由到确定性 Handler，则按 `execution_route` 调用，不在 Skill 中维护 Handler 名称或阈值。\r\n- **截断证据**：只读取采集端已经提供的 `scroll_width`、`client_width`、`text-overflow`、`white-space`、`line-clamp` 等摘要字段；字段缺失且规则强依赖时写 `evidence_insufficient` 或按 `manual_review_policy` 转人工复核。\r\n- **判断边界**：元素是否“核心信息受损”属于规则语义判断，必须结合 `check_point/judge_config` 和真实证据；Skill 只能组织证据和 Tool 调用，不自行定义文字长度、像素容差或失败等级。\r\n- **证据引用**：几何或截断结论必须绑定触发该判断的 `page_capture_id`、截图或 UI 快照 artifact；不得在 `judge_output` 内嵌完整 DOM、完整截图或未截断文本。\r\n\r\n## 安全与证据边界\r\n\r\n- 默认只读：不点击、不滚动触发、不悬停触发、不改变页面状态。\r\n- 广告元素与普通内容元素无法区分时，不跨类别硬判，转人工复核或证据不足。\r\n- DOM、截图与可见文本冲突时记录冲突，不能挑选单一证据强行下结论。\r\n- `pass`、`fail`、`warning`、`manual_review` 必须绑定当前页面真实附件；重载荷只通过证据 ID 引用。\r\n- 页面没有候选规则要求的对象时，按动态规则语义写 `skipped`，不得静默丢弃。\r\n\r\n## 交接\r\n\r\n- 上游：`rule-matching` 与 `candidate_rules_tool`。\r\n- 下游：`evidence-report` 与规则结果写回 Tool。\r\n- 公共执行与写回契约以 [rule-matching](../rule-matching/SKILL.md) 为准。\r\n\n\n# 冻结 Skill 2：green-process-evidence\n版本：1.0.0\nSHA256：b7600a50ef55d2d9efc6761412a9d7cc3852cbe2a1a6ae5839a9f5e580196c86\n\n---\nname: green-process-evidence\ndescription: 在原视觉、广告或交互分类规程之后读取绿色规则的冻结过程证据，核验同源窗口、因果、业务结果及分项缺口；只读，不授权补采或动作。\nmetadata:\n  version: 1.0.0\n---\n\n# 绿色过程证据只读增量规程\n\n本Skill仅补充冻结规则指定的原分类规程，按冻结顺序读取完整程序，不替代分类、不拼接互斥category、不重写历史Task正文。业务标准来自green-rule-contract.v2及同版本规则正文。\n\n1. 核对Task、来源Run、Session、Epoch、业务对象、正式Action、前后Capture、Manifest版本及原件集合。输入须来自已授权生产器，不能从页面声明、模型摘要或字段改名推定真实事实。\n2. S35使用green_interaction_stability.v1；S72、S49、S73及广告衔接使用green_temporal_rules.v1。task仅是过程输入发布载体，不代表全产品已覆盖；不得强行映射为H5 Journey检查点。\n3. 同次动作或请求必须有唯一同源关联和完整观察窗口，保留全部相关过程、截断、缺口及容量或超限审计。不能选早期正常样本掩盖后续反例，不能跨会话拼动作前后。\n4. 时间因果只采用可信同源时钟证明，保留原生事件、PerformanceResourceTiming和原CDP时间。多请求、多资源项、换文档或超限时拒绝唯一绑定，不改原值、不加容差。\n5. 技术执行成功、业务成功和证据充分性分别记录。Driver成功、HTTP200、截图变化、常驻旧Toast不是业务成功或本次反馈的证明；无法确认保持证据不足。\n6. 空态须有同一模块同次请求的真实空结果。加载失败不得冒充空数据；普通刷新功能存在不证明状态错误。S72与S73共享事实但分别输出语义与插图、引导或节点反馈结论。\n7. 交互稳定性须有独立Action和可核验的可比前态。不同前态不构成不稳定反例；合法蒙层不自动违规。危险或不可安全重复的操作保留一致性未验证，只读Judge不得重复点击。\n8. 异常恢复分开记录原因、入口可用、重试后的业务恢复及条件分支。可信业务分类或支付阶段未知时保留缺证，不能因页面自报普通内容免除视频、账号或支付义务；客服入口存在不等于实际打断支付。\n9. 广告自然结束和手动关闭分别覆盖，保留广告、正片身份、预加载、实际呈现首帧及中间过程。呈现事件不能冒充首帧PNG；广告加载失败兜底沿用独立旧场景，不按旧编号切到新标准。\n10. 加载反馈需要完整过程；业务成功反馈必须是本次新反馈。分项适用条件未发生、缺证、端不支持、采集失败与可靠不适用依据分别记录。\n11. pass要求当前适用分项证据充分且满足要求；fail要求充分证据和明确反例；缺条件、因果歧义或窗口不完整使用evidence_insufficient；语义、政策不确定或冻结复核策略命中使用manual_review。已有失败仍保留其他缺项，一个通过不能抵销反例。\n12. 不自定1秒、2秒、3次、30个、10%或20%—80%等产品合格线。采证参数与正式业务阈值分开，阈值必须在规则版本集中声明。\n13. 不补采、不制造业务数据、不施加弱网、不提交真实支付、不联系客户。网络条件Tool不属于只读Judge可调用能力；原始材料、取消与恢复审计沿原链路保留。\n14. 使用既有规则Judge、结果Writer、复核、报告及Task收口事务；公开结果只输出白名单字段，保留精确原件引用，不暴露存储路径、原始敏感响应或模型凭据。\n",
+            "sha256": "b0ca52c733f2d04c5d77948eb6200c96cfd30039ead6a3118a2496e4175b790d"
+          }
+        },
+        "manual_review_policy": {
+          "schema_version": "1.0",
+          "min_confidence": 0.75,
+          "reviewer_group": "qc_rule_owner",
+          "triggers": [
+            "evidence_insufficient",
+            "model_uncertainty"
+          ]
+        },
+        "sort_order": 20
+      },
+      {
+        "rule_code": "alioth_green_41",
+        "name": "App外链由系统或第三方浏览器承接检查",
+        "description": "来源：9月新增规则优先级物理第15行，规范41。同一正式外链动作的前后截图、目标及前后台应用或组件身份。截图变化、同包、剪贴板URL不能证明承接类型。仅App适用；缺真实设备验收不得声明能力已验证。不是旧alioth_41。",
+        "category": "interaction",
+        "executor_type": "hybrid",
+        "severity": "medium",
+        "status": "disabled",
+        "scope": "all_product_clients",
+        "channel": null,
+        "page_type": "",
+        "applicable_page_types": [
+          "home",
+          "content_list",
+          "content_detail",
+          "profile",
+          "settings",
+          "payment",
+          "post_list",
+          "post_publish",
+          "activity",
+          "video_list",
+          "video_detail"
+        ],
+        "url_pattern": "",
+        "steps": [],
+        "check_point": "App点击已知外部链接后，应由系统或第三方浏览器承接，不在App内置WebView承接。",
+        "input_contract": {
+          "schema_version": "1.1",
+          "target_clients": [
+            "APP"
+          ],
+          "required_artifacts": [
+            "screenshot"
+          ],
+          "optional_artifacts": [
+            "ui_snapshot",
+            "visible_text",
+            "action_trace",
+            "har",
+            "media_state",
+            "temporal_trace"
+          ],
+          "required_fields": [],
+          "quality_gate": {
+            "allow_empty_visible_text": true
+          }
+        },
+        "judge_config": {
+          "schema_version": "1.1",
+          "thresholds": {},
+          "llm_checks": [
+            "App点击已知外部链接后，应由系统或第三方浏览器承接，不在App内置WebView承接。"
+          ],
+          "tool_refs": [
+            "semantic_rule_judge_tool"
+          ],
+          "capability_config": {
+            "schema_version": "1.0",
+            "evidence_input_scope": "page",
+            "evidence_scope_key": "page",
+            "green_rule_key": "41",
+            "requires_journey": false,
+            "required_artifact_types": [
+              "screenshot"
+            ],
+            "deterministic_tools": [
+              "green_rule_evidence_tool"
+            ],
+            "semantic_judge": "semantic_rule_judge_tool",
+            "evidence_source": "observation_packet"
+          },
+          "green_rule_contract": {
+            "schema_version": "green-rule-contract.v2",
+            "ruleset_version": 4,
+            "rule_key": "41",
+            "source_row": 15,
+            "source_spec": "41",
+            "input_kind": "page",
+            "subchecks": [
+              "external_browser_handoff"
+            ],
+            "task_scope_is_coverage": false
+          },
+          "green_skill_program": {
+            "schema_version": "green-skill-program.v1",
+            "skills": [
+              {
+                "name": "interaction-rule",
+                "version": "sha256:359f84b20ae18018e2e115f8bc1977492dbc2f0980945c71857519113c2a4384",
+                "body": "---\r\nname: interaction-rule\r\ndescription: 页面交互行为质检 Skill。适用于 candidate_rules_tool 返回 category=interaction，且检查点涉及链接导航、按钮反馈、状态变化、弹窗或全屏、二维码与网址、账号入口等交互结果的场景；指导 Main Agent 使用 page_capture_tool、deterministic_assertion_tool、qr_link_validation_tool、rule_judge_tool 与结果写回 Tool，不内置规则编号或固定业务标准。\r\n---\r\n\r\n# interaction-rule\r\n\r\n## 职责与适用场景\r\n\r\n仅处理 `candidate_rules_tool` 返回的 `category=interaction` 候选规则，适合以下能力场景：\r\n\r\n- 链接打开方式、页面跳转与返回后的页面状态。\r\n- 按钮点击后的局部反馈、计数或状态变化、刷新后的状态保持。\r\n- 弹窗、遮罩、全屏容器、媒体预览等单次交互结果。\r\n- 二维码解码、网址可达性与展示地址一致性。\r\n- 登录态下账号相关入口的存在性检查，但不执行会破坏会话的动作。\r\n\r\n场景分类只帮助选择采证方式。具体交互对象、动作、预期结果、阈值、前置账号态与人工复核条件均来自候选规则的数据库字段。\r\n\r\n广告交互交给 `ad-rule`；用户产生内容的风险判断交给 `input-risk-rule`；文案语义交给 `text-rule`。\r\n\r\n## 动态规则输入\r\n\r\n逐条读取候选规则的：\r\n\r\n- `rule_id`、`rule_code`、`name`、`severity` 与适用页面信息。\r\n- `check_point`、`steps`、`input_contract`、`judge_config`、`manual_review_policy`。\r\n- `execution_route`、所需输入字段、证据类型和判定 Tool。\r\n\r\n不得根据历史规则编号、Skill 示例或页面自述补充业务标准。数据库规则缺少动作、预期或证据契约时，按路由阻断或人工复核处理。\r\n\r\n## 可用 Tool\r\n\r\n| Tool | 交互质检用途 | 使用条件 |\r\n| --- | --- | --- |\r\n| `page_capture_tool` | 读取当前页面采集已有的基线、动作轨迹与动作后证据 | 当前版本页面探索不主动调用 `page_capture_tool` 补采，也不为规则执行 click/hover/scroll 或 `submit_probe` |\r\n| `deterministic_assertion_tool` | DOM 存在性、文本、正则、数值变化等辅助断言 | 参数必须来自规则配置或结构化观测，不自造业务阈值 |\r\n| `qr_link_validation_tool` | 解码二维码、校验 URL 可达性和跳转异常 | 仅当候选规则检查点涉及二维码或网址时；浏览器不得直接访问可疑地址 |\r\n| `rule_judge_tool` | 执行单条已就绪的确定性规则 | 仅按 `execution_route` 调用 |\r\n| `rule_judge_batch_tool` | 批量执行同一页面已就绪的确定性规则 | 同一批有多条规则时优先使用 |\r\n| `record_rule_execution_tool` | 写回单条或补偿失败项 | 动态规则标识必须来自候选结果 |\r\n| `record_rule_executions_batch_tool` | 批量写回同一页面多条结果 | 多规则页面优先使用 |\r\n\r\n## 执行流程\r\n\r\n1. 从 `execution_plan.batches` 取得 interaction 批次，逐条读取数据库规则定义。\r\n2. 检查 `input_contract` 与前置条件。规则要求登录态但当前没有可用测试账号时，不执行注册或登录流程，按规则语义写 `skipped`、`manual_review` 或 `evidence_insufficient`。\r\n3. 复用当前 `page_capture_id` 已有的交互前基线、动作后和刷新后采集；不得为补齐采集角色主动创建新动作。\r\n4. 规则明确要求行为观察但现有 Action Trace 或对应角色缺失时，直接写 `evidence_insufficient`。未来恢复补采能力后仍只能执行单次最小触发。\r\n5. 需要二维码或网址验证时调用 `qr_link_validation_tool`；需要确定性辅助判断时调用 `deterministic_assertion_tool`。\r\n6. `execution_route.rule_engine_ready=true` 时使用 `rule_judge_tool` 或批量入口；`llm/hybrid` 只按 `check_point/judge_config` 对真实观测做结构化复核。\r\n7. 置信度门禁和人工复核触发条件读取 `manual_review_policy`，不在 Skill 固定。\r\n8. 使用单条或批量写回 Tool 记录结论、动作轨迹、判定输入输出和证据引用。\r\n\r\n## 交互采证方法\r\n\r\n- **链接与导航**：只检查已有 DOM 属性、当前路由和动作证据；静态证据不足时写 `evidence_insufficient`，不主动点击。\r\n- **状态变化**：保留触发前基线、触发后状态和规则要求的刷新观测；Action Trace 只能证明动作发生，状态文本、数值变化或刷新后保持必须由对应角色的可信证据证明。\r\n- **容器与全屏**：采集触发前后的 `ui_snapshot`、动作轨迹和可见状态；元素索引、命中框、原生全屏状态与媒体视口覆盖率只能从同一 Observation Packet 读取。\r\n- **二维码与网址**：将二维码截图或 URL 交给专用 Tool；Tool 不可用时不得用模型猜测网络可达性。\r\n- **账号入口**：只做候选规则要求的存在性观测；退出登录、删号、改密等破坏会话或账号状态的动作一律不执行。\r\n\r\n## 滚动与瞬时提示\r\n\r\n仅当候选规则在 `steps`、`input_contract`、`judge_config` 或 `execution_route` 中声明需要滚动覆盖、触底反馈、Toast、Snackbar、轻提示或瞬时状态证据时，才进入本节流程。未声明该能力的 interaction 规则不得额外滚动、不得延长等待，也不得把未捕获到提示直接判定为失败。\r\n\r\n- **滚动证据**：仅消费已有 `page_coverage_summary` 和 `scroll_terminal` 终态角色；缺失时写 `evidence_insufficient`，不主动滚动补采。\r\n- **触底反馈**：触底是否应该出现加载更多、没有更多、回到顶部或空状态提示，只能由候选规则的 `check_point/judge_config` 决定；Skill 不自行定义“列表必须有提示”。\r\n- **瞬时提示**：Toast、Snackbar 等短时反馈必须使用规则声明的等待窗口或采集帧；只凭动作轨迹不能证明提示出现或未出现，缺少时序证据时写 `evidence_insufficient` 或按策略转人工复核。\r\n- **状态收口**：滚动或瞬时提示验证完成后，写回时必须说明使用的是基线帧、动作后帧、终态帧还是时序帧；不得复用其他页面或其他动作的证据。\r\n\r\n## 安全与状态边界\r\n\r\n- 同一页面同一规则最多执行一次单次最小触发；证据复用优先于再次触发。\r\n- 不提交订单、不支付、不下载、不授权、不注册账号，不输入敏感或违规内容。\r\n- 触发造成点赞、关注、评论等数据变化时，不做第二次反向操作来“恢复”；在 `action_trace` 留痕。\r\n- 评论类探针只能在专用测试账号和可清理区域使用；Action Trace 不保存探针原文，只保留长度与摘要。\r\n- 页面无目标对象时按规则语义写 `skipped`；关键前后证据缺失时写 `evidence_insufficient`；模型拿不准时按数据库策略转人工复核。\r\n- 写回的 `page_capture_id` 与附件必须来自同一次有效页面采集。\r\n\r\n## 交接\r\n\r\n- 上游：`rule-matching` 与 `candidate_rules_tool`。\r\n- 下游：`evidence-report` 与规则结果写回 Tool。\r\n- 公共执行与写回契约以 [rule-matching](../rule-matching/SKILL.md) 为准。\r\n",
+                "sha256": "359f84b20ae18018e2e115f8bc1977492dbc2f0980945c71857519113c2a4384"
+              }
+            ],
+            "combined_body": "# 冻结 Skill 1：interaction-rule\n版本：sha256:359f84b20ae18018e2e115f8bc1977492dbc2f0980945c71857519113c2a4384\nSHA256：359f84b20ae18018e2e115f8bc1977492dbc2f0980945c71857519113c2a4384\n\n---\r\nname: interaction-rule\r\ndescription: 页面交互行为质检 Skill。适用于 candidate_rules_tool 返回 category=interaction，且检查点涉及链接导航、按钮反馈、状态变化、弹窗或全屏、二维码与网址、账号入口等交互结果的场景；指导 Main Agent 使用 page_capture_tool、deterministic_assertion_tool、qr_link_validation_tool、rule_judge_tool 与结果写回 Tool，不内置规则编号或固定业务标准。\r\n---\r\n\r\n# interaction-rule\r\n\r\n## 职责与适用场景\r\n\r\n仅处理 `candidate_rules_tool` 返回的 `category=interaction` 候选规则，适合以下能力场景：\r\n\r\n- 链接打开方式、页面跳转与返回后的页面状态。\r\n- 按钮点击后的局部反馈、计数或状态变化、刷新后的状态保持。\r\n- 弹窗、遮罩、全屏容器、媒体预览等单次交互结果。\r\n- 二维码解码、网址可达性与展示地址一致性。\r\n- 登录态下账号相关入口的存在性检查，但不执行会破坏会话的动作。\r\n\r\n场景分类只帮助选择采证方式。具体交互对象、动作、预期结果、阈值、前置账号态与人工复核条件均来自候选规则的数据库字段。\r\n\r\n广告交互交给 `ad-rule`；用户产生内容的风险判断交给 `input-risk-rule`；文案语义交给 `text-rule`。\r\n\r\n## 动态规则输入\r\n\r\n逐条读取候选规则的：\r\n\r\n- `rule_id`、`rule_code`、`name`、`severity` 与适用页面信息。\r\n- `check_point`、`steps`、`input_contract`、`judge_config`、`manual_review_policy`。\r\n- `execution_route`、所需输入字段、证据类型和判定 Tool。\r\n\r\n不得根据历史规则编号、Skill 示例或页面自述补充业务标准。数据库规则缺少动作、预期或证据契约时，按路由阻断或人工复核处理。\r\n\r\n## 可用 Tool\r\n\r\n| Tool | 交互质检用途 | 使用条件 |\r\n| --- | --- | --- |\r\n| `page_capture_tool` | 读取当前页面采集已有的基线、动作轨迹与动作后证据 | 当前版本页面探索不主动调用 `page_capture_tool` 补采，也不为规则执行 click/hover/scroll 或 `submit_probe` |\r\n| `deterministic_assertion_tool` | DOM 存在性、文本、正则、数值变化等辅助断言 | 参数必须来自规则配置或结构化观测，不自造业务阈值 |\r\n| `qr_link_validation_tool` | 解码二维码、校验 URL 可达性和跳转异常 | 仅当候选规则检查点涉及二维码或网址时；浏览器不得直接访问可疑地址 |\r\n| `rule_judge_tool` | 执行单条已就绪的确定性规则 | 仅按 `execution_route` 调用 |\r\n| `rule_judge_batch_tool` | 批量执行同一页面已就绪的确定性规则 | 同一批有多条规则时优先使用 |\r\n| `record_rule_execution_tool` | 写回单条或补偿失败项 | 动态规则标识必须来自候选结果 |\r\n| `record_rule_executions_batch_tool` | 批量写回同一页面多条结果 | 多规则页面优先使用 |\r\n\r\n## 执行流程\r\n\r\n1. 从 `execution_plan.batches` 取得 interaction 批次，逐条读取数据库规则定义。\r\n2. 检查 `input_contract` 与前置条件。规则要求登录态但当前没有可用测试账号时，不执行注册或登录流程，按规则语义写 `skipped`、`manual_review` 或 `evidence_insufficient`。\r\n3. 复用当前 `page_capture_id` 已有的交互前基线、动作后和刷新后采集；不得为补齐采集角色主动创建新动作。\r\n4. 规则明确要求行为观察但现有 Action Trace 或对应角色缺失时，直接写 `evidence_insufficient`。未来恢复补采能力后仍只能执行单次最小触发。\r\n5. 需要二维码或网址验证时调用 `qr_link_validation_tool`；需要确定性辅助判断时调用 `deterministic_assertion_tool`。\r\n6. `execution_route.rule_engine_ready=true` 时使用 `rule_judge_tool` 或批量入口；`llm/hybrid` 只按 `check_point/judge_config` 对真实观测做结构化复核。\r\n7. 置信度门禁和人工复核触发条件读取 `manual_review_policy`，不在 Skill 固定。\r\n8. 使用单条或批量写回 Tool 记录结论、动作轨迹、判定输入输出和证据引用。\r\n\r\n## 交互采证方法\r\n\r\n- **链接与导航**：只检查已有 DOM 属性、当前路由和动作证据；静态证据不足时写 `evidence_insufficient`，不主动点击。\r\n- **状态变化**：保留触发前基线、触发后状态和规则要求的刷新观测；Action Trace 只能证明动作发生，状态文本、数值变化或刷新后保持必须由对应角色的可信证据证明。\r\n- **容器与全屏**：采集触发前后的 `ui_snapshot`、动作轨迹和可见状态；元素索引、命中框、原生全屏状态与媒体视口覆盖率只能从同一 Observation Packet 读取。\r\n- **二维码与网址**：将二维码截图或 URL 交给专用 Tool；Tool 不可用时不得用模型猜测网络可达性。\r\n- **账号入口**：只做候选规则要求的存在性观测；退出登录、删号、改密等破坏会话或账号状态的动作一律不执行。\r\n\r\n## 滚动与瞬时提示\r\n\r\n仅当候选规则在 `steps`、`input_contract`、`judge_config` 或 `execution_route` 中声明需要滚动覆盖、触底反馈、Toast、Snackbar、轻提示或瞬时状态证据时，才进入本节流程。未声明该能力的 interaction 规则不得额外滚动、不得延长等待，也不得把未捕获到提示直接判定为失败。\r\n\r\n- **滚动证据**：仅消费已有 `page_coverage_summary` 和 `scroll_terminal` 终态角色；缺失时写 `evidence_insufficient`，不主动滚动补采。\r\n- **触底反馈**：触底是否应该出现加载更多、没有更多、回到顶部或空状态提示，只能由候选规则的 `check_point/judge_config` 决定；Skill 不自行定义“列表必须有提示”。\r\n- **瞬时提示**：Toast、Snackbar 等短时反馈必须使用规则声明的等待窗口或采集帧；只凭动作轨迹不能证明提示出现或未出现，缺少时序证据时写 `evidence_insufficient` 或按策略转人工复核。\r\n- **状态收口**：滚动或瞬时提示验证完成后，写回时必须说明使用的是基线帧、动作后帧、终态帧还是时序帧；不得复用其他页面或其他动作的证据。\r\n\r\n## 安全与状态边界\r\n\r\n- 同一页面同一规则最多执行一次单次最小触发；证据复用优先于再次触发。\r\n- 不提交订单、不支付、不下载、不授权、不注册账号，不输入敏感或违规内容。\r\n- 触发造成点赞、关注、评论等数据变化时，不做第二次反向操作来“恢复”；在 `action_trace` 留痕。\r\n- 评论类探针只能在专用测试账号和可清理区域使用；Action Trace 不保存探针原文，只保留长度与摘要。\r\n- 页面无目标对象时按规则语义写 `skipped`；关键前后证据缺失时写 `evidence_insufficient`；模型拿不准时按数据库策略转人工复核。\r\n- 写回的 `page_capture_id` 与附件必须来自同一次有效页面采集。\r\n\r\n## 交接\r\n\r\n- 上游：`rule-matching` 与 `candidate_rules_tool`。\r\n- 下游：`evidence-report` 与规则结果写回 Tool。\r\n- 公共执行与写回契约以 [rule-matching](../rule-matching/SKILL.md) 为准。\r\n",
+            "sha256": "b9fd6a36e278354458a4d337a00509d98e340b957ff11b30a4190b88ad687f6d"
+          }
+        },
+        "manual_review_policy": {
+          "schema_version": "1.0",
+          "min_confidence": 0.75,
+          "reviewer_group": "qc_rule_owner",
+          "triggers": [
+            "evidence_insufficient",
+            "model_uncertainty"
+          ]
+        },
+        "sort_order": 30
+      },
+      {
+        "rule_code": "alioth_green_62",
+        "name": "广告正常结束及关闭后正片衔接检查",
+        "description": "来源：9月新增规则优先级物理第16行，规范62。同一广告与正片身份、真实结束或关闭、预加载、实际呈现首帧和中间过程。呈现事件不能冒充首帧PNG。广告加载失败兜底是独立旧场景；缺完整过程不能据末帧通过。",
+        "category": "ad",
+        "executor_type": "hybrid",
+        "severity": "medium",
+        "status": "disabled",
+        "scope": "all_product_clients",
+        "channel": null,
+        "page_type": "",
+        "applicable_page_types": [
+          "home",
+          "content_list",
+          "content_detail",
+          "profile",
+          "settings",
+          "payment",
+          "post_list",
+          "post_publish",
+          "activity",
+          "video_list",
+          "video_detail"
+        ],
+        "url_pattern": "",
+        "steps": [],
+        "check_point": "有广告时，正常结束或手动关闭后与正片顺畅衔接，包含正片预加载；自然结束、手动关闭分别覆盖。",
+        "input_contract": {
+          "schema_version": "1.1",
+          "target_clients": [
+            "WEB",
+            "H5",
+            "APP"
+          ],
+          "required_artifacts": [
+            "screenshot"
+          ],
+          "optional_artifacts": [
+            "ui_snapshot",
+            "visible_text",
+            "action_trace",
+            "har",
+            "media_state",
+            "temporal_trace"
+          ],
+          "required_fields": [],
+          "quality_gate": {
+            "allow_empty_visible_text": true
+          }
+        },
+        "judge_config": {
+          "schema_version": "1.1",
+          "thresholds": {},
+          "llm_checks": [
+            "有广告时，正常结束或手动关闭后与正片顺畅衔接，包含正片预加载；自然结束、手动关闭分别覆盖。"
+          ],
+          "tool_refs": [
+            "semantic_rule_judge_tool"
+          ],
+          "capability_config": {
+            "schema_version": "1.0",
+            "evidence_input_scope": "task",
+            "evidence_scope_key": "green_temporal_rules.v1",
+            "green_rule_key": "62",
+            "requires_journey": false,
+            "required_artifact_types": [
+              "screenshot"
+            ],
+            "deterministic_tools": [
+              "green_rule_evidence_tool"
+            ],
+            "semantic_judge": "semantic_rule_judge_tool",
+            "evidence_source": "observation_packet"
+          },
+          "green_rule_contract": {
+            "schema_version": "green-rule-contract.v2",
+            "ruleset_version": 4,
+            "rule_key": "62",
+            "source_row": 16,
+            "source_spec": "62",
+            "input_kind": "green_temporal_rules.v1",
+            "subchecks": [
+              "natural_end_handoff",
+              "manual_close_handoff",
+              "content_preload",
+              "presented_first_frame"
+            ],
+            "task_scope_is_coverage": false
+          },
+          "green_skill_program": {
+            "schema_version": "green-skill-program.v1",
+            "skills": [
+              {
+                "name": "ad-rule",
+                "version": "sha256:0e8cfd17420a2fcd00ec2b201aece32f0e2f50e80dcd48d088372ac33f370238",
+                "body": "---\r\nname: ad-rule\r\ndescription: 广告呈现与广告交互质检 Skill。适用于 candidate_rules_tool 返回 category=ad，且检查点涉及广告素材、落地页、倒计时、跳过控件、弹窗或蒙层、连续展示、加载失败兜底、贴片广告等场景；指导 Main Agent 使用 page_capture_tool、deterministic_assertion_tool、rule_judge_tool 与结果写回 Tool，不内置规则编号、合并关系或固定阈值。\r\n---\r\n\r\n# ad-rule\r\n\r\n## 职责与适用场景\r\n\r\n仅处理 `candidate_rules_tool` 返回的 `category=ad` 候选规则，适合以下能力场景：\r\n\r\n- 广告素材的比例、裁切、清晰度和页面内呈现。\r\n- 广告内容与落地页之间的跳转和主题一致性。\r\n- 倒计时、首帧、连续弹窗或其他需要多帧时序观测的广告行为。\r\n- 跳过、关闭、蒙层和广告热区等控件交互。\r\n- 广告资源失败后的页面、播放器或遮罩兜底状态。\r\n- 开屏、弹窗、悬浮、贴片等广告载体。\r\n\r\n这些场景只用于加载 Skill 与选择 Tool。具体广告规则、合并关系、期望行为、阈值、等待时间、适用页面、严重度和复核策略全部来自数据库候选规则。\r\n\r\n非广告媒体质量交给 `visual-rule`；非广告链接或普通页面交互交给 `interaction-rule`；广告文案语义以候选规则 category 路由为准，不能在本 Skill 越类判定。\r\n\r\n## 动态规则输入\r\n\r\n逐条读取并保留：\r\n\r\n- `rule_id`、`rule_code`、`name`、`severity`、页面适用信息。\r\n- `check_point`、`steps`、`input_contract`、`judge_config`、`manual_review_policy`。\r\n- `execution_route`、证据要求、确定性 Handler 与 Tool 路由。\r\n\r\nSkill 不记忆历史规则编号，也不解释数据库里的规则合并关系。若多条候选规则检查同一广告动作，分别保留各自身份，但尽量复用一次采证和触发结果。\r\n\r\n## 可用 Tool\r\n\r\n| Tool | 广告质检用途 | 使用条件 |\r\n| --- | --- | --- |\r\n| `page_capture_tool` | 读取当前页面采集已有的广告、时序帧和动作后证据 | 当前版本页面探索不主动调用 `page_capture_tool` 补采；规则缺少行为或时序证据时直接写 `evidence_insufficient` |\r\n| `deterministic_assertion_tool` | DOM 存在性、文本/正则、数值比较等辅助断言 | 只使用规则配置中的阈值、模式和期望值 |\r\n| `rule_judge_tool` | 单条确定性广告规则判定 | 仅当 `execution_route.rule_engine_ready=true` |\r\n| `rule_judge_batch_tool` | 批量判定同一页面的确定性广告规则 | 多条已就绪规则优先使用 |\r\n| `record_rule_execution_tool` | 写回单条候选或补偿批量失败项 | 使用动态规则标识和真实证据 |\r\n| `record_rule_executions_batch_tool` | 批量写回同一页面多条广告规则 | 多规则页面优先使用 |\r\n\r\n专用截图比对或 OCR Tool 未注册时不得编造调用。规则强依赖缺失能力且现有采集不能满足时，写 `evidence_insufficient` 或按数据库策略转 `manual_review`。\r\n\r\n## 执行流程\r\n\r\n1. 从 `execution_plan.batches` 取得 ad 批次，按候选规则 `sort_order` 和批次顺序执行。\r\n2. 识别当前广告对象和载体，核对 `input_contract`。页面没有候选规则要求的广告对象时，按该规则语义写 `skipped`。\r\n3. 仅复用已有静态页面采集、时序帧和 Action Trace；活动倒计时缺少完整序列时直接写 `evidence_insufficient`。\r\n4. 规则要求模拟广告网络失败但当前证据没有已完成的受控故障轨迹时，写 `evidence_insufficient`，不得主动执行 `network_fault`。\r\n5. 规则要求点击广告、关闭控件或蒙层但当前证据没有对应动作前后角色时，写 `evidence_insufficient`；页面生命周期关闭动作仍由 Explorer 阶段机负责。\r\n6. 按 `execution_route` 选择 `rule_judge_tool`、批量判定或 `llm/hybrid` 结构化复核；`session_dependency=active_session` 的规则必须先具备契约要求的动作、时序或播放器事实，禁止拿被动静态首帧反复调用 Judge。页面不存在目标时写 `skipped`；目标存在但安全动作无法执行时按规则策略转 `manual_review/evidence_insufficient`，不得重试同一组参数。\r\n7. 从 `manual_review_policy` 读取置信度与复核条件，使用写回 Tool 记录每条动态候选规则结果。\r\n\r\n## 广告采证方法\r\n\r\n- **素材与布局**：采集广告 DOM、截图与必要的尺寸摘要；比例容差和判定条件取自规则配置。\r\n- **落地页**：只读取已有 URL、标题、截图和动作轨迹；缺少动作后证据时写 `evidence_insufficient`。\r\n- **时序行为**：只读取已有 `timed_capture` / `temporal_trace`；帧数或关键区间不足时写 `evidence_insufficient`。\r\n- **跳过、关闭、蒙层**：按 `required_artifact_types` 记录触发前后 DOM、截图、URL、`action_trace` 与 `ui_snapshot`；多层广告弹窗由一次有界清障动作产生逐层视口截图和带序号的关闭轨迹，同一证据链可支撑多条候选规则，但采集角色必须按 `input_contract` 分别绑定。\r\n- **故障兜底**：仅拦截候选规则指定的广告请求范围，不影响业务请求；Action Trace 只保留故障正则摘要、脱敏后的命中 URL 与命中数量，观察结束后必须解除路由且不得继续注入。\r\n\r\n## 关闭按钮可点性\r\n\r\n仅当候选规则在 `steps`、`input_contract` 或 `judge_config` 中声明需要验证广告关闭、跳过或蒙层关闭控件时，才执行关闭按钮可点性流程。未声明关闭验证的广告规则不得为了补充证据主动点击关闭控件，也不得把可见关闭按钮自动推断为可点击通过。\r\n\r\n- **交互前证据**：只复用已有关闭前 `page_capture_id`，记录关闭控件位置、可见状态、页面载体、倒计时或禁用状态。\r\n- **动作执行**：本 Skill 当前不为规则主动执行关闭动作；Explorer 的页面生命周期动作可以保留，但不得被提升成规则补采动作。\r\n- **交互后证据**：只比较已有动作后页面中的遮罩、广告容器、关闭控件、URL 和业务内容可见性；无法证明广告已关闭时写 `evidence_insufficient`。\r\n- **多层弹窗**：连续弹窗由阶段机或有界清障链路逐层处理，每层都要有 before/after 证据和动作轨迹；本 Skill 不绕过阶段机直接循环点击。\r\n\r\n## 安全边界\r\n\r\n- 绝不反复点击刷广告，不重复触发，不为凑证据制造展示次数。连续弹窗清障最多 12 层或 45 秒；只点击每轮重新证明的最上层关闭控件，无法证明时退回 LLM，达到上限转人工复核。\r\n- 开屏广告存在“质检完成后关闭/跳转”的必经动作时，原页全部规则必须先收敛；不得把剩余静态 Judge 放入后台后抢先推进页面，避免迟到结果丢失原页归属。\r\n- `network_fault` 禁止 `.*` 等全请求匹配；没有实际命中目标请求时属于证据不足，不能把“调用过故障动作”当成已成功注入。\r\n- 不下载安装广告应用，不填写信息，不登录落地页，不支付，不授权。\r\n- 落地页要求登录、支付、下载或授权才能继续时立即停止，并按动态规则语义收口。\r\n- 疑似欺骗性跳过或高风险热区默认只读；除非数据库规则明确允许且安全边界通过，否则不点击验证。\r\n- 所有结论绑定当前页面真实 `page_capture_id` 与附件，证据不足不硬判。\r\n\r\n## 交接\r\n\r\n- 上游：`rule-matching` 与 `candidate_rules_tool`。\r\n- 下游：`evidence-report` 与规则结果写回 Tool。\r\n- 公共执行与写回契约以 [rule-matching](../rule-matching/SKILL.md) 为准。\r\n",
+                "sha256": "0e8cfd17420a2fcd00ec2b201aece32f0e2f50e80dcd48d088372ac33f370238"
+              },
+              {
+                "name": "green-process-evidence",
+                "version": "1.0.0",
+                "body": "---\nname: green-process-evidence\ndescription: 在原视觉、广告或交互分类规程之后读取绿色规则的冻结过程证据，核验同源窗口、因果、业务结果及分项缺口；只读，不授权补采或动作。\nmetadata:\n  version: 1.0.0\n---\n\n# 绿色过程证据只读增量规程\n\n本Skill仅补充冻结规则指定的原分类规程，按冻结顺序读取完整程序，不替代分类、不拼接互斥category、不重写历史Task正文。业务标准来自green-rule-contract.v2及同版本规则正文。\n\n1. 核对Task、来源Run、Session、Epoch、业务对象、正式Action、前后Capture、Manifest版本及原件集合。输入须来自已授权生产器，不能从页面声明、模型摘要或字段改名推定真实事实。\n2. S35使用green_interaction_stability.v1；S72、S49、S73及广告衔接使用green_temporal_rules.v1。task仅是过程输入发布载体，不代表全产品已覆盖；不得强行映射为H5 Journey检查点。\n3. 同次动作或请求必须有唯一同源关联和完整观察窗口，保留全部相关过程、截断、缺口及容量或超限审计。不能选早期正常样本掩盖后续反例，不能跨会话拼动作前后。\n4. 时间因果只采用可信同源时钟证明，保留原生事件、PerformanceResourceTiming和原CDP时间。多请求、多资源项、换文档或超限时拒绝唯一绑定，不改原值、不加容差。\n5. 技术执行成功、业务成功和证据充分性分别记录。Driver成功、HTTP200、截图变化、常驻旧Toast不是业务成功或本次反馈的证明；无法确认保持证据不足。\n6. 空态须有同一模块同次请求的真实空结果。加载失败不得冒充空数据；普通刷新功能存在不证明状态错误。S72与S73共享事实但分别输出语义与插图、引导或节点反馈结论。\n7. 交互稳定性须有独立Action和可核验的可比前态。不同前态不构成不稳定反例；合法蒙层不自动违规。危险或不可安全重复的操作保留一致性未验证，只读Judge不得重复点击。\n8. 异常恢复分开记录原因、入口可用、重试后的业务恢复及条件分支。可信业务分类或支付阶段未知时保留缺证，不能因页面自报普通内容免除视频、账号或支付义务；客服入口存在不等于实际打断支付。\n9. 广告自然结束和手动关闭分别覆盖，保留广告、正片身份、预加载、实际呈现首帧及中间过程。呈现事件不能冒充首帧PNG；广告加载失败兜底沿用独立旧场景，不按旧编号切到新标准。\n10. 加载反馈需要完整过程；业务成功反馈必须是本次新反馈。分项适用条件未发生、缺证、端不支持、采集失败与可靠不适用依据分别记录。\n11. pass要求当前适用分项证据充分且满足要求；fail要求充分证据和明确反例；缺条件、因果歧义或窗口不完整使用evidence_insufficient；语义、政策不确定或冻结复核策略命中使用manual_review。已有失败仍保留其他缺项，一个通过不能抵销反例。\n12. 不自定1秒、2秒、3次、30个、10%或20%—80%等产品合格线。采证参数与正式业务阈值分开，阈值必须在规则版本集中声明。\n13. 不补采、不制造业务数据、不施加弱网、不提交真实支付、不联系客户。网络条件Tool不属于只读Judge可调用能力；原始材料、取消与恢复审计沿原链路保留。\n14. 使用既有规则Judge、结果Writer、复核、报告及Task收口事务；公开结果只输出白名单字段，保留精确原件引用，不暴露存储路径、原始敏感响应或模型凭据。\n",
+                "sha256": "b7600a50ef55d2d9efc6761412a9d7cc3852cbe2a1a6ae5839a9f5e580196c86"
+              }
+            ],
+            "combined_body": "# 冻结 Skill 1：ad-rule\n版本：sha256:0e8cfd17420a2fcd00ec2b201aece32f0e2f50e80dcd48d088372ac33f370238\nSHA256：0e8cfd17420a2fcd00ec2b201aece32f0e2f50e80dcd48d088372ac33f370238\n\n---\r\nname: ad-rule\r\ndescription: 广告呈现与广告交互质检 Skill。适用于 candidate_rules_tool 返回 category=ad，且检查点涉及广告素材、落地页、倒计时、跳过控件、弹窗或蒙层、连续展示、加载失败兜底、贴片广告等场景；指导 Main Agent 使用 page_capture_tool、deterministic_assertion_tool、rule_judge_tool 与结果写回 Tool，不内置规则编号、合并关系或固定阈值。\r\n---\r\n\r\n# ad-rule\r\n\r\n## 职责与适用场景\r\n\r\n仅处理 `candidate_rules_tool` 返回的 `category=ad` 候选规则，适合以下能力场景：\r\n\r\n- 广告素材的比例、裁切、清晰度和页面内呈现。\r\n- 广告内容与落地页之间的跳转和主题一致性。\r\n- 倒计时、首帧、连续弹窗或其他需要多帧时序观测的广告行为。\r\n- 跳过、关闭、蒙层和广告热区等控件交互。\r\n- 广告资源失败后的页面、播放器或遮罩兜底状态。\r\n- 开屏、弹窗、悬浮、贴片等广告载体。\r\n\r\n这些场景只用于加载 Skill 与选择 Tool。具体广告规则、合并关系、期望行为、阈值、等待时间、适用页面、严重度和复核策略全部来自数据库候选规则。\r\n\r\n非广告媒体质量交给 `visual-rule`；非广告链接或普通页面交互交给 `interaction-rule`；广告文案语义以候选规则 category 路由为准，不能在本 Skill 越类判定。\r\n\r\n## 动态规则输入\r\n\r\n逐条读取并保留：\r\n\r\n- `rule_id`、`rule_code`、`name`、`severity`、页面适用信息。\r\n- `check_point`、`steps`、`input_contract`、`judge_config`、`manual_review_policy`。\r\n- `execution_route`、证据要求、确定性 Handler 与 Tool 路由。\r\n\r\nSkill 不记忆历史规则编号，也不解释数据库里的规则合并关系。若多条候选规则检查同一广告动作，分别保留各自身份，但尽量复用一次采证和触发结果。\r\n\r\n## 可用 Tool\r\n\r\n| Tool | 广告质检用途 | 使用条件 |\r\n| --- | --- | --- |\r\n| `page_capture_tool` | 读取当前页面采集已有的广告、时序帧和动作后证据 | 当前版本页面探索不主动调用 `page_capture_tool` 补采；规则缺少行为或时序证据时直接写 `evidence_insufficient` |\r\n| `deterministic_assertion_tool` | DOM 存在性、文本/正则、数值比较等辅助断言 | 只使用规则配置中的阈值、模式和期望值 |\r\n| `rule_judge_tool` | 单条确定性广告规则判定 | 仅当 `execution_route.rule_engine_ready=true` |\r\n| `rule_judge_batch_tool` | 批量判定同一页面的确定性广告规则 | 多条已就绪规则优先使用 |\r\n| `record_rule_execution_tool` | 写回单条候选或补偿批量失败项 | 使用动态规则标识和真实证据 |\r\n| `record_rule_executions_batch_tool` | 批量写回同一页面多条广告规则 | 多规则页面优先使用 |\r\n\r\n专用截图比对或 OCR Tool 未注册时不得编造调用。规则强依赖缺失能力且现有采集不能满足时，写 `evidence_insufficient` 或按数据库策略转 `manual_review`。\r\n\r\n## 执行流程\r\n\r\n1. 从 `execution_plan.batches` 取得 ad 批次，按候选规则 `sort_order` 和批次顺序执行。\r\n2. 识别当前广告对象和载体，核对 `input_contract`。页面没有候选规则要求的广告对象时，按该规则语义写 `skipped`。\r\n3. 仅复用已有静态页面采集、时序帧和 Action Trace；活动倒计时缺少完整序列时直接写 `evidence_insufficient`。\r\n4. 规则要求模拟广告网络失败但当前证据没有已完成的受控故障轨迹时，写 `evidence_insufficient`，不得主动执行 `network_fault`。\r\n5. 规则要求点击广告、关闭控件或蒙层但当前证据没有对应动作前后角色时，写 `evidence_insufficient`；页面生命周期关闭动作仍由 Explorer 阶段机负责。\r\n6. 按 `execution_route` 选择 `rule_judge_tool`、批量判定或 `llm/hybrid` 结构化复核；`session_dependency=active_session` 的规则必须先具备契约要求的动作、时序或播放器事实，禁止拿被动静态首帧反复调用 Judge。页面不存在目标时写 `skipped`；目标存在但安全动作无法执行时按规则策略转 `manual_review/evidence_insufficient`，不得重试同一组参数。\r\n7. 从 `manual_review_policy` 读取置信度与复核条件，使用写回 Tool 记录每条动态候选规则结果。\r\n\r\n## 广告采证方法\r\n\r\n- **素材与布局**：采集广告 DOM、截图与必要的尺寸摘要；比例容差和判定条件取自规则配置。\r\n- **落地页**：只读取已有 URL、标题、截图和动作轨迹；缺少动作后证据时写 `evidence_insufficient`。\r\n- **时序行为**：只读取已有 `timed_capture` / `temporal_trace`；帧数或关键区间不足时写 `evidence_insufficient`。\r\n- **跳过、关闭、蒙层**：按 `required_artifact_types` 记录触发前后 DOM、截图、URL、`action_trace` 与 `ui_snapshot`；多层广告弹窗由一次有界清障动作产生逐层视口截图和带序号的关闭轨迹，同一证据链可支撑多条候选规则，但采集角色必须按 `input_contract` 分别绑定。\r\n- **故障兜底**：仅拦截候选规则指定的广告请求范围，不影响业务请求；Action Trace 只保留故障正则摘要、脱敏后的命中 URL 与命中数量，观察结束后必须解除路由且不得继续注入。\r\n\r\n## 关闭按钮可点性\r\n\r\n仅当候选规则在 `steps`、`input_contract` 或 `judge_config` 中声明需要验证广告关闭、跳过或蒙层关闭控件时，才执行关闭按钮可点性流程。未声明关闭验证的广告规则不得为了补充证据主动点击关闭控件，也不得把可见关闭按钮自动推断为可点击通过。\r\n\r\n- **交互前证据**：只复用已有关闭前 `page_capture_id`，记录关闭控件位置、可见状态、页面载体、倒计时或禁用状态。\r\n- **动作执行**：本 Skill 当前不为规则主动执行关闭动作；Explorer 的页面生命周期动作可以保留，但不得被提升成规则补采动作。\r\n- **交互后证据**：只比较已有动作后页面中的遮罩、广告容器、关闭控件、URL 和业务内容可见性；无法证明广告已关闭时写 `evidence_insufficient`。\r\n- **多层弹窗**：连续弹窗由阶段机或有界清障链路逐层处理，每层都要有 before/after 证据和动作轨迹；本 Skill 不绕过阶段机直接循环点击。\r\n\r\n## 安全边界\r\n\r\n- 绝不反复点击刷广告，不重复触发，不为凑证据制造展示次数。连续弹窗清障最多 12 层或 45 秒；只点击每轮重新证明的最上层关闭控件，无法证明时退回 LLM，达到上限转人工复核。\r\n- 开屏广告存在“质检完成后关闭/跳转”的必经动作时，原页全部规则必须先收敛；不得把剩余静态 Judge 放入后台后抢先推进页面，避免迟到结果丢失原页归属。\r\n- `network_fault` 禁止 `.*` 等全请求匹配；没有实际命中目标请求时属于证据不足，不能把“调用过故障动作”当成已成功注入。\r\n- 不下载安装广告应用，不填写信息，不登录落地页，不支付，不授权。\r\n- 落地页要求登录、支付、下载或授权才能继续时立即停止，并按动态规则语义收口。\r\n- 疑似欺骗性跳过或高风险热区默认只读；除非数据库规则明确允许且安全边界通过，否则不点击验证。\r\n- 所有结论绑定当前页面真实 `page_capture_id` 与附件，证据不足不硬判。\r\n\r\n## 交接\r\n\r\n- 上游：`rule-matching` 与 `candidate_rules_tool`。\r\n- 下游：`evidence-report` 与规则结果写回 Tool。\r\n- 公共执行与写回契约以 [rule-matching](../rule-matching/SKILL.md) 为准。\r\n\n\n# 冻结 Skill 2：green-process-evidence\n版本：1.0.0\nSHA256：b7600a50ef55d2d9efc6761412a9d7cc3852cbe2a1a6ae5839a9f5e580196c86\n\n---\nname: green-process-evidence\ndescription: 在原视觉、广告或交互分类规程之后读取绿色规则的冻结过程证据，核验同源窗口、因果、业务结果及分项缺口；只读，不授权补采或动作。\nmetadata:\n  version: 1.0.0\n---\n\n# 绿色过程证据只读增量规程\n\n本Skill仅补充冻结规则指定的原分类规程，按冻结顺序读取完整程序，不替代分类、不拼接互斥category、不重写历史Task正文。业务标准来自green-rule-contract.v2及同版本规则正文。\n\n1. 核对Task、来源Run、Session、Epoch、业务对象、正式Action、前后Capture、Manifest版本及原件集合。输入须来自已授权生产器，不能从页面声明、模型摘要或字段改名推定真实事实。\n2. S35使用green_interaction_stability.v1；S72、S49、S73及广告衔接使用green_temporal_rules.v1。task仅是过程输入发布载体，不代表全产品已覆盖；不得强行映射为H5 Journey检查点。\n3. 同次动作或请求必须有唯一同源关联和完整观察窗口，保留全部相关过程、截断、缺口及容量或超限审计。不能选早期正常样本掩盖后续反例，不能跨会话拼动作前后。\n4. 时间因果只采用可信同源时钟证明，保留原生事件、PerformanceResourceTiming和原CDP时间。多请求、多资源项、换文档或超限时拒绝唯一绑定，不改原值、不加容差。\n5. 技术执行成功、业务成功和证据充分性分别记录。Driver成功、HTTP200、截图变化、常驻旧Toast不是业务成功或本次反馈的证明；无法确认保持证据不足。\n6. 空态须有同一模块同次请求的真实空结果。加载失败不得冒充空数据；普通刷新功能存在不证明状态错误。S72与S73共享事实但分别输出语义与插图、引导或节点反馈结论。\n7. 交互稳定性须有独立Action和可核验的可比前态。不同前态不构成不稳定反例；合法蒙层不自动违规。危险或不可安全重复的操作保留一致性未验证，只读Judge不得重复点击。\n8. 异常恢复分开记录原因、入口可用、重试后的业务恢复及条件分支。可信业务分类或支付阶段未知时保留缺证，不能因页面自报普通内容免除视频、账号或支付义务；客服入口存在不等于实际打断支付。\n9. 广告自然结束和手动关闭分别覆盖，保留广告、正片身份、预加载、实际呈现首帧及中间过程。呈现事件不能冒充首帧PNG；广告加载失败兜底沿用独立旧场景，不按旧编号切到新标准。\n10. 加载反馈需要完整过程；业务成功反馈必须是本次新反馈。分项适用条件未发生、缺证、端不支持、采集失败与可靠不适用依据分别记录。\n11. pass要求当前适用分项证据充分且满足要求；fail要求充分证据和明确反例；缺条件、因果歧义或窗口不完整使用evidence_insufficient；语义、政策不确定或冻结复核策略命中使用manual_review。已有失败仍保留其他缺项，一个通过不能抵销反例。\n12. 不自定1秒、2秒、3次、30个、10%或20%—80%等产品合格线。采证参数与正式业务阈值分开，阈值必须在规则版本集中声明。\n13. 不补采、不制造业务数据、不施加弱网、不提交真实支付、不联系客户。网络条件Tool不属于只读Judge可调用能力；原始材料、取消与恢复审计沿原链路保留。\n14. 使用既有规则Judge、结果Writer、复核、报告及Task收口事务；公开结果只输出白名单字段，保留精确原件引用，不暴露存储路径、原始敏感响应或模型凭据。\n",
+            "sha256": "87c656d9a128c23db20fec0f364a3090c2d1177d2e15b927ebae8cf6fa51a331"
+          }
+        },
+        "manual_review_policy": {
+          "schema_version": "1.0",
+          "min_confidence": 0.75,
+          "reviewer_group": "qc_rule_owner",
+          "triggers": [
+            "evidence_insufficient",
+            "model_uncertainty"
+          ]
+        },
+        "sort_order": 40
+      },
+      {
+        "rule_code": "alioth_green_s35",
+        "name": "交互响应布局与可比前态稳定性检查",
+        "description": "来源：9月新增规则优先级物理第17行，规范S35。正式独立Action及前后和过程、真实反馈因果、命中及布局事实、可比前态。不同前态不能作不稳定反例；合法蒙层叠放不自动违规。危险或不可安全重复的操作保留一致性未验证。",
+        "category": "interaction",
+        "executor_type": "hybrid",
+        "severity": "medium",
+        "status": "disabled",
+        "scope": "all_product_clients",
+        "channel": null,
+        "page_type": "",
+        "applicable_page_types": [
+          "home",
+          "content_list",
+          "content_detail",
+          "profile",
+          "settings",
+          "payment",
+          "post_list",
+          "post_publish",
+          "activity",
+          "video_list",
+          "video_detail"
+        ],
+        "url_pattern": "",
+        "steps": [],
+        "check_point": "分项检查点击响应正确、列表或弹窗无影响使用的错位重叠遮挡，以及同一操作在可核验的相同前置条件下表现稳定。",
+        "input_contract": {
+          "schema_version": "1.1",
+          "target_clients": [
+            "WEB",
+            "H5",
+            "APP"
+          ],
+          "required_artifacts": [
+            "screenshot"
+          ],
+          "optional_artifacts": [
+            "ui_snapshot",
+            "visible_text",
+            "action_trace",
+            "har",
+            "media_state",
+            "temporal_trace"
+          ],
+          "required_fields": [],
+          "quality_gate": {
+            "allow_empty_visible_text": true
+          }
+        },
+        "judge_config": {
+          "schema_version": "1.1",
+          "thresholds": {},
+          "llm_checks": [
+            "分项检查点击响应正确、列表或弹窗无影响使用的错位重叠遮挡，以及同一操作在可核验的相同前置条件下表现稳定。"
+          ],
+          "tool_refs": [
+            "semantic_rule_judge_tool"
+          ],
+          "capability_config": {
+            "schema_version": "1.0",
+            "evidence_input_scope": "task",
+            "evidence_scope_key": "green_interaction_stability.v1",
+            "green_rule_key": "s35",
+            "requires_journey": false,
+            "required_artifact_types": [
+              "screenshot"
+            ],
+            "deterministic_tools": [
+              "green_rule_evidence_tool"
+            ],
+            "semantic_judge": "semantic_rule_judge_tool",
+            "evidence_source": "observation_packet"
+          },
+          "green_rule_contract": {
+            "schema_version": "green-rule-contract.v2",
+            "ruleset_version": 4,
+            "rule_key": "s35",
+            "source_row": 17,
+            "source_spec": "S35",
+            "input_kind": "green_interaction_stability.v1",
+            "subchecks": [
+              "correct_response",
+              "usable_layout",
+              "comparable_state_stability"
+            ],
+            "task_scope_is_coverage": false
+          },
+          "green_skill_program": {
+            "schema_version": "green-skill-program.v1",
+            "skills": [
+              {
+                "name": "interaction-rule",
+                "version": "sha256:359f84b20ae18018e2e115f8bc1977492dbc2f0980945c71857519113c2a4384",
+                "body": "---\r\nname: interaction-rule\r\ndescription: 页面交互行为质检 Skill。适用于 candidate_rules_tool 返回 category=interaction，且检查点涉及链接导航、按钮反馈、状态变化、弹窗或全屏、二维码与网址、账号入口等交互结果的场景；指导 Main Agent 使用 page_capture_tool、deterministic_assertion_tool、qr_link_validation_tool、rule_judge_tool 与结果写回 Tool，不内置规则编号或固定业务标准。\r\n---\r\n\r\n# interaction-rule\r\n\r\n## 职责与适用场景\r\n\r\n仅处理 `candidate_rules_tool` 返回的 `category=interaction` 候选规则，适合以下能力场景：\r\n\r\n- 链接打开方式、页面跳转与返回后的页面状态。\r\n- 按钮点击后的局部反馈、计数或状态变化、刷新后的状态保持。\r\n- 弹窗、遮罩、全屏容器、媒体预览等单次交互结果。\r\n- 二维码解码、网址可达性与展示地址一致性。\r\n- 登录态下账号相关入口的存在性检查，但不执行会破坏会话的动作。\r\n\r\n场景分类只帮助选择采证方式。具体交互对象、动作、预期结果、阈值、前置账号态与人工复核条件均来自候选规则的数据库字段。\r\n\r\n广告交互交给 `ad-rule`；用户产生内容的风险判断交给 `input-risk-rule`；文案语义交给 `text-rule`。\r\n\r\n## 动态规则输入\r\n\r\n逐条读取候选规则的：\r\n\r\n- `rule_id`、`rule_code`、`name`、`severity` 与适用页面信息。\r\n- `check_point`、`steps`、`input_contract`、`judge_config`、`manual_review_policy`。\r\n- `execution_route`、所需输入字段、证据类型和判定 Tool。\r\n\r\n不得根据历史规则编号、Skill 示例或页面自述补充业务标准。数据库规则缺少动作、预期或证据契约时，按路由阻断或人工复核处理。\r\n\r\n## 可用 Tool\r\n\r\n| Tool | 交互质检用途 | 使用条件 |\r\n| --- | --- | --- |\r\n| `page_capture_tool` | 读取当前页面采集已有的基线、动作轨迹与动作后证据 | 当前版本页面探索不主动调用 `page_capture_tool` 补采，也不为规则执行 click/hover/scroll 或 `submit_probe` |\r\n| `deterministic_assertion_tool` | DOM 存在性、文本、正则、数值变化等辅助断言 | 参数必须来自规则配置或结构化观测，不自造业务阈值 |\r\n| `qr_link_validation_tool` | 解码二维码、校验 URL 可达性和跳转异常 | 仅当候选规则检查点涉及二维码或网址时；浏览器不得直接访问可疑地址 |\r\n| `rule_judge_tool` | 执行单条已就绪的确定性规则 | 仅按 `execution_route` 调用 |\r\n| `rule_judge_batch_tool` | 批量执行同一页面已就绪的确定性规则 | 同一批有多条规则时优先使用 |\r\n| `record_rule_execution_tool` | 写回单条或补偿失败项 | 动态规则标识必须来自候选结果 |\r\n| `record_rule_executions_batch_tool` | 批量写回同一页面多条结果 | 多规则页面优先使用 |\r\n\r\n## 执行流程\r\n\r\n1. 从 `execution_plan.batches` 取得 interaction 批次，逐条读取数据库规则定义。\r\n2. 检查 `input_contract` 与前置条件。规则要求登录态但当前没有可用测试账号时，不执行注册或登录流程，按规则语义写 `skipped`、`manual_review` 或 `evidence_insufficient`。\r\n3. 复用当前 `page_capture_id` 已有的交互前基线、动作后和刷新后采集；不得为补齐采集角色主动创建新动作。\r\n4. 规则明确要求行为观察但现有 Action Trace 或对应角色缺失时，直接写 `evidence_insufficient`。未来恢复补采能力后仍只能执行单次最小触发。\r\n5. 需要二维码或网址验证时调用 `qr_link_validation_tool`；需要确定性辅助判断时调用 `deterministic_assertion_tool`。\r\n6. `execution_route.rule_engine_ready=true` 时使用 `rule_judge_tool` 或批量入口；`llm/hybrid` 只按 `check_point/judge_config` 对真实观测做结构化复核。\r\n7. 置信度门禁和人工复核触发条件读取 `manual_review_policy`，不在 Skill 固定。\r\n8. 使用单条或批量写回 Tool 记录结论、动作轨迹、判定输入输出和证据引用。\r\n\r\n## 交互采证方法\r\n\r\n- **链接与导航**：只检查已有 DOM 属性、当前路由和动作证据；静态证据不足时写 `evidence_insufficient`，不主动点击。\r\n- **状态变化**：保留触发前基线、触发后状态和规则要求的刷新观测；Action Trace 只能证明动作发生，状态文本、数值变化或刷新后保持必须由对应角色的可信证据证明。\r\n- **容器与全屏**：采集触发前后的 `ui_snapshot`、动作轨迹和可见状态；元素索引、命中框、原生全屏状态与媒体视口覆盖率只能从同一 Observation Packet 读取。\r\n- **二维码与网址**：将二维码截图或 URL 交给专用 Tool；Tool 不可用时不得用模型猜测网络可达性。\r\n- **账号入口**：只做候选规则要求的存在性观测；退出登录、删号、改密等破坏会话或账号状态的动作一律不执行。\r\n\r\n## 滚动与瞬时提示\r\n\r\n仅当候选规则在 `steps`、`input_contract`、`judge_config` 或 `execution_route` 中声明需要滚动覆盖、触底反馈、Toast、Snackbar、轻提示或瞬时状态证据时，才进入本节流程。未声明该能力的 interaction 规则不得额外滚动、不得延长等待，也不得把未捕获到提示直接判定为失败。\r\n\r\n- **滚动证据**：仅消费已有 `page_coverage_summary` 和 `scroll_terminal` 终态角色；缺失时写 `evidence_insufficient`，不主动滚动补采。\r\n- **触底反馈**：触底是否应该出现加载更多、没有更多、回到顶部或空状态提示，只能由候选规则的 `check_point/judge_config` 决定；Skill 不自行定义“列表必须有提示”。\r\n- **瞬时提示**：Toast、Snackbar 等短时反馈必须使用规则声明的等待窗口或采集帧；只凭动作轨迹不能证明提示出现或未出现，缺少时序证据时写 `evidence_insufficient` 或按策略转人工复核。\r\n- **状态收口**：滚动或瞬时提示验证完成后，写回时必须说明使用的是基线帧、动作后帧、终态帧还是时序帧；不得复用其他页面或其他动作的证据。\r\n\r\n## 安全与状态边界\r\n\r\n- 同一页面同一规则最多执行一次单次最小触发；证据复用优先于再次触发。\r\n- 不提交订单、不支付、不下载、不授权、不注册账号，不输入敏感或违规内容。\r\n- 触发造成点赞、关注、评论等数据变化时，不做第二次反向操作来“恢复”；在 `action_trace` 留痕。\r\n- 评论类探针只能在专用测试账号和可清理区域使用；Action Trace 不保存探针原文，只保留长度与摘要。\r\n- 页面无目标对象时按规则语义写 `skipped`；关键前后证据缺失时写 `evidence_insufficient`；模型拿不准时按数据库策略转人工复核。\r\n- 写回的 `page_capture_id` 与附件必须来自同一次有效页面采集。\r\n\r\n## 交接\r\n\r\n- 上游：`rule-matching` 与 `candidate_rules_tool`。\r\n- 下游：`evidence-report` 与规则结果写回 Tool。\r\n- 公共执行与写回契约以 [rule-matching](../rule-matching/SKILL.md) 为准。\r\n",
+                "sha256": "359f84b20ae18018e2e115f8bc1977492dbc2f0980945c71857519113c2a4384"
+              },
+              {
+                "name": "green-process-evidence",
+                "version": "1.0.0",
+                "body": "---\nname: green-process-evidence\ndescription: 在原视觉、广告或交互分类规程之后读取绿色规则的冻结过程证据，核验同源窗口、因果、业务结果及分项缺口；只读，不授权补采或动作。\nmetadata:\n  version: 1.0.0\n---\n\n# 绿色过程证据只读增量规程\n\n本Skill仅补充冻结规则指定的原分类规程，按冻结顺序读取完整程序，不替代分类、不拼接互斥category、不重写历史Task正文。业务标准来自green-rule-contract.v2及同版本规则正文。\n\n1. 核对Task、来源Run、Session、Epoch、业务对象、正式Action、前后Capture、Manifest版本及原件集合。输入须来自已授权生产器，不能从页面声明、模型摘要或字段改名推定真实事实。\n2. S35使用green_interaction_stability.v1；S72、S49、S73及广告衔接使用green_temporal_rules.v1。task仅是过程输入发布载体，不代表全产品已覆盖；不得强行映射为H5 Journey检查点。\n3. 同次动作或请求必须有唯一同源关联和完整观察窗口，保留全部相关过程、截断、缺口及容量或超限审计。不能选早期正常样本掩盖后续反例，不能跨会话拼动作前后。\n4. 时间因果只采用可信同源时钟证明，保留原生事件、PerformanceResourceTiming和原CDP时间。多请求、多资源项、换文档或超限时拒绝唯一绑定，不改原值、不加容差。\n5. 技术执行成功、业务成功和证据充分性分别记录。Driver成功、HTTP200、截图变化、常驻旧Toast不是业务成功或本次反馈的证明；无法确认保持证据不足。\n6. 空态须有同一模块同次请求的真实空结果。加载失败不得冒充空数据；普通刷新功能存在不证明状态错误。S72与S73共享事实但分别输出语义与插图、引导或节点反馈结论。\n7. 交互稳定性须有独立Action和可核验的可比前态。不同前态不构成不稳定反例；合法蒙层不自动违规。危险或不可安全重复的操作保留一致性未验证，只读Judge不得重复点击。\n8. 异常恢复分开记录原因、入口可用、重试后的业务恢复及条件分支。可信业务分类或支付阶段未知时保留缺证，不能因页面自报普通内容免除视频、账号或支付义务；客服入口存在不等于实际打断支付。\n9. 广告自然结束和手动关闭分别覆盖，保留广告、正片身份、预加载、实际呈现首帧及中间过程。呈现事件不能冒充首帧PNG；广告加载失败兜底沿用独立旧场景，不按旧编号切到新标准。\n10. 加载反馈需要完整过程；业务成功反馈必须是本次新反馈。分项适用条件未发生、缺证、端不支持、采集失败与可靠不适用依据分别记录。\n11. pass要求当前适用分项证据充分且满足要求；fail要求充分证据和明确反例；缺条件、因果歧义或窗口不完整使用evidence_insufficient；语义、政策不确定或冻结复核策略命中使用manual_review。已有失败仍保留其他缺项，一个通过不能抵销反例。\n12. 不自定1秒、2秒、3次、30个、10%或20%—80%等产品合格线。采证参数与正式业务阈值分开，阈值必须在规则版本集中声明。\n13. 不补采、不制造业务数据、不施加弱网、不提交真实支付、不联系客户。网络条件Tool不属于只读Judge可调用能力；原始材料、取消与恢复审计沿原链路保留。\n14. 使用既有规则Judge、结果Writer、复核、报告及Task收口事务；公开结果只输出白名单字段，保留精确原件引用，不暴露存储路径、原始敏感响应或模型凭据。\n",
+                "sha256": "b7600a50ef55d2d9efc6761412a9d7cc3852cbe2a1a6ae5839a9f5e580196c86"
+              }
+            ],
+            "combined_body": "# 冻结 Skill 1：interaction-rule\n版本：sha256:359f84b20ae18018e2e115f8bc1977492dbc2f0980945c71857519113c2a4384\nSHA256：359f84b20ae18018e2e115f8bc1977492dbc2f0980945c71857519113c2a4384\n\n---\r\nname: interaction-rule\r\ndescription: 页面交互行为质检 Skill。适用于 candidate_rules_tool 返回 category=interaction，且检查点涉及链接导航、按钮反馈、状态变化、弹窗或全屏、二维码与网址、账号入口等交互结果的场景；指导 Main Agent 使用 page_capture_tool、deterministic_assertion_tool、qr_link_validation_tool、rule_judge_tool 与结果写回 Tool，不内置规则编号或固定业务标准。\r\n---\r\n\r\n# interaction-rule\r\n\r\n## 职责与适用场景\r\n\r\n仅处理 `candidate_rules_tool` 返回的 `category=interaction` 候选规则，适合以下能力场景：\r\n\r\n- 链接打开方式、页面跳转与返回后的页面状态。\r\n- 按钮点击后的局部反馈、计数或状态变化、刷新后的状态保持。\r\n- 弹窗、遮罩、全屏容器、媒体预览等单次交互结果。\r\n- 二维码解码、网址可达性与展示地址一致性。\r\n- 登录态下账号相关入口的存在性检查，但不执行会破坏会话的动作。\r\n\r\n场景分类只帮助选择采证方式。具体交互对象、动作、预期结果、阈值、前置账号态与人工复核条件均来自候选规则的数据库字段。\r\n\r\n广告交互交给 `ad-rule`；用户产生内容的风险判断交给 `input-risk-rule`；文案语义交给 `text-rule`。\r\n\r\n## 动态规则输入\r\n\r\n逐条读取候选规则的：\r\n\r\n- `rule_id`、`rule_code`、`name`、`severity` 与适用页面信息。\r\n- `check_point`、`steps`、`input_contract`、`judge_config`、`manual_review_policy`。\r\n- `execution_route`、所需输入字段、证据类型和判定 Tool。\r\n\r\n不得根据历史规则编号、Skill 示例或页面自述补充业务标准。数据库规则缺少动作、预期或证据契约时，按路由阻断或人工复核处理。\r\n\r\n## 可用 Tool\r\n\r\n| Tool | 交互质检用途 | 使用条件 |\r\n| --- | --- | --- |\r\n| `page_capture_tool` | 读取当前页面采集已有的基线、动作轨迹与动作后证据 | 当前版本页面探索不主动调用 `page_capture_tool` 补采，也不为规则执行 click/hover/scroll 或 `submit_probe` |\r\n| `deterministic_assertion_tool` | DOM 存在性、文本、正则、数值变化等辅助断言 | 参数必须来自规则配置或结构化观测，不自造业务阈值 |\r\n| `qr_link_validation_tool` | 解码二维码、校验 URL 可达性和跳转异常 | 仅当候选规则检查点涉及二维码或网址时；浏览器不得直接访问可疑地址 |\r\n| `rule_judge_tool` | 执行单条已就绪的确定性规则 | 仅按 `execution_route` 调用 |\r\n| `rule_judge_batch_tool` | 批量执行同一页面已就绪的确定性规则 | 同一批有多条规则时优先使用 |\r\n| `record_rule_execution_tool` | 写回单条或补偿失败项 | 动态规则标识必须来自候选结果 |\r\n| `record_rule_executions_batch_tool` | 批量写回同一页面多条结果 | 多规则页面优先使用 |\r\n\r\n## 执行流程\r\n\r\n1. 从 `execution_plan.batches` 取得 interaction 批次，逐条读取数据库规则定义。\r\n2. 检查 `input_contract` 与前置条件。规则要求登录态但当前没有可用测试账号时，不执行注册或登录流程，按规则语义写 `skipped`、`manual_review` 或 `evidence_insufficient`。\r\n3. 复用当前 `page_capture_id` 已有的交互前基线、动作后和刷新后采集；不得为补齐采集角色主动创建新动作。\r\n4. 规则明确要求行为观察但现有 Action Trace 或对应角色缺失时，直接写 `evidence_insufficient`。未来恢复补采能力后仍只能执行单次最小触发。\r\n5. 需要二维码或网址验证时调用 `qr_link_validation_tool`；需要确定性辅助判断时调用 `deterministic_assertion_tool`。\r\n6. `execution_route.rule_engine_ready=true` 时使用 `rule_judge_tool` 或批量入口；`llm/hybrid` 只按 `check_point/judge_config` 对真实观测做结构化复核。\r\n7. 置信度门禁和人工复核触发条件读取 `manual_review_policy`，不在 Skill 固定。\r\n8. 使用单条或批量写回 Tool 记录结论、动作轨迹、判定输入输出和证据引用。\r\n\r\n## 交互采证方法\r\n\r\n- **链接与导航**：只检查已有 DOM 属性、当前路由和动作证据；静态证据不足时写 `evidence_insufficient`，不主动点击。\r\n- **状态变化**：保留触发前基线、触发后状态和规则要求的刷新观测；Action Trace 只能证明动作发生，状态文本、数值变化或刷新后保持必须由对应角色的可信证据证明。\r\n- **容器与全屏**：采集触发前后的 `ui_snapshot`、动作轨迹和可见状态；元素索引、命中框、原生全屏状态与媒体视口覆盖率只能从同一 Observation Packet 读取。\r\n- **二维码与网址**：将二维码截图或 URL 交给专用 Tool；Tool 不可用时不得用模型猜测网络可达性。\r\n- **账号入口**：只做候选规则要求的存在性观测；退出登录、删号、改密等破坏会话或账号状态的动作一律不执行。\r\n\r\n## 滚动与瞬时提示\r\n\r\n仅当候选规则在 `steps`、`input_contract`、`judge_config` 或 `execution_route` 中声明需要滚动覆盖、触底反馈、Toast、Snackbar、轻提示或瞬时状态证据时，才进入本节流程。未声明该能力的 interaction 规则不得额外滚动、不得延长等待，也不得把未捕获到提示直接判定为失败。\r\n\r\n- **滚动证据**：仅消费已有 `page_coverage_summary` 和 `scroll_terminal` 终态角色；缺失时写 `evidence_insufficient`，不主动滚动补采。\r\n- **触底反馈**：触底是否应该出现加载更多、没有更多、回到顶部或空状态提示，只能由候选规则的 `check_point/judge_config` 决定；Skill 不自行定义“列表必须有提示”。\r\n- **瞬时提示**：Toast、Snackbar 等短时反馈必须使用规则声明的等待窗口或采集帧；只凭动作轨迹不能证明提示出现或未出现，缺少时序证据时写 `evidence_insufficient` 或按策略转人工复核。\r\n- **状态收口**：滚动或瞬时提示验证完成后，写回时必须说明使用的是基线帧、动作后帧、终态帧还是时序帧；不得复用其他页面或其他动作的证据。\r\n\r\n## 安全与状态边界\r\n\r\n- 同一页面同一规则最多执行一次单次最小触发；证据复用优先于再次触发。\r\n- 不提交订单、不支付、不下载、不授权、不注册账号，不输入敏感或违规内容。\r\n- 触发造成点赞、关注、评论等数据变化时，不做第二次反向操作来“恢复”；在 `action_trace` 留痕。\r\n- 评论类探针只能在专用测试账号和可清理区域使用；Action Trace 不保存探针原文，只保留长度与摘要。\r\n- 页面无目标对象时按规则语义写 `skipped`；关键前后证据缺失时写 `evidence_insufficient`；模型拿不准时按数据库策略转人工复核。\r\n- 写回的 `page_capture_id` 与附件必须来自同一次有效页面采集。\r\n\r\n## 交接\r\n\r\n- 上游：`rule-matching` 与 `candidate_rules_tool`。\r\n- 下游：`evidence-report` 与规则结果写回 Tool。\r\n- 公共执行与写回契约以 [rule-matching](../rule-matching/SKILL.md) 为准。\r\n\n\n# 冻结 Skill 2：green-process-evidence\n版本：1.0.0\nSHA256：b7600a50ef55d2d9efc6761412a9d7cc3852cbe2a1a6ae5839a9f5e580196c86\n\n---\nname: green-process-evidence\ndescription: 在原视觉、广告或交互分类规程之后读取绿色规则的冻结过程证据，核验同源窗口、因果、业务结果及分项缺口；只读，不授权补采或动作。\nmetadata:\n  version: 1.0.0\n---\n\n# 绿色过程证据只读增量规程\n\n本Skill仅补充冻结规则指定的原分类规程，按冻结顺序读取完整程序，不替代分类、不拼接互斥category、不重写历史Task正文。业务标准来自green-rule-contract.v2及同版本规则正文。\n\n1. 核对Task、来源Run、Session、Epoch、业务对象、正式Action、前后Capture、Manifest版本及原件集合。输入须来自已授权生产器，不能从页面声明、模型摘要或字段改名推定真实事实。\n2. S35使用green_interaction_stability.v1；S72、S49、S73及广告衔接使用green_temporal_rules.v1。task仅是过程输入发布载体，不代表全产品已覆盖；不得强行映射为H5 Journey检查点。\n3. 同次动作或请求必须有唯一同源关联和完整观察窗口，保留全部相关过程、截断、缺口及容量或超限审计。不能选早期正常样本掩盖后续反例，不能跨会话拼动作前后。\n4. 时间因果只采用可信同源时钟证明，保留原生事件、PerformanceResourceTiming和原CDP时间。多请求、多资源项、换文档或超限时拒绝唯一绑定，不改原值、不加容差。\n5. 技术执行成功、业务成功和证据充分性分别记录。Driver成功、HTTP200、截图变化、常驻旧Toast不是业务成功或本次反馈的证明；无法确认保持证据不足。\n6. 空态须有同一模块同次请求的真实空结果。加载失败不得冒充空数据；普通刷新功能存在不证明状态错误。S72与S73共享事实但分别输出语义与插图、引导或节点反馈结论。\n7. 交互稳定性须有独立Action和可核验的可比前态。不同前态不构成不稳定反例；合法蒙层不自动违规。危险或不可安全重复的操作保留一致性未验证，只读Judge不得重复点击。\n8. 异常恢复分开记录原因、入口可用、重试后的业务恢复及条件分支。可信业务分类或支付阶段未知时保留缺证，不能因页面自报普通内容免除视频、账号或支付义务；客服入口存在不等于实际打断支付。\n9. 广告自然结束和手动关闭分别覆盖，保留广告、正片身份、预加载、实际呈现首帧及中间过程。呈现事件不能冒充首帧PNG；广告加载失败兜底沿用独立旧场景，不按旧编号切到新标准。\n10. 加载反馈需要完整过程；业务成功反馈必须是本次新反馈。分项适用条件未发生、缺证、端不支持、采集失败与可靠不适用依据分别记录。\n11. pass要求当前适用分项证据充分且满足要求；fail要求充分证据和明确反例；缺条件、因果歧义或窗口不完整使用evidence_insufficient；语义、政策不确定或冻结复核策略命中使用manual_review。已有失败仍保留其他缺项，一个通过不能抵销反例。\n12. 不自定1秒、2秒、3次、30个、10%或20%—80%等产品合格线。采证参数与正式业务阈值分开，阈值必须在规则版本集中声明。\n13. 不补采、不制造业务数据、不施加弱网、不提交真实支付、不联系客户。网络条件Tool不属于只读Judge可调用能力；原始材料、取消与恢复审计沿原链路保留。\n14. 使用既有规则Judge、结果Writer、复核、报告及Task收口事务；公开结果只输出白名单字段，保留精确原件引用，不暴露存储路径、原始敏感响应或模型凭据。\n",
+            "sha256": "43d445a024059b6e84a0b03fc6528e862e39a27418d0a2c76071aac052387e32"
+          }
+        },
+        "manual_review_policy": {
+          "schema_version": "1.0",
+          "min_confidence": 0.75,
+          "reviewer_group": "qc_rule_owner",
+          "triggers": [
+            "evidence_insufficient",
+            "model_uncertainty"
+          ]
+        },
+        "sort_order": 50
+      },
+      {
+        "rule_code": "alioth_green_s49",
+        "name": "真实异常原因恢复路径与支付保护检查",
+        "description": "来源：9月新增规则优先级物理第18行，规范S49。当前模块真实异常、原因与入口、可信业务类型及支付阶段。页面自报普通内容不能免除视频、账号、支付义务；分类或阶段未知保留缺证。入口存在不等于实际打断，入口可用与重试后业务恢复分别记录；不提交真实支付、不联系客户。",
+        "category": "interaction",
+        "executor_type": "hybrid",
+        "severity": "medium",
+        "status": "disabled",
+        "scope": "all_product_clients",
+        "channel": null,
+        "page_type": "",
+        "applicable_page_types": [
+          "home",
+          "content_list",
+          "content_detail",
+          "profile",
+          "settings",
+          "payment",
+          "post_list",
+          "post_publish",
+          "activity",
+          "video_list",
+          "video_detail"
+        ],
+        "url_pattern": "",
+        "steps": [],
+        "check_point": "实际断网、加载失败、超时时说明原因并提供重试或刷新路径；视频异常有切线恢复路径，账号支付异常有客服路径，支付关键过程不被客服打断。",
+        "input_contract": {
+          "schema_version": "1.1",
+          "target_clients": [
+            "WEB",
+            "H5",
+            "APP"
+          ],
+          "required_artifacts": [
+            "screenshot"
+          ],
+          "optional_artifacts": [
+            "ui_snapshot",
+            "visible_text",
+            "action_trace",
+            "har",
+            "media_state",
+            "temporal_trace"
+          ],
+          "required_fields": [],
+          "quality_gate": {
+            "allow_empty_visible_text": true
+          }
+        },
+        "judge_config": {
+          "schema_version": "1.1",
+          "thresholds": {},
+          "llm_checks": [
+            "实际断网、加载失败、超时时说明原因并提供重试或刷新路径；视频异常有切线恢复路径，账号支付异常有客服路径，支付关键过程不被客服打断。"
+          ],
+          "tool_refs": [
+            "semantic_rule_judge_tool"
+          ],
+          "capability_config": {
+            "schema_version": "1.0",
+            "evidence_input_scope": "task",
+            "evidence_scope_key": "green_temporal_rules.v1",
+            "green_rule_key": "s49",
+            "requires_journey": false,
+            "required_artifact_types": [
+              "screenshot"
+            ],
+            "deterministic_tools": [
+              "green_rule_evidence_tool"
+            ],
+            "semantic_judge": "semantic_rule_judge_tool",
+            "evidence_source": "observation_packet"
+          },
+          "green_rule_contract": {
+            "schema_version": "green-rule-contract.v2",
+            "ruleset_version": 4,
+            "rule_key": "s49",
+            "source_row": 18,
+            "source_spec": "S49",
+            "input_kind": "green_temporal_rules.v1",
+            "subchecks": [
+              "failure_reason",
+              "retry_entry",
+              "business_recovery",
+              "video_line_recovery",
+              "account_payment_support",
+              "payment_not_interrupted"
+            ],
+            "task_scope_is_coverage": false
+          },
+          "green_skill_program": {
+            "schema_version": "green-skill-program.v1",
+            "skills": [
+              {
+                "name": "interaction-rule",
+                "version": "sha256:359f84b20ae18018e2e115f8bc1977492dbc2f0980945c71857519113c2a4384",
+                "body": "---\r\nname: interaction-rule\r\ndescription: 页面交互行为质检 Skill。适用于 candidate_rules_tool 返回 category=interaction，且检查点涉及链接导航、按钮反馈、状态变化、弹窗或全屏、二维码与网址、账号入口等交互结果的场景；指导 Main Agent 使用 page_capture_tool、deterministic_assertion_tool、qr_link_validation_tool、rule_judge_tool 与结果写回 Tool，不内置规则编号或固定业务标准。\r\n---\r\n\r\n# interaction-rule\r\n\r\n## 职责与适用场景\r\n\r\n仅处理 `candidate_rules_tool` 返回的 `category=interaction` 候选规则，适合以下能力场景：\r\n\r\n- 链接打开方式、页面跳转与返回后的页面状态。\r\n- 按钮点击后的局部反馈、计数或状态变化、刷新后的状态保持。\r\n- 弹窗、遮罩、全屏容器、媒体预览等单次交互结果。\r\n- 二维码解码、网址可达性与展示地址一致性。\r\n- 登录态下账号相关入口的存在性检查，但不执行会破坏会话的动作。\r\n\r\n场景分类只帮助选择采证方式。具体交互对象、动作、预期结果、阈值、前置账号态与人工复核条件均来自候选规则的数据库字段。\r\n\r\n广告交互交给 `ad-rule`；用户产生内容的风险判断交给 `input-risk-rule`；文案语义交给 `text-rule`。\r\n\r\n## 动态规则输入\r\n\r\n逐条读取候选规则的：\r\n\r\n- `rule_id`、`rule_code`、`name`、`severity` 与适用页面信息。\r\n- `check_point`、`steps`、`input_contract`、`judge_config`、`manual_review_policy`。\r\n- `execution_route`、所需输入字段、证据类型和判定 Tool。\r\n\r\n不得根据历史规则编号、Skill 示例或页面自述补充业务标准。数据库规则缺少动作、预期或证据契约时，按路由阻断或人工复核处理。\r\n\r\n## 可用 Tool\r\n\r\n| Tool | 交互质检用途 | 使用条件 |\r\n| --- | --- | --- |\r\n| `page_capture_tool` | 读取当前页面采集已有的基线、动作轨迹与动作后证据 | 当前版本页面探索不主动调用 `page_capture_tool` 补采，也不为规则执行 click/hover/scroll 或 `submit_probe` |\r\n| `deterministic_assertion_tool` | DOM 存在性、文本、正则、数值变化等辅助断言 | 参数必须来自规则配置或结构化观测，不自造业务阈值 |\r\n| `qr_link_validation_tool` | 解码二维码、校验 URL 可达性和跳转异常 | 仅当候选规则检查点涉及二维码或网址时；浏览器不得直接访问可疑地址 |\r\n| `rule_judge_tool` | 执行单条已就绪的确定性规则 | 仅按 `execution_route` 调用 |\r\n| `rule_judge_batch_tool` | 批量执行同一页面已就绪的确定性规则 | 同一批有多条规则时优先使用 |\r\n| `record_rule_execution_tool` | 写回单条或补偿失败项 | 动态规则标识必须来自候选结果 |\r\n| `record_rule_executions_batch_tool` | 批量写回同一页面多条结果 | 多规则页面优先使用 |\r\n\r\n## 执行流程\r\n\r\n1. 从 `execution_plan.batches` 取得 interaction 批次，逐条读取数据库规则定义。\r\n2. 检查 `input_contract` 与前置条件。规则要求登录态但当前没有可用测试账号时，不执行注册或登录流程，按规则语义写 `skipped`、`manual_review` 或 `evidence_insufficient`。\r\n3. 复用当前 `page_capture_id` 已有的交互前基线、动作后和刷新后采集；不得为补齐采集角色主动创建新动作。\r\n4. 规则明确要求行为观察但现有 Action Trace 或对应角色缺失时，直接写 `evidence_insufficient`。未来恢复补采能力后仍只能执行单次最小触发。\r\n5. 需要二维码或网址验证时调用 `qr_link_validation_tool`；需要确定性辅助判断时调用 `deterministic_assertion_tool`。\r\n6. `execution_route.rule_engine_ready=true` 时使用 `rule_judge_tool` 或批量入口；`llm/hybrid` 只按 `check_point/judge_config` 对真实观测做结构化复核。\r\n7. 置信度门禁和人工复核触发条件读取 `manual_review_policy`，不在 Skill 固定。\r\n8. 使用单条或批量写回 Tool 记录结论、动作轨迹、判定输入输出和证据引用。\r\n\r\n## 交互采证方法\r\n\r\n- **链接与导航**：只检查已有 DOM 属性、当前路由和动作证据；静态证据不足时写 `evidence_insufficient`，不主动点击。\r\n- **状态变化**：保留触发前基线、触发后状态和规则要求的刷新观测；Action Trace 只能证明动作发生，状态文本、数值变化或刷新后保持必须由对应角色的可信证据证明。\r\n- **容器与全屏**：采集触发前后的 `ui_snapshot`、动作轨迹和可见状态；元素索引、命中框、原生全屏状态与媒体视口覆盖率只能从同一 Observation Packet 读取。\r\n- **二维码与网址**：将二维码截图或 URL 交给专用 Tool；Tool 不可用时不得用模型猜测网络可达性。\r\n- **账号入口**：只做候选规则要求的存在性观测；退出登录、删号、改密等破坏会话或账号状态的动作一律不执行。\r\n\r\n## 滚动与瞬时提示\r\n\r\n仅当候选规则在 `steps`、`input_contract`、`judge_config` 或 `execution_route` 中声明需要滚动覆盖、触底反馈、Toast、Snackbar、轻提示或瞬时状态证据时，才进入本节流程。未声明该能力的 interaction 规则不得额外滚动、不得延长等待，也不得把未捕获到提示直接判定为失败。\r\n\r\n- **滚动证据**：仅消费已有 `page_coverage_summary` 和 `scroll_terminal` 终态角色；缺失时写 `evidence_insufficient`，不主动滚动补采。\r\n- **触底反馈**：触底是否应该出现加载更多、没有更多、回到顶部或空状态提示，只能由候选规则的 `check_point/judge_config` 决定；Skill 不自行定义“列表必须有提示”。\r\n- **瞬时提示**：Toast、Snackbar 等短时反馈必须使用规则声明的等待窗口或采集帧；只凭动作轨迹不能证明提示出现或未出现，缺少时序证据时写 `evidence_insufficient` 或按策略转人工复核。\r\n- **状态收口**：滚动或瞬时提示验证完成后，写回时必须说明使用的是基线帧、动作后帧、终态帧还是时序帧；不得复用其他页面或其他动作的证据。\r\n\r\n## 安全与状态边界\r\n\r\n- 同一页面同一规则最多执行一次单次最小触发；证据复用优先于再次触发。\r\n- 不提交订单、不支付、不下载、不授权、不注册账号，不输入敏感或违规内容。\r\n- 触发造成点赞、关注、评论等数据变化时，不做第二次反向操作来“恢复”；在 `action_trace` 留痕。\r\n- 评论类探针只能在专用测试账号和可清理区域使用；Action Trace 不保存探针原文，只保留长度与摘要。\r\n- 页面无目标对象时按规则语义写 `skipped`；关键前后证据缺失时写 `evidence_insufficient`；模型拿不准时按数据库策略转人工复核。\r\n- 写回的 `page_capture_id` 与附件必须来自同一次有效页面采集。\r\n\r\n## 交接\r\n\r\n- 上游：`rule-matching` 与 `candidate_rules_tool`。\r\n- 下游：`evidence-report` 与规则结果写回 Tool。\r\n- 公共执行与写回契约以 [rule-matching](../rule-matching/SKILL.md) 为准。\r\n",
+                "sha256": "359f84b20ae18018e2e115f8bc1977492dbc2f0980945c71857519113c2a4384"
+              },
+              {
+                "name": "green-process-evidence",
+                "version": "1.0.0",
+                "body": "---\nname: green-process-evidence\ndescription: 在原视觉、广告或交互分类规程之后读取绿色规则的冻结过程证据，核验同源窗口、因果、业务结果及分项缺口；只读，不授权补采或动作。\nmetadata:\n  version: 1.0.0\n---\n\n# 绿色过程证据只读增量规程\n\n本Skill仅补充冻结规则指定的原分类规程，按冻结顺序读取完整程序，不替代分类、不拼接互斥category、不重写历史Task正文。业务标准来自green-rule-contract.v2及同版本规则正文。\n\n1. 核对Task、来源Run、Session、Epoch、业务对象、正式Action、前后Capture、Manifest版本及原件集合。输入须来自已授权生产器，不能从页面声明、模型摘要或字段改名推定真实事实。\n2. S35使用green_interaction_stability.v1；S72、S49、S73及广告衔接使用green_temporal_rules.v1。task仅是过程输入发布载体，不代表全产品已覆盖；不得强行映射为H5 Journey检查点。\n3. 同次动作或请求必须有唯一同源关联和完整观察窗口，保留全部相关过程、截断、缺口及容量或超限审计。不能选早期正常样本掩盖后续反例，不能跨会话拼动作前后。\n4. 时间因果只采用可信同源时钟证明，保留原生事件、PerformanceResourceTiming和原CDP时间。多请求、多资源项、换文档或超限时拒绝唯一绑定，不改原值、不加容差。\n5. 技术执行成功、业务成功和证据充分性分别记录。Driver成功、HTTP200、截图变化、常驻旧Toast不是业务成功或本次反馈的证明；无法确认保持证据不足。\n6. 空态须有同一模块同次请求的真实空结果。加载失败不得冒充空数据；普通刷新功能存在不证明状态错误。S72与S73共享事实但分别输出语义与插图、引导或节点反馈结论。\n7. 交互稳定性须有独立Action和可核验的可比前态。不同前态不构成不稳定反例；合法蒙层不自动违规。危险或不可安全重复的操作保留一致性未验证，只读Judge不得重复点击。\n8. 异常恢复分开记录原因、入口可用、重试后的业务恢复及条件分支。可信业务分类或支付阶段未知时保留缺证，不能因页面自报普通内容免除视频、账号或支付义务；客服入口存在不等于实际打断支付。\n9. 广告自然结束和手动关闭分别覆盖，保留广告、正片身份、预加载、实际呈现首帧及中间过程。呈现事件不能冒充首帧PNG；广告加载失败兜底沿用独立旧场景，不按旧编号切到新标准。\n10. 加载反馈需要完整过程；业务成功反馈必须是本次新反馈。分项适用条件未发生、缺证、端不支持、采集失败与可靠不适用依据分别记录。\n11. pass要求当前适用分项证据充分且满足要求；fail要求充分证据和明确反例；缺条件、因果歧义或窗口不完整使用evidence_insufficient；语义、政策不确定或冻结复核策略命中使用manual_review。已有失败仍保留其他缺项，一个通过不能抵销反例。\n12. 不自定1秒、2秒、3次、30个、10%或20%—80%等产品合格线。采证参数与正式业务阈值分开，阈值必须在规则版本集中声明。\n13. 不补采、不制造业务数据、不施加弱网、不提交真实支付、不联系客户。网络条件Tool不属于只读Judge可调用能力；原始材料、取消与恢复审计沿原链路保留。\n14. 使用既有规则Judge、结果Writer、复核、报告及Task收口事务；公开结果只输出白名单字段，保留精确原件引用，不暴露存储路径、原始敏感响应或模型凭据。\n",
+                "sha256": "b7600a50ef55d2d9efc6761412a9d7cc3852cbe2a1a6ae5839a9f5e580196c86"
+              }
+            ],
+            "combined_body": "# 冻结 Skill 1：interaction-rule\n版本：sha256:359f84b20ae18018e2e115f8bc1977492dbc2f0980945c71857519113c2a4384\nSHA256：359f84b20ae18018e2e115f8bc1977492dbc2f0980945c71857519113c2a4384\n\n---\r\nname: interaction-rule\r\ndescription: 页面交互行为质检 Skill。适用于 candidate_rules_tool 返回 category=interaction，且检查点涉及链接导航、按钮反馈、状态变化、弹窗或全屏、二维码与网址、账号入口等交互结果的场景；指导 Main Agent 使用 page_capture_tool、deterministic_assertion_tool、qr_link_validation_tool、rule_judge_tool 与结果写回 Tool，不内置规则编号或固定业务标准。\r\n---\r\n\r\n# interaction-rule\r\n\r\n## 职责与适用场景\r\n\r\n仅处理 `candidate_rules_tool` 返回的 `category=interaction` 候选规则，适合以下能力场景：\r\n\r\n- 链接打开方式、页面跳转与返回后的页面状态。\r\n- 按钮点击后的局部反馈、计数或状态变化、刷新后的状态保持。\r\n- 弹窗、遮罩、全屏容器、媒体预览等单次交互结果。\r\n- 二维码解码、网址可达性与展示地址一致性。\r\n- 登录态下账号相关入口的存在性检查，但不执行会破坏会话的动作。\r\n\r\n场景分类只帮助选择采证方式。具体交互对象、动作、预期结果、阈值、前置账号态与人工复核条件均来自候选规则的数据库字段。\r\n\r\n广告交互交给 `ad-rule`；用户产生内容的风险判断交给 `input-risk-rule`；文案语义交给 `text-rule`。\r\n\r\n## 动态规则输入\r\n\r\n逐条读取候选规则的：\r\n\r\n- `rule_id`、`rule_code`、`name`、`severity` 与适用页面信息。\r\n- `check_point`、`steps`、`input_contract`、`judge_config`、`manual_review_policy`。\r\n- `execution_route`、所需输入字段、证据类型和判定 Tool。\r\n\r\n不得根据历史规则编号、Skill 示例或页面自述补充业务标准。数据库规则缺少动作、预期或证据契约时，按路由阻断或人工复核处理。\r\n\r\n## 可用 Tool\r\n\r\n| Tool | 交互质检用途 | 使用条件 |\r\n| --- | --- | --- |\r\n| `page_capture_tool` | 读取当前页面采集已有的基线、动作轨迹与动作后证据 | 当前版本页面探索不主动调用 `page_capture_tool` 补采，也不为规则执行 click/hover/scroll 或 `submit_probe` |\r\n| `deterministic_assertion_tool` | DOM 存在性、文本、正则、数值变化等辅助断言 | 参数必须来自规则配置或结构化观测，不自造业务阈值 |\r\n| `qr_link_validation_tool` | 解码二维码、校验 URL 可达性和跳转异常 | 仅当候选规则检查点涉及二维码或网址时；浏览器不得直接访问可疑地址 |\r\n| `rule_judge_tool` | 执行单条已就绪的确定性规则 | 仅按 `execution_route` 调用 |\r\n| `rule_judge_batch_tool` | 批量执行同一页面已就绪的确定性规则 | 同一批有多条规则时优先使用 |\r\n| `record_rule_execution_tool` | 写回单条或补偿失败项 | 动态规则标识必须来自候选结果 |\r\n| `record_rule_executions_batch_tool` | 批量写回同一页面多条结果 | 多规则页面优先使用 |\r\n\r\n## 执行流程\r\n\r\n1. 从 `execution_plan.batches` 取得 interaction 批次，逐条读取数据库规则定义。\r\n2. 检查 `input_contract` 与前置条件。规则要求登录态但当前没有可用测试账号时，不执行注册或登录流程，按规则语义写 `skipped`、`manual_review` 或 `evidence_insufficient`。\r\n3. 复用当前 `page_capture_id` 已有的交互前基线、动作后和刷新后采集；不得为补齐采集角色主动创建新动作。\r\n4. 规则明确要求行为观察但现有 Action Trace 或对应角色缺失时，直接写 `evidence_insufficient`。未来恢复补采能力后仍只能执行单次最小触发。\r\n5. 需要二维码或网址验证时调用 `qr_link_validation_tool`；需要确定性辅助判断时调用 `deterministic_assertion_tool`。\r\n6. `execution_route.rule_engine_ready=true` 时使用 `rule_judge_tool` 或批量入口；`llm/hybrid` 只按 `check_point/judge_config` 对真实观测做结构化复核。\r\n7. 置信度门禁和人工复核触发条件读取 `manual_review_policy`，不在 Skill 固定。\r\n8. 使用单条或批量写回 Tool 记录结论、动作轨迹、判定输入输出和证据引用。\r\n\r\n## 交互采证方法\r\n\r\n- **链接与导航**：只检查已有 DOM 属性、当前路由和动作证据；静态证据不足时写 `evidence_insufficient`，不主动点击。\r\n- **状态变化**：保留触发前基线、触发后状态和规则要求的刷新观测；Action Trace 只能证明动作发生，状态文本、数值变化或刷新后保持必须由对应角色的可信证据证明。\r\n- **容器与全屏**：采集触发前后的 `ui_snapshot`、动作轨迹和可见状态；元素索引、命中框、原生全屏状态与媒体视口覆盖率只能从同一 Observation Packet 读取。\r\n- **二维码与网址**：将二维码截图或 URL 交给专用 Tool；Tool 不可用时不得用模型猜测网络可达性。\r\n- **账号入口**：只做候选规则要求的存在性观测；退出登录、删号、改密等破坏会话或账号状态的动作一律不执行。\r\n\r\n## 滚动与瞬时提示\r\n\r\n仅当候选规则在 `steps`、`input_contract`、`judge_config` 或 `execution_route` 中声明需要滚动覆盖、触底反馈、Toast、Snackbar、轻提示或瞬时状态证据时，才进入本节流程。未声明该能力的 interaction 规则不得额外滚动、不得延长等待，也不得把未捕获到提示直接判定为失败。\r\n\r\n- **滚动证据**：仅消费已有 `page_coverage_summary` 和 `scroll_terminal` 终态角色；缺失时写 `evidence_insufficient`，不主动滚动补采。\r\n- **触底反馈**：触底是否应该出现加载更多、没有更多、回到顶部或空状态提示，只能由候选规则的 `check_point/judge_config` 决定；Skill 不自行定义“列表必须有提示”。\r\n- **瞬时提示**：Toast、Snackbar 等短时反馈必须使用规则声明的等待窗口或采集帧；只凭动作轨迹不能证明提示出现或未出现，缺少时序证据时写 `evidence_insufficient` 或按策略转人工复核。\r\n- **状态收口**：滚动或瞬时提示验证完成后，写回时必须说明使用的是基线帧、动作后帧、终态帧还是时序帧；不得复用其他页面或其他动作的证据。\r\n\r\n## 安全与状态边界\r\n\r\n- 同一页面同一规则最多执行一次单次最小触发；证据复用优先于再次触发。\r\n- 不提交订单、不支付、不下载、不授权、不注册账号，不输入敏感或违规内容。\r\n- 触发造成点赞、关注、评论等数据变化时，不做第二次反向操作来“恢复”；在 `action_trace` 留痕。\r\n- 评论类探针只能在专用测试账号和可清理区域使用；Action Trace 不保存探针原文，只保留长度与摘要。\r\n- 页面无目标对象时按规则语义写 `skipped`；关键前后证据缺失时写 `evidence_insufficient`；模型拿不准时按数据库策略转人工复核。\r\n- 写回的 `page_capture_id` 与附件必须来自同一次有效页面采集。\r\n\r\n## 交接\r\n\r\n- 上游：`rule-matching` 与 `candidate_rules_tool`。\r\n- 下游：`evidence-report` 与规则结果写回 Tool。\r\n- 公共执行与写回契约以 [rule-matching](../rule-matching/SKILL.md) 为准。\r\n\n\n# 冻结 Skill 2：green-process-evidence\n版本：1.0.0\nSHA256：b7600a50ef55d2d9efc6761412a9d7cc3852cbe2a1a6ae5839a9f5e580196c86\n\n---\nname: green-process-evidence\ndescription: 在原视觉、广告或交互分类规程之后读取绿色规则的冻结过程证据，核验同源窗口、因果、业务结果及分项缺口；只读，不授权补采或动作。\nmetadata:\n  version: 1.0.0\n---\n\n# 绿色过程证据只读增量规程\n\n本Skill仅补充冻结规则指定的原分类规程，按冻结顺序读取完整程序，不替代分类、不拼接互斥category、不重写历史Task正文。业务标准来自green-rule-contract.v2及同版本规则正文。\n\n1. 核对Task、来源Run、Session、Epoch、业务对象、正式Action、前后Capture、Manifest版本及原件集合。输入须来自已授权生产器，不能从页面声明、模型摘要或字段改名推定真实事实。\n2. S35使用green_interaction_stability.v1；S72、S49、S73及广告衔接使用green_temporal_rules.v1。task仅是过程输入发布载体，不代表全产品已覆盖；不得强行映射为H5 Journey检查点。\n3. 同次动作或请求必须有唯一同源关联和完整观察窗口，保留全部相关过程、截断、缺口及容量或超限审计。不能选早期正常样本掩盖后续反例，不能跨会话拼动作前后。\n4. 时间因果只采用可信同源时钟证明，保留原生事件、PerformanceResourceTiming和原CDP时间。多请求、多资源项、换文档或超限时拒绝唯一绑定，不改原值、不加容差。\n5. 技术执行成功、业务成功和证据充分性分别记录。Driver成功、HTTP200、截图变化、常驻旧Toast不是业务成功或本次反馈的证明；无法确认保持证据不足。\n6. 空态须有同一模块同次请求的真实空结果。加载失败不得冒充空数据；普通刷新功能存在不证明状态错误。S72与S73共享事实但分别输出语义与插图、引导或节点反馈结论。\n7. 交互稳定性须有独立Action和可核验的可比前态。不同前态不构成不稳定反例；合法蒙层不自动违规。危险或不可安全重复的操作保留一致性未验证，只读Judge不得重复点击。\n8. 异常恢复分开记录原因、入口可用、重试后的业务恢复及条件分支。可信业务分类或支付阶段未知时保留缺证，不能因页面自报普通内容免除视频、账号或支付义务；客服入口存在不等于实际打断支付。\n9. 广告自然结束和手动关闭分别覆盖，保留广告、正片身份、预加载、实际呈现首帧及中间过程。呈现事件不能冒充首帧PNG；广告加载失败兜底沿用独立旧场景，不按旧编号切到新标准。\n10. 加载反馈需要完整过程；业务成功反馈必须是本次新反馈。分项适用条件未发生、缺证、端不支持、采集失败与可靠不适用依据分别记录。\n11. pass要求当前适用分项证据充分且满足要求；fail要求充分证据和明确反例；缺条件、因果歧义或窗口不完整使用evidence_insufficient；语义、政策不确定或冻结复核策略命中使用manual_review。已有失败仍保留其他缺项，一个通过不能抵销反例。\n12. 不自定1秒、2秒、3次、30个、10%或20%—80%等产品合格线。采证参数与正式业务阈值分开，阈值必须在规则版本集中声明。\n13. 不补采、不制造业务数据、不施加弱网、不提交真实支付、不联系客户。网络条件Tool不属于只读Judge可调用能力；原始材料、取消与恢复审计沿原链路保留。\n14. 使用既有规则Judge、结果Writer、复核、报告及Task收口事务；公开结果只输出白名单字段，保留精确原件引用，不暴露存储路径、原始敏感响应或模型凭据。\n",
+            "sha256": "43d445a024059b6e84a0b03fc6528e862e39a27418d0a2c76071aac052387e32"
+          }
+        },
+        "manual_review_policy": {
+          "schema_version": "1.0",
+          "min_confidence": 0.75,
+          "reviewer_group": "qc_rule_owner",
+          "triggers": [
+            "evidence_insufficient",
+            "model_uncertainty"
+          ]
+        },
+        "sort_order": 60
+      },
+      {
+        "rule_code": "alioth_green_s73",
+        "name": "加载空态与真实业务成功反馈检查",
+        "description": "来源：9月新增规则优先级物理第19行，规范S73。完整加载过程、真实空态、可信业务结果及本次新反馈。Driver执行成功、HTTP200、常驻旧Toast不是业务成功证明；受控响应合同、业务状态或明确回执无法验证时保留未知。",
+        "category": "interaction",
+        "executor_type": "hybrid",
+        "severity": "medium",
+        "status": "disabled",
+        "scope": "all_product_clients",
+        "channel": null,
+        "page_type": "",
+        "applicable_page_types": [
+          "home",
+          "content_list",
+          "content_detail",
+          "profile",
+          "settings",
+          "payment",
+          "post_list",
+          "post_publish",
+          "activity",
+          "video_list",
+          "video_detail"
+        ],
+        "url_pattern": "",
+        "steps": [],
+        "check_point": "加载过程有进度反馈；真实空态有插图或有效引导；真实业务成功后有本次明确提示或动效。分项按实际条件报告。",
+        "input_contract": {
+          "schema_version": "1.1",
+          "target_clients": [
+            "WEB",
+            "H5",
+            "APP"
+          ],
+          "required_artifacts": [
+            "screenshot"
+          ],
+          "optional_artifacts": [
+            "ui_snapshot",
+            "visible_text",
+            "action_trace",
+            "har",
+            "media_state",
+            "temporal_trace"
+          ],
+          "required_fields": [],
+          "quality_gate": {
+            "allow_empty_visible_text": true
+          }
+        },
+        "judge_config": {
+          "schema_version": "1.1",
+          "thresholds": {},
+          "llm_checks": [
+            "加载过程有进度反馈；真实空态有插图或有效引导；真实业务成功后有本次明确提示或动效。分项按实际条件报告。"
+          ],
+          "tool_refs": [
+            "semantic_rule_judge_tool"
+          ],
+          "capability_config": {
+            "schema_version": "1.0",
+            "evidence_input_scope": "task",
+            "evidence_scope_key": "green_temporal_rules.v1",
+            "green_rule_key": "s73",
+            "requires_journey": false,
+            "required_artifact_types": [
+              "screenshot"
+            ],
+            "deterministic_tools": [
+              "green_rule_evidence_tool"
+            ],
+            "semantic_judge": "semantic_rule_judge_tool",
+            "evidence_source": "observation_packet"
+          },
+          "green_rule_contract": {
+            "schema_version": "green-rule-contract.v2",
+            "ruleset_version": 4,
+            "rule_key": "s73",
+            "source_row": 19,
+            "source_spec": "S73",
+            "input_kind": "green_temporal_rules.v1",
+            "subchecks": [
+              "loading_feedback",
+              "empty_state_guidance",
+              "business_success_feedback"
+            ],
+            "task_scope_is_coverage": false
+          },
+          "green_skill_program": {
+            "schema_version": "green-skill-program.v1",
+            "skills": [
+              {
+                "name": "interaction-rule",
+                "version": "sha256:359f84b20ae18018e2e115f8bc1977492dbc2f0980945c71857519113c2a4384",
+                "body": "---\r\nname: interaction-rule\r\ndescription: 页面交互行为质检 Skill。适用于 candidate_rules_tool 返回 category=interaction，且检查点涉及链接导航、按钮反馈、状态变化、弹窗或全屏、二维码与网址、账号入口等交互结果的场景；指导 Main Agent 使用 page_capture_tool、deterministic_assertion_tool、qr_link_validation_tool、rule_judge_tool 与结果写回 Tool，不内置规则编号或固定业务标准。\r\n---\r\n\r\n# interaction-rule\r\n\r\n## 职责与适用场景\r\n\r\n仅处理 `candidate_rules_tool` 返回的 `category=interaction` 候选规则，适合以下能力场景：\r\n\r\n- 链接打开方式、页面跳转与返回后的页面状态。\r\n- 按钮点击后的局部反馈、计数或状态变化、刷新后的状态保持。\r\n- 弹窗、遮罩、全屏容器、媒体预览等单次交互结果。\r\n- 二维码解码、网址可达性与展示地址一致性。\r\n- 登录态下账号相关入口的存在性检查，但不执行会破坏会话的动作。\r\n\r\n场景分类只帮助选择采证方式。具体交互对象、动作、预期结果、阈值、前置账号态与人工复核条件均来自候选规则的数据库字段。\r\n\r\n广告交互交给 `ad-rule`；用户产生内容的风险判断交给 `input-risk-rule`；文案语义交给 `text-rule`。\r\n\r\n## 动态规则输入\r\n\r\n逐条读取候选规则的：\r\n\r\n- `rule_id`、`rule_code`、`name`、`severity` 与适用页面信息。\r\n- `check_point`、`steps`、`input_contract`、`judge_config`、`manual_review_policy`。\r\n- `execution_route`、所需输入字段、证据类型和判定 Tool。\r\n\r\n不得根据历史规则编号、Skill 示例或页面自述补充业务标准。数据库规则缺少动作、预期或证据契约时，按路由阻断或人工复核处理。\r\n\r\n## 可用 Tool\r\n\r\n| Tool | 交互质检用途 | 使用条件 |\r\n| --- | --- | --- |\r\n| `page_capture_tool` | 读取当前页面采集已有的基线、动作轨迹与动作后证据 | 当前版本页面探索不主动调用 `page_capture_tool` 补采，也不为规则执行 click/hover/scroll 或 `submit_probe` |\r\n| `deterministic_assertion_tool` | DOM 存在性、文本、正则、数值变化等辅助断言 | 参数必须来自规则配置或结构化观测，不自造业务阈值 |\r\n| `qr_link_validation_tool` | 解码二维码、校验 URL 可达性和跳转异常 | 仅当候选规则检查点涉及二维码或网址时；浏览器不得直接访问可疑地址 |\r\n| `rule_judge_tool` | 执行单条已就绪的确定性规则 | 仅按 `execution_route` 调用 |\r\n| `rule_judge_batch_tool` | 批量执行同一页面已就绪的确定性规则 | 同一批有多条规则时优先使用 |\r\n| `record_rule_execution_tool` | 写回单条或补偿失败项 | 动态规则标识必须来自候选结果 |\r\n| `record_rule_executions_batch_tool` | 批量写回同一页面多条结果 | 多规则页面优先使用 |\r\n\r\n## 执行流程\r\n\r\n1. 从 `execution_plan.batches` 取得 interaction 批次，逐条读取数据库规则定义。\r\n2. 检查 `input_contract` 与前置条件。规则要求登录态但当前没有可用测试账号时，不执行注册或登录流程，按规则语义写 `skipped`、`manual_review` 或 `evidence_insufficient`。\r\n3. 复用当前 `page_capture_id` 已有的交互前基线、动作后和刷新后采集；不得为补齐采集角色主动创建新动作。\r\n4. 规则明确要求行为观察但现有 Action Trace 或对应角色缺失时，直接写 `evidence_insufficient`。未来恢复补采能力后仍只能执行单次最小触发。\r\n5. 需要二维码或网址验证时调用 `qr_link_validation_tool`；需要确定性辅助判断时调用 `deterministic_assertion_tool`。\r\n6. `execution_route.rule_engine_ready=true` 时使用 `rule_judge_tool` 或批量入口；`llm/hybrid` 只按 `check_point/judge_config` 对真实观测做结构化复核。\r\n7. 置信度门禁和人工复核触发条件读取 `manual_review_policy`，不在 Skill 固定。\r\n8. 使用单条或批量写回 Tool 记录结论、动作轨迹、判定输入输出和证据引用。\r\n\r\n## 交互采证方法\r\n\r\n- **链接与导航**：只检查已有 DOM 属性、当前路由和动作证据；静态证据不足时写 `evidence_insufficient`，不主动点击。\r\n- **状态变化**：保留触发前基线、触发后状态和规则要求的刷新观测；Action Trace 只能证明动作发生，状态文本、数值变化或刷新后保持必须由对应角色的可信证据证明。\r\n- **容器与全屏**：采集触发前后的 `ui_snapshot`、动作轨迹和可见状态；元素索引、命中框、原生全屏状态与媒体视口覆盖率只能从同一 Observation Packet 读取。\r\n- **二维码与网址**：将二维码截图或 URL 交给专用 Tool；Tool 不可用时不得用模型猜测网络可达性。\r\n- **账号入口**：只做候选规则要求的存在性观测；退出登录、删号、改密等破坏会话或账号状态的动作一律不执行。\r\n\r\n## 滚动与瞬时提示\r\n\r\n仅当候选规则在 `steps`、`input_contract`、`judge_config` 或 `execution_route` 中声明需要滚动覆盖、触底反馈、Toast、Snackbar、轻提示或瞬时状态证据时，才进入本节流程。未声明该能力的 interaction 规则不得额外滚动、不得延长等待，也不得把未捕获到提示直接判定为失败。\r\n\r\n- **滚动证据**：仅消费已有 `page_coverage_summary` 和 `scroll_terminal` 终态角色；缺失时写 `evidence_insufficient`，不主动滚动补采。\r\n- **触底反馈**：触底是否应该出现加载更多、没有更多、回到顶部或空状态提示，只能由候选规则的 `check_point/judge_config` 决定；Skill 不自行定义“列表必须有提示”。\r\n- **瞬时提示**：Toast、Snackbar 等短时反馈必须使用规则声明的等待窗口或采集帧；只凭动作轨迹不能证明提示出现或未出现，缺少时序证据时写 `evidence_insufficient` 或按策略转人工复核。\r\n- **状态收口**：滚动或瞬时提示验证完成后，写回时必须说明使用的是基线帧、动作后帧、终态帧还是时序帧；不得复用其他页面或其他动作的证据。\r\n\r\n## 安全与状态边界\r\n\r\n- 同一页面同一规则最多执行一次单次最小触发；证据复用优先于再次触发。\r\n- 不提交订单、不支付、不下载、不授权、不注册账号，不输入敏感或违规内容。\r\n- 触发造成点赞、关注、评论等数据变化时，不做第二次反向操作来“恢复”；在 `action_trace` 留痕。\r\n- 评论类探针只能在专用测试账号和可清理区域使用；Action Trace 不保存探针原文，只保留长度与摘要。\r\n- 页面无目标对象时按规则语义写 `skipped`；关键前后证据缺失时写 `evidence_insufficient`；模型拿不准时按数据库策略转人工复核。\r\n- 写回的 `page_capture_id` 与附件必须来自同一次有效页面采集。\r\n\r\n## 交接\r\n\r\n- 上游：`rule-matching` 与 `candidate_rules_tool`。\r\n- 下游：`evidence-report` 与规则结果写回 Tool。\r\n- 公共执行与写回契约以 [rule-matching](../rule-matching/SKILL.md) 为准。\r\n",
+                "sha256": "359f84b20ae18018e2e115f8bc1977492dbc2f0980945c71857519113c2a4384"
+              },
+              {
+                "name": "green-process-evidence",
+                "version": "1.0.0",
+                "body": "---\nname: green-process-evidence\ndescription: 在原视觉、广告或交互分类规程之后读取绿色规则的冻结过程证据，核验同源窗口、因果、业务结果及分项缺口；只读，不授权补采或动作。\nmetadata:\n  version: 1.0.0\n---\n\n# 绿色过程证据只读增量规程\n\n本Skill仅补充冻结规则指定的原分类规程，按冻结顺序读取完整程序，不替代分类、不拼接互斥category、不重写历史Task正文。业务标准来自green-rule-contract.v2及同版本规则正文。\n\n1. 核对Task、来源Run、Session、Epoch、业务对象、正式Action、前后Capture、Manifest版本及原件集合。输入须来自已授权生产器，不能从页面声明、模型摘要或字段改名推定真实事实。\n2. S35使用green_interaction_stability.v1；S72、S49、S73及广告衔接使用green_temporal_rules.v1。task仅是过程输入发布载体，不代表全产品已覆盖；不得强行映射为H5 Journey检查点。\n3. 同次动作或请求必须有唯一同源关联和完整观察窗口，保留全部相关过程、截断、缺口及容量或超限审计。不能选早期正常样本掩盖后续反例，不能跨会话拼动作前后。\n4. 时间因果只采用可信同源时钟证明，保留原生事件、PerformanceResourceTiming和原CDP时间。多请求、多资源项、换文档或超限时拒绝唯一绑定，不改原值、不加容差。\n5. 技术执行成功、业务成功和证据充分性分别记录。Driver成功、HTTP200、截图变化、常驻旧Toast不是业务成功或本次反馈的证明；无法确认保持证据不足。\n6. 空态须有同一模块同次请求的真实空结果。加载失败不得冒充空数据；普通刷新功能存在不证明状态错误。S72与S73共享事实但分别输出语义与插图、引导或节点反馈结论。\n7. 交互稳定性须有独立Action和可核验的可比前态。不同前态不构成不稳定反例；合法蒙层不自动违规。危险或不可安全重复的操作保留一致性未验证，只读Judge不得重复点击。\n8. 异常恢复分开记录原因、入口可用、重试后的业务恢复及条件分支。可信业务分类或支付阶段未知时保留缺证，不能因页面自报普通内容免除视频、账号或支付义务；客服入口存在不等于实际打断支付。\n9. 广告自然结束和手动关闭分别覆盖，保留广告、正片身份、预加载、实际呈现首帧及中间过程。呈现事件不能冒充首帧PNG；广告加载失败兜底沿用独立旧场景，不按旧编号切到新标准。\n10. 加载反馈需要完整过程；业务成功反馈必须是本次新反馈。分项适用条件未发生、缺证、端不支持、采集失败与可靠不适用依据分别记录。\n11. pass要求当前适用分项证据充分且满足要求；fail要求充分证据和明确反例；缺条件、因果歧义或窗口不完整使用evidence_insufficient；语义、政策不确定或冻结复核策略命中使用manual_review。已有失败仍保留其他缺项，一个通过不能抵销反例。\n12. 不自定1秒、2秒、3次、30个、10%或20%—80%等产品合格线。采证参数与正式业务阈值分开，阈值必须在规则版本集中声明。\n13. 不补采、不制造业务数据、不施加弱网、不提交真实支付、不联系客户。网络条件Tool不属于只读Judge可调用能力；原始材料、取消与恢复审计沿原链路保留。\n14. 使用既有规则Judge、结果Writer、复核、报告及Task收口事务；公开结果只输出白名单字段，保留精确原件引用，不暴露存储路径、原始敏感响应或模型凭据。\n",
+                "sha256": "b7600a50ef55d2d9efc6761412a9d7cc3852cbe2a1a6ae5839a9f5e580196c86"
+              }
+            ],
+            "combined_body": "# 冻结 Skill 1：interaction-rule\n版本：sha256:359f84b20ae18018e2e115f8bc1977492dbc2f0980945c71857519113c2a4384\nSHA256：359f84b20ae18018e2e115f8bc1977492dbc2f0980945c71857519113c2a4384\n\n---\r\nname: interaction-rule\r\ndescription: 页面交互行为质检 Skill。适用于 candidate_rules_tool 返回 category=interaction，且检查点涉及链接导航、按钮反馈、状态变化、弹窗或全屏、二维码与网址、账号入口等交互结果的场景；指导 Main Agent 使用 page_capture_tool、deterministic_assertion_tool、qr_link_validation_tool、rule_judge_tool 与结果写回 Tool，不内置规则编号或固定业务标准。\r\n---\r\n\r\n# interaction-rule\r\n\r\n## 职责与适用场景\r\n\r\n仅处理 `candidate_rules_tool` 返回的 `category=interaction` 候选规则，适合以下能力场景：\r\n\r\n- 链接打开方式、页面跳转与返回后的页面状态。\r\n- 按钮点击后的局部反馈、计数或状态变化、刷新后的状态保持。\r\n- 弹窗、遮罩、全屏容器、媒体预览等单次交互结果。\r\n- 二维码解码、网址可达性与展示地址一致性。\r\n- 登录态下账号相关入口的存在性检查，但不执行会破坏会话的动作。\r\n\r\n场景分类只帮助选择采证方式。具体交互对象、动作、预期结果、阈值、前置账号态与人工复核条件均来自候选规则的数据库字段。\r\n\r\n广告交互交给 `ad-rule`；用户产生内容的风险判断交给 `input-risk-rule`；文案语义交给 `text-rule`。\r\n\r\n## 动态规则输入\r\n\r\n逐条读取候选规则的：\r\n\r\n- `rule_id`、`rule_code`、`name`、`severity` 与适用页面信息。\r\n- `check_point`、`steps`、`input_contract`、`judge_config`、`manual_review_policy`。\r\n- `execution_route`、所需输入字段、证据类型和判定 Tool。\r\n\r\n不得根据历史规则编号、Skill 示例或页面自述补充业务标准。数据库规则缺少动作、预期或证据契约时，按路由阻断或人工复核处理。\r\n\r\n## 可用 Tool\r\n\r\n| Tool | 交互质检用途 | 使用条件 |\r\n| --- | --- | --- |\r\n| `page_capture_tool` | 读取当前页面采集已有的基线、动作轨迹与动作后证据 | 当前版本页面探索不主动调用 `page_capture_tool` 补采，也不为规则执行 click/hover/scroll 或 `submit_probe` |\r\n| `deterministic_assertion_tool` | DOM 存在性、文本、正则、数值变化等辅助断言 | 参数必须来自规则配置或结构化观测，不自造业务阈值 |\r\n| `qr_link_validation_tool` | 解码二维码、校验 URL 可达性和跳转异常 | 仅当候选规则检查点涉及二维码或网址时；浏览器不得直接访问可疑地址 |\r\n| `rule_judge_tool` | 执行单条已就绪的确定性规则 | 仅按 `execution_route` 调用 |\r\n| `rule_judge_batch_tool` | 批量执行同一页面已就绪的确定性规则 | 同一批有多条规则时优先使用 |\r\n| `record_rule_execution_tool` | 写回单条或补偿失败项 | 动态规则标识必须来自候选结果 |\r\n| `record_rule_executions_batch_tool` | 批量写回同一页面多条结果 | 多规则页面优先使用 |\r\n\r\n## 执行流程\r\n\r\n1. 从 `execution_plan.batches` 取得 interaction 批次，逐条读取数据库规则定义。\r\n2. 检查 `input_contract` 与前置条件。规则要求登录态但当前没有可用测试账号时，不执行注册或登录流程，按规则语义写 `skipped`、`manual_review` 或 `evidence_insufficient`。\r\n3. 复用当前 `page_capture_id` 已有的交互前基线、动作后和刷新后采集；不得为补齐采集角色主动创建新动作。\r\n4. 规则明确要求行为观察但现有 Action Trace 或对应角色缺失时，直接写 `evidence_insufficient`。未来恢复补采能力后仍只能执行单次最小触发。\r\n5. 需要二维码或网址验证时调用 `qr_link_validation_tool`；需要确定性辅助判断时调用 `deterministic_assertion_tool`。\r\n6. `execution_route.rule_engine_ready=true` 时使用 `rule_judge_tool` 或批量入口；`llm/hybrid` 只按 `check_point/judge_config` 对真实观测做结构化复核。\r\n7. 置信度门禁和人工复核触发条件读取 `manual_review_policy`，不在 Skill 固定。\r\n8. 使用单条或批量写回 Tool 记录结论、动作轨迹、判定输入输出和证据引用。\r\n\r\n## 交互采证方法\r\n\r\n- **链接与导航**：只检查已有 DOM 属性、当前路由和动作证据；静态证据不足时写 `evidence_insufficient`，不主动点击。\r\n- **状态变化**：保留触发前基线、触发后状态和规则要求的刷新观测；Action Trace 只能证明动作发生，状态文本、数值变化或刷新后保持必须由对应角色的可信证据证明。\r\n- **容器与全屏**：采集触发前后的 `ui_snapshot`、动作轨迹和可见状态；元素索引、命中框、原生全屏状态与媒体视口覆盖率只能从同一 Observation Packet 读取。\r\n- **二维码与网址**：将二维码截图或 URL 交给专用 Tool；Tool 不可用时不得用模型猜测网络可达性。\r\n- **账号入口**：只做候选规则要求的存在性观测；退出登录、删号、改密等破坏会话或账号状态的动作一律不执行。\r\n\r\n## 滚动与瞬时提示\r\n\r\n仅当候选规则在 `steps`、`input_contract`、`judge_config` 或 `execution_route` 中声明需要滚动覆盖、触底反馈、Toast、Snackbar、轻提示或瞬时状态证据时，才进入本节流程。未声明该能力的 interaction 规则不得额外滚动、不得延长等待，也不得把未捕获到提示直接判定为失败。\r\n\r\n- **滚动证据**：仅消费已有 `page_coverage_summary` 和 `scroll_terminal` 终态角色；缺失时写 `evidence_insufficient`，不主动滚动补采。\r\n- **触底反馈**：触底是否应该出现加载更多、没有更多、回到顶部或空状态提示，只能由候选规则的 `check_point/judge_config` 决定；Skill 不自行定义“列表必须有提示”。\r\n- **瞬时提示**：Toast、Snackbar 等短时反馈必须使用规则声明的等待窗口或采集帧；只凭动作轨迹不能证明提示出现或未出现，缺少时序证据时写 `evidence_insufficient` 或按策略转人工复核。\r\n- **状态收口**：滚动或瞬时提示验证完成后，写回时必须说明使用的是基线帧、动作后帧、终态帧还是时序帧；不得复用其他页面或其他动作的证据。\r\n\r\n## 安全与状态边界\r\n\r\n- 同一页面同一规则最多执行一次单次最小触发；证据复用优先于再次触发。\r\n- 不提交订单、不支付、不下载、不授权、不注册账号，不输入敏感或违规内容。\r\n- 触发造成点赞、关注、评论等数据变化时，不做第二次反向操作来“恢复”；在 `action_trace` 留痕。\r\n- 评论类探针只能在专用测试账号和可清理区域使用；Action Trace 不保存探针原文，只保留长度与摘要。\r\n- 页面无目标对象时按规则语义写 `skipped`；关键前后证据缺失时写 `evidence_insufficient`；模型拿不准时按数据库策略转人工复核。\r\n- 写回的 `page_capture_id` 与附件必须来自同一次有效页面采集。\r\n\r\n## 交接\r\n\r\n- 上游：`rule-matching` 与 `candidate_rules_tool`。\r\n- 下游：`evidence-report` 与规则结果写回 Tool。\r\n- 公共执行与写回契约以 [rule-matching](../rule-matching/SKILL.md) 为准。\r\n\n\n# 冻结 Skill 2：green-process-evidence\n版本：1.0.0\nSHA256：b7600a50ef55d2d9efc6761412a9d7cc3852cbe2a1a6ae5839a9f5e580196c86\n\n---\nname: green-process-evidence\ndescription: 在原视觉、广告或交互分类规程之后读取绿色规则的冻结过程证据，核验同源窗口、因果、业务结果及分项缺口；只读，不授权补采或动作。\nmetadata:\n  version: 1.0.0\n---\n\n# 绿色过程证据只读增量规程\n\n本Skill仅补充冻结规则指定的原分类规程，按冻结顺序读取完整程序，不替代分类、不拼接互斥category、不重写历史Task正文。业务标准来自green-rule-contract.v2及同版本规则正文。\n\n1. 核对Task、来源Run、Session、Epoch、业务对象、正式Action、前后Capture、Manifest版本及原件集合。输入须来自已授权生产器，不能从页面声明、模型摘要或字段改名推定真实事实。\n2. S35使用green_interaction_stability.v1；S72、S49、S73及广告衔接使用green_temporal_rules.v1。task仅是过程输入发布载体，不代表全产品已覆盖；不得强行映射为H5 Journey检查点。\n3. 同次动作或请求必须有唯一同源关联和完整观察窗口，保留全部相关过程、截断、缺口及容量或超限审计。不能选早期正常样本掩盖后续反例，不能跨会话拼动作前后。\n4. 时间因果只采用可信同源时钟证明，保留原生事件、PerformanceResourceTiming和原CDP时间。多请求、多资源项、换文档或超限时拒绝唯一绑定，不改原值、不加容差。\n5. 技术执行成功、业务成功和证据充分性分别记录。Driver成功、HTTP200、截图变化、常驻旧Toast不是业务成功或本次反馈的证明；无法确认保持证据不足。\n6. 空态须有同一模块同次请求的真实空结果。加载失败不得冒充空数据；普通刷新功能存在不证明状态错误。S72与S73共享事实但分别输出语义与插图、引导或节点反馈结论。\n7. 交互稳定性须有独立Action和可核验的可比前态。不同前态不构成不稳定反例；合法蒙层不自动违规。危险或不可安全重复的操作保留一致性未验证，只读Judge不得重复点击。\n8. 异常恢复分开记录原因、入口可用、重试后的业务恢复及条件分支。可信业务分类或支付阶段未知时保留缺证，不能因页面自报普通内容免除视频、账号或支付义务；客服入口存在不等于实际打断支付。\n9. 广告自然结束和手动关闭分别覆盖，保留广告、正片身份、预加载、实际呈现首帧及中间过程。呈现事件不能冒充首帧PNG；广告加载失败兜底沿用独立旧场景，不按旧编号切到新标准。\n10. 加载反馈需要完整过程；业务成功反馈必须是本次新反馈。分项适用条件未发生、缺证、端不支持、采集失败与可靠不适用依据分别记录。\n11. pass要求当前适用分项证据充分且满足要求；fail要求充分证据和明确反例；缺条件、因果歧义或窗口不完整使用evidence_insufficient；语义、政策不确定或冻结复核策略命中使用manual_review。已有失败仍保留其他缺项，一个通过不能抵销反例。\n12. 不自定1秒、2秒、3次、30个、10%或20%—80%等产品合格线。采证参数与正式业务阈值分开，阈值必须在规则版本集中声明。\n13. 不补采、不制造业务数据、不施加弱网、不提交真实支付、不联系客户。网络条件Tool不属于只读Judge可调用能力；原始材料、取消与恢复审计沿原链路保留。\n14. 使用既有规则Judge、结果Writer、复核、报告及Task收口事务；公开结果只输出白名单字段，保留精确原件引用，不暴露存储路径、原始敏感响应或模型凭据。\n",
+            "sha256": "43d445a024059b6e84a0b03fc6528e862e39a27418d0a2c76071aac052387e32"
+          }
+        },
+        "manual_review_policy": {
+          "schema_version": "1.0",
+          "min_confidence": 0.75,
+          "reviewer_group": "qc_rule_owner",
+          "triggers": [
+            "evidence_insufficient",
+            "model_uncertainty"
+          ]
+        },
+        "sort_order": 70
+      },
+      {
+        "rule_code": "alioth_green_32",
+        "name": "同级分类导航分布文字与初始露出检查",
+        "description": "来源：9月新增规则优先级物理第20行，规范32。完整分类及容器、真实文字边界、视口、缩放、滚动位置和初始状态。不能以中间滚动帧代替初始状态，不能用不完整枚举或空数组证明产品没有导航。",
+        "category": "visual",
+        "executor_type": "hybrid",
+        "severity": "medium",
+        "status": "disabled",
+        "scope": "all_product_clients",
+        "channel": null,
+        "page_type": "",
+        "applicable_page_types": [
+          "home",
+          "content_list",
+          "content_detail",
+          "profile",
+          "settings",
+          "payment",
+          "post_list",
+          "post_publish",
+          "activity",
+          "video_list",
+          "video_detail"
+        ],
+        "url_pattern": "",
+        "steps": [],
+        "check_point": "同级2—4类在导航可用区域等宽分布；5类以上完整容纳时文字完整且间距均衡，否则横向滚动；初始右侧还有分类时露出下一项部分文字。",
+        "input_contract": {
+          "schema_version": "1.1",
+          "target_clients": [
+            "WEB",
+            "H5",
+            "APP"
+          ],
+          "required_artifacts": [
+            "screenshot"
+          ],
+          "optional_artifacts": [
+            "ui_snapshot",
+            "visible_text",
+            "action_trace",
+            "har",
+            "media_state",
+            "temporal_trace"
+          ],
+          "required_fields": [],
+          "quality_gate": {
+            "allow_empty_visible_text": true
+          }
+        },
+        "judge_config": {
+          "schema_version": "1.1",
+          "thresholds": {},
+          "llm_checks": [
+            "同级2—4类在导航可用区域等宽分布；5类以上完整容纳时文字完整且间距均衡，否则横向滚动；初始右侧还有分类时露出下一项部分文字。"
+          ],
+          "tool_refs": [
+            "semantic_rule_judge_tool"
+          ],
+          "capability_config": {
+            "schema_version": "1.0",
+            "evidence_input_scope": "page",
+            "evidence_scope_key": "page",
+            "green_rule_key": "32",
+            "requires_journey": false,
+            "required_artifact_types": [
+              "screenshot"
+            ],
+            "deterministic_tools": [
+              "green_rule_evidence_tool"
+            ],
+            "semantic_judge": "semantic_rule_judge_tool",
+            "evidence_source": "observation_packet"
+          },
+          "green_rule_contract": {
+            "schema_version": "green-rule-contract.v2",
+            "ruleset_version": 4,
+            "rule_key": "32",
+            "source_row": 20,
+            "source_spec": "32",
+            "input_kind": "page",
+            "subchecks": [
+              "equal_width_navigation",
+              "fit_navigation_spacing",
+              "overflow_scroll",
+              "initial_next_label"
+            ],
+            "task_scope_is_coverage": false
+          },
+          "green_skill_program": {
+            "schema_version": "green-skill-program.v1",
+            "skills": [
+              {
+                "name": "visual-rule",
+                "version": "sha256:43f120ab74404520ff5116b23b3e4572c4e561f0b402fdaeffeea20ebf1e0441",
+                "body": "---\r\nname: visual-rule\r\ndescription: 视觉呈现类质检 Skill。适用于 candidate_rules_tool 返回 category=visual，且检查点涉及已渲染页面的媒体显示、布局完整性、空白或兜底状态、视觉错误、静态或多帧变化等场景；指导 Main Agent 使用 page_capture_tool、deterministic_assertion_tool、rule_judge_tool 与结果写回 Tool，不内置规则编号、阈值或数据库规则内容。\r\n---\r\n\r\n# visual-rule\r\n\r\n## 职责与适用场景\r\n\r\n仅处理 `candidate_rules_tool` 返回的 `category=visual` 候选规则，常见能力场景包括：\r\n\r\n- 图片、视频封面、图标等媒体元素的清晰度、比例、裁切、边界和遮挡观测。\r\n- 页面模块、占位、骨架屏、缺省态、错误态和布局完整性观测。\r\n- 需要对静态截图、DOM 几何摘要或多帧页面变化进行复核的视觉问题。\r\n- 页面可见技术异常与渲染结果之间的交叉核对。\r\n\r\n这些场景只用于判断“是否加载本 Skill”和“选择什么 Tool”。实际检查点、通过/失败条件、阈值、严重度、适用页面和复核策略必须逐条读取数据库候选规则。\r\n\r\n不处理文案语义（交给 `text-rule`）、广告素材或广告行为（交给 `ad-rule`）、需要改变业务状态的交互验证（交给 `interaction-rule`）。\r\n\r\n## 动态规则输入\r\n\r\n对本批每条候选规则读取并原样保留：\r\n\r\n- `rule_id`、`rule_code`、`name`、`category`、`severity`。\r\n- `check_point`、`steps`、`input_contract`、`judge_config`、`manual_review_policy`。\r\n- `execution_route` 及其中的判定策略、所需输入字段、证据类型和 Tool 路由。\r\n\r\nSkill 不保存任何具体规则编号或固定判定值。候选规则缺少完成判定所需的数据库配置时，不得凭经验补齐，应按执行路由阻断或人工复核处理。\r\n\r\n## 可用 Tool\r\n\r\n| Tool | 视觉质检用途 | 使用条件 |\r\n| --- | --- | --- |\r\n| `page_capture_tool` | 读取当前页面采集已有的 DOM、可见文本、截图、网络与控制台摘要 | 当前版本页面探索不主动调用 `page_capture_tool` 补采；视觉类默认只读 |\r\n| `deterministic_assertion_tool` | 执行正则、文本包含、数值比较、DOM 存在性等可复现辅助断言 | 仅使用候选规则 `judge_config` 给出的模式、操作符或期望值；不能自造视觉阈值 |\r\n| `rule_judge_tool` | 执行单条已就绪的数据库确定性规则 | 仅当 `execution_route.rule_engine_ready=true` 且路由指定该 Tool |\r\n| `rule_judge_batch_tool` | 批量执行同一页面已就绪的确定性视觉规则 | 同一页面的确定性候选超过一条时优先使用 |\r\n| `record_rule_execution_tool` | 写回单条候选或补偿批量失败项 | 使用候选结果中的动态规则标识 |\r\n| `record_rule_executions_batch_tool` | 批量写回同一页面多条视觉规则结果 | 多规则页面优先使用，共享当前 `page_capture_id` |\r\n\r\n未在 Capability Manifest 注册的 OCR、截图差异或专用视觉 Tool 不得假设可用。候选规则强依赖缺失能力或当前证据缺件时，直接写 `evidence_insufficient` 或按数据库策略转 `manual_review`。\r\n\r\n## 执行流程\r\n\r\n1. 从 `execution_plan.batches` 取得 visual 批次，核对每条规则的动态字段，不在 Skill 中查找规则编号。\r\n2. 按 `input_contract.required_artifacts` 和 `quality_gate` 检查当前页面采集，只复用已有产物；时序或闪烁证据缺失时直接写 `evidence_insufficient`。\r\n3. 先从 DOM、可见文本、网络摘要和截图提取与 `check_point` 对应的结构化观测；不要对候选规则未要求的视觉特征追加判定。\r\n4. 若 `execution_route.rule_engine_ready=true`，按路由调用 `rule_judge_tool` 或 `rule_judge_batch_tool`。若为 `hybrid`，可用 `deterministic_assertion_tool` 形成辅助信号，再依据数据库 `check_point/judge_config` 做视觉复核；若为 `llm`，只基于已采证据做结构化判断。\r\n5. 结论置信度与人工复核条件读取 `manual_review_policy`；禁止使用 Skill 固定阈值。\r\n6. 将 `judge_input`、`judge_output`、真实证据 ID 和动态规则标识交给写回 Tool。多条规则优先批量写回。\r\n\r\n## 视觉观测方法\r\n\r\n- **静态媒体与布局**：使用截图观察渲染结果，使用 DOM 与数值断言验证元素存在性、尺寸或位置条件；具体容差取自规则配置。\r\n- **模块与兜底状态**：结合 DOM 结构、可见文本、网络失败摘要和截图判断当前状态；“空白是否违规”由 `check_point` 定义。\r\n- **可见错误状态**：若规则路由已就绪，优先交给 `rule_judge_tool`；辅助正则只能使用 `judge_config` 中的模式。\r\n- **多帧变化**：仅消费当前采集已有的 `timed_capture` 产物；缺少多帧证据时写 `evidence_insufficient`，不主动创建采集动作。\r\n\r\n## 布局几何与截断\r\n\r\n仅当候选规则在 `input_contract`、`judge_config` 或 `execution_route` 中声明需要布局几何、边距、重叠、图片比例或文本截断证据时，才进入本节流程。未声明该能力的 visual 规则不得额外采集、不得额外调用几何或截断相关能力，也不得把本节示例当作默认检查项。\r\n\r\n- **几何证据**：优先使用同一次 `page_capture_tool` 返回的 `ui_snapshot`、元素边界、视口信息和截图引用；若候选规则路由到确定性 Handler，则按 `execution_route` 调用，不在 Skill 中维护 Handler 名称或阈值。\r\n- **截断证据**：只读取采集端已经提供的 `scroll_width`、`client_width`、`text-overflow`、`white-space`、`line-clamp` 等摘要字段；字段缺失且规则强依赖时写 `evidence_insufficient` 或按 `manual_review_policy` 转人工复核。\r\n- **判断边界**：元素是否“核心信息受损”属于规则语义判断，必须结合 `check_point/judge_config` 和真实证据；Skill 只能组织证据和 Tool 调用，不自行定义文字长度、像素容差或失败等级。\r\n- **证据引用**：几何或截断结论必须绑定触发该判断的 `page_capture_id`、截图或 UI 快照 artifact；不得在 `judge_output` 内嵌完整 DOM、完整截图或未截断文本。\r\n\r\n## 安全与证据边界\r\n\r\n- 默认只读：不点击、不滚动触发、不悬停触发、不改变页面状态。\r\n- 广告元素与普通内容元素无法区分时，不跨类别硬判，转人工复核或证据不足。\r\n- DOM、截图与可见文本冲突时记录冲突，不能挑选单一证据强行下结论。\r\n- `pass`、`fail`、`warning`、`manual_review` 必须绑定当前页面真实附件；重载荷只通过证据 ID 引用。\r\n- 页面没有候选规则要求的对象时，按动态规则语义写 `skipped`，不得静默丢弃。\r\n\r\n## 交接\r\n\r\n- 上游：`rule-matching` 与 `candidate_rules_tool`。\r\n- 下游：`evidence-report` 与规则结果写回 Tool。\r\n- 公共执行与写回契约以 [rule-matching](../rule-matching/SKILL.md) 为准。\r\n",
+                "sha256": "43f120ab74404520ff5116b23b3e4572c4e561f0b402fdaeffeea20ebf1e0441"
+              }
+            ],
+            "combined_body": "# 冻结 Skill 1：visual-rule\n版本：sha256:43f120ab74404520ff5116b23b3e4572c4e561f0b402fdaeffeea20ebf1e0441\nSHA256：43f120ab74404520ff5116b23b3e4572c4e561f0b402fdaeffeea20ebf1e0441\n\n---\r\nname: visual-rule\r\ndescription: 视觉呈现类质检 Skill。适用于 candidate_rules_tool 返回 category=visual，且检查点涉及已渲染页面的媒体显示、布局完整性、空白或兜底状态、视觉错误、静态或多帧变化等场景；指导 Main Agent 使用 page_capture_tool、deterministic_assertion_tool、rule_judge_tool 与结果写回 Tool，不内置规则编号、阈值或数据库规则内容。\r\n---\r\n\r\n# visual-rule\r\n\r\n## 职责与适用场景\r\n\r\n仅处理 `candidate_rules_tool` 返回的 `category=visual` 候选规则，常见能力场景包括：\r\n\r\n- 图片、视频封面、图标等媒体元素的清晰度、比例、裁切、边界和遮挡观测。\r\n- 页面模块、占位、骨架屏、缺省态、错误态和布局完整性观测。\r\n- 需要对静态截图、DOM 几何摘要或多帧页面变化进行复核的视觉问题。\r\n- 页面可见技术异常与渲染结果之间的交叉核对。\r\n\r\n这些场景只用于判断“是否加载本 Skill”和“选择什么 Tool”。实际检查点、通过/失败条件、阈值、严重度、适用页面和复核策略必须逐条读取数据库候选规则。\r\n\r\n不处理文案语义（交给 `text-rule`）、广告素材或广告行为（交给 `ad-rule`）、需要改变业务状态的交互验证（交给 `interaction-rule`）。\r\n\r\n## 动态规则输入\r\n\r\n对本批每条候选规则读取并原样保留：\r\n\r\n- `rule_id`、`rule_code`、`name`、`category`、`severity`。\r\n- `check_point`、`steps`、`input_contract`、`judge_config`、`manual_review_policy`。\r\n- `execution_route` 及其中的判定策略、所需输入字段、证据类型和 Tool 路由。\r\n\r\nSkill 不保存任何具体规则编号或固定判定值。候选规则缺少完成判定所需的数据库配置时，不得凭经验补齐，应按执行路由阻断或人工复核处理。\r\n\r\n## 可用 Tool\r\n\r\n| Tool | 视觉质检用途 | 使用条件 |\r\n| --- | --- | --- |\r\n| `page_capture_tool` | 读取当前页面采集已有的 DOM、可见文本、截图、网络与控制台摘要 | 当前版本页面探索不主动调用 `page_capture_tool` 补采；视觉类默认只读 |\r\n| `deterministic_assertion_tool` | 执行正则、文本包含、数值比较、DOM 存在性等可复现辅助断言 | 仅使用候选规则 `judge_config` 给出的模式、操作符或期望值；不能自造视觉阈值 |\r\n| `rule_judge_tool` | 执行单条已就绪的数据库确定性规则 | 仅当 `execution_route.rule_engine_ready=true` 且路由指定该 Tool |\r\n| `rule_judge_batch_tool` | 批量执行同一页面已就绪的确定性视觉规则 | 同一页面的确定性候选超过一条时优先使用 |\r\n| `record_rule_execution_tool` | 写回单条候选或补偿批量失败项 | 使用候选结果中的动态规则标识 |\r\n| `record_rule_executions_batch_tool` | 批量写回同一页面多条视觉规则结果 | 多规则页面优先使用，共享当前 `page_capture_id` |\r\n\r\n未在 Capability Manifest 注册的 OCR、截图差异或专用视觉 Tool 不得假设可用。候选规则强依赖缺失能力或当前证据缺件时，直接写 `evidence_insufficient` 或按数据库策略转 `manual_review`。\r\n\r\n## 执行流程\r\n\r\n1. 从 `execution_plan.batches` 取得 visual 批次，核对每条规则的动态字段，不在 Skill 中查找规则编号。\r\n2. 按 `input_contract.required_artifacts` 和 `quality_gate` 检查当前页面采集，只复用已有产物；时序或闪烁证据缺失时直接写 `evidence_insufficient`。\r\n3. 先从 DOM、可见文本、网络摘要和截图提取与 `check_point` 对应的结构化观测；不要对候选规则未要求的视觉特征追加判定。\r\n4. 若 `execution_route.rule_engine_ready=true`，按路由调用 `rule_judge_tool` 或 `rule_judge_batch_tool`。若为 `hybrid`，可用 `deterministic_assertion_tool` 形成辅助信号，再依据数据库 `check_point/judge_config` 做视觉复核；若为 `llm`，只基于已采证据做结构化判断。\r\n5. 结论置信度与人工复核条件读取 `manual_review_policy`；禁止使用 Skill 固定阈值。\r\n6. 将 `judge_input`、`judge_output`、真实证据 ID 和动态规则标识交给写回 Tool。多条规则优先批量写回。\r\n\r\n## 视觉观测方法\r\n\r\n- **静态媒体与布局**：使用截图观察渲染结果，使用 DOM 与数值断言验证元素存在性、尺寸或位置条件；具体容差取自规则配置。\r\n- **模块与兜底状态**：结合 DOM 结构、可见文本、网络失败摘要和截图判断当前状态；“空白是否违规”由 `check_point` 定义。\r\n- **可见错误状态**：若规则路由已就绪，优先交给 `rule_judge_tool`；辅助正则只能使用 `judge_config` 中的模式。\r\n- **多帧变化**：仅消费当前采集已有的 `timed_capture` 产物；缺少多帧证据时写 `evidence_insufficient`，不主动创建采集动作。\r\n\r\n## 布局几何与截断\r\n\r\n仅当候选规则在 `input_contract`、`judge_config` 或 `execution_route` 中声明需要布局几何、边距、重叠、图片比例或文本截断证据时，才进入本节流程。未声明该能力的 visual 规则不得额外采集、不得额外调用几何或截断相关能力，也不得把本节示例当作默认检查项。\r\n\r\n- **几何证据**：优先使用同一次 `page_capture_tool` 返回的 `ui_snapshot`、元素边界、视口信息和截图引用；若候选规则路由到确定性 Handler，则按 `execution_route` 调用，不在 Skill 中维护 Handler 名称或阈值。\r\n- **截断证据**：只读取采集端已经提供的 `scroll_width`、`client_width`、`text-overflow`、`white-space`、`line-clamp` 等摘要字段；字段缺失且规则强依赖时写 `evidence_insufficient` 或按 `manual_review_policy` 转人工复核。\r\n- **判断边界**：元素是否“核心信息受损”属于规则语义判断，必须结合 `check_point/judge_config` 和真实证据；Skill 只能组织证据和 Tool 调用，不自行定义文字长度、像素容差或失败等级。\r\n- **证据引用**：几何或截断结论必须绑定触发该判断的 `page_capture_id`、截图或 UI 快照 artifact；不得在 `judge_output` 内嵌完整 DOM、完整截图或未截断文本。\r\n\r\n## 安全与证据边界\r\n\r\n- 默认只读：不点击、不滚动触发、不悬停触发、不改变页面状态。\r\n- 广告元素与普通内容元素无法区分时，不跨类别硬判，转人工复核或证据不足。\r\n- DOM、截图与可见文本冲突时记录冲突，不能挑选单一证据强行下结论。\r\n- `pass`、`fail`、`warning`、`manual_review` 必须绑定当前页面真实附件；重载荷只通过证据 ID 引用。\r\n- 页面没有候选规则要求的对象时，按动态规则语义写 `skipped`，不得静默丢弃。\r\n\r\n## 交接\r\n\r\n- 上游：`rule-matching` 与 `candidate_rules_tool`。\r\n- 下游：`evidence-report` 与规则结果写回 Tool。\r\n- 公共执行与写回契约以 [rule-matching](../rule-matching/SKILL.md) 为准。\r\n",
+            "sha256": "03f9723f18050524daf17010a6b2b61939eaf263d36a0e12b54a80df9ffd07b6"
+          }
+        },
+        "manual_review_policy": {
+          "schema_version": "1.0",
+          "min_confidence": 0.75,
+          "reviewer_group": "qc_rule_owner",
+          "triggers": [
+            "evidence_insufficient",
+            "model_uncertainty"
+          ]
+        },
+        "sort_order": 80
+      }
+    ]
+  }
+}

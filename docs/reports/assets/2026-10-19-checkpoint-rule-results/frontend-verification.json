@@ -1,0 +1,25 @@
+{
+  "scope": "工作台前端结果展示及原件关联验证；不代表绿色规则业务验收",
+  "unit_tests": {
+    "command": "npm run test -- --run",
+    "directory": "app/workstation",
+    "test_files_passed": 60,
+    "tests_passed": 490,
+    "tests_failed": 0,
+    "exit_code": 0,
+    "duration_seconds": 19.04,
+    "prior_failure": "新增动作元数据断言时，测试桩缺组件名称，1项查找失败；补齐测试桩名称后全量通过"
+  },
+  "production_build": {
+    "command": "npm run build",
+    "includes_typecheck": true,
+    "exit_code": 0,
+    "last_change": "检查点截图按钮限制宽度并允许长编号换行；随后构建通过并在真实浏览器验证"
+  },
+  "browser_regression": {
+    "tests_passed": 3,
+    "exit_code": 0,
+    "scope": "既有受控短流程1280和390、管理规则编辑；使用接口夹具，不代替真实服务登录",
+    "log": "frontend-browser-regression.log"
+  }
+}

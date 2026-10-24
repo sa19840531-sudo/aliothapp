@@ -1,0 +1,183 @@
+{
+  "schema_version": "app-ui-tree-features.v1",
+  "product_name": "禁果短剧",
+  "product_aliases": [
+    "禁果",
+    "禁果短剧",
+    "jinguo"
+  ],
+  "playbook_id": "jinguo",
+  "package_name": "dark.nvycy.ambpu",
+  "package_hints": [
+    "dark.nvycy.ambpu",
+    "dark.NVYCy.AmBPu",
+    "jinguo",
+    "禁果"
+  ],
+  "flow_order": [
+    "startup_ad",
+    "popup_ads",
+    "bottom_tabs"
+  ],
+  "note": "禁果底栏：语意图标＋相对六等分槽位（首页/剧场/视频/社区/福利/我的）；禁止以绝对 px 为主路径；对齐开屏 semantic_skip_relative。",
+  "bottom_navigation": {
+    "phase": "bottom_tabs",
+    "policy": "semantic_icon_relative",
+    "layout": {
+      "slot_count": 6,
+      "clickable_slot_indexes": [0, 1, 2, 3, 4, 5],
+      "forbidden_slot_indexes": [],
+      "y_normalized_fallback": 0.91,
+      "note": "六格等分；槽心约 x=0.083/0.25/0.417/0.583/0.75/0.917",
+      "slot_centers_norm": [0.0833, 0.25, 0.4167, 0.5833, 0.75, 0.9167]
+    },
+    "match_fields": [
+      "semantic_target",
+      "metadata.content_desc",
+      "metadata.text",
+      "metadata.label",
+      "metadata.resource_id",
+      "metadata.ui_tree_text",
+      "metadata.accessibility_text"
+    ],
+    "bounds": {
+      "min_top": 0.84,
+      "max_bottom": 0.98
+    },
+    "visual_band": {
+      "min_top": 0.86,
+      "max_bottom": 0.955,
+      "note": "业务底栏触控带；不含系统手势条"
+    },
+    "discovery_sources": [
+      "ui_tree",
+      "accessibility",
+      "vision",
+      "promoted_coverage",
+      "promoted_bottom_nav"
+    ],
+    "visual_pixel_priority": true,
+    "ordered_tabs": [
+      {
+        "label": "首页",
+        "aliases": ["首页", "首頁", "主页", "主頁", "home"],
+        "slot_index": 0,
+        "icon_kind": "home_blob",
+        "semantic_markers": ["首页", "主页", "home"],
+        "action": "tap_then_screenshot",
+        "click": true,
+        "page_types": ["home"],
+        "relative_slot": {"left": 0.0, "right": 0.1667},
+        "tap_bounds": {
+          "left": 0.03,
+          "top": 0.88,
+          "right": 0.14,
+          "bottom": 0.945
+        },
+        "note": "选中时常为黄实心豆形图标"
+      },
+      {
+        "label": "剧场",
+        "aliases": ["剧场", "劇場", "theater"],
+        "slot_index": 1,
+        "icon_kind": "film_reel",
+        "semantic_markers": ["剧场", "theater"],
+        "action": "tap_then_screenshot",
+        "click": true,
+        "page_types": ["content_list", "video_list"],
+        "relative_slot": {"left": 0.1667, "right": 0.3333},
+        "tap_bounds": {
+          "left": 0.2,
+          "top": 0.88,
+          "right": 0.3,
+          "bottom": 0.945
+        }
+      },
+      {
+        "label": "视频",
+        "aliases": ["视频", "視頻", "video"],
+        "slot_index": 2,
+        "icon_kind": "clapper",
+        "semantic_markers": ["视频", "video"],
+        "action": "tap_then_screenshot",
+        "click": true,
+        "page_types": ["video_list", "video_detail"],
+        "relative_slot": {"left": 0.3333, "right": 0.5},
+        "tap_bounds": {
+          "left": 0.37,
+          "top": 0.88,
+          "right": 0.47,
+          "bottom": 0.945
+        }
+      },
+      {
+        "label": "社区",
+        "aliases": ["社区", "社區", "community"],
+        "slot_index": 3,
+        "icon_kind": "planet",
+        "semantic_markers": ["社区", "community"],
+        "action": "tap_then_screenshot",
+        "click": true,
+        "page_types": ["post_list", "community"],
+        "relative_slot": {"left": 0.5, "right": 0.6667},
+        "tap_bounds": {
+          "left": 0.53,
+          "top": 0.88,
+          "right": 0.63,
+          "bottom": 0.945
+        }
+      },
+      {
+        "label": "福利",
+        "aliases": ["福利", "benefits", "welfare"],
+        "slot_index": 4,
+        "icon_kind": "heart",
+        "semantic_markers": ["福利"],
+        "action": "tap_then_screenshot",
+        "click": true,
+        "page_types": ["activity", "welfare"],
+        "relative_slot": {"left": 0.6667, "right": 0.8333},
+        "tap_bounds": {
+          "left": 0.7,
+          "top": 0.88,
+          "right": 0.8,
+          "bottom": 0.945
+        }
+      },
+      {
+        "label": "我的",
+        "aliases": ["我的", "我", "mine", "profile", "me"],
+        "slot_index": 5,
+        "icon_kind": "person",
+        "semantic_markers": ["我的", "我", "mine", "me"],
+        "action": "tap_then_screenshot",
+        "click": true,
+        "page_types": ["profile"],
+        "relative_slot": {"left": 0.8333, "right": 1.0},
+        "tap_bounds": {
+          "left": 0.86,
+          "top": 0.88,
+          "right": 0.97,
+          "bottom": 0.945
+        },
+        "note": "右上红点仅为角标，不改变槽位"
+      }
+    ],
+    "forbid": [
+      "absolute_px_as_primary",
+      "system_gesture_bar",
+      "cloud_back_chevron_as_business_tab",
+      "hjll_default_labels"
+    ]
+  },
+  "startup_ad": {
+    "phase": "startup_ad",
+    "policy": "semantic_skip_relative_top_right",
+    "note": "开屏：语义进入/跳过 + 右上相对区；禁止 ENTRY_TAP / cloud_back"
+  },
+  "popup_ads": {
+    "phase": "popup_ads",
+    "policy": "watcher_cascade",
+    "note": "Watcher→A文案→B几何安全X→C蒙层→D cloud_back_twice"
+  }
+}

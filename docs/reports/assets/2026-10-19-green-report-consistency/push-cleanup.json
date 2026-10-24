@@ -1,0 +1,13 @@
+{
+  "container": "alioth-green-push-pg-20261019",
+  "container_id": "f03c324ce6c7b8b19e0d968289dbaea654c2f08e817370d962ed4ecf3f551145",
+  "label": "green-push-validation-20261019",
+  "active_database_connections_before_stop": 0,
+  "exit_code": 0,
+  "removed": true,
+  "existing_volume_retained": "alioth-green-shared-20261019-pgdata",
+  "main_and_unrelated_container_ids_unchanged": true,
+  "temporary_listening_ports": [],
+  "new_images": [],
+  "new_networks": []
+}

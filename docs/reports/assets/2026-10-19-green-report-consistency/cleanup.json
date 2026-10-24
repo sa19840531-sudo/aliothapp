@@ -1,0 +1,21 @@
+{
+  "container": "alioth-green-report-pg-20261019",
+  "verified_container_id_prefix": "ff46d45f3139",
+  "validation_label": "green-report-consistency-20261019",
+  "active_database_connections_before_stop": 0,
+  "exit_code": 0,
+  "container_removed": true,
+  "mounts": [
+    {
+      "name": "alioth-green-shared-20261019-pgdata",
+      "destination": "/var/lib/postgresql/data"
+    }
+  ],
+  "existing_volume_retained": "alioth-green-shared-20261019-pgdata",
+  "main_container_ids_unchanged": true,
+  "unrelated_tgbot_retained": true,
+  "created_images": [],
+  "created_networks": [],
+  "temporary_listening_ports": [],
+  "source_mount_isolation_claimed": false
+}

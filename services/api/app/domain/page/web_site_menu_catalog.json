@@ -1,0 +1,3210 @@
+{
+  "schema_version": "web-menu-allowlist.v4",
+  "catalog_id": "web_v2_six_site_menu_allowlist",
+  "version": "2026-09-11.1",
+  "captured_at": "2026-08-30",
+  "source": {
+    "kind": "operator_provided_navigation_html",
+    "attachment_sha256": "2B9DB035750126C905C1C87829BE47C5C4C34389618FA5091C6C0CF29E82DDF0"
+  },
+  "policy": {
+    "match_scope": "site_origin_and_business_url_v2",
+    "host_wildcards_allowed": false,
+    "menu_label_is_authoritative": false,
+    "fragment_ignored": false,
+    "identity_policy_version": "web-url-identity.v2",
+    "query_is_part_of_identity": true,
+    "http_to_https_same_host_upgrade_allowed": true,
+    "https_to_http_downgrade_allowed": false,
+    "redirect_must_remain_same_host": true,
+    "runtime_dom_presence_required": true,
+    "runtime_discovered_unlisted_action": "record_only_needs_review",
+    "cross_origin_action": "block_and_record_terminal",
+    "home_action": "use_existing_home_baseline",
+    "allowlisted_action": "safe_get_observe_only"
+  },
+  "summary": {
+    "site_count": 6,
+    "active_anchor_count": 166,
+    "home_baseline_count": 6,
+    "allowlisted_navigation_count": 157,
+    "blocked_cross_origin_count": 3,
+    "unique_same_origin_target_count": 162,
+    "ignored_commented_anchor_count": 4,
+    "active_entry_count": 6,
+    "observe_only_entry_count": 156,
+    "deprecated_entry_count": 4
+  },
+  "sites": [
+    {
+      "site_id": "heiliao_com",
+      "origin": "https://heiliao.com",
+      "catalog_version": "2026-09-11.1",
+      "status": "active",
+      "verification": {"verified_at": "2026-09-04", "evidence_ref": "docs/reports/2026-09-04-web-v2-six-site-live-retest-summary.md", "result": "live_retest_reviewed"},
+      "applicability": {"required_page_types": ["home", "content_list", "content_detail", "video_list", "video_detail"], "optional_page_types": ["activity", "search_page"], "not_applicable_page_types": []},
+      "entry_defaults": {"version": "2026-09-11.1", "status": "observe-only", "verification": {"verified_at": "2026-09-04", "evidence_ref": "docs/reports/2026-09-04-web-v2-six-site-live-retest-summary.md", "result": "source_snapshot_reviewed"}},
+      "entry_overrides": {"heiliao.home": {"status": "active"}},
+      "navigation_evidence": {
+        "container": "div#home-nav-slider.slider-content.fixed",
+        "signals": [
+          "id_contains_nav",
+          "repeated_direct_anchor_children"
+        ],
+        "active_anchor_count": 30
+      },
+      "entries": [
+        {
+          "entry_id": "heiliao.home",
+          "menu_path": [
+            "首页"
+          ],
+          "href": "/",
+          "decision": "home_baseline",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "home",
+            "confidence": 0.72,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": true
+          }
+        },
+        {
+          "entry_id": "heiliao.hlcg",
+          "menu_path": [
+            "最新黑料"
+          ],
+          "href": "/hlcg/",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "heiliao.jrrs",
+          "menu_path": [
+            "今日热瓜"
+          ],
+          "href": "/jrrs/",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "heiliao.jqrm",
+          "menu_path": [
+            "热门黑料"
+          ],
+          "href": "/jqrm/",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "heiliao.lsdg",
+          "menu_path": [
+            "经典黑料"
+          ],
+          "href": "/lsdg/",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "heiliao.sjb",
+          "menu_path": [
+            "体育直播"
+          ],
+          "href": "/sjb/",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "heiliao.xycg",
+          "menu_path": [
+            "校园黑料"
+          ],
+          "href": "/xycg/",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "heiliao.whhl",
+          "menu_path": [
+            "网红黑料"
+          ],
+          "href": "/whhl/",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "heiliao.fczq",
+          "menu_path": [
+            "反差专区"
+          ],
+          "href": "/fczq/",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "heiliao.ycsq",
+          "menu_path": [
+            "原创社区"
+          ],
+          "href": "/ycsq/",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "heiliao.mxcw",
+          "menu_path": [
+            "明星丑闻"
+          ],
+          "href": "/mxcw/",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "heiliao.mrds",
+          "menu_path": [
+            "每日大赛"
+          ],
+          "href": "/mrds/",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "heiliao.qqqw",
+          "menu_path": [
+            "全球奇闻"
+          ],
+          "href": "/qqqw/",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "heiliao.ttsq",
+          "menu_path": [
+            "推特社区"
+          ],
+          "href": "/ttsq/",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "heiliao.ysdj",
+          "menu_path": [
+            "影视短剧"
+          ],
+          "href": "/ysdj/",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "heiliao.whhj",
+          "menu_path": [
+            "网黄合集"
+          ],
+          "href": "/whhj/",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "heiliao.shxw",
+          "menu_path": [
+            "社会新闻"
+          ],
+          "href": "/shxw/",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "heiliao.thzq",
+          "menu_path": [
+            "探花专区"
+          ],
+          "href": "/thzq/",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "heiliao.cpcd",
+          "menu_path": [
+            "厕拍抄底"
+          ],
+          "href": "/cpcd/",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "heiliao.yqby",
+          "menu_path": [
+            "有求必应"
+          ],
+          "href": "/yqby/",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "heiliao.syzy",
+          "menu_path": [
+            "深夜综艺"
+          ],
+          "href": "/syzy/",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "heiliao.djbl",
+          "menu_path": [
+            "独家爆料"
+          ],
+          "href": "/djbl/",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "heiliao.jqxs",
+          "menu_path": [
+            "黑料小说"
+          ],
+          "href": "/jqxs/",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "heiliao.gchl",
+          "menu_path": [
+            "官场爆料"
+          ],
+          "href": "/gchl/",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "heiliao.hlkt",
+          "menu_path": [
+            "黑料课堂"
+          ],
+          "href": "/hlkt/",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "heiliao.hlbg",
+          "menu_path": [
+            "黑料爆改"
+          ],
+          "href": "/hlbg/",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "heiliao.ttzz",
+          "menu_path": [
+            "桃图杂志"
+          ],
+          "href": "/ttzz/",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "heiliao.mrrb",
+          "menu_path": [
+            "日榜黑料"
+          ],
+          "href": "/mrrb/",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "heiliao.zbjx",
+          "menu_path": [
+            "周榜精选"
+          ],
+          "href": "/zbjx/",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "heiliao.ybrg",
+          "menu_path": [
+            "月榜热瓜"
+          ],
+          "href": "/ybrg/",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        }
+      ]
+    },
+    {
+      "site_id": "hl365_com",
+      "origin": "https://hl365.com",
+      "catalog_version": "2026-09-11.1",
+      "status": "active",
+      "verification": {"verified_at": "2026-09-04", "evidence_ref": "docs/reports/2026-09-04-web-v2-six-site-live-retest-summary.md", "result": "live_retest_reviewed"},
+      "applicability": {"required_page_types": ["home", "content_list", "content_detail", "video_list", "video_detail"], "optional_page_types": ["activity", "search_page"], "not_applicable_page_types": []},
+      "entry_defaults": {"version": "2026-09-11.1", "status": "observe-only", "verification": {"verified_at": "2026-09-04", "evidence_ref": "docs/reports/2026-09-04-web-v2-six-site-live-retest-summary.md", "result": "source_snapshot_reviewed"}},
+      "entry_overrides": {
+        "hl365.home": {"status": "active"},
+        "hl365.sjb_hl": {"status": "deprecated", "verification": {"verified_at": "2026-09-04", "evidence_ref": "docs/reports/2026-09-04-web-v2-six-site-live-retest-summary.md", "result": "runtime_absent_confirmed"}},
+        "hl365.sjb_ttt": {"status": "deprecated", "verification": {"verified_at": "2026-09-04", "evidence_ref": "docs/reports/2026-09-04-web-v2-six-site-live-retest-summary.md", "result": "runtime_absent_confirmed"}},
+        "hl365.sjb_rs": {"status": "deprecated", "verification": {"verified_at": "2026-09-04", "evidence_ref": "docs/reports/2026-09-04-web-v2-six-site-live-retest-summary.md", "result": "runtime_absent_confirmed"}},
+        "hl365.sjb_bc": {"status": "deprecated", "verification": {"verified_at": "2026-09-04", "evidence_ref": "docs/reports/2026-09-04-web-v2-six-site-live-retest-summary.md", "result": "runtime_absent_confirmed"}}
+      },
+      "navigation_evidence": {
+        "container": "ul.navbar-nav.mr-auto",
+        "signals": [
+          "class_contains_nav",
+          "ul_li_anchor_hierarchy",
+          "dropdown_menu_groups"
+        ],
+        "active_anchor_count": 43,
+        "non_clickable_group_count": 8
+      },
+      "entries": [
+        {
+          "entry_id": "hl365.home",
+          "menu_path": [
+            "首页"
+          ],
+          "href": "/",
+          "decision": "home_baseline",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "home",
+            "confidence": 0.72,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": true
+          }
+        },
+        {
+          "entry_id": "hl365.24hcg",
+          "menu_path": [
+            "今日看料"
+          ],
+          "href": "/category/24hcg/",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "hl365.sjb_hl",
+          "menu_path": [
+            "优先投放区",
+            "世界杯球员黑料"
+          ],
+          "href": "/category/sjb-hl/",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": false,
+            "reason": "catalog_entry_deprecated"
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "hl365.sjb_ttt",
+          "menu_path": [
+            "优先投放区",
+            "世界杯太太团"
+          ],
+          "href": "/category/sjb-ttt/",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": false,
+            "reason": "catalog_entry_deprecated"
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "hl365.sjb_rs",
+          "menu_path": [
+            "优先投放区",
+            "世界杯热搜"
+          ],
+          "href": "/category/sjb-rs/",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": false,
+            "reason": "catalog_entry_deprecated"
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "hl365.sjb_bc",
+          "menu_path": [
+            "优先投放区",
+            "世界杯博彩专区"
+          ],
+          "href": "/category/sjb-bc/",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": false,
+            "reason": "catalog_entry_deprecated"
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "hl365.sjb_qm",
+          "menu_path": [
+            "优先投放区",
+            "球迷现场"
+          ],
+          "href": "/category/sjb-qm/",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "hl365.mrds",
+          "menu_path": [
+            "每日大赛"
+          ],
+          "href": "/category/mrds/",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "hl365.swdj",
+          "menu_path": [
+            "AI短剧"
+          ],
+          "href": "/category/swdj/",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "hl365.rgtj",
+          "menu_path": [
+            "吃瓜排行",
+            "热门吃瓜"
+          ],
+          "href": "/category/rgtj/",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "hl365.mrrg",
+          "menu_path": [
+            "吃瓜排行",
+            "每日热瓜"
+          ],
+          "href": "/category/mrrg/",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "hl365.hlda",
+          "menu_path": [
+            "吃瓜排行",
+            "黑料大事"
+          ],
+          "href": "/category/hlda/",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "hl365.fcns",
+          "menu_path": [
+            "黑料吃瓜",
+            "反差女神"
+          ],
+          "href": "/category/fcns/",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "hl365.xyrg",
+          "menu_path": [
+            "黑料吃瓜",
+            "学院热瓜"
+          ],
+          "href": "/category/xyrg/",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "hl365.whhl",
+          "menu_path": [
+            "黑料吃瓜",
+            "网红吃瓜"
+          ],
+          "href": "/category/whhl/",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "hl365.hlzt",
+          "menu_path": [
+            "黑料吃瓜",
+            "黑料杂谈"
+          ],
+          "href": "/category/hlzt/",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "hl365.mxbg",
+          "menu_path": [
+            "黑料吃瓜",
+            "明星吃瓜"
+          ],
+          "href": "/category/mxbg/",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "hl365.gcmw",
+          "menu_path": [
+            "黑料吃瓜",
+            "官场秘闻"
+          ],
+          "href": "/category/gcmw/",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "hl365.mrst",
+          "menu_path": [
+            "成人影院",
+            "禁播动漫"
+          ],
+          "href": "/category/mrst/",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "hl365.lydt",
+          "menu_path": [
+            "成人影院",
+            "撸友看片"
+          ],
+          "href": "/category/lydt/",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "hl365.llsq",
+          "menu_path": [
+            "成人影院",
+            "海角乱伦"
+          ],
+          "href": "/category/llsq/",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "hl365.avjs",
+          "menu_path": [
+            "成人影院",
+            "av解说"
+          ],
+          "href": "/category/avjs/",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "hl365.thdq",
+          "menu_path": [
+            "成人影院",
+            "探花大全"
+          ],
+          "href": "/category/thdq/",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "hl365.whzj",
+          "menu_path": [
+            "定制专辑",
+            "网黄专辑"
+          ],
+          "href": "/category/whzj/",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "hl365.qgzq",
+          "menu_path": [
+            "定制专辑",
+            "原创投稿"
+          ],
+          "href": "/category/qgzq/",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "hl365.wyxs",
+          "menu_path": [
+            "定制专辑",
+            "性爱技巧"
+          ],
+          "href": "/category/wyxs/",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "hl365.pmv",
+          "menu_path": [
+            "定制专辑",
+            "PMV混剪"
+          ],
+          "href": "/category/pmv/",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "hl365.chjlb",
+          "menu_path": [
+            "定制专辑",
+            "偷拍盗摄"
+          ],
+          "href": "/category/chjlb/",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "hl365.back_home",
+          "menu_path": [
+            "官方信息",
+            "最新回家路"
+          ],
+          "href": "/back-home.html",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "hl365.contribute",
+          "menu_path": [
+            "官方信息",
+            "投稿求瓜"
+          ],
+          "href": "/contribute.html",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "hl365.archives",
+          "menu_path": [
+            "官方信息",
+            "往期内容"
+          ],
+          "href": "/archives.html",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "hl365.tags",
+          "menu_path": [
+            "官方信息",
+            "热门关键字"
+          ],
+          "href": "/tags.html",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "hl365.faq",
+          "menu_path": [
+            "官方信息",
+            "常见问题"
+          ],
+          "href": "/faq.html",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "hl365.weixin",
+          "menu_path": [
+            "联系官方",
+            "官方吃瓜社"
+          ],
+          "href": "/weixin.html",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "hl365.tg_1",
+          "menu_path": [
+            "联系官方",
+            "官方TG"
+          ],
+          "href": "/tg-1.html",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "hl365.twitter",
+          "menu_path": [
+            "联系官方",
+            "官方推特"
+          ],
+          "href": "/155266.html",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "hl365.business",
+          "menu_path": [
+            "联系官方",
+            "官方商务合作"
+          ],
+          "href": "/40764.html",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "hl365.contact",
+          "menu_path": [
+            "联系官方",
+            "加入我们"
+          ],
+          "href": "/contact.html",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "hl365.app",
+          "menu_path": [
+            "官方推荐",
+            "黑料不打烊app"
+          ],
+          "href": "/148775.html",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "hl365.navigation",
+          "menu_path": [
+            "官方推荐",
+            "撸友导航"
+          ],
+          "href": "/dh.html",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "hl365.yscloud",
+          "menu_path": [
+            "官方推荐",
+            "萤石云破解"
+          ],
+          "href": "/191899.html",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "hl365.metaverse",
+          "menu_path": [
+            "官方推荐",
+            "深夜元宇宙"
+          ],
+          "href": "/199822.html",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "hl365.short_drama",
+          "menu_path": [
+            "官方推荐",
+            "野果短剧"
+          ],
+          "href": "/220113.html",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        }
+      ]
+    },
+    {
+      "site_id": "www_91jav1_com",
+      "origin": "https://www.91jav1.com",
+      "catalog_version": "2026-09-11.1",
+      "status": "active",
+      "verification": {"verified_at": "2026-09-04", "evidence_ref": "docs/reports/2026-09-04-web-v2-six-site-live-retest-summary.md", "result": "live_retest_reviewed"},
+      "applicability": {"required_page_types": ["home", "content_list", "content_detail", "video_list", "video_detail"], "optional_page_types": ["activity", "search_page"], "not_applicable_page_types": []},
+      "entry_defaults": {"version": "2026-09-11.1", "status": "observe-only", "verification": {"verified_at": "2026-09-04", "evidence_ref": "docs/reports/2026-09-04-web-v2-six-site-live-retest-summary.md", "result": "source_snapshot_reviewed"}},
+      "entry_overrides": {"91jav.home": {"status": "active"}},
+      "navigation_evidence": {
+        "container": "nav.navbar.navbar-expand-lg ul.navbar-nav",
+        "signals": [
+          "semantic_nav_element",
+          "class_contains_nav",
+          "ul_li_anchor_hierarchy"
+        ],
+        "active_anchor_count": 8
+      },
+      "entries": [
+        {
+          "entry_id": "91jav.home",
+          "menu_path": [
+            "首页"
+          ],
+          "href": "/",
+          "decision": "home_baseline",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "home",
+            "confidence": 0.72,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": true
+          }
+        },
+        {
+          "entry_id": "91jav.actress_hot",
+          "menu_path": [
+            "热门女优"
+          ],
+          "href": "/actress/hot/",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "91jav.subtitle",
+          "menu_path": [
+            "中文字幕"
+          ],
+          "href": "/theme/detail/3/",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "91jav.uncensored",
+          "menu_path": [
+            "无码高清"
+          ],
+          "href": "/theme/detail/11/hot/",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "91jav.theme",
+          "menu_path": [
+            "专题合集"
+          ],
+          "href": "/theme/",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "91jav.movie",
+          "menu_path": [
+            "AV影评"
+          ],
+          "href": "/movie",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "91jav.official_app",
+          "menu_path": [
+            "官方APP"
+          ],
+          "href": "https://aaa.snbbqdli.vip",
+          "decision": "blocked_cross_origin",
+          "collection_eligibility": {
+            "eligible": false,
+            "reason": "blocked_cross_origin"
+          },
+          "classification_hint": null
+        },
+        {
+          "entry_id": "91jav.home_route",
+          "menu_path": [
+            "回家的路"
+          ],
+          "href": "/article/58281",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": false,
+            "reason": "functional_or_navigation_entry"
+          },
+          "classification_hint": null
+        }
+      ]
+    },
+    {
+      "site_id": "91porna_com",
+      "origin": "http://91porna.com",
+      "catalog_version": "2026-09-11.1",
+      "status": "active",
+      "verification": {"verified_at": "2026-09-04", "evidence_ref": "docs/reports/2026-09-04-web-v2-six-site-live-retest-summary.md", "result": "live_retest_reviewed"},
+      "applicability": {"required_page_types": ["home", "content_list", "content_detail", "video_list", "video_detail"], "optional_page_types": ["activity", "search_page"], "not_applicable_page_types": []},
+      "entry_defaults": {"version": "2026-09-11.1", "status": "observe-only", "verification": {"verified_at": "2026-09-04", "evidence_ref": "docs/reports/2026-09-04-web-v2-six-site-live-retest-summary.md", "result": "source_snapshot_reviewed"}},
+      "entry_overrides": {"91porna.home": {"status": "active"}},
+      "navigation_evidence": {
+        "container": "ul.flex.dx-container",
+        "signals": [
+          "ul_li_anchor_hierarchy",
+          "navigation_data_attributes",
+          "dropdown_anchor_groups"
+        ],
+        "active_anchor_count": 65
+      },
+      "entries": [
+        {
+          "entry_id": "91porna.home",
+          "menu_path": [
+            "首页"
+          ],
+          "href": "/",
+          "decision": "home_baseline",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "home",
+            "confidence": 0.72,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": true
+          }
+        },
+        {
+          "entry_id": "91porna.video",
+          "menu_path": [
+            "91视频"
+          ],
+          "href": "/comic/index/video?category=play",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "91porna.video.hot",
+          "menu_path": [
+            "91视频",
+            "热门排行榜"
+          ],
+          "href": "/comic/index/video?category=now_month_hot",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "91porna.video.original",
+          "menu_path": [
+            "91视频",
+            "国产原创"
+          ],
+          "href": "/comic/index/video?category=original",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "91porna.video.gossip",
+          "menu_path": [
+            "91视频",
+            "吃瓜爆料"
+          ],
+          "href": "/comic/index/search?keyword=%E5%90%83%E7%93%9C+%E9%BB%91%E6%96%99+%E7%88%86%E6%96%99",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "91porna.video.mature",
+          "menu_path": [
+            "91视频",
+            "熟女做爱"
+          ],
+          "href": "/comic/index/search?keyword=%E7%86%9F%E5%A5%B3",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "91porna.video.young_style",
+          "menu_path": [
+            "91视频",
+            "可爱萝莉"
+          ],
+          "href": "/comic/index/search?keyword=%E8%90%9D%E8%8E%89",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "91porna.video.animation",
+          "menu_path": [
+            "91视频",
+            "成人动漫"
+          ],
+          "href": "/comic/index/search?keyword=%E5%8A%A8%E6%BC%AB",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "91porna.video.black",
+          "menu_path": [
+            "91视频",
+            "大屌黑人"
+          ],
+          "href": "/comic/index/search?keyword=%E9%BB%91%E4%BA%BA",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "91porna.video.busty",
+          "menu_path": [
+            "91视频",
+            "童颜巨乳"
+          ],
+          "href": "/comic/index/search?keyword=%E5%B7%A8%E4%B9%B3",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "91porna.video.swap",
+          "menu_path": [
+            "91视频",
+            "少妇换妻"
+          ],
+          "href": "/comic/index/search?keyword=%E6%8D%A2%E5%A6%BB",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "91porna.video.internal",
+          "menu_path": [
+            "91视频",
+            "内射中出"
+          ],
+          "href": "/comic/index/search?keyword=%E5%86%85%E5%B0%84",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "91porna.video.massage",
+          "menu_path": [
+            "91视频",
+            "会所按摩"
+          ],
+          "href": "/comic/index/search?keyword=%E6%8C%89%E6%91%A9",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "91porna.video.tanhua",
+          "menu_path": [
+            "91视频",
+            "91探花"
+          ],
+          "href": "/comic/index/search?keyword=%E6%8E%A2%E8%8A%B1",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "91porna.video.incest",
+          "menu_path": [
+            "91视频",
+            "家庭乱伦"
+          ],
+          "href": "/comic/index/search?keyword=%E5%AE%B6%E5%BA%AD%E4%B9%B1%E4%BC%A6",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "91porna.video.category_three",
+          "menu_path": [
+            "91视频",
+            "三级片"
+          ],
+          "href": "/comic/index/search?keyword=%E4%B8%89%E7%BA%A7%E7%89%87",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "91porna.short",
+          "menu_path": [
+            "91短视频"
+          ],
+          "href": "/melonshort",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "91porna.short.amateur",
+          "menu_path": [
+            "91短视频",
+            "素人自拍"
+          ],
+          "href": "/melonshort/cat/amateur",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "91porna.short.edit",
+          "menu_path": [
+            "91短视频",
+            "高燃混剪"
+          ],
+          "href": "/melonshort/cat/hunjian",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "91porna.short.contrast",
+          "menu_path": [
+            "91短视频",
+            "反差系列"
+          ],
+          "href": "/melonshort/cat/fancha",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "91porna.short.influencer",
+          "menu_path": [
+            "91短视频",
+            "网红达人"
+          ],
+          "href": "/melonshort/cat/wanghong",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "91porna.short.celebrity",
+          "menu_path": [
+            "91短视频",
+            "明星大瓜"
+          ],
+          "href": "/melonshort/cat/mingxing",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "91porna.short.original",
+          "menu_path": [
+            "91短视频",
+            "原创自拍"
+          ],
+          "href": "/melonshort/cat/zipai",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "91porna.gossip",
+          "menu_path": [
+            "黑料吃瓜"
+          ],
+          "href": "/%E9%BB%91%E6%96%99%E5%90%83%E7%93%9C/%E6%8E%A8%E8%8D%90",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "91porna.gossip.today",
+          "menu_path": [
+            "黑料吃瓜",
+            "今日吃瓜"
+          ],
+          "href": "/%E9%BB%91%E6%96%99%E5%90%83%E7%93%9C/%E4%BB%8A%E6%97%A5%E5%90%83%E7%93%9C/%E6%9C%80%E6%96%B0",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "91porna.gossip.campus",
+          "menu_path": [
+            "黑料吃瓜",
+            "学生校园"
+          ],
+          "href": "/%E9%BB%91%E6%96%99%E5%90%83%E7%93%9C/%E5%AD%A6%E7%94%9F%E6%A0%A1%E5%9B%AD/%E6%8E%A8%E8%8D%90",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "91porna.gossip.celebrity",
+          "menu_path": [
+            "黑料吃瓜",
+            "明星黑料"
+          ],
+          "href": "/%E9%BB%91%E6%96%99%E5%90%83%E7%93%9C/%E6%98%8E%E6%98%9F%E9%BB%91%E6%96%99/%E6%8E%A8%E8%8D%90",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "91porna.gossip.influencer",
+          "menu_path": [
+            "黑料吃瓜",
+            "网红黑料"
+          ],
+          "href": "/%E9%BB%91%E6%96%99%E5%90%83%E7%93%9C/%E7%BD%91%E7%BA%A2%E9%BB%91%E6%96%99/%E6%8E%A8%E8%8D%90",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "91porna.gossip.contest",
+          "menu_path": [
+            "黑料吃瓜",
+            "每日大赛"
+          ],
+          "href": "/%E9%BB%91%E6%96%99%E5%90%83%E7%93%9C/%E6%AF%8F%E6%97%A5%E5%A4%A7%E8%B5%9B/%E6%8E%A8%E8%8D%90",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "91porna.gossip.people",
+          "menu_path": [
+            "黑料吃瓜",
+            "名人合集"
+          ],
+          "href": "/%E9%BB%91%E6%96%99%E5%90%83%E7%93%9C/%E5%90%8D%E4%BA%BA%E5%90%88%E9%9B%86/%E6%8E%A8%E8%8D%90",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "91porna.ai",
+          "menu_path": [
+            "AI成人"
+          ],
+          "href": "/comic/index/search?keyword=ai%E6%88%90%E4%BA%BA",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "91porna.ai.short",
+          "menu_path": [
+            "AI成人",
+            "AI成人短剧"
+          ],
+          "href": "/comic/index/search?keyword=ai%E7%9F%AD%E5%89%A7",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "91porna.ai.comic",
+          "menu_path": [
+            "AI成人",
+            "AI漫剧"
+          ],
+          "href": "/comic/index/search?keyword=ai%E6%BC%AB%E5%89%A7",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "91porna.ai.beauty",
+          "menu_path": [
+            "AI成人",
+            "AI美女"
+          ],
+          "href": "/comic/index/search?keyword=ai%E7%BE%8E%E5%A5%B3",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "91porna.ai.face_swap",
+          "menu_path": [
+            "AI成人",
+            "AI换脸"
+          ],
+          "href": "/comic/index/search?keyword=+ai%E6%8D%A2%E8%84%B8",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "91porna.ai.external_short",
+          "menu_path": [
+            "AI成人",
+            "91成人短剧"
+          ],
+          "href": "https://91crdj.com/",
+          "decision": "blocked_cross_origin",
+          "collection_eligibility": {
+            "eligible": false,
+            "reason": "blocked_cross_origin"
+          },
+          "classification_hint": null
+        },
+        {
+          "entry_id": "91porna.av",
+          "menu_path": [
+            "日本AV"
+          ],
+          "href": "/comic/index/av",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "91porna.av.group",
+          "menu_path": [
+            "日本AV",
+            "多P群交"
+          ],
+          "href": "/comic/av/relvideo?model=1&type=theme&order=week",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "91porna.av.uncensored",
+          "menu_path": [
+            "日本AV",
+            "无码解放"
+          ],
+          "href": "/comic/av/relvideo?model=12&type=theme&order=week",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "91porna.av.subtitle",
+          "menu_path": [
+            "日本AV",
+            "中文字幕"
+          ],
+          "href": "/comic/av/relvideo?model=5&type=theme&order=week",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "91porna.av.uniform",
+          "menu_path": [
+            "日本AV",
+            "制服诱惑"
+          ],
+          "href": "/comic/av/relvideo?model=6&type=theme&order=week",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "91porna.av.black",
+          "menu_path": [
+            "日本AV",
+            "黑人专区"
+          ],
+          "href": "/comic/av/relvideo?model=107&type=tag&order=week",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "91porna.av.sm",
+          "menu_path": [
+            "日本AV",
+            "SM调教"
+          ],
+          "href": "/comic/av/relvideo?model=7&type=theme&order=week",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "91porna.animation",
+          "menu_path": [
+            "91动漫"
+          ],
+          "href": "/comic/index/search?keyword=h%E5%8A%A8%E6%BC%AB",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "91porna.animation.adult",
+          "menu_path": [
+            "91动漫",
+            "成人动漫"
+          ],
+          "href": "/comic/index/search?keyword=%E6%88%90%E4%BA%BA%E5%8A%A8%E6%BC%AB",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "91porna.animation.jp",
+          "menu_path": [
+            "91动漫",
+            "日本动漫"
+          ],
+          "href": "/comic/index/search?keyword=%E6%97%A5%E6%9C%AC%E5%8A%A8%E6%BC%AB",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "91porna.animation.cn",
+          "menu_path": [
+            "91动漫",
+            "国产动漫"
+          ],
+          "href": "/comic/index/search?keyword=%E5%9B%BD%E4%BA%A7%E5%8A%A8%E6%BC%AB",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "91porna.animation.3d",
+          "menu_path": [
+            "91动漫",
+            "3d动漫"
+          ],
+          "href": "/comic/index/search?keyword=3d%E5%8A%A8%E6%BC%AB",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "91porna.animation.fan",
+          "menu_path": [
+            "91动漫",
+            "同人动漫"
+          ],
+          "href": "/comic/index/search?keyword=%E5%90%8C%E4%BA%BA%E5%8A%A8%E6%BC%AB",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "91porna.animation.set",
+          "menu_path": [
+            "91动漫",
+            "动漫合集"
+          ],
+          "href": "/moviesets/chengrendongman",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "91porna.sets",
+          "menu_path": [
+            "精选合集"
+          ],
+          "href": "/moviesets",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "91porna.sets.latest",
+          "menu_path": [
+            "精选合集",
+            "最新合集"
+          ],
+          "href": "/moviesets",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "91porna.sets.rank",
+          "menu_path": [
+            "精选合集",
+            "排行榜合集"
+          ],
+          "href": "/moviesets/rank",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "91porna.sets.category",
+          "menu_path": [
+            "精选合集",
+            "分类合集"
+          ],
+          "href": "/moviesets/category",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "91porna.sets.people",
+          "menu_path": [
+            "精选合集",
+            "人物合集"
+          ],
+          "href": "/moviesets/people",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "91porna.sets.brand",
+          "menu_path": [
+            "精选合集",
+            "品牌合集"
+          ],
+          "href": "/moviesets/brand",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "91porna.novels",
+          "menu_path": [
+            "色情小说"
+          ],
+          "href": "/novels",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "91porna.novels.city",
+          "menu_path": [
+            "色情小说",
+            "都市激情"
+          ],
+          "href": "/novels/dushi-jiqing/new",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "91porna.novels.campus",
+          "menu_path": [
+            "色情小说",
+            "校园之恋"
+          ],
+          "href": "/novels/xiaoyuan-zhilian/new",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "91porna.novels.mature",
+          "menu_path": [
+            "色情小说",
+            "人妻熟女"
+          ],
+          "href": "/novels/renqi-shunv/new",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "91porna.novels.family",
+          "menu_path": [
+            "色情小说",
+            "家庭乱伦"
+          ],
+          "href": "/novels/jiating-luanlun/new",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "91porna.brand",
+          "menu_path": [
+            "91品牌"
+          ],
+          "href": "/comic/index/links?key=ppxx",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": false,
+            "reason": "functional_or_navigation_entry"
+          },
+          "classification_hint": null
+        },
+        {
+          "entry_id": "91porna.brand.home",
+          "menu_path": [
+            "91品牌",
+            "最新地址"
+          ],
+          "href": "/comic/index/links?key=home",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": false,
+            "reason": "functional_or_navigation_entry"
+          },
+          "classification_hint": null
+        },
+        {
+          "entry_id": "91porna.brand.app",
+          "menu_path": [
+            "91品牌",
+            "91APP"
+          ],
+          "href": "https://8ceab.vryqcsea.cc",
+          "decision": "blocked_cross_origin",
+          "collection_eligibility": {
+            "eligible": false,
+            "reason": "blocked_cross_origin"
+          },
+          "classification_hint": null
+        },
+        {
+          "entry_id": "91porna.brand.more",
+          "menu_path": [
+            "91品牌",
+            "更多好站"
+          ],
+          "href": "/comic/index/more",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": false,
+            "reason": "functional_or_navigation_entry"
+          },
+          "classification_hint": null
+        }
+      ]
+    },
+    {
+      "site_id": "huangguoai_com",
+      "origin": "http://huangguoai.com",
+      "catalog_version": "2026-09-11.1",
+      "status": "active",
+      "verification": {"verified_at": "2026-09-04", "evidence_ref": "docs/reports/2026-09-04-web-v2-six-site-live-retest-summary.md", "result": "live_retest_reviewed"},
+      "applicability": {"required_page_types": ["home", "content_list", "content_detail", "video_list", "video_detail"], "optional_page_types": ["activity", "search_page"], "not_applicable_page_types": []},
+      "entry_defaults": {"version": "2026-09-11.1", "status": "observe-only", "verification": {"verified_at": "2026-09-04", "evidence_ref": "docs/reports/2026-09-04-web-v2-six-site-live-retest-summary.md", "result": "source_snapshot_reviewed"}},
+      "entry_overrides": {"huangguo.home": {"status": "active"}},
+      "navigation_evidence": {
+        "container": "nav.hg-topbar-nav",
+        "signals": [
+          "semantic_nav_element",
+          "class_contains_nav",
+          "aria_label_navigation",
+          "repeated_direct_anchor_children"
+        ],
+        "active_anchor_count": 9
+      },
+      "entries": [
+        {
+          "entry_id": "huangguo.home",
+          "menu_path": [
+            "首页"
+          ],
+          "href": "/",
+          "decision": "home_baseline",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "home",
+            "confidence": 0.72,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": true
+          }
+        },
+        {
+          "entry_id": "huangguo.ai_short",
+          "menu_path": [
+            "AI成人短剧"
+          ],
+          "href": "/ai-duanju/",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "huangguo.ai_comic",
+          "menu_path": [
+            "AI成人漫剧"
+          ],
+          "href": "/ai-manju/",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "huangguo.ai_face_swap",
+          "menu_path": [
+            "AI换脸"
+          ],
+          "href": "/ai-huanlian/",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "huangguo.ai_remix",
+          "menu_path": [
+            "AI魔改"
+          ],
+          "href": "/ai-mogai/",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "huangguo.topics",
+          "menu_path": [
+            "专题"
+          ],
+          "href": "/topics/",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "huangguo.rank",
+          "menu_path": [
+            "排行榜"
+          ],
+          "href": "/ranks/hot/",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "huangguo.gossip",
+          "menu_path": [
+            "黄果吃瓜"
+          ],
+          "href": "/chigua/",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "content_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "huangguo.home_route",
+          "menu_path": [
+            "回家的路"
+          ],
+          "href": "/go-home/",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": false,
+            "reason": "functional_or_navigation_entry"
+          },
+          "classification_hint": null
+        }
+      ]
+    },
+    {
+      "site_id": "avhub360_com",
+      "origin": "https://avhub360.com",
+      "catalog_version": "2026-09-11.1",
+      "status": "active",
+      "verification": {"verified_at": "2026-09-04", "evidence_ref": "docs/reports/2026-09-04-web-v2-six-site-live-retest-summary.md", "result": "live_retest_reviewed"},
+      "applicability": {"required_page_types": ["home", "video_list", "video_detail"], "optional_page_types": ["activity", "search_page"], "not_applicable_page_types": ["content_list", "content_detail"]},
+      "entry_defaults": {"version": "2026-09-11.1", "status": "observe-only", "verification": {"verified_at": "2026-09-04", "evidence_ref": "docs/reports/2026-09-04-web-v2-six-site-live-retest-summary.md", "result": "source_snapshot_reviewed"}},
+      "entry_overrides": {"avhub.home": {"status": "active"}},
+      "navigation_evidence": {
+        "container": "ul.navbar-nav",
+        "signals": [
+          "class_contains_nav",
+          "ul_li_anchor_hierarchy"
+        ],
+        "active_anchor_count": 11,
+        "ignored_commented_anchor_count": 4
+      },
+      "entries": [
+        {
+          "entry_id": "avhub.home",
+          "menu_path": [
+            "首页"
+          ],
+          "href": "/",
+          "decision": "home_baseline",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "home",
+            "confidence": 0.72,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": true
+          }
+        },
+        {
+          "entry_id": "avhub.new",
+          "menu_path": [
+            "新作"
+          ],
+          "href": "/new",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "avhub.subtitle",
+          "menu_path": [
+            "中文字幕"
+          ],
+          "href": "/theme/detail/3",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "avhub.uncensored",
+          "menu_path": [
+            "高清无码"
+          ],
+          "href": "/theme/detail/11/hot",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "avhub.theme",
+          "menu_path": [
+            "主题"
+          ],
+          "href": "/theme",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "avhub.actress",
+          "menu_path": [
+            "女优"
+          ],
+          "href": "/actress",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "avhub.popular",
+          "menu_path": [
+            "东京热"
+          ],
+          "href": "/popular",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "avhub.movie",
+          "menu_path": [
+            "AV精选"
+          ],
+          "href": "/movie",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "avhub.female",
+          "menu_path": [
+            "女性向"
+          ],
+          "href": "/female",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        },
+        {
+          "entry_id": "avhub.home_route",
+          "menu_path": [
+            "回家的路"
+          ],
+          "href": "/gohome",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": false,
+            "reason": "functional_or_navigation_entry"
+          },
+          "classification_hint": null
+        },
+        {
+          "entry_id": "avhub.tags",
+          "menu_path": [
+            "黑丝"
+          ],
+          "href": "/tags",
+          "decision": "allowlisted_observe_only",
+          "collection_eligibility": {
+            "eligible": true,
+            "reason": null
+          },
+          "classification_hint": {
+            "expected_page_type": "video_list",
+            "confidence": 0.86,
+            "source": "operator_verified_menu_classification",
+            "mixed_content": false
+          }
+        }
+      ]
+    }
+  ]
+}

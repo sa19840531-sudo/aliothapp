@@ -1,0 +1,1 @@
+{"url": "https://example.test/video/1", "document": {"time_origin_ms": 10}, "viewport": {"width": 360, "height": 640}, "elements": [{"tag": "video", "visible": true, "h5_media_instance_id": "media-1", "bounds": {"x": 0, "y": 10, "width": 360, "height": 200}, "media": {"current_time": 5, "ready_state": 4, "seeking": false, "video_width": 640, "video_height": 360}}]}

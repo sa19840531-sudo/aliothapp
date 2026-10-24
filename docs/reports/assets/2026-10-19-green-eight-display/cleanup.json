@@ -1,0 +1,15 @@
+{
+  "test_container_removed": "alioth-green-eight-pg-20261019",
+  "exit_code": 0,
+  "volume_retained": "alioth-green-shared-20261019-pgdata",
+  "main_container_ids_preserved": {
+    "alioth-api": "2059125b2b6c",
+    "alioth-worker": "0ec803c433ee",
+    "alioth-web": "5f1ab940956e",
+    "alioth-postgres": "07025048a170",
+    "alioth-redis": "0535d5381262",
+    "tgbot": "8e59eccf8bab"
+  },
+  "active_test_connections_before_stop": 0,
+  "dedicated_image_or_network_created": false
+}

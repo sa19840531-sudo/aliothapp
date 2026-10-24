@@ -1,0 +1,43 @@
+{
+  "batch": "20261012-170654",
+  "task_id": "7201448d-bce7-4dc9-9170-d1f5b3bfc967",
+  "run_id": "1bc5e3d8-7672-44a5-8de0-0bb9d8c6b545",
+  "source_report": "031价格补证目标漂移-20261012-1813-原始只读统计.json",
+  "fixture_scope": "原始统计中已核验的身份、哈希、时序；正文仅保留脱敏业务词，不是重新采集或完整原页面",
+  "rule_code": "alioth_13",
+  "url": "https://dxbbmcw6gltgg.cloudfront.net/AcgImageDetail?id=682c363574706631feb81e17",
+  "page_type": "content_detail",
+  "visible_text_fragment": "选集\n开始阅读",
+  "verified_artifacts": {
+    "dom_sha256": "a8e1f1c414acd02863ae5f5820f92fa2ff879af75150dc0647c2fda315e27f89",
+    "screenshot_sha256": "0ddaf013f45d0789e324b2de5c57ec353037e513db22a5cd7043988119468f83",
+    "same_hash_for_all_three": true,
+    "snapshot_element_count": 56,
+    "snapshot_element_limit_reached": false,
+    "snapshot_price_elements": 0,
+    "dom_price_fragments": 0,
+    "dom_video_iframe_count": 0
+  },
+  "before_capture_id": "c6125cb0-b476-48c3-b114-f26f438fd588",
+  "after_capture_id": "f146abc5-1436-4c54-a2cf-4b6a4fd236e3",
+  "last_capture_id": "47e51240-c5ab-4059-a81d-2ee229d3ca46",
+  "timeline": {
+    "before_captured_at": "2026-10-12T09:47:35.356209+00:00",
+    "after_captured_at": "2026-10-12T09:47:41.527636+00:00",
+    "request_created_at": "2026-10-12T09:48:42.005728+00:00",
+    "last_captured_at": "2026-10-12T09:55:49.489566+00:00",
+    "request_completed_at": "2026-10-12T09:56:43.097205+00:00",
+    "first_back_at": "2026-10-12T09:59:10.907000+00:00"
+  },
+  "failed_request_id": "evidence-request:aa071fc55e11bb3622cdf1929cc3050efd0ad9ca49dd7a7322d079d8d4ee76c7",
+  "failure_code": "H5_ACTIVE_SESSION_TARGET_DRIFTED",
+  "failed_request_own_action_count": 0,
+  "window_usage_events": 21,
+  "window_usage_note": "该时段全部来源调用，不能全部归因于失败价格请求或宣称全部可节省",
+  "input_contract": {
+    "required_artifacts": ["visible_text"],
+    "required_capture_roles": ["primary", "location_1"],
+    "recapture_policy": {"kind": "exact_state", "fallback": "manual_only"},
+    "reuse_policy": {"scope": "same_object"}
+  }
+}

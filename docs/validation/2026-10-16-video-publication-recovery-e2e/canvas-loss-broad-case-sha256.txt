@@ -1,0 +1,6 @@
+ed76661ff8be29e5ca778c30cb8c38e6e22754d8b941d4099df5120ded55d424  docs/validation/2026-10-16-video-publication-recovery-e2e/canvas-loss-broad-case/canvas-state.json
+04d6522f25e1ece5103c9169cd7845f1076f1987f046f0fe34b25d73fd0fac92  docs/validation/2026-10-16-video-publication-recovery-e2e/canvas-loss-broad-case/current-0.png
+04d6522f25e1ece5103c9169cd7845f1076f1987f046f0fe34b25d73fd0fac92  docs/validation/2026-10-16-video-publication-recovery-e2e/canvas-loss-broad-case/initial-source.png
+2dc6eb22afd3e94d8041db1abd3d93352013eed1d7f7b82e96bdbac601ecaae6  docs/validation/2026-10-16-video-publication-recovery-e2e/canvas-loss-broad-case/resolutions.json
+04d6522f25e1ece5103c9169cd7845f1076f1987f046f0fe34b25d73fd0fac92  docs/validation/2026-10-16-video-publication-recovery-e2e/canvas-loss-broad-case/source-0.png
+01b0c9881329fb588254f329c763f4399038a8365aa1fbac7235da45483278c0  docs/validation/2026-10-16-video-publication-recovery-e2e/canvas-loss-broad-case/source-dom.html

@@ -1,0 +1,126 @@
+# ========================================
+# Python（services/api 后端）
+# ========================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+*.egg
+
+# 虚拟环境
+.venv/
+.venv-win/
+venv/
+env/
+ENV/
+!infra/env/
+
+# 测试与静态检查缓存
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+
+# ========================================
+# Node / 前端（app/admin、app/workstation、app/shared）
+# ========================================
+node_modules/
+dist/
+dist-ssr/
+.vite/
+*.local
+
+# 包管理器调试日志
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ========================================
+# Playwright（infrastructure/browser 相关本地调试产物）
+# ========================================
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
+
+# ========================================
+# 环境变量与密钥（严禁提交真实凭证）
+# ========================================
+.env
+.env.*
+!.env.example
+!infra/env/.env.*.example
+# 雷电本机 profiles（仅保留 example；local 禁止入库）
+infra/env/ldplayer-profiles.local.json
+**/ldplayer-profiles.local.json
+# H5 本地运行时专用（含本地口令/转发桥接，禁止入库）
+/.alioth-h5-v2.override.yml
+/.alioth-llm-bridge.py
+
+# ========================================
+# 日志与本地运行产物
+# ========================================
+*.log
+logs/
+*.sqlite3
+.alioth/
+# 一次性排障脚本与其输出（deploy-alioth-to-vmware.py 同样按此前缀排除）
+.tmp_*
+# Android Surface Driver 默认截图落盘目录（android_surface_driver.py）
+.alioth-android-captures/
+
+# ========================================
+# 编辑器 / IDE
+# ========================================
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+
+.worktrees/
+
+# ========================================
+# Mobile Demo 页／网站与本地工具链（仓库仅保留 untitled*.py 脚本）
+# ========================================
+.alioth-mobile-demo/
+.cursor/skills/alioth-mobile-demo/
+scripts/start-mobile-demo-*.ps1
+# 现场一次性诊断脚本，不进入版本库（ruff 亦排除）。
+scripts/_*.py
+docs/design/2026-07-13-mobile-demo-deps-docker-integration.md
+# 一次性 QC／E2E／审计 HTML 报告，不进入版本库。
+docs/**/*-e2e-*-report*.html
+docs/**/*-audit-report.html
+docs/docker-e2e-qc-report-*.html
+docs/qc-report-local-e2e-*.html
+docs/qc-persistence-deep-review-*.html
+services/api/app/api/v1/mobile_demo.py
+services/api/app/api/v1/mobile_demo_*.py
+services/api/app/mobile_demo_*.py
+services/api/tests/test_mobile_demo_*.py
+services/api/tests/test_agent_ad_capture_terminal.py
+# 历史 Airtest 脚本不得混入 API 包；一律外挂到 ALIOTH_APP_SCRIPT_ROOT。
+services/api/app/untitled.air/
+services/api/app/untitled.air/**
+
+# ========================================
+# 操作系统
+# ========================================
+.DS_Store
+Thumbs.db
+
+# �T��J?�G�w?�]�O���a?�u���۫�?�s�]�Y�ϳQ -f �K�[�]��?�� GitHub�^
+*.apk
+**/*.apk
+.alioth/
+.alioth/**
+

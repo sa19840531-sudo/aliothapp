@@ -1,0 +1,2283 @@
+{
+  "schema_version": "page-type-catalog.v2",
+  "version": "2026-09-30.web.v17",
+  "platform": "web",
+  "source": {
+    "workbook_name": "web-v2-exploration-design",
+    "sheets": [
+      "Web 五类业务页面闭集",
+      "六站导航与列表详情样本"
+    ],
+    "extraction_method": "web-desktop-dynamic-exploration-ten-page-types-v5"
+  },
+  "page_types": [
+    {
+      "code": "home",
+      "recognition_rules": {
+        "required_all": [
+          {
+            "fact": "top_level_obstruction_count",
+            "operator": "eq",
+            "value": 0
+          },
+          {
+            "fact": "is_canonical_root_url",
+            "operator": "eq",
+            "value": true
+          }
+        ],
+        "required_any": [
+          {
+            "fact": "top_navigation_container_count",
+            "operator": "gte",
+            "value": 1
+          },
+          {
+            "fact": "visible_category_entry_count",
+            "operator": "gte",
+            "value": 2
+          },
+          {
+            "fact": "homepage_section_count",
+            "operator": "gte",
+            "value": 2
+          },
+          {
+            "fact": "repeated_primary_card_count",
+            "operator": "gte",
+            "value": 2
+          }
+        ],
+        "supporting": [
+          {
+            "fact": "dom_tokens",
+            "operator": "contains_exact",
+            "value": "homepage"
+          }
+        ],
+        "strong_negative_any": [
+          {
+            "reason_code": "top_level_obstruction",
+            "all_of": [
+              {
+                "fact": "top_level_obstruction_count",
+                "operator": "gte",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "reason_code": "single_player_conflicts_with_home",
+            "all_of": [
+              {
+                "fact": "active_home_navigation",
+                "operator": "eq",
+                "value": false
+              },
+              {
+                "fact": "single_subject_element_count",
+                "operator": "gte",
+                "value": 1
+              },
+              {
+                "fact": "player_root_count",
+                "operator": "gte",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "reason_code": "active_home_player_without_feed",
+            "all_of": [
+              {
+                "fact": "active_home_navigation",
+                "operator": "eq",
+                "value": true
+              },
+              {
+                "fact": "player_root_count",
+                "operator": "gte",
+                "value": 1
+              },
+              {
+                "fact": "repeated_primary_card_count",
+                "operator": "lte",
+                "value": 5
+              },
+              {
+                "fact": "continuous_video_feed_count",
+                "operator": "lte",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "reason_code": "active_home_player_without_detail_links",
+            "all_of": [
+              {
+                "fact": "active_home_navigation",
+                "operator": "eq",
+                "value": true
+              },
+              {
+                "fact": "player_root_count",
+                "operator": "gte",
+                "value": 1
+              },
+              {
+                "fact": "primary_detail_link_count",
+                "operator": "lte",
+                "value": 5
+              }
+            ]
+          },
+          {
+            "reason_code": "single_article_conflicts_with_home",
+            "all_of": [
+              {
+                "fact": "primary_subject_count",
+                "operator": "eq",
+                "value": 1
+              },
+              {
+                "fact": "primary_article_body_count",
+                "operator": "gte",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "reason_code": "long_body_conflicts_with_home",
+            "all_of": [
+              {
+                "fact": "single_subject_element_count",
+                "operator": "gte",
+                "value": 1
+              },
+              {
+                "fact": "paragraph_text_length",
+                "operator": "gte",
+                "value": 300
+              }
+            ]
+          },
+          {
+            "reason_code": "single_activity_subject_has_priority",
+            "all_of": [
+              {
+                "fact": "activity_primary_region_count",
+                "operator": "eq",
+                "value": 1
+              },
+              {
+                "fact": "activity_action_count",
+                "operator": "gte",
+                "value": 1
+              },
+              {
+                "fact": "homepage_section_count",
+                "operator": "lte",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "reason_code": "open_search_search_trigger_count_has_priority",
+            "all_of": [
+              {
+                "fact": "search_trigger_count",
+                "operator": "gte",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "reason_code": "open_search_query_result_group_count_has_priority",
+            "all_of": [
+              {
+                "fact": "query_result_group_count",
+                "operator": "gte",
+                "value": 1
+              }
+            ]
+          }
+        ]
+      },
+      "name": "Web首页",
+      "status": "supported",
+      "category": "business",
+      "coverage_required": true,
+      "purpose": "站点入口与综合推荐或连续视频信息流首页，聚合主导航、内容候选、广告与官方入口。",
+      "required_positive_signals": [
+        "页面顶部或侧边存在完整主导航（含多个分类入口、搜索、登录/注册等）",
+        "主体区域有多个内容板块，或选中首页导航下呈现可切换的连续视频信息流",
+        "存在多个并列内容卡片或可信的重复视频候选，不以单个当前播放项断言详情"
+      ],
+      "supporting_signals": [
+        "URL 为站点根路径或极简首页路径",
+        "规范根页的首页导航被选中，且主体存在多个可验证的重复内容候选",
+        "存在站点标识（logo、名称、口号）及官方推广信息",
+        "常见年龄确认层、广告弹窗或悬浮入口",
+        "页面可滚动加载多组推荐内容，结构呈聚合态而非单一列表"
+      ],
+      "strong_negative_signals": [
+        "仅有单个视频播放器且缺少可信首页导航或足量重复候选，或仅有单篇完整正文",
+        "仅为某一分类下的纯列表，缺少首页特有的多板块聚合",
+        "被完整阻断层遮挡，关闭后仍无业务主体"
+      ],
+      "confusable_with": [
+        "content_list",
+        "video_list"
+      ],
+      "missing_evidence_actions": [
+        "关闭年龄门与广告弹窗后重新采集",
+        "滚动完整页面确认是否存在多板块结构",
+        "检查顶部导航与站点标识是否存在"
+      ],
+      "runtime_traits": [
+        "stable",
+        "desktop_web",
+        "homepage_aggregate"
+      ],
+      "aliases": [
+        "home",
+        "Web首页",
+        "首页"
+      ],
+      "signals": {
+        "ocr_keywords": [
+          "首页",
+          "热门",
+          "推荐",
+          "更新"
+        ],
+        "dom_hints": [
+          "home-page",
+          "homepage",
+          "site-home",
+          "main-navigation"
+        ],
+        "layout_hints": [
+          "顶部主导航下同时存在多个内容板块和并列内容卡片"
+        ]
+      },
+      "entry_hints": [],
+      "exit_hints": [
+        "打开当前导航容器中的同源分类菜单"
+      ],
+      "next_page_candidates": [],
+      "risk_actions": [
+        "登录",
+        "注册",
+        "支付",
+        "下载",
+        "跳转广告"
+      ],
+      "related_rules": [],
+      "rule_matchable": true,
+      "route_prefixes": [],
+      "navigation_aliases": [],
+      "default_detail_page_type": null,
+      "source": "Web 五类业务页面设计",
+      "remark": "裸域名或规范根路径是首页强证据，最终结果同时保存 DOM、截图、导航和多板块证据。"
+    },
+    {
+      "code": "content_list",
+      "recognition_rules": {
+        "required_all": [
+          {
+            "fact": "top_level_obstruction_count",
+            "operator": "eq",
+            "value": 0
+          },
+          {
+            "fact": "repeated_primary_card_count",
+            "operator": "gte",
+            "value": 2
+          }
+        ],
+        "required_any": [
+          {
+            "fact": "repeated_primary_card_count",
+            "operator": "gte",
+            "value": 2
+          }
+        ],
+        "supporting": [
+          {
+            "fact": "dom_tokens",
+            "operator": "contains_exact",
+            "value": "archive"
+          }
+        ],
+        "strong_negative_any": [
+          {
+            "reason_code": "top_level_obstruction",
+            "all_of": [
+              {
+                "fact": "top_level_obstruction_count",
+                "operator": "gte",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "reason_code": "video_grid_conflicts_with_content_list",
+            "all_of": [
+              {
+                "fact": "player_root_count",
+                "operator": "gte",
+                "value": 1
+              },
+              {
+                "fact": "media_card_count",
+                "operator": "gte",
+                "value": 2
+              }
+            ]
+          },
+          {
+            "reason_code": "single_activity_subject_has_priority",
+            "all_of": [
+              {
+                "fact": "activity_primary_region_count",
+                "operator": "eq",
+                "value": 1
+              },
+              {
+                "fact": "activity_action_count",
+                "operator": "gte",
+                "value": 1
+              },
+              {
+                "fact": "homepage_section_count",
+                "operator": "lte",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "reason_code": "open_search_search_trigger_count_has_priority",
+            "all_of": [
+              {
+                "fact": "search_trigger_count",
+                "operator": "gte",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "reason_code": "open_search_query_result_group_count_has_priority",
+            "all_of": [
+              {
+                "fact": "query_result_group_count",
+                "operator": "gte",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "reason_code": "primary_subject_conflicts_with_list",
+            "all_of": [
+              {
+                "fact": "primary_subject_count",
+                "operator": "gte",
+                "value": 1
+              }
+            ]
+          }
+        ]
+      },
+      "name": "Web内容列表",
+      "status": "supported",
+      "category": "business",
+      "coverage_required": true,
+      "purpose": "识别以重复文章、爆料、图文帖或事件条目为主体的列表页面。",
+      "required_positive_signals": [
+        "至少两个同类重复业务条目",
+        "至少两个可信内容详情入口",
+        "页面主体为多个重复结构的内容卡片（标题 + 时间/标签 + 可选摘要）",
+        "卡片以文字描述为主，点击后进入内容详情而非直接播放视频",
+        "列表项可明确识别为「帖子/图文内容」而非「视频封面 + 媒体元数据」"
+      ],
+      "supporting_signals": [
+        "标题、摘要、正文预览、图片或发布时间结构",
+        "URL 或页面标题体现分类、标签、搜索或内容流特征",
+        "存在分页、筛选、排序或加载更多控件",
+        "顶部有分类导航或位置指示",
+        "可混有少量媒体缩略图，但整体仍以文字条目为主"
+      ],
+      "strong_negative_signals": [
+        "单一长正文占据主体",
+        "多个视频播放器或纯影片库为主体",
+        "页面仅有导航或广告",
+        "主体是纯视频封面网格，每项以缩略图、时长、媒体编号等为主",
+        "页面聚焦单篇完整正文或单个视频播放器",
+        "仅有广告或导航预览，无真实内容列表"
+      ],
+      "confusable_with": [
+        "home",
+        "video_list",
+        "content_detail"
+      ],
+      "missing_evidence_actions": [
+        "补采无遮挡主体区域",
+        "核对重复文章条目",
+        "区分视频缩略图与视频列表",
+        "滚动列表确认重复卡片结构",
+        "点击卡片验证是否进入内容详情页",
+        "关闭遮挡层后重新判断主体类型"
+      ],
+      "runtime_traits": [
+        "stable",
+        "desktop_web",
+        "repeated_cards"
+      ],
+      "aliases": [
+        "content_list",
+        "Web内容列表",
+        "内容列表"
+      ],
+      "signals": {
+        "ocr_keywords": [
+          "资讯",
+          "文章",
+          "专题",
+          "图集",
+          "更新"
+        ],
+        "dom_hints": [
+          "article-list",
+          "content-grid",
+          "post-list",
+          "content-card",
+          "article-card",
+          "post-card",
+          "archive"
+        ],
+        "layout_hints": [
+          "包含多个重复的非视频内容标题、摘要、图片或文章条目"
+        ]
+      },
+      "entry_hints": [
+        {
+          "from_page_type": "external",
+          "action_intent": "打开已核准的内容菜单",
+          "target_keywords": [
+            "内容菜单"
+          ]
+        }
+      ],
+      "exit_hints": [
+        "打开当前无遮挡 DOM 中的可信内容条目"
+      ],
+      "next_page_candidates": [
+        {
+          "page_type": "content_detail",
+          "probability": "high",
+          "action_intent": "打开内容详情",
+          "target_keywords": [
+            "文章标题",
+            "图文标题",
+            "专题标题"
+          ],
+          "risk_level": "low"
+        }
+      ],
+      "risk_actions": [
+        "下载",
+        "投稿",
+        "登录",
+        "提交表单"
+      ],
+      "related_rules": [],
+      "rule_matchable": true,
+      "route_prefixes": [],
+      "navigation_aliases": [],
+      "default_detail_page_type": "content_detail",
+      "source": "Web V2 四类业务页面设计",
+      "remark": "重复非视频内容结构为主要证据，不能把导航、分页或广告当作详情入口。"
+    },
+    {
+      "code": "content_detail",
+      "recognition_rules": {
+        "required_all": [
+          {
+            "fact": "top_level_obstruction_count",
+            "operator": "eq",
+            "value": 0
+          },
+          {
+            "fact": "primary_subject_count",
+            "operator": "eq",
+            "value": 1
+          }
+        ],
+        "required_any": [
+          {
+            "fact": "primary_subject_kind",
+            "operator": "eq",
+            "value": "article"
+          },
+          {
+            "fact": "primary_subject_kind",
+            "operator": "eq",
+            "value": "gallery"
+          }
+        ],
+        "supporting": [
+          {
+            "fact": "breadcrumb_count",
+            "operator": "gte",
+            "value": 1
+          },
+          {
+            "fact": "detail_navigation_source_count",
+            "operator": "gte",
+            "value": 1
+          }
+        ],
+        "strong_negative_any": [
+          {
+            "reason_code": "top_level_obstruction",
+            "all_of": [
+              {
+                "fact": "top_level_obstruction_count",
+                "operator": "gte",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "reason_code": "WEB_PAGE_TYPE_PRIMARY_REGION_CONFLICT",
+            "all_of": [
+              {
+                "fact": "primary_subject_count",
+                "operator": "gte",
+                "value": 2
+              }
+            ]
+          },
+          {
+            "reason_code": "repeated_cards_conflict_with_detail",
+            "all_of": [
+              {
+                "fact": "repeated_primary_card_count",
+                "operator": "gte",
+                "value": 2
+              }
+            ]
+          },
+          {
+            "reason_code": "primary_video_conflicts_with_content_detail",
+            "all_of": [
+              {
+                "fact": "primary_player_count",
+                "operator": "gte",
+                "value": 1
+              }
+            ]
+          }
+        ]
+      },
+      "name": "Web内容详情",
+      "status": "supported",
+      "category": "business",
+      "coverage_required": true,
+      "purpose": "识别单一文章、图文或图集主体；正文内嵌媒体与次要推荐不改变详情轴。",
+      "required_positive_signals": [
+        "单一业务主体",
+        "实际正文内容或图集成立，空容器不能证明正文",
+        "页面主体聚焦于一篇完整内容（大标题 + 长文本正文）",
+        "存在可读的长文本或图文组合，核心不是视频播放器",
+        "主体区域以外的推荐、侧栏和广告不计入列表冲突"
+      ],
+      "supporting_signals": [
+        "标题、作者、发布时间、图片或上一篇下一篇",
+        "URL 呈现单条内容详情形态",
+        "存在返回入口、位置指示或相关推荐",
+        "可能嵌入少量媒体，但文字正文为绝对主体",
+        "常见底部推广或站点信息"
+      ],
+      "strong_negative_signals": [
+        "多个同级文章卡片为主体",
+        "单一播放器为主要承载",
+        "页面仅有导航、广告或加载骨架",
+        "主体是单个大尺寸视频播放器及视频元信息",
+        "页面是多条内容的列表",
+        "仅有阻断层，无真实正文"
+      ],
+      "confusable_with": [
+        "content_list",
+        "video_detail"
+      ],
+      "missing_evidence_actions": [
+        "补采正文主体",
+        "核对段落与文章容器",
+        "区分内嵌视频与主视频详情",
+        "确认正文区域存在完整可读长文本",
+        "检查是否存在作为页面核心的播放器",
+        "关闭弹窗后重新采集主体"
+      ],
+      "runtime_traits": [
+        "stable",
+        "desktop_web",
+        "single_subject"
+      ],
+      "aliases": [
+        "content_detail",
+        "Web内容详情",
+        "内容详情"
+      ],
+      "signals": {
+        "ocr_keywords": [
+          "正文",
+          "发布时间",
+          "作者",
+          "上一篇",
+          "下一篇"
+        ],
+        "dom_hints": [
+          "article",
+          "article-body",
+          "post-content",
+          "content-detail",
+          "detail-content",
+          "entry-content"
+        ],
+        "layout_hints": [
+          "单一非视频内容主体，通常具有标题、正文、图片或元信息"
+        ]
+      },
+      "entry_hints": [
+        {
+          "from_page_type": "content_list",
+          "action_intent": "打开可信内容条目",
+          "target_keywords": [
+            "文章标题",
+            "图文标题",
+            "专题标题"
+          ]
+        }
+      ],
+      "exit_hints": [
+        "返回菜单探索流程"
+      ],
+      "next_page_candidates": [],
+      "risk_actions": [
+        "下载",
+        "评论提交",
+        "登录",
+        "外部链接"
+      ],
+      "related_rules": [],
+      "rule_matchable": true,
+      "route_prefixes": [],
+      "navigation_aliases": [],
+      "default_detail_page_type": null,
+      "source": "Web V2 四类业务页面设计",
+      "remark": "单一非视频主体为主要证据；页面含视频附件不自动等于视频详情。"
+    },
+    {
+      "code": "video_list",
+      "recognition_rules": {
+        "required_all": [
+          {
+            "fact": "top_level_obstruction_count",
+            "operator": "eq",
+            "value": 0
+          },
+          {
+            "fact": "repeated_primary_card_count",
+            "operator": "gte",
+            "value": 2
+          }
+        ],
+        "required_any": [
+          {
+            "fact": "media_card_count",
+            "operator": "gte",
+            "value": 2
+          },
+          {
+            "fact": "video_element_count",
+            "operator": "gte",
+            "value": 1
+          },
+          {
+            "fact": "dom_tokens",
+            "operator": "contains_exact",
+            "value": "video-list"
+          },
+          {
+            "fact": "dom_tokens",
+            "operator": "contains_exact",
+            "value": "video-grid"
+          },
+          {
+            "fact": "dom_tokens",
+            "operator": "contains_exact",
+            "value": "media-card"
+          }
+        ],
+        "supporting": [],
+        "strong_negative_any": [
+          {
+            "reason_code": "top_level_obstruction",
+            "all_of": [
+              {
+                "fact": "top_level_obstruction_count",
+                "operator": "gte",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "reason_code": "single_activity_subject_has_priority",
+            "all_of": [
+              {
+                "fact": "activity_primary_region_count",
+                "operator": "eq",
+                "value": 1
+              },
+              {
+                "fact": "activity_action_count",
+                "operator": "gte",
+                "value": 1
+              },
+              {
+                "fact": "homepage_section_count",
+                "operator": "lte",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "reason_code": "open_search_search_trigger_count_has_priority",
+            "all_of": [
+              {
+                "fact": "search_trigger_count",
+                "operator": "gte",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "reason_code": "open_search_query_result_group_count_has_priority",
+            "all_of": [
+              {
+                "fact": "query_result_group_count",
+                "operator": "gte",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "reason_code": "primary_subject_conflicts_with_list",
+            "all_of": [
+              {
+                "fact": "primary_subject_count",
+                "operator": "gte",
+                "value": 1
+              }
+            ]
+          }
+        ]
+      },
+      "name": "Web视频列表",
+      "status": "supported",
+      "category": "business",
+      "coverage_required": true,
+      "purpose": "识别以可重复视频卡片、影片或短剧条目为主体的列表页面。",
+      "required_positive_signals": [
+        "至少两个同类重复业务卡片",
+        "至少两个可信详情入口",
+        "页面主体为多个重复的视频卡片（封面图 + 标题 + 时长或其他媒体信息）",
+        "每个卡片以视频缩略图为主，点击后进入视频详情页",
+        "存在分类、筛选、排序或分页等列表控件"
+      ],
+      "supporting_signals": [
+        "视频封面、时长、播放量或媒体卡片结构",
+        "URL 或页面标题体现视频分类、主题、更新或媒体流特征",
+        "卡片上可见播放相关标识、媒体编号、时长、播放量等",
+        "顶部有与视频相关的导航或位置指示",
+        "可能混有广告卡片，但仍以视频网格为主体"
+      ],
+      "strong_negative_signals": [
+        "单一播放器占据主体",
+        "单一长正文占据主体",
+        "页面仅有导航或广告",
+        "页面主体是单个视频播放器",
+        "列表项以纯文字内容标题与摘要为主",
+        "仅为首页多板块聚合，无专注的视频列表形态"
+      ],
+      "confusable_with": [
+        "home",
+        "content_list",
+        "video_detail"
+      ],
+      "missing_evidence_actions": [
+        "补采无遮挡主体区域",
+        "核对重复卡片和详情入口",
+        "复核视频承载结构",
+        "滚动确认重复视频卡片结构",
+        "检查卡片点击后是否进入单个视频详情",
+        "关闭广告与年龄门后重新判断"
+      ],
+      "runtime_traits": [
+        "stable",
+        "desktop_web",
+        "repeated_cards"
+      ],
+      "aliases": [
+        "video_list",
+        "Web视频列表",
+        "视频列表"
+      ],
+      "signals": {
+        "ocr_keywords": [
+          "视频",
+          "播放",
+          "时长",
+          "更新"
+        ],
+        "dom_hints": [
+          "video-list",
+          "video-grid",
+          "video-img-box",
+          "media-card",
+          "drama-card",
+          "archive",
+          "poster",
+          "duration",
+          "thumbnail"
+        ],
+        "layout_hints": [
+          "包含多个重复视频封面、标题、时长或播放量卡片"
+        ]
+      },
+      "entry_hints": [
+        {
+          "from_page_type": "external",
+          "action_intent": "打开已核准的视频菜单",
+          "target_keywords": [
+            "视频菜单"
+          ]
+        }
+      ],
+      "exit_hints": [
+        "打开当前无遮挡 DOM 中的可信视频卡片"
+      ],
+      "next_page_candidates": [
+        {
+          "page_type": "video_detail",
+          "probability": "high",
+          "action_intent": "打开视频详情",
+          "target_keywords": [
+            "视频标题",
+            "视频封面"
+          ],
+          "risk_level": "low"
+        }
+      ],
+      "risk_actions": [
+        "下载",
+        "付费播放",
+        "跳转广告"
+      ],
+      "related_rules": [],
+      "rule_matchable": true,
+      "route_prefixes": [],
+      "navigation_aliases": [],
+      "default_detail_page_type": "video_detail",
+      "source": "Web V2 四类业务页面设计",
+      "remark": "重复视频卡片为主要证据，菜单文案和 URL 只能作为弱佐证。"
+    },
+    {
+      "code": "video_detail",
+      "recognition_rules": {
+        "required_all": [
+          {
+            "fact": "top_level_obstruction_count",
+            "operator": "eq",
+            "value": 0
+          },
+          {
+            "fact": "primary_subject_count",
+            "operator": "eq",
+            "value": 1
+          }
+        ],
+        "required_any": [
+          {
+            "fact": "primary_player_count",
+            "operator": "gte",
+            "value": 1
+          }
+        ],
+        "supporting": [
+          {
+            "fact": "breadcrumb_count",
+            "operator": "gte",
+            "value": 1
+          },
+          {
+            "fact": "detail_navigation_source_count",
+            "operator": "gte",
+            "value": 1
+          }
+        ],
+        "strong_negative_any": [
+          {
+            "reason_code": "top_level_obstruction",
+            "all_of": [
+              {
+                "fact": "top_level_obstruction_count",
+                "operator": "gte",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "reason_code": "WEB_PAGE_TYPE_PRIMARY_REGION_CONFLICT",
+            "all_of": [
+              {
+                "fact": "primary_subject_count",
+                "operator": "gte",
+                "value": 2
+              }
+            ]
+          },
+          {
+            "reason_code": "repeated_cards_conflict_with_detail",
+            "all_of": [
+              {
+                "fact": "repeated_primary_card_count",
+                "operator": "gte",
+                "value": 2
+              }
+            ]
+          },
+          {
+            "reason_code": "long_article_conflicts_with_video_detail",
+            "all_of": [
+              {
+                "fact": "primary_subject_kind",
+                "operator": "eq",
+                "value": "article"
+              }
+            ]
+          }
+        ]
+      },
+      "name": "Web视频详情",
+      "status": "supported",
+      "category": "business",
+      "coverage_required": true,
+      "purpose": "识别唯一主要视频主体，播放器位于 article/main 内仍按媒体资源、控件与几何证据判断；次要推荐不制造列表冲突。",
+      "required_positive_signals": [
+        "单一业务主体",
+        "可验证的播放器或视频资源结构",
+        "页面主体聚焦于一个视频内容，而非多个并列视频条目",
+        "存在可信的视频播放器或等效媒体播放结构",
+        "视频主体属于当前业务页面，不是广告、导航预览或悬浮推荐"
+      ],
+      "supporting_signals": [
+        "标题、播放控制、剧集信息或相关推荐",
+        "URL 呈现单条视频详情形态",
+        "存在标题、简介、作者/出演、播放控制、标签或相关推荐",
+        "有返回列表或位置指示",
+        "可能提供收藏、分享等互动入口"
+      ],
+      "strong_negative_signals": [
+        "多个同级影片卡片为主体",
+        "只有视频缩略图而无播放器",
+        "页面仅有广告或加载骨架",
+        "页面主体是包含多个重复视频卡片的列表",
+        "仅存在广告视频、背景视频或导航区域的缩略图",
+        "具备详情形态但不存在可信播放器或媒体资源",
+        "当前最上层仍是广告、年龄门或其他阻断层"
+      ],
+      "confusable_with": [
+        "video_list",
+        "content_detail"
+      ],
+      "missing_evidence_actions": [
+        "补采播放器主体",
+        "核对视频资源结构",
+        "区分推荐卡片与主播放器",
+        "补采完整页面结构、可见文本与媒体元素",
+        "关闭遮挡层后重新采集业务主体",
+        "确认播放器区域属于当前详情主体"
+      ],
+      "runtime_traits": [
+        "stable",
+        "desktop_web",
+        "single_subject",
+        "video_player"
+      ],
+      "aliases": [
+        "video_detail",
+        "Web视频详情",
+        "视频详情"
+      ],
+      "signals": {
+        "ocr_keywords": [
+          "播放",
+          "暂停",
+          "全屏",
+          "相关推荐"
+        ],
+        "dom_hints": [
+          "video-player",
+          "video-detail",
+          "video-js",
+          "playback"
+        ],
+        "layout_hints": [
+          "单个视频播放器占据主体区域，并具有单一标题或内容说明"
+        ]
+      },
+      "entry_hints": [
+        {
+          "from_page_type": "video_list",
+          "action_intent": "打开可信视频卡片",
+          "target_keywords": [
+            "视频标题",
+            "视频封面"
+          ]
+        }
+      ],
+      "exit_hints": [
+        "返回菜单探索流程"
+      ],
+      "next_page_candidates": [],
+      "risk_actions": [
+        "下载",
+        "付费",
+        "外部播放器跳转",
+        "广告落地页"
+      ],
+      "related_rules": [],
+      "rule_matchable": true,
+      "route_prefixes": [],
+      "navigation_aliases": [],
+      "default_detail_page_type": null,
+      "source": "Web V2 四类业务页面设计",
+      "remark": "必须有播放器或视频资源结构证据，不能只靠 URL 或菜单文字判断。"
+    },
+    {
+      "code": "activity",
+      "recognition_rules": {
+        "required_all": [
+          {
+            "fact": "top_level_obstruction_count",
+            "operator": "eq",
+            "value": 0
+          },
+          {
+            "fact": "activity_primary_region_count",
+            "operator": "eq",
+            "value": 1
+          },
+          {
+            "fact": "activity_action_count",
+            "operator": "gte",
+            "value": 1
+          }
+        ],
+        "required_any": [
+          {
+            "fact": "activity_primary_region_count",
+            "operator": "eq",
+            "value": 1
+          }
+        ],
+        "supporting": [],
+        "strong_negative_any": [
+          {
+            "reason_code": "top_level_obstruction",
+            "all_of": [
+              {
+                "fact": "top_level_obstruction_count",
+                "operator": "gte",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "reason_code": "multi_section_home_conflicts_with_activity",
+            "all_of": [
+              {
+                "fact": "homepage_section_count",
+                "operator": "gte",
+                "value": 2
+              }
+            ]
+          }
+        ]
+      },
+      "name": "Web活动页",
+      "status": "supported",
+      "category": "business",
+      "coverage_required": false,
+      "purpose": "识别以单一运营活动、专题、推广或福利主体为核心的页面。",
+      "required_positive_signals": [
+        "单一运营、专题、推广或福利主体",
+        "存在参与、领取、跳转或推广导向",
+        "主体不是多板块首页"
+      ],
+      "supporting_signals": [
+        "活动期限、专题标题、规则或奖励说明",
+        "页面具有明显时效性或专题属性"
+      ],
+      "strong_negative_signals": [
+        "页面具有稳定全局导航和多个并列业务板块",
+        "个人中心或纯登录页",
+        "首页弹窗中的活动广告",
+        "顶层年龄门或广告仍遮挡业务主体"
+      ],
+      "confusable_with": [
+        "home",
+        "age_gate"
+      ],
+      "missing_evidence_actions": [
+        "补采活动主体和规则区域",
+        "核对是否为单一专题而非首页板块",
+        "关闭可处理遮挡后重新采集"
+      ],
+      "runtime_traits": [
+        "stable",
+        "desktop_web",
+        "single_subject"
+      ],
+      "aliases": [
+        "activity",
+        "Web活动页",
+        "活动页",
+        "专题页"
+      ],
+      "signals": {
+        "ocr_keywords": [
+          "活动",
+          "专题",
+          "参与",
+          "领取"
+        ],
+        "dom_hints": [
+          "activity",
+          "campaign",
+          "event",
+          "promotion"
+        ],
+        "layout_hints": [
+          "单一活动或专题主体，通常包含规则、奖励或参与入口"
+        ]
+      },
+      "entry_hints": [
+        {
+          "from_page_type": "external",
+          "action_intent": "打开已核准的同源活动入口",
+          "target_keywords": [
+            "活动",
+            "专题",
+            "参与"
+          ]
+        }
+      ],
+      "exit_hints": [
+        "返回菜单探索流程"
+      ],
+      "next_page_candidates": [],
+      "risk_actions": [
+        "领取",
+        "下载",
+        "登录",
+        "外部链接"
+      ],
+      "related_rules": [],
+      "rule_matchable": true,
+      "route_prefixes": [],
+      "navigation_aliases": [],
+      "default_detail_page_type": null,
+      "source": "Web 十类页面类型设计",
+      "remark": "单一活动主体可成立；多板块首页不能因活动文案改判。"
+    },
+    {
+      "code": "search_page",
+      "recognition_rules": {
+        "required_all": [
+          {
+            "fact": "top_level_obstruction_count",
+            "operator": "eq",
+            "value": 0
+          }
+        ],
+        "required_any": [
+          {
+            "fact": "search_trigger_count",
+            "operator": "gte",
+            "value": 1
+          },
+          {
+            "fact": "query_result_group_count",
+            "operator": "gte",
+            "value": 1
+          }
+        ],
+        "supporting": [
+          {
+            "fact": "search_input_count",
+            "operator": "gte",
+            "value": 1
+          }
+        ],
+        "strong_negative_any": [
+          {
+            "reason_code": "top_level_obstruction",
+            "all_of": [
+              {
+                "fact": "top_level_obstruction_count",
+                "operator": "gte",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "reason_code": "single_activity_subject_has_priority",
+            "all_of": [
+              {
+                "fact": "activity_primary_region_count",
+                "operator": "eq",
+                "value": 1
+              },
+              {
+                "fact": "activity_action_count",
+                "operator": "gte",
+                "value": 1
+              },
+              {
+                "fact": "homepage_section_count",
+                "operator": "lte",
+                "value": 1
+              }
+            ]
+          }
+        ]
+      },
+      "name": "Web搜索页",
+      "status": "supported",
+      "category": "business",
+      "coverage_required": false,
+      "purpose": "识别已打开的搜索交互页或自然到达的查询结果页。",
+      "required_positive_signals": [
+        "已打开的搜索输入区域及触发动作，或自然到达的查询结果态",
+        "搜索主体位于当前业务页面",
+        "不是仅有顶栏搜索图标"
+      ],
+      "supporting_signals": [
+        "查询词、结果计数或搜索结果卡片",
+        "搜索筛选、历史或空结果提示"
+      ],
+      "strong_negative_signals": [
+        "仅有顶栏搜索图标",
+        "未打开搜索界面",
+        "顶层年龄门或广告仍遮挡业务主体"
+      ],
+      "confusable_with": [
+        "content_list",
+        "unknown"
+      ],
+      "missing_evidence_actions": [
+        "补采已打开的搜索界面",
+        "核对结果是否由查询驱动",
+        "不输入关键词、不提交表单"
+      ],
+      "runtime_traits": [
+        "stable",
+        "desktop_web",
+        "search_interaction"
+      ],
+      "aliases": [
+        "search_page",
+        "Web搜索页",
+        "搜索页",
+        "搜索结果"
+      ],
+      "signals": {
+        "ocr_keywords": [
+          "搜索",
+          "结果",
+          "查询",
+          "暂无结果"
+        ],
+        "dom_hints": [
+          "search",
+          "search-results",
+          "query"
+        ],
+        "layout_hints": [
+          "已打开的搜索输入区或由查询驱动的结果主体"
+        ]
+      },
+      "entry_hints": [
+        {
+          "from_page_type": "external",
+          "action_intent": "打开已核准的搜索入口",
+          "target_keywords": [
+            "搜索",
+            "查找"
+          ]
+        }
+      ],
+      "exit_hints": [
+        "仅只读采集搜索页面，不提交查询"
+      ],
+      "next_page_candidates": [],
+      "risk_actions": [
+        "提交搜索",
+        "登录",
+        "外部链接"
+      ],
+      "related_rules": [],
+      "rule_matchable": true,
+      "route_prefixes": [],
+      "navigation_aliases": [],
+      "default_detail_page_type": null,
+      "source": "Web 十类页面类型设计",
+      "remark": "空搜索界面可以成立；顶栏单独搜索图标不成立。"
+    },
+    {
+      "code": "collection_page",
+      "recognition_rules": {
+        "required_all": [
+          {
+            "fact": "top_level_obstruction_count",
+            "operator": "eq",
+            "value": 0
+          },
+          {
+            "fact": "repeated_primary_card_count",
+            "operator": "gte",
+            "value": 2
+          }
+        ],
+        "required_any": [
+          {
+            "fact": "repeated_primary_card_count",
+            "operator": "gte",
+            "value": 2
+          }
+        ],
+        "supporting": [
+          {
+            "fact": "media_card_count",
+            "operator": "gte",
+            "value": 2
+          }
+        ],
+        "strong_negative_any": [
+          {
+            "reason_code": "primary_article_conflict",
+            "all_of": [
+              {
+                "fact": "primary_article_body_count",
+                "operator": "gte",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "reason_code": "primary_player_conflict",
+            "all_of": [
+              {
+                "fact": "primary_player_count",
+                "operator": "gte",
+                "value": 1
+              }
+            ]
+          }
+        ]
+      },
+      "name": "Web集合页",
+      "status": "supported",
+      "category": "business",
+      "coverage_required": false,
+      "purpose": "识别以主题、人物、频道或系列集合入口为主体的页面；不是单条内容列表。",
+      "required_positive_signals": [
+        "多个集合入口构成页面主体",
+        "入口语义指向内容集合而非单篇文章或单个视频",
+        "模型依据当前同帧截图与结构证据确认集合语义"
+      ],
+      "supporting_signals": [
+        "集合名称、封面和条目数量相互对应",
+        "有限跟进一个入口后出现对应内容列表"
+      ],
+      "strong_negative_signals": [
+        "仅顶部导航、侧栏或详情推荐区",
+        "主体为单篇正文或播放器",
+        "主体卡片直接对应单个作品"
+      ],
+      "confusable_with": [
+        "home",
+        "content_list",
+        "video_list",
+        "unknown"
+      ],
+      "missing_evidence_actions": [
+        "核对主体入口与单个作品卡片的区别",
+        "证据不足保持 unknown，不凭路径、头像或数量强签"
+      ],
+      "runtime_traits": [
+        "stable",
+        "desktop_web",
+        "collection_navigation"
+      ],
+      "aliases": [
+        "collection_page",
+        "Web集合页",
+        "集合页"
+      ],
+      "signals": {
+        "ocr_keywords": [
+          "专题",
+          "合集",
+          "人物",
+          "系列"
+        ],
+        "dom_hints": [
+          "集合入口重复容器"
+        ],
+        "layout_hints": [
+          "集合入口为主内容，而非全局导航或推荐"
+        ]
+      },
+      "entry_hints": [
+        {
+          "from_page_type": "external",
+          "action_intent": "打开已核准的集合入口",
+          "target_keywords": [
+            "集合",
+            "专题"
+          ]
+        }
+      ],
+      "exit_hints": [
+        "最多跟进一个已验证的同源集合入口；禁止集合递归"
+      ],
+      "next_page_candidates": [
+        {
+          "page_type": "content_list",
+          "probability": "medium",
+          "action_intent": "打开一个内容集合",
+          "target_keywords": [
+            "集合"
+          ]
+        },
+        {
+          "page_type": "video_list",
+          "probability": "medium",
+          "action_intent": "打开一个视频集合",
+          "target_keywords": [
+            "集合"
+          ]
+        }
+      ],
+      "risk_actions": [
+        "外部链接",
+        "登录",
+        "下载"
+      ],
+      "related_rules": [],
+      "rule_matchable": true,
+      "route_prefixes": [],
+      "navigation_aliases": [],
+      "default_detail_page_type": null,
+      "source": "Web 集合页独立类型设计",
+      "remark": "模型优先；结构是必要证据而非集合语义的充分证明。集合页不自动启用广告分支。"
+    },
+    {
+      "code": "age_gate",
+      "recognition_rules": {
+        "required_all": [
+          {
+            "fact": "top_level_obstruction_count",
+            "operator": "gte",
+            "value": 1
+          },
+          {
+            "fact": "single_subject_element_count",
+            "operator": "gte",
+            "value": 1
+          }
+        ],
+        "required_any": [
+          {
+            "fact": "dom_tokens",
+            "operator": "contains_exact",
+            "value": "age-gate"
+          },
+          {
+            "fact": "dom_tokens",
+            "operator": "contains_exact",
+            "value": "age-verification"
+          }
+        ],
+        "supporting": [],
+        "strong_negative_any": [
+          {
+            "reason_code": "unobstructed_business_page",
+            "all_of": [
+              {
+                "fact": "top_level_obstruction_count",
+                "operator": "eq",
+                "value": 0
+              }
+            ]
+          }
+        ]
+      },
+      "name": "Web年龄门",
+      "status": "supported",
+      "category": "lifecycle",
+      "coverage_required": false,
+      "purpose": "识别阻断真实业务主体的成年或进入确认层。",
+      "required_positive_signals": [
+        "最上层存在年龄或进入确认语义",
+        "存在明确确认动作",
+        "确认前真实业务主体不可见或不可操作"
+      ],
+      "supporting_signals": [
+        "出生日期、年龄提示或进入站点文案",
+        "确认后可进入同一站点真实业务主体"
+      ],
+      "strong_negative_signals": [
+        "普通广告关闭按钮",
+        "加载态或选线态",
+        "确认层未阻断真实业务主体"
+      ],
+      "confusable_with": [
+        "activity",
+        "unknown"
+      ],
+      "missing_evidence_actions": [
+        "补采最上层确认语义和动作",
+        "确认关闭前业务主体是否被阻断",
+        "记录关闭前后独立页面状态"
+      ],
+      "runtime_traits": [
+        "transient",
+        "desktop_web",
+        "top_level_obstruction"
+      ],
+      "aliases": [
+        "age_gate",
+        "Web年龄门",
+        "年龄确认",
+        "进入确认"
+      ],
+      "signals": {
+        "ocr_keywords": [
+          "年龄",
+          "成年",
+          "确认",
+          "进入"
+        ],
+        "dom_hints": [
+          "age-gate",
+          "age-verification",
+          "adult-confirm"
+        ],
+        "layout_hints": [
+          "顶层确认层阻断真实业务主体"
+        ]
+      },
+      "entry_hints": [
+        {
+          "from_page_type": "external",
+          "action_intent": "记录关闭前年龄门状态",
+          "target_keywords": [
+            "确认",
+            "进入"
+          ]
+        }
+      ],
+      "exit_hints": [
+        "确认后创建新的就绪页面状态"
+      ],
+      "next_page_candidates": [],
+      "risk_actions": [
+        "年龄确认",
+        "登录",
+        "付费",
+        "外部链接"
+      ],
+      "related_rules": [],
+      "rule_matchable": true,
+      "route_prefixes": [],
+      "navigation_aliases": [],
+      "default_detail_page_type": null,
+      "source": "Web 十类页面类型设计",
+      "remark": "年龄门是生命周期页面，不进入业务覆盖率分母。"
+    },
+    {
+      "code": "ad_page",
+      "recognition_rules": {
+        "required_all": [
+          {
+            "fact": "advertisement_element_count",
+            "operator": "gte",
+            "value": 0
+          }
+        ],
+        "required_any": [
+          {
+            "fact": "top_level_obstruction_count",
+            "operator": "gte",
+            "value": 0
+          }
+        ],
+        "supporting": [],
+        "strong_negative_any": []
+      },
+      "name": "Web广告落地页",
+      "status": "supported",
+      "category": "evidence_only",
+      "coverage_required": false,
+      "purpose": "记录由已识别广告链接在隔离标签页中成功打开后的广告落地证据。",
+      "required_positive_signals": [
+        "入口已由广告识别阶段确认并提取出安全链接",
+        "广告链接已在隔离标签页中成功打开",
+        "隔离标签页已形成独立 Capture 与证据产物"
+      ],
+      "supporting_signals": [
+        "最终 URL 与广告入口链接可形成可审计跳转链",
+        "页面截图、DOM 与可见文本能够证明广告落地状态"
+      ],
+      "strong_negative_signals": [
+        "普通业务导航链接或站内详情链接",
+        "广告链接未成功打开或被 URL 安全策略拒绝",
+        "仅存在广告覆盖层但没有可安全打开的落地链接"
+      ],
+      "confusable_with": [
+        "activity",
+        "content_detail",
+        "unknown"
+      ],
+      "missing_evidence_actions": [
+        "记录 WEB_AD_PAGE_OPEN_FAILED 并保留入口证据",
+        "补采广告入口链接、最终 URL 和隔离标签页截图",
+        "不得将打开失败的广告虚构为 ad_page"
+      ],
+      "runtime_traits": [
+        "desktop_web",
+        "isolated_tab",
+        "evidence_only"
+      ],
+      "aliases": [
+        "ad_page",
+        "Web广告落地页",
+        "广告页",
+        "广告落地页"
+      ],
+      "signals": {
+        "ocr_keywords": [
+          "广告",
+          "推广",
+          "赞助"
+        ],
+        "dom_hints": [
+          "advertisement",
+          "sponsored",
+          "promo"
+        ],
+        "layout_hints": [
+          "由广告入口在隔离标签页打开的独立页面"
+        ]
+      },
+      "entry_hints": [
+        {
+          "from_page_type": "external",
+          "action_intent": "在隔离标签页打开已确认的广告链接",
+          "target_keywords": [
+            "广告",
+            "推广"
+          ]
+        }
+      ],
+      "exit_hints": [
+        "保存广告落地页证据后关闭隔离标签页"
+      ],
+      "next_page_candidates": [],
+      "risk_actions": [
+        "下载",
+        "登录",
+        "付费",
+        "外部链接"
+      ],
+      "related_rules": [],
+      "rule_matchable": false,
+      "route_prefixes": [],
+      "navigation_aliases": [],
+      "default_detail_page_type": null,
+      "source": "Web 十类页面类型设计",
+      "remark": "ad_page 由广告来源和隔离打开事实直接签发，不进入普通页面分类、证据充分性判定或业务覆盖率分母。"
+    },
+    {
+      "code": "recharge_page",
+      "recognition_rules": {
+        "required_all": [
+          {
+            "fact": "top_level_obstruction_count",
+            "operator": "eq",
+            "value": 0
+          }
+        ],
+        "required_any": [
+          {
+            "fact": "single_subject_element_count",
+            "operator": "gte",
+            "value": 0
+          }
+        ],
+        "supporting": [],
+        "strong_negative_any": []
+      },
+      "name": "Web钱包页",
+      "status": "supported",
+      "category": "evidence_only",
+      "coverage_required": false,
+      "purpose": "记录已登录隔离会话中进入钱包后可见余额与账户操作的页面和证据。",
+      "required_positive_signals": [
+        "隔离登录会话已通过新文档账户 UI 证实",
+        "唯一同源钱包入口经过当前 DOM、截图或图片文字复核",
+        "导航或弹层后可见钱包主体与数字余额，并保存截图和脱敏 DOM"
+      ],
+      "supporting_signals": [
+        "钱包、余额或资产标题位于当前可见主体",
+        "页面 URL、文档身份或可见弹层状态相对账户入口发生可信变化"
+      ],
+      "strong_negative_signals": [
+        "只在账户菜单看到钱包链接而未进入钱包主体",
+        "只有充值表单而没有独立钱包余额区域",
+        "跨源跳转、遮挡、多义入口或支付提交"
+      ],
+      "confusable_with": [
+        "topup_page",
+        "activity",
+        "ad_page",
+        "unknown"
+      ],
+      "missing_evidence_actions": [
+        "保留账户入口截图并记录钱包未到达原因",
+        "补采钱包主体的当前视口截图、脱敏 DOM 与无查询参数 URL",
+        "无法确认独立钱包主体时不得签发 recharge_page"
+      ],
+      "runtime_traits": [
+        "desktop_web",
+        "isolated_login_context",
+        "evidence_only"
+      ],
+      "aliases": [
+        "recharge_page",
+        "Web钱包页",
+        "钱包页"
+      ],
+      "signals": {
+        "ocr_keywords": [
+          "钱包",
+          "我的钱包",
+          "余额",
+          "wallet",
+          "balance"
+        ],
+        "dom_hints": [
+          "wallet",
+          "balance",
+          "account"
+        ],
+        "layout_hints": [
+          "钱包标题、数字余额和账户操作形成独立页面或弹层状态"
+        ]
+      },
+      "entry_hints": [
+        {
+          "from_page_type": "external",
+          "action_intent": "已认证隔离会话中打开当前可见的同源钱包入口",
+          "target_keywords": [
+            "钱包",
+            "我的钱包",
+            "wallet",
+            "balance"
+          ]
+        }
+      ],
+      "exit_hints": [
+        "保存钱包截图与脱敏 DOM 后继续检查唯一充值入口"
+      ],
+      "next_page_candidates": [
+        {
+          "page_type": "topup_page",
+          "probability": "medium",
+          "action_intent": "打开钱包中的充值入口",
+          "target_keywords": [
+            "充值",
+            "去充值",
+            "top up"
+          ],
+          "risk_level": "low"
+        }
+      ],
+      "risk_actions": [
+        "提交充值金额",
+        "支付",
+        "绑定银行卡",
+        "跨源认证"
+      ],
+      "related_rules": [],
+      "rule_matchable": false,
+      "route_prefixes": [],
+      "navigation_aliases": [],
+      "default_detail_page_type": null,
+      "source": "Web 登录后账户分支设计",
+      "remark": "recharge_page 表示登录后的钱包页，仅作隔离支线证据；不进入主探索业务覆盖率分母或普通页型分类。"
+    },
+    {
+      "code": "topup_page",
+      "recognition_rules": {
+        "required_all": [
+          {
+            "fact": "top_level_obstruction_count",
+            "operator": "eq",
+            "value": 0
+          }
+        ],
+        "required_any": [
+          {
+            "fact": "single_subject_element_count",
+            "operator": "gte",
+            "value": 0
+          }
+        ],
+        "supporting": [],
+        "strong_negative_any": []
+      },
+      "name": "Web充值页",
+      "status": "supported",
+      "category": "evidence_only",
+      "coverage_required": false,
+      "purpose": "记录已登录隔离会话中从钱包或账户入口进入的独立充值页面与证据。",
+      "required_positive_signals": [
+        "隔离登录会话已通过新文档账户 UI 证实",
+        "唯一同源充值入口经过当前 DOM、截图或图片文字复核",
+        "导航或弹层后可见充值金额与支付方式或充值动作，并保存截图和脱敏 DOM"
+      ],
+      "supporting_signals": [
+        "充值标题、金额选项或支付方式位于当前可见主体",
+        "URL、文档身份或可见弹层状态相对钱包或账户入口发生可信变化"
+      ],
+      "strong_negative_signals": [
+        "仅在钱包或账户页看到充值字样而未进入充值主体",
+        "充值记录、充值历史或无实际状态变化的入口",
+        "跨源跳转、遮挡、多义入口或支付提交"
+      ],
+      "confusable_with": [
+        "recharge_page",
+        "activity",
+        "ad_page",
+        "unknown"
+      ],
+      "missing_evidence_actions": [
+        "保留钱包或账户入口截图并记录充值未到达原因",
+        "补采独立充值主体的当前视口截图、脱敏 DOM 与无查询参数 URL",
+        "无法确认独立充值主体时不得签发 topup_page"
+      ],
+      "runtime_traits": [
+        "desktop_web",
+        "isolated_login_context",
+        "evidence_only"
+      ],
+      "aliases": [
+        "topup_page",
+        "Web充值页",
+        "充值页"
+      ],
+      "signals": {
+        "ocr_keywords": [
+          "充值",
+          "去充值",
+          "立即充值",
+          "recharge",
+          "top up"
+        ],
+        "dom_hints": [
+          "recharge",
+          "topup",
+          "deposit"
+        ],
+        "layout_hints": [
+          "充值金额与支付方式或充值动作形成独立页面或弹层状态"
+        ]
+      },
+      "entry_hints": [
+        {
+          "from_page_type": "recharge_page",
+          "action_intent": "钱包页优先打开当前可见的同源充值入口",
+          "target_keywords": [
+            "充值",
+            "去充值",
+            "recharge",
+            "top up"
+          ]
+        },
+        {
+          "from_page_type": "external",
+          "action_intent": "账户区域未发现钱包时打开唯一同源充值入口",
+          "target_keywords": [
+            "充值",
+            "去充值",
+            "recharge",
+            "top up"
+          ]
+        }
+      ],
+      "exit_hints": [
+        "保存充值页截图与脱敏 DOM 后结束隔离登录支线，不填写金额或提交支付"
+      ],
+      "next_page_candidates": [],
+      "risk_actions": [
+        "提交充值金额",
+        "支付",
+        "绑定银行卡",
+        "跨源认证"
+      ],
+      "related_rules": [],
+      "rule_matchable": false,
+      "route_prefixes": [],
+      "navigation_aliases": [],
+      "default_detail_page_type": null,
+      "source": "Web 登录后账户分支设计",
+      "remark": "topup_page 表示登录后的独立充值页，仅留证，不进入主探索业务覆盖率分母或普通页型分类。"
+    },
+    {
+      "code": "guide_page",
+      "recognition_rules": {
+        "required_all": [
+          {"fact": "top_level_obstruction_count", "operator": "gte", "value": 0}
+        ],
+        "required_any": [
+          {"fact": "advertisement_element_count", "operator": "gte", "value": 0}
+        ],
+        "supporting": [],
+        "strong_negative_any": []
+      },
+      "name": "Web应用引导页",
+      "status": "supported",
+      "category": "evidence_only",
+      "coverage_required": false,
+      "purpose": "记录独立会话中打开的应用下载引导落地页证据。",
+      "required_positive_signals": [
+        "可信来源页存在可见的应用入口",
+        "隔离落地页主体明确提供应用下载或安装引导",
+        "落地页截图、DOM 与最终 URL 属于同一页面"
+      ],
+      "supporting_signals": [
+        "存在安卓或 iOS 下载选项、二维码或安装说明",
+        "入口和最终 URL 存在可审计跳转链"
+      ],
+      "strong_negative_signals": [
+        "来源首页仅有页脚 App 链接，主体仍是普通首页",
+        "目标为直接 APK 等下载资源而非网页",
+        "落地页被遮挡、身份漂移或内容不足"
+      ],
+      "confusable_with": ["home", "activity", "ad_page", "unknown"],
+      "missing_evidence_actions": [
+        "保留入口证据并记录引导支线未完成原因",
+        "补采独立落地页首屏截图、DOM 和跳转链",
+        "证据不足时不签发 guide_page"
+      ],
+      "runtime_traits": ["desktop_web", "isolated_context", "evidence_only"],
+      "aliases": ["guide_page", "应用引导页", "APP下载引导页"],
+      "signals": {
+        "ocr_keywords": ["下载 APP", "安卓下载", "苹果下载"],
+        "dom_hints": ["android", "ios", "download", "qrcode"],
+        "layout_hints": ["页面主体提供应用下载入口、二维码或安装指引"]
+      },
+      "entry_hints": [],
+      "exit_hints": ["只留证，不启动安装或下载"],
+      "next_page_candidates": [],
+      "risk_actions": ["下载文件", "安装应用", "登录", "提交表单"],
+      "related_rules": [],
+      "rule_matchable": false,
+      "route_prefixes": [],
+      "navigation_aliases": [],
+      "default_detail_page_type": null,
+      "source": "Web 应用引导支线设计",
+      "remark": "仅隔离支线落地页可签发，不进入业务覆盖、菜单和详情计数。"
+    },
+    {
+      "code": "unknown",
+      "recognition_rules": {
+        "required_all": [
+          {
+            "fact": "top_level_obstruction_count",
+            "operator": "gte",
+            "value": 0
+          }
+        ],
+        "required_any": [
+          {
+            "fact": "single_subject_element_count",
+            "operator": "gte",
+            "value": 0
+          }
+        ],
+        "supporting": [],
+        "strong_negative_any": []
+      },
+      "name": "Web未知页",
+      "status": "supported",
+      "category": "neither",
+      "coverage_required": false,
+      "purpose": "记录证据不足、冲突、异常或无法唯一归类的页面状态。",
+      "required_positive_signals": [
+        "没有任何页面类型同时达到置信度与结构门槛",
+        "存在证据不足、冲突、异常或不可处理遮挡"
+      ],
+      "supporting_signals": [
+        "加载中、错误、空白或不透明媒体主体",
+        "多个候选存在无法消解的强冲突"
+      ],
+      "strong_negative_signals": [
+        "某一规范页面类型已稳定满足必需信号和结构门槛",
+        "仅因单个辅助信号缺失而降级"
+      ],
+      "confusable_with": [
+        "content_detail",
+        "video_detail",
+        "search_page",
+        "age_gate"
+      ],
+      "missing_evidence_actions": [
+        "补采主体 DOM、截图和可见文本",
+        "关闭已授权的普通广告后重新采集",
+        "记录冲突并转人工复核"
+      ],
+      "runtime_traits": [
+        "desktop_web",
+        "needs_review"
+      ],
+      "aliases": [
+        "unknown",
+        "Web未知页",
+        "未知页",
+        "需复核"
+      ],
+      "signals": {
+        "ocr_keywords": [
+          "加载",
+          "错误",
+          "空白",
+          "异常"
+        ],
+        "dom_hints": [
+          "loading",
+          "error",
+          "empty-state"
+        ],
+        "layout_hints": [
+          "证据不足、冲突或异常，无法唯一归类"
+        ]
+      },
+      "entry_hints": [
+        {
+          "from_page_type": "external",
+          "action_intent": "保留页面状态供人工复核",
+          "target_keywords": [
+            "异常",
+            "错误"
+          ]
+        }
+      ],
+      "exit_hints": [
+        "记录需复核原因"
+      ],
+      "next_page_candidates": [],
+      "risk_actions": [
+        "登录",
+        "下载",
+        "外部链接"
+      ],
+      "related_rules": [],
+      "rule_matchable": true,
+      "route_prefixes": [],
+      "navigation_aliases": [],
+      "default_detail_page_type": null,
+      "source": "Web 十类页面类型设计",
+      "remark": "unknown 是正式、可持久化的兜底分类，不计为业务覆盖。"
+    }
+  ],
+  "page_type_groups": {
+    "business": [
+      "home",
+      "content_list",
+      "content_detail",
+      "video_list",
+      "video_detail",
+      "activity",
+      "search_page",
+      "collection_page"
+    ],
+    "lifecycle": [
+      "age_gate"
+    ],
+    "evidence_only": [
+      "ad_page",
+      "recharge_page",
+      "topup_page",
+      "guide_page"
+    ],
+    "neither": [
+      "unknown"
+    ]
+  },
+  "media_rules": {
+    "content_detail": {
+      "image_gallery_or_viewer": "支持判定为 content_detail",
+      "embedded_media_in_body": "仍按主内容判定，通常支持 content_detail",
+      "player_shell_without_resource": "不支持 video_detail",
+      "confirmed_primary_video_resource": "应优先考虑 video_detail",
+      "top_level_obstruction": "不支持签发真实详情页面类型"
+    },
+    "video_detail": {
+      "single_primary_video_subject": "支持判定为 video_detail",
+      "confirmed_video_resource": "支持判定为 video_detail",
+      "player_shell_without_resource": "不支持 video_detail",
+      "background_ad_or_preview_video": "不支持 video_detail",
+      "top_level_obstruction": "不支持签发真实详情页面类型"
+    }
+  },
+  "detail_classification_principles": [
+    "按主内容判定，不按页面中是否出现过 player 类名或 video 标签的全局计数判定",
+    "图片查看器、图集、漫画翻页 → content_detail",
+    "正文内嵌少量视频或图片，通常仍为 content_detail",
+    "真实视频资源且为页面主体 → video_detail",
+    "播放器外壳、类名或按钮不等于已确认视频资源",
+    "证据不足或冲突 → unknown，不强判"
+  ],
+  "notes": [
+    "本目录仅适用于 Web V2，不扩展 App/H5 页面类型。",
+    "业务覆盖率只使用 business 分组，lifecycle 与 neither 单独审计。"
+  ],
+  "navigation_signals": {
+    "common_positive_signals": [
+      "页面顶部或底部存在全局导航区域，包含多个并列的分类或功能入口",
+      "导航入口指向不同业务频道或列表，而非当前内容的层级路径",
+      "导航在站点多个页面中结构稳定、可复用",
+      "仅以当前视口内可见且可点击的入口作为有效信号"
+    ],
+    "supporting_signals": [
+      "导航区域固定或粘性，与页面主体形成明显分区",
+      "入口语义为频道/分类，而非当前位置路径",
+      "可同时包含搜索、登录等站点级功能入口",
+      "可能存在「默认可见的一区 + 需展开才可见的一区」两套结构"
+    ],
+    "collapsed_and_visible_nav": {
+      "description": "部分站点同时存在默认可见导航与默认收起导航",
+      "rules": [
+        "主导航可视结构判定只把当前屏幕上可见的入口计入正向结构信号",
+        "默认收起、需先展开才出现的入口，在未展开前不计入可视结构信号",
+        "若采集时已展开，则展开后可见的入口可一并计入",
+        "可见区域已满足「多个并列入口」时，即可认定存在主导航",
+        "菜单链接采集与可视结构判定分离：可信导航容器 DOM 中隐藏或收起的真实安全 href 仍应采集并直接导航"
+      ]
+    },
+    "strong_negative_signals": [
+      "仅为单行层级路径指示（上级 > 下级 > 当前）",
+      "入口语义是返回上一级或标识当前位置，而非并列频道",
+      "仅出现在详情内容上方，不是全站复用的全局结构",
+      "顶栏只有品牌标识与登录，无实质分类入口",
+      "当前视口内没有任何可点击的分类入口（全部隐藏或收起）"
+    ],
+    "distinguish_from_breadcrumb": {
+      "menu_nav": [
+        "多个入口相互并列，无层级递进语义",
+        "点击后进入不同频道或列表",
+        "全站多页面结构一致"
+      ],
+      "breadcrumb": [
+        "呈线性路径，表达「我在哪」",
+        "主要用于逐级返回",
+        "多出现在列表或详情的内容区上方",
+        "末级常为当前页标题，可点性弱"
+      ]
+    },
+    "usage_notes": [
+      "以「可见 + 并列多入口 + 全站复用」为判定核心，不依赖具体命名或文案",
+      "收起区未展开时不计可视结构信号；其真实安全 href 仍进入菜单链接采集",
+      "面包屑只可作 list/detail 的辅助信号，不得作为导航 positive 信号",
+      "先关闭年龄门与广告层，再采集导航，避免把弹层按钮当成菜单",
+      "DOM 中隐藏、离屏或被局部遮挡的真实 href 与可见 href 同等采集；visibility 只保留作审计，不作为直接导航门禁",
+      "无 href、javascript、模板内容、搜索、广告、登录、支付、下载、危险或跨域入口不得据此执行"
+    ]
+  },
+  "detail_link_signals": {
+    "purpose": "在列表或菜单页中，识别指向单条内容/视频详情的入口链接或卡片。",
+    "required_positive_signals": [
+      "列表主体中存在多个重复结构的可点击单元（卡片或行）",
+      "每个单元点击后进入单条详情（内容详情或视频详情），而非继续停留在同类列表",
+      "单元内同时包含标题类信息，并可伴随封面、时间、标签、播放量等摘要"
+    ],
+    "supporting_signals": [
+      "可点击区域覆盖整卡或明确的标题/封面热区",
+      "链接指向单条资源，而不是分类聚合页或外部广告",
+      "同一列表内多个单元的链接模式结构一致（重复性高）",
+      "单元上可能有「新」、时长、热度等列表态标识，进入详情后这些列表标识不再作为页面主体"
+    ],
+    "strong_negative_signals": [
+      "点击后仍是同类多条列表，未进入单条主体",
+      "指向分类、筛选、分页、广告或外链推广",
+      "仅为导航频道入口（切换整站频道，不是进单条详情）",
+      "无可点击热区，或点击无跳转/无进入详情行为"
+    ],
+    "distinguish_from_nav_and_ad": {
+      "detail_link": [
+        "位于列表内容区，呈重复卡片/行",
+        "一对一进入单条详情",
+        "带标题或封面等摘要信息"
+      ],
+      "menu_nav": [
+        "位于全局导航区",
+        "进入的是分类/频道列表，不是单条详情"
+      ],
+      "ad_or_promo": [
+        "文案或视觉强推广导向",
+        "常跳出站外或进入活动/下载页",
+        "不与正文列表单元保持同一重复结构"
+      ]
+    },
+    "content_vs_video_detail_link": {
+      "to_content_detail": [
+        "卡片以文字标题/事件摘要为主",
+        "进入后主体为长文本或图文正文"
+      ],
+      "to_video_detail": [
+        "卡片以封面缩略图 + 标题为主，常有时长/播放量",
+        "进入后主体为播放器 + 视频信息"
+      ]
+    },
+    "usage_notes": [
+      "以「重复列表单元 + 点击进入单条详情」为核心，不依赖具体 URL 形态",
+      "采集时需实际点击或等价追踪跳转目标，避免把分类链、分页链、广告链误判为详情链",
+      "同一列表页可同时存在指向 content_detail 与 video_detail 的入口，需按卡片形态与落地页主体区分",
+      "关闭广告层后再识别列表主链，避免弹层链接干扰"
+    ]
+  },
+  "common_site_observations": {
+    "age_gate": "多数目标站点在首页及部分内页存在年龄确认层，需完成确认后才能看到真实业务内容；部分站点会在刷新后再次出现。",
+    "ad_overlay": "常见全屏或居中广告弹窗，需主动关闭后才能正常操作页面。",
+    "mixed_content": "首页与部分列表页常同时混有文字内容卡片与视频封面卡片，判断时需以主体占比和卡片形态为准。",
+    "navigation": "顶部通常有固定导航、搜索与登录入口；分类维度多样。",
+    "player": "视频详情页存在明确播放器结构；列表页多为静态封面卡片，不直接播放。"
+  }
+}

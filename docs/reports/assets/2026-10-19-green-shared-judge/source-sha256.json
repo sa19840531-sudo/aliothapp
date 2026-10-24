@@ -1,0 +1,142 @@
+{
+  "base_commit": "9021bd9a3fc5128cd09013f734fbe4eac5fb6d5d",
+  "branch": "dev_2.0",
+  "scope": "第109行；第110行既有改动保留",
+  "files": [
+    {
+      "path": "docs/绿色规则三端实施规范.md",
+      "sha256": "a22697624ee8e35ffafb968e60c6d7e6158e703efb46ed040b0ad987b057da1f",
+      "bytes": 13890
+    },
+    {
+      "path": "scripts/install_green_ruleset.py",
+      "sha256": "96d19ed4e901f0aa3f247fba7066872992637e2950eece28f1fe6ca4947d485b",
+      "bytes": 9402
+    },
+    {
+      "path": "services/api/app/agents/skills/green-content-safety/SKILL.md",
+      "sha256": "db50f70a3c357068f4924f59395db6fd7b9dd92f2428113c4b831210b93f327e",
+      "bytes": 2031
+    },
+    {
+      "path": "services/api/app/agents/skills/green-process-evidence/SKILL.md",
+      "sha256": "b7600a50ef55d2d9efc6761412a9d7cc3852cbe2a1a6ae5839a9f5e580196c86",
+      "bytes": 3699
+    },
+    {
+      "path": "services/api/app/application/aggregate_inspection_execution.py",
+      "sha256": "7c95aacbcd79472760467ac2b6dd15906656466c5d0101b2b90575cf209d219b",
+      "bytes": 28525
+    },
+    {
+      "path": "services/api/app/application/aggregate_rule_config.py",
+      "sha256": "9f1901bebaedac49bc3be2f0bafbf77c182ecde3d5b5c11945efabbe25abc55c",
+      "bytes": 3914
+    },
+    {
+      "path": "services/api/app/application/green_evidence_contracts.py",
+      "sha256": "fc431f3bc4e2b6f970d3afcfcfd9c788f5a470a9a52c50e9957278a196138c25",
+      "bytes": 2335
+    },
+    {
+      "path": "services/api/app/application/green_page_judge.py",
+      "sha256": "738af74620e108d67974ebfc45b41638f102658e1d2e3cebcf7ea28913d72bd8",
+      "bytes": 4052
+    },
+    {
+      "path": "services/api/app/application/green_rule_catalog.py",
+      "sha256": "6e6b6ca6033c0ce236e351d76070c0df782908aef9b4b00d49dc1bb6c824784f",
+      "bytes": 14203
+    },
+    {
+      "path": "services/api/app/application/green_rule_evidence.py",
+      "sha256": "68b68e7de545a8b81dd9164724259b17fe9a4b71a2d8b4b529269049c557bc88",
+      "bytes": 11735
+    },
+    {
+      "path": "services/api/app/application/green_rule_skills.py",
+      "sha256": "0ec3862f1f9d3d4d47d9fcd26fc91c64012189447d7e4934ac5c00ad35518cda",
+      "bytes": 6644
+    },
+    {
+      "path": "services/api/app/application/rule_judge.py",
+      "sha256": "12220bd5abe44c2f26ed6a2843dddca68032c5ecc97dfb834b811fcad913cf6d",
+      "bytes": 227826
+    },
+    {
+      "path": "services/api/app/application/task_rule_inventory.py",
+      "sha256": "3e64d131f9f7b9911c7dd834030b2dbb18908bd80231b46f73b7a41a90f1d4a6",
+      "bytes": 11748
+    },
+    {
+      "path": "services/api/app/infrastructure/db/aggregate_inspection_execution_repository.py",
+      "sha256": "f7a0c5211f1d34b92a1e372e33d83565634179325cb98f8880e0f78a394638b2",
+      "bytes": 53578
+    },
+    {
+      "path": "services/api/app/infrastructure/db/green_process_evidence.py",
+      "sha256": "f26af1fa95c5aa601f90fdfa364073a6f3e97f9cf67eee02f4d5e65673d1ab39",
+      "bytes": 16223
+    },
+    {
+      "path": "services/api/app/infrastructure/db/task_rule_inventory_repository.py",
+      "sha256": "5791d7d4eedff7797eb542369d725420815e05440f5b405b966851a2f17103a2",
+      "bytes": 21194
+    },
+    {
+      "path": "services/api/tests/test_green_aggregate_execution_postgres.py",
+      "sha256": "01d0c42bfb13feba3f588b09afd5ff84388a701486a31594acec2a61ec896d5a",
+      "bytes": 20628
+    },
+    {
+      "path": "services/api/tests/test_green_aggregate_publication_postgres.py",
+      "sha256": "2d9638f680f40c2feb131dc92e38bcdc40db2bd955a03083adc473fd166f7f30",
+      "bytes": 6998
+    },
+    {
+      "path": "services/api/tests/test_green_legacy_rule_compatibility.py",
+      "sha256": "d194bce1c8b5e8050b034f0c06d5d0bb83b8b4fda883b975080ce41b09932dbc",
+      "bytes": 8340
+    },
+    {
+      "path": "services/api/tests/test_green_process_evidence_postgres.py",
+      "sha256": "651e0b2ad40689e62c9fcaf696f02607e905a0b82b677492ea861ede8da663ad",
+      "bytes": 7622
+    },
+    {
+      "path": "services/api/tests/test_green_process_evidence.py",
+      "sha256": "796849ce2e3021358dda6228de4173bb7917d90ce8e0139f0ffdc4355a644885",
+      "bytes": 15439
+    },
+    {
+      "path": "services/api/tests/test_green_rule_catalog.py",
+      "sha256": "c9dbbf71a1ec9144f514d8bd3e1aa7025c6c455b483059114b3c99f8c14bb8e6",
+      "bytes": 6109
+    },
+    {
+      "path": "services/api/tests/test_green_rule_skills.py",
+      "sha256": "443edfa1eac1b8fc59302ae9958181732ac9f984270a8b8a25d09451dfd725f5",
+      "bytes": 4320
+    },
+    {
+      "path": "services/api/tests/test_green_ruleset_installation.py",
+      "sha256": "6b2ff2bfe1c3b130ed4a049c5c36b4fe67be6211c7ae30ae2d152a91f25db21f",
+      "bytes": 8240
+    },
+    {
+      "path": "services/api/tests/test_green_shared_rule_judge.py",
+      "sha256": "afd08929b791a67feb7e1462d8da0e23fdc2e41a3062a01ee8638ad9958a4ee2",
+      "bytes": 4775
+    },
+    {
+      "path": "services/api/tests/test_green_web_inventory_freeze.py",
+      "sha256": "8bc65c80fc9c24b7aeb9d1f12e690ffbd51588524a7d137d52abc0fa425f864a",
+      "bytes": 5761
+    },
+    {
+      "path": "services/api/tests/test_rule_judge.py",
+      "sha256": "8fdcd65e75f074c4d411f108e4e4364f94eb11505e4d0206952c500a5401064b",
+      "bytes": 144927
+    }
+  ]
+}

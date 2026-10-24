@@ -1,0 +1,69 @@
+{
+  "completed_at_utc": "2026-10-19T08:26:30.6522012Z",
+  "removed_containers": [
+    {
+      "name": "alioth-checkpoint-results-api-20261019",
+      "id": "83a5ec0d60b4224b74db7c4776bd060a01a2d59a739ab04fc44701ce67febea7"
+    },
+    {
+      "name": "alioth-checkpoint-results-pg-20261019",
+      "id": "7d339b45ae0e9703433630f5384604a8b2f840442bb4c948ceb33b8bbb5b2a34"
+    }
+  ],
+  "removed_network": {
+    "name": "alioth-checkpoint-results-20261019",
+    "id": "dd0051863ea7ac8ccf8b54e8949bb3233e87c8cedc19bb398d5c169081568fc9"
+  },
+  "preserved_database_volume": {
+    "name": "alioth-checkpoint-results-20261019-pgdata",
+    "mountpoint": "/var/lib/docker/volumes/alioth-checkpoint-results-20261019-pgdata/_data",
+    "labels": {
+      "alioth.validation": "checkpoint-rule-results-20261019"
+    },
+    "data_directory": "/var/lib/postgresql/data",
+    "database": "alioth_checkpoint_results_test",
+    "system_identifier": "7698286980384509990",
+    "shutdown_exit_code": 0
+  },
+  "temporary_private_files_removed": [
+    "seed-manifest.json",
+    "test-db.env"
+  ],
+  "remaining_owned_containers": [],
+  "remaining_owned_networks": [],
+  "remaining_owned_listeners": [],
+  "main_services": [
+    {
+      "name": "/alioth-api",
+      "id": "2059125b2b6c2de4f7bf5eba08725961b07706446e6f341294c48609435e744c",
+      "state": "running",
+      "started_at": "2026-10-19T01:55:31.5524399Z"
+    },
+    {
+      "name": "/alioth-worker",
+      "id": "0ec803c433ee779700583f4586e7b99056b250368f81114ece5e425730a0d7cd",
+      "state": "running",
+      "started_at": "2026-10-19T01:55:31.5559357Z"
+    },
+    {
+      "name": "/alioth-web",
+      "id": "5f1ab940956eb8de62f2815651c7a3814f977900135558846335fe2ba895dca0",
+      "state": "running",
+      "started_at": "2026-10-19T01:55:31.5058515Z"
+    },
+    {
+      "name": "/alioth-postgres",
+      "id": "07025048a170144a250e470b65f0b0943bb67a2372ac0060232a6311882dc24d",
+      "state": "running",
+      "started_at": "2026-10-19T01:55:31.5635674Z"
+    },
+    {
+      "name": "/alioth-redis",
+      "id": "0535d5381262363d7ce182a17a7c9698598b701b7427cb1b53ecf17fc72b370d",
+      "state": "running",
+      "started_at": "2026-10-19T01:55:31.5297778Z"
+    }
+  ],
+  "images": "未构建本轮专用镜像；共享既有镜像保留",
+  "evidence": "源码、docs证据及原始夹具字节保留；未执行数据卷删除"
+}

@@ -1,0 +1,159 @@
+{
+  "task_id": "97ae1d9c-ebb3-46cb-80f0-491f449c05bc",
+  "categories": [
+    {
+      "category": "任务聚合未执行",
+      "rule_codes": [
+        "alioth_22",
+        "alioth_ops_7",
+        "alioth_spec_48"
+      ],
+      "rule_count": 3,
+      "changed_after_start": 0
+    },
+    {
+      "category": "已有记录",
+      "rule_codes": [
+        "alioth_12",
+        "alioth_13",
+        "alioth_15",
+        "alioth_20",
+        "alioth_21",
+        "alioth_23",
+        "alioth_24",
+        "alioth_26",
+        "alioth_40",
+        "alioth_44",
+        "alioth_ops_10",
+        "alioth_ops_3",
+        "alioth_ops_4",
+        "alioth_ops_6",
+        "alioth_ops_9",
+        "alioth_spec_31",
+        "alioth_spec_35",
+        "alioth_spec_72",
+        "alioth_spec_new_20",
+        "alioth_spec_new_4"
+      ],
+      "rule_count": 20,
+      "changed_after_start": 0
+    },
+    {
+      "category": "快照质检未执行",
+      "rule_codes": [
+        "alioth_14",
+        "alioth_18",
+        "alioth_19",
+        "alioth_2",
+        "alioth_25",
+        "alioth_27",
+        "alioth_3",
+        "alioth_30",
+        "alioth_32",
+        "alioth_33",
+        "alioth_34",
+        "alioth_36",
+        "alioth_38",
+        "alioth_39",
+        "alioth_4",
+        "alioth_41",
+        "alioth_42",
+        "alioth_5",
+        "alioth_6",
+        "alioth_9",
+        "alioth_ops_1",
+        "alioth_ops_2",
+        "alioth_ops_8",
+        "alioth_spec_24",
+        "alioth_spec_27",
+        "alioth_spec_28",
+        "alioth_spec_37",
+        "alioth_spec_38",
+        "alioth_spec_new_25",
+        "alioth_spec_new_27",
+        "alioth_spec_new_29"
+      ],
+      "rule_count": 31,
+      "changed_after_start": 0
+    },
+    {
+      "category": "检查页型范围外",
+      "rule_codes": [
+        "alioth_10",
+        "alioth_11",
+        "alioth_16",
+        "alioth_17",
+        "alioth_28",
+        "alioth_45",
+        "alioth_46",
+        "alioth_47",
+        "alioth_48",
+        "alioth_7",
+        "alioth_ops_11",
+        "alioth_ops_5",
+        "alioth_spec_new_24"
+      ],
+      "rule_count": 13,
+      "changed_after_start": 0
+    },
+    {
+      "category": "要求登录且未获得登录事实",
+      "rule_codes": [
+        "alioth_29",
+        "alioth_31",
+        "alioth_43",
+        "alioth_8"
+      ],
+      "rule_count": 4,
+      "changed_after_start": 0
+    },
+    {
+      "category": "非APP规则",
+      "rule_codes": [
+        "alioth_spec_17",
+        "alioth_spec_18"
+      ],
+      "rule_count": 2,
+      "changed_after_start": 0
+    }
+  ],
+  "checked_at": "2026-10-08T10:23:14.242893+08:00",
+  "task_status": "review",
+  "completion_gate": {
+    "gate_passed": false,
+    "block_reasons": [
+      "manual_review_seal"
+    ],
+    "exploration_terminal": false,
+    "app_coverage_satisfied": false
+  },
+  "quality_outcome": "unknown",
+  "execution_status": "needs_review",
+  "exploration_work": {
+    "running": 1,
+    "succeeded": 39
+  },
+  "inspection_scope": {
+    "page_types": [
+      "content_detail",
+      "content_list",
+      "home",
+      "video_detail",
+      "video_list"
+    ]
+  },
+  "publication_count": 0,
+  "finalization_state": "sealed",
+  "ruleset_rule_total": 73,
+  "raw_execution_count": 343,
+  "evidence_index_count": 0,
+  "exploration_failures": [
+    {
+      "phase": "runtime",
+      "error_type": "AppExplorationLeaseLostError",
+      "reason_code": "AppExplorationLeaseLostError",
+      "recovery_state": "no_evidence"
+    }
+  ],
+  "supplemental_evidence_disabled_count": 263
+}

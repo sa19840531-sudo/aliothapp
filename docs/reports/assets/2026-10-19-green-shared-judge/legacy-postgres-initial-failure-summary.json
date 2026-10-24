@@ -1,0 +1,16 @@
+{
+  "notice": "Accurate retained summary; the original initial full log was overwritten before the separate-log requirement. This file does not reconstruct original output.",
+  "initial_group": [
+    "test_task_rule_inventory_postgres.py",
+    "test_rule_judge_formal_packet_postgres.py",
+    "test_journey_cross_session_e2e_postgres.py",
+    "test_aggregate_disposition_postgres.py"
+  ],
+  "initial_result": {
+    "failed": 10,
+    "passed": 20
+  },
+  "cause": "task_rule_inventory tests ran before another module first invoked its isolated-database migration fixture; qc_tenant and qc_rule did not yet exist.",
+  "tool_chunk_id": "b39e8b",
+  "correction": "Confirm schema upgraded to 20261016_0140, then rerun the whole group and review recovery. Final results are in separate final logs."
+}

@@ -1,0 +1,79 @@
+{
+  "package_name": "com.alz7xm2.drama",
+  "slug": "tangguo",
+  "display_name": "糖果短剧",
+  "resolution": [1440, 3040],
+  "cloud_back_tap": [1120, 2955],
+  "gesture_y_max": 2794,
+  "execution_policy": "agent_profile_only",
+  "popup_close_policy": "watcher_cascade",
+  "bottom_nav_policy": "semantic_icon_relative",
+  "bottom_nav_ordered_tabs": ["首页", "剧库", "投票", "专题", "我的"],
+  "taps": {},
+  "timing_rules": [],
+  "exploration_curriculum": [
+    {
+      "phase": "popup",
+      "hint": "弹窗：Watcher→A文案→B几何安全X→C蒙层→D「<」连点两下；关完再进首页业务"
+    },
+    {
+      "phase": "home_content_entry",
+      "hint": "首页：有影片可点则点进；取证后回首页；播放成功须进度证据"
+    },
+    {
+      "phase": "home_top_category_tabs",
+      "hint": "上方分类：记录原选中；由左至右点最多3个未选中；可横滑2次；完成后恢复原分类"
+    },
+    {
+      "phase": "comic_read",
+      "hint": "条件漫画：选一本→阅读页→下滑3次→回首页接续；整任务最多一轮；详情滑不算阅读"
+    },
+    {
+      "phase": "bottom_nav",
+      "hint": "底栏巡检：首页→剧库→投票→专题→我的；语意图标+相对五等分；禁止绝对px主路径"
+    },
+    {
+      "phase": "profile_wallet",
+      "hint": "我的：搜寻钱包／余额／储值／充值／支付；最多下滚2次；未发现则正常结束分支"
+    },
+    {
+      "phase": "payment_alipay",
+      "hint": "支付：语意图标+相对槽（左微信右支付宝）选支付宝并验证；inspect_only 不点确认支付／不建单；钱包页「确认支付」文案≠订单确认收口"
+    },
+    {
+      "phase": "payment_channels",
+      "hint": "渠道行：semantic_icon_relative 两等分；有图标行时禁止只靠 OCR 绝对框"
+    }
+  ],
+  "tangguo_flow": {
+    "enabled": true,
+    "payment_mode": "inspect_only",
+    "allow_pending_order_creation": false,
+    "payment_method": "alipay"
+  },
+  "popup_notes": {
+    "policy": "watcher_cascade",
+    "startup": "semantic_skip_relative_top_right",
+    "home_content": "semantic_watch_or_first_card",
+    "bottom_nav": "semantic_icon_relative_five_slots"
+  },
+  "popup_close_by_type": {
+    "startup_skip": {
+      "action": "vision_skip",
+      "control_role": "skip",
+      "expected_state_hint": "tap_skip",
+      "target_hint": "开屏/首屏：语义进入/跳过 + 右上相对区；禁止 back/ENTRY_TAP",
+      "popup_close_policy": "startup_semantic_relative"
+    }
+  },
+  "bounded_dismiss": {
+    "enabled": true,
+    "splash_max_steps": 3,
+    "popup_max_steps": 2,
+    "mode": "constrained_tool",
+    "constrained_output": ["found_true_coordinate", "found_false"],
+    "forbid_actions": ["BACK", "SWIPE", "INPUT", "bottom_nav"],
+    "failsafe": "yield_to_business"
+  },
+  "note": "无专属编排；①限步+②无状态Tool+③约束输出清障（开屏≤3／弹层≤2，found+坐标|false，禁BACK）+ 进片／底栏课纲；docs/data/tangguo_ui_tree_features.json"
+}

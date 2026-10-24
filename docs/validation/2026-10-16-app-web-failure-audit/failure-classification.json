@@ -1,0 +1,144 @@
+{
+  "head": "b0147a8826e756ffa77cd9f89a9f59fe95eef18b",
+  "baseline": {
+    "passed": 186,
+    "failed": 27
+  },
+  "failures": [
+    {
+      "test": "services.api.tests.test_maf_explorer_agent::test_dynamic_fallback_keeps_home_top_when_curriculum_open",
+      "error": "AssertionError: assert 'candidate-tab-short' == 'candidate-home-top-manga'\n  \n  - candidate-home-top-manga\n  + candidate-tab-short",
+      "classification": "旧通用寻页合同未冻结，错误依赖已经移除的历史包名解析"
+    },
+    {
+      "test": "services.api.tests.test_maf_explorer_agent::test_home_top_category_preferred_over_bottom_tab_while_tabs_incomplete",
+      "error": "AssertionError: assert 'candidate-tab-short' == 'candidate-home-top-latest'\n  \n  - candidate-home-top-latest\n  + candidate-tab-short",
+      "classification": "旧通用寻页合同未冻结，错误依赖已经移除的历史包名解析"
+    },
+    {
+      "test": "services.api.tests.test_maf_explorer_agent::test_home_top_clicks_latest_even_when_ui_defaults_to_recommend",
+      "error": "AssertionError: assert 'candidate-tab-short' == 'candidate-home-top-latest'\n  \n  - candidate-home-top-latest\n  + candidate-tab-short",
+      "classification": "旧通用寻页合同未冻结，错误依赖已经移除的历史包名解析"
+    },
+    {
+      "test": "services.api.tests.test_maf_explorer_agent::test_home_top_latest_not_blocked_by_unsatisfied_soft_popup_phase",
+      "error": "AssertionError: assert 'candidate-tab-short' == 'candidate-home-top-latest'\n  \n  - candidate-home-top-latest\n  + candidate-tab-short",
+      "classification": "旧通用寻页合同未冻结，错误依赖已经移除的历史包名解析"
+    },
+    {
+      "test": "services.api.tests.test_maf_explorer_agent::test_home_top_category_synthesizes_when_pool_only_has_bottom_tab",
+      "error": "AssertionError: assert False\n +  where False = <built-in method startswith of str object at 0x11529ab70>('forced-home-top-category:')\n +    where <built-in method startswith of str object at 0x11529ab70> = 'candidate-tab-short'.startswith",
+      "classification": "旧通用寻页合同未冻结，错误依赖已经移除的历史包名解析"
+    },
+    {
+      "test": "services.api.tests.test_maf_explorer_agent::test_home_top_already_on_latest_clicks_first_video",
+      "error": "AssertionError: assert 'candidate-tab-short' == 'candidate-first-video'\n  \n  - candidate-first-video\n  + candidate-tab-short",
+      "classification": "旧通用寻页合同未冻结，错误依赖已经移除的历史包名解析"
+    },
+    {
+      "test": "services.api.tests.test_maf_explorer_agent::test_home_top_sample_need_first_card_clicks_list_card",
+      "error": "assert False\n +  where False = isinstance(None, ActionIntent)",
+      "classification": "旧通用寻页合同未冻结，错误依赖已经移除的历史包名解析"
+    },
+    {
+      "test": "services.api.tests.test_maf_explorer_agent::test_home_top_sample_clicks_lower_video_not_category_chip",
+      "error": "assert False\n +  where False = isinstance(None, ActionIntent)",
+      "classification": "旧通用寻页合同未冻结，错误依赖已经移除的历史包名解析"
+    },
+    {
+      "test": "services.api.tests.test_maf_explorer_agent::test_home_top_sample_manga_prefers_3d_manga_card",
+      "error": "assert False\n +  where False = isinstance(None, ActionIntent)",
+      "classification": "旧通用寻页合同未冻结，错误依赖已经移除的历史包名解析"
+    },
+    {
+      "test": "services.api.tests.test_maf_explorer_agent::test_home_top_sample_manga_lower_band_3d_uses_pixel_visual",
+      "error": "assert False\n +  where False = isinstance(None, ActionIntent)",
+      "classification": "旧通用寻页合同未冻结，错误依赖已经移除的历史包名解析"
+    },
+    {
+      "test": "services.api.tests.test_maf_explorer_agent::test_home_top_sample_manga_synthesizes_3d_slot_when_unlabeled",
+      "error": "assert False\n +  where False = isinstance(None, ActionIntent)",
+      "classification": "旧通用寻页合同未冻结，错误依赖已经移除的历史包名解析"
+    },
+    {
+      "test": "services.api.tests.test_maf_explorer_agent::test_home_top_sample_need_back_on_payment_issues_back_not_buy",
+      "error": "AssertionError: assert None is True\n +  where None = <built-in method get of mappingproxy object at 0x11520f580>('home_top_category_sample_seek')\n +    where <built-in method get of mappingproxy object at 0x11520f580> = mappingproxy({'candidate_id': 'forced-system-back:capture-1'}).get\n +      where mappingproxy({'candidate_id': 'forced-system-back:capture-1'}) = ActionIntent(task_id='task-1', session_id='session-1', intent_id='action-intent:9d903d5ce63edf9f57dd8d69d2a39a6e1fda7c...': 'forced-system-back:capture-1'}), risk_level=<InteractionRiskLevel.LOW: 'low'>, protocol_version='action-intent.v1').parameters",
+      "classification": "旧通用寻页合同未冻结，错误依赖已经移除的历史包名解析"
+    },
+    {
+      "test": "services.api.tests.test_maf_explorer_agent::test_home_top_sample_need_back_not_hijacked_by_short_drama_exit",
+      "error": "assert False\n +  where False = isinstance(None, ActionIntent)",
+      "classification": "旧通用寻页合同未冻结，错误依赖已经移除的历史包名解析"
+    },
+    {
+      "test": "services.api.tests.test_maf_explorer_agent::test_home_after_latest_sample_clicks_recommend_not_short_drama",
+      "error": "assert False\n +  where False = isinstance(None, ActionIntent)",
+      "classification": "旧通用寻页合同未冻结，错误依赖已经移除的历史包名解析"
+    },
+    {
+      "test": "services.api.tests.test_maf_explorer_agent::test_home_after_latest_need_back_clicks_domestic_not_short_drama",
+      "error": "assert False\n +  where False = isinstance(None, ActionIntent)",
+      "classification": "旧通用寻页合同未冻结，错误依赖已经移除的历史包名解析"
+    },
+    {
+      "test": "services.api.tests.test_maf_explorer_agent::test_home_already_on_latest_need_back_clicks_domestic_not_latest",
+      "error": "assert False\n +  where False = isinstance(None, ActionIntent)",
+      "classification": "旧通用寻页合同未冻结，错误依赖已经移除的历史包名解析"
+    },
+    {
+      "test": "services.api.tests.test_maf_explorer_agent::test_home_top_scrolled_to_uniform_resets_strip_not_click_anime",
+      "error": "assert False\n +  where False = isinstance(None, ActionIntent)",
+      "classification": "旧通用寻页合同未冻结，错误依赖已经移除的历史包名解析"
+    },
+    {
+      "test": "services.api.tests.test_maf_explorer_agent::test_home_top_selected_japan_av_resets_not_click_manga",
+      "error": "assert False\n +  where False = isinstance(None, ActionIntent)",
+      "classification": "旧通用寻页合同未冻结，错误依赖已经移除的历史包名解析"
+    },
+    {
+      "test": "services.api.tests.test_maf_explorer_agent::test_home_top_scrolled_but_manga_visible_clicks_manga_not_reset",
+      "error": "assert False\n +  where False = isinstance(None, ActionIntent)",
+      "classification": "旧通用寻页合同未冻结，错误依赖已经移除的历史包名解析"
+    },
+    {
+      "test": "services.api.tests.test_maf_explorer_agent::test_manga_selected_with_europe_visible_clicks_first_card_not_europe",
+      "error": "AssertionError: assert 'candidate-tab-short' == 'candidate-3d-manga'\n  \n  - candidate-3d-manga\n  + candidate-tab-short",
+      "classification": "旧通用寻页合同未冻结，错误依赖已经移除的历史包名解析"
+    },
+    {
+      "test": "services.api.tests.test_maf_explorer_agent::test_home_default_recommend_selected_clicks_latest_not_strip_reset",
+      "error": "assert False\n +  where False = isinstance(None, ActionIntent)",
+      "classification": "旧通用寻页合同未冻结，错误依赖已经移除的历史包名解析"
+    },
+    {
+      "test": "services.api.tests.test_maf_explorer_agent::test_home_detail_bounce_skips_false_popup_and_latest_tab",
+      "error": "AssertionError: assert 'candidate-tab-short' == 'candidate-domestic'\n  \n  - candidate-domestic\n  + candidate-tab-short",
+      "classification": "旧通用寻页合同未冻结，错误依赖已经移除的历史包名解析"
+    },
+    {
+      "test": "services.api.tests.test_maf_explorer_agent::test_hjll_verified_circular_x_retries_until_airtest_limit",
+      "error": "AssertionError: assert <InteractionOperation.OBSERVE: 'observe'> is <InteractionOperation.CLICK: 'click'>\n +  where <InteractionOperation.OBSERVE: 'observe'> = ActionIntent(task_id='task-1', session_id='session-1', intent_id='action-intent:348edba391556b18bb8677dadf5e422a101ecc...t': 'popup_clearance_reobserve'})}), risk_level=<InteractionRiskLevel.LOW: 'low'>, protocol_version='action-intent.v1').action_type\n +  and   <InteractionOperation.CLICK: 'click'> = InteractionOperation.CLICK",
+      "classification": "当前产品合同测试错误使用已移除的历史包名"
+    },
+    {
+      "test": "services.api.tests.test_maf_explorer_agent::test_hjll_verified_circular_x_stops_clicking_at_airtest_limit",
+      "error": "AssertionError: assert ActionIntent(task_id='task-1', session_id='session-1', intent_id='action-intent:348edba391556b18bb8677dadf5e422a101ecc...t': 'popup_clearance_reobserve'})}), risk_level=<InteractionRiskLevel.LOW: 'low'>, protocol_version='action-intent.v1') is None",
+      "classification": "旧包名夹具掩盖当前产品优先关层路径绕过既有八轮上限"
+    },
+    {
+      "test": "services.api.tests.test_maf_explorer_agent::test_hjll_airtest_retires_no_x_promo_scrim_strategy",
+      "error": "AssertionError: assert <InteractionOperation.BACK: 'back'> is <InteractionOperation.OBSERVE: 'observe'>\n +  where <InteractionOperation.BACK: 'back'> = ActionIntent(task_id='task-1', session_id='session-1', intent_id='action-intent:9d903d5ce63edf9f57dd8d69d2a39a6e1fda7c...': 'forced-system-back:capture-1'}), risk_level=<InteractionRiskLevel.LOW: 'low'>, protocol_version='action-intent.v1').action_type\n +  and   <InteractionOperation.OBSERVE: 'observe'> = InteractionOperation.OBSERVE",
+      "classification": "当前产品合同测试错误使用已移除的历史包名"
+    },
+    {
+      "test": "services.api.tests.test_maf_explorer_agent::test_hjll_airtest_top_and_bottom_safe_bounds_match_script",
+      "error": "AssertionError: assert () == ('最新', '推荐', '国产', '动漫', '漫画')\n  \n  Right contains 5 more items, first extra item: '最新'\n  Use -v to get more diff",
+      "classification": "当前产品合同测试错误使用已移除的历史包名"
+    },
+    {
+      "test": "services.api.tests.test_v2_task_entrypoints::test_unknown_web_target_locks_dynamic_home_denominator",
+      "error": "AssertionError: assert {'applicabili...web.v18', ...} == {'applicabili...': <ANY>, ...}\n  \n  Omitting 8 identical items, use -vv to show\n  Differing items:\n  {'optional_page_types': ['activity', 'collection_page', 'content_detail', 'content_list', 'search_page', 'video_detail', ...]} != {'optional_page_types': ['activity', 'content_detail', 'content_list', 'search_page', 'video_detail', 'video_list']}\n  {'page_type_statuses': {'activity': 'not_observed', 'collection_page': 'not_observed', 'content_detail': 'not_observed', 'content_list': 'not_observed', ...}} != {'page_type_statuses': {'activity': 'not_observed', 'content_detail': 'not_observed', 'content_list': 'not_observed', 'home': 'required', ...}}\n  Use -v to get more diff",
+      "classification": "旧入口预期遗漏集合页，并掩盖 v12-v18 覆盖快照版本回退"
+    }
+  ]
+}

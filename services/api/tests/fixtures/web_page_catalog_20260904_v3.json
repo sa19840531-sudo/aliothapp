@@ -1,0 +1,178 @@
+{
+  "schema_version": "page-type-catalog.v2",
+  "version": "2026-09-04.web.v3",
+  "source": {
+    "workbook_name": "web-v2-exploration-design",
+    "sheets": [
+      "Web 四类业务页面闭集",
+      "六站导航与列表详情样本"
+    ],
+    "extraction_method": "web-desktop-four-business-page-types-v3"
+  },
+  "page_types": [
+    {
+      "code": "video_list",
+      "name": "Web视频列表",
+      "status": "supported",
+      "category": "business",
+      "coverage_required": true,
+      "purpose": "识别以可重复视频卡片、影片或短剧条目为主体的列表页面。",
+      "required_positive_signals": ["至少两个同类重复业务卡片", "至少两个可信详情入口"],
+      "supporting_signals": ["视频封面、时长、播放量或媒体卡片结构"],
+      "strong_negative_signals": ["单一播放器占据主体", "单一长正文占据主体", "页面仅有导航或广告"],
+      "confusable_with": ["content_list", "video_detail"],
+      "missing_evidence_actions": ["补采无遮挡主体区域", "核对重复卡片和详情入口", "复核视频承载结构"],
+      "runtime_traits": ["stable", "desktop_web", "repeated_cards"],
+      "aliases": ["video_list", "Web视频列表", "视频列表"],
+      "signals": {
+        "ocr_keywords": ["视频", "播放", "时长", "更新"],
+        "dom_hints": ["video-list", "video-grid", "video-img-box", "media-card", "drama-card", "archive", "poster", "duration", "thumbnail"],
+        "layout_hints": ["包含多个重复视频封面、标题、时长或播放量卡片"]
+      },
+      "entry_hints": [
+        {
+          "from_page_type": "external",
+          "action_intent": "打开已核准的视频菜单",
+          "target_keywords": ["视频菜单"]
+        }
+      ],
+      "exit_hints": ["打开当前无遮挡 DOM 中的可信视频卡片"],
+      "next_page_candidates": [
+        {
+          "page_type": "video_detail",
+          "probability": "high",
+          "action_intent": "打开视频详情",
+          "target_keywords": ["视频标题", "视频封面"],
+          "risk_level": "low"
+        }
+      ],
+      "risk_actions": ["下载", "付费播放", "跳转广告"],
+      "related_rules": [],
+      "rule_matchable": true,
+      "route_prefixes": [],
+      "navigation_aliases": [],
+      "default_detail_page_type": "video_detail",
+      "source": "Web V2 四类业务页面设计",
+      "remark": "重复视频卡片为主要证据，菜单文案和 URL 只能作为弱佐证。"
+    },
+    {
+      "code": "video_detail",
+      "name": "Web视频详情",
+      "status": "supported",
+      "category": "business",
+      "coverage_required": true,
+      "purpose": "识别以单一视频播放器或单部影片为主体的详情页面。",
+      "required_positive_signals": ["单一业务主体", "可验证的播放器或视频资源结构"],
+      "supporting_signals": ["标题、播放控制、剧集信息或相关推荐"],
+      "strong_negative_signals": ["多个同级影片卡片为主体", "只有视频缩略图而无播放器", "页面仅有广告或加载骨架"],
+      "confusable_with": ["video_list", "content_detail"],
+      "missing_evidence_actions": ["补采播放器主体", "核对视频资源结构", "区分推荐卡片与主播放器"],
+      "runtime_traits": ["stable", "desktop_web", "single_subject", "video_player"],
+      "aliases": ["video_detail", "Web视频详情", "视频详情"],
+      "signals": {
+        "ocr_keywords": ["播放", "暂停", "全屏", "相关推荐"],
+        "dom_hints": ["video", "source", "player", "video-player", "video-detail", "video-js", "playback"],
+        "layout_hints": ["单个视频播放器占据主体区域，并具有单一标题或内容说明"]
+      },
+      "entry_hints": [
+        {
+          "from_page_type": "video_list",
+          "action_intent": "打开可信视频卡片",
+          "target_keywords": ["视频标题", "视频封面"]
+        }
+      ],
+      "exit_hints": ["返回菜单探索流程"],
+      "next_page_candidates": [],
+      "risk_actions": ["下载", "付费", "外部播放器跳转", "广告落地页"],
+      "related_rules": [],
+      "rule_matchable": true,
+      "route_prefixes": [],
+      "navigation_aliases": [],
+      "default_detail_page_type": null,
+      "source": "Web V2 四类业务页面设计",
+      "remark": "必须有播放器或视频资源结构证据，不能只靠 URL 或菜单文字判断。"
+    },
+    {
+      "code": "content_list",
+      "name": "Web内容列表",
+      "status": "supported",
+      "category": "business",
+      "coverage_required": true,
+      "purpose": "识别以重复文章、爆料、图文帖或事件条目为主体的列表页面。",
+      "required_positive_signals": ["至少两个同类重复业务条目", "至少两个可信内容详情入口"],
+      "supporting_signals": ["标题、摘要、正文预览、图片或发布时间结构"],
+      "strong_negative_signals": ["单一长正文占据主体", "多个视频播放器或纯影片库为主体", "页面仅有导航或广告"],
+      "confusable_with": ["video_list", "content_detail"],
+      "missing_evidence_actions": ["补采无遮挡主体区域", "核对重复文章条目", "区分视频缩略图与视频列表"],
+      "runtime_traits": ["stable", "desktop_web", "repeated_cards"],
+      "aliases": ["content_list", "Web内容列表", "内容列表"],
+      "signals": {
+        "ocr_keywords": ["资讯", "文章", "专题", "图集", "更新"],
+        "dom_hints": ["article-list", "content-grid", "post-list", "content-card", "article-card", "post-card", "archive", "card", "item"],
+        "layout_hints": ["包含多个重复的非视频内容标题、摘要、图片或文章条目"]
+      },
+      "entry_hints": [
+        {
+          "from_page_type": "external",
+          "action_intent": "打开已核准的内容菜单",
+          "target_keywords": ["内容菜单"]
+        }
+      ],
+      "exit_hints": ["打开当前无遮挡 DOM 中的可信内容条目"],
+      "next_page_candidates": [
+        {
+          "page_type": "content_detail",
+          "probability": "high",
+          "action_intent": "打开内容详情",
+          "target_keywords": ["文章标题", "图文标题", "专题标题"],
+          "risk_level": "low"
+        }
+      ],
+      "risk_actions": ["下载", "投稿", "登录", "提交表单"],
+      "related_rules": [],
+      "rule_matchable": true,
+      "route_prefixes": [],
+      "navigation_aliases": [],
+      "default_detail_page_type": "content_detail",
+      "source": "Web V2 四类业务页面设计",
+      "remark": "重复非视频内容结构为主要证据，不能把导航、分页或广告当作详情入口。"
+    },
+    {
+      "code": "content_detail",
+      "name": "Web内容详情",
+      "status": "supported",
+      "category": "business",
+      "coverage_required": true,
+      "purpose": "识别以单一文章、爆料、图文帖或事件正文为主体的详情页面。",
+      "required_positive_signals": ["单一业务主体", "正文、文章容器或足量段落文本"],
+      "supporting_signals": ["标题、作者、发布时间、图片或上一篇下一篇"],
+      "strong_negative_signals": ["多个同级文章卡片为主体", "单一播放器为主要承载", "页面仅有导航、广告或加载骨架"],
+      "confusable_with": ["content_list", "video_detail"],
+      "missing_evidence_actions": ["补采正文主体", "核对段落与文章容器", "区分内嵌视频与主视频详情"],
+      "runtime_traits": ["stable", "desktop_web", "single_subject"],
+      "aliases": ["content_detail", "Web内容详情", "内容详情"],
+      "signals": {
+        "ocr_keywords": ["正文", "发布时间", "作者", "上一篇", "下一篇"],
+        "dom_hints": ["article", "article-body", "post-content", "content-detail", "detail-content", "entry-content", "detail"],
+        "layout_hints": ["单一非视频内容主体，通常具有标题、正文、图片或元信息"]
+      },
+      "entry_hints": [
+        {
+          "from_page_type": "content_list",
+          "action_intent": "打开可信内容条目",
+          "target_keywords": ["文章标题", "图文标题", "专题标题"]
+        }
+      ],
+      "exit_hints": ["返回菜单探索流程"],
+      "next_page_candidates": [],
+      "risk_actions": ["下载", "评论提交", "登录", "外部链接"],
+      "related_rules": [],
+      "rule_matchable": true,
+      "route_prefixes": [],
+      "navigation_aliases": [],
+      "default_detail_page_type": null,
+      "source": "Web V2 四类业务页面设计",
+      "remark": "单一非视频主体为主要证据；页面含视频附件不自动等于视频详情。"
+    }
+  ]
+}

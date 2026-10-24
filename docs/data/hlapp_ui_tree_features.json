@@ -1,0 +1,562 @@
+{
+  "schema_version": "app-ui-tree-features.v1",
+  "product_name": "黑料不打烊",
+  "product_aliases": [
+    "黑料不打烊",
+    "黑料不打烊app",
+    "hlapp",
+    "黑料"
+  ],
+  "playbook_id": "hlapp",
+  "script_ref": "untitled1.py",
+  "apk_hint": "F:\\\\apptest\\\\黑料不打烊app\\\\hlapp_1.8.9_260929_1.apk",
+  "package_name": "top.qkjzg.zfiufm",
+  "package_hints": [
+    "top.qkjzg.zfiufm",
+    "hlapp",
+    "黑料",
+    "黑料不打烊"
+  ],
+  "coverage_scope": {
+    "required_page_types": [
+      "home",
+      "content_list",
+      "content_detail",
+      "video_list",
+      "video_detail",
+      "post_list",
+      "activity"
+    ],
+    "minimum_business_pages": 7,
+    "excluded_from_denominator": [
+      "profile",
+      "settings",
+      "payment",
+      "post_publish"
+    ],
+    "note": "七类必达；本轮不测我的／设置／充值／发帖"
+  },
+  "flow_order": [
+    "age_gate",
+    "startup_ad",
+    "popup_ads",
+    "home_top_category_tabs",
+    "bottom_tabs"
+  ],
+  "note": "黑料不打烊（hlapp）UI Tree：年龄门→开屏右上跳过→系统公告／弹层下方白圆X→主页上方分类→底栏首页→精选→片库→直播→AI科技→圈子（七格仅点前六，禁止我的）。2026-09-15 qa-c 实采校准。",
+  "age_gate": {
+    "phase": "age_gate",
+    "must_screenshot_before_action": true,
+    "context_markers": [
+      "18岁",
+      "18歲",
+      "24小时吃瓜",
+      "HL365",
+      "hl365.com",
+      "年满18",
+      "年滿18",
+      "开启吃瓜黑料万篇长征路",
+      "我年满",
+      "我年满18岁-进入",
+      "我年滿",
+      "我未满18岁-离开",
+      "未成年",
+      "未满18",
+      "请确定你已年满18岁"
+    ],
+    "enter_button_texts": [
+      "我年满18岁-进入",
+      "我年满18岁",
+      "我已满18岁-进入",
+      "我已满18岁",
+      "确认已满18",
+      "确认年满18"
+    ],
+    "leave_button_texts": [
+      "未满18",
+      "未满十八",
+      "未成年",
+      "离开",
+      "under 18",
+      "under18",
+      "exit",
+      "leave"
+    ],
+    "match_fields": [
+      "semantic_target",
+      "metadata.content_desc",
+      "metadata.text",
+      "metadata.label",
+      "metadata.ui_tree_text",
+      "metadata.accessibility_text",
+      "metadata.purpose",
+      "metadata.expected_state_hint"
+    ],
+    "hit_region": {
+      "min_top": 0.55,
+      "enter_button": {
+        "normalized_bounds": {
+          "left": 0.1176,
+          "top": 0.675,
+          "right": 0.8824,
+          "bottom": 0.7408
+        },
+        "center": {
+          "x": 0.5,
+          "y": 0.7079
+        },
+        "content_desc": "我年满18岁-进入"
+      },
+      "leave_button": {
+        "normalized_bounds": {
+          "left": 0.1176,
+          "top": 0.5943,
+          "right": 0.8824,
+          "bottom": 0.6596
+        },
+        "center": {
+          "x": 0.5,
+          "y": 0.627
+        },
+        "content_desc": "我未满18岁-离开"
+      },
+      "note": "qa-c 1080x2280 dump：进入键在离开键下方；须点进入，禁止点离开。"
+    },
+    "action": "tap",
+    "priority": "before_startup_ad_and_popup_ads",
+    "note": "qa-c 实采：content-desc=我年满18岁-进入，中心约 (0.50,0.71)；禁止点我未满18岁-离开。"
+  },
+  "startup_ad": {
+    "phase": "startup_ad",
+    "must_screenshot_before_action": true,
+    "zero_touch_burst": {
+      "max_frames": 3,
+      "poll_seconds": 1.5,
+      "note": "右上跳过前零触控连拍最多3帧，去重轮播"
+    },
+    "page_types": [
+      "startup_ad"
+    ],
+    "page_states": [
+      "popup",
+      "overlay"
+    ],
+    "context_markers": [
+      "开屏",
+      "跳过",
+      "跳過",
+      "skip",
+      "广告"
+    ],
+    "close_button_texts": [
+      "跳过",
+      "跳過",
+      "skip",
+      "关闭",
+      "關閉",
+      "close"
+    ],
+    "close_zones": [
+      {
+        "name": "top_right_skip",
+        "normalized_bounds": {
+          "left": 0.8028,
+          "top": 0.0601,
+          "right": 0.9602,
+          "bottom": 0.1044
+        },
+        "center": {
+          "x": 0.8815,
+          "y": 0.0822
+        },
+        "content_desc": "跳过",
+        "note": "qa-c dump：右上跳过胶囊；宁可偏上偏右，绝不下移进广告本体"
+      }
+    ],
+    "visual_close_priority": [
+      "pixel_top_right_close_label",
+      "ui_tree_close_zones"
+    ],
+    "forbid": [
+      "点广告本体",
+      "点下载",
+      "点安装",
+      "点立即打开",
+      "外链取证"
+    ],
+    "action": "tap_skip_once",
+    "note": "开屏：先零触控截图（最多3），再只点一次右上「跳过」（qa-c 中心约 0.88,0.08）。"
+  },
+  "popup_ads": {
+    "phase": "popup_ads",
+    "must_screenshot_before_each_close": true,
+    "repeat_until_clear": true,
+    "page_states": [
+      "popup",
+      "overlay",
+      "modal",
+      "dialog"
+    ],
+    "context_markers": [
+      "弹窗",
+      "广告",
+      "公告",
+      "关闭",
+      "活動",
+      "活动"
+    ],
+    "close_button_texts": [
+      "关闭",
+      "關閉",
+      "×",
+      "X",
+      "x",
+      "close",
+      "dismiss"
+    ],
+    "close_zones": [
+      {
+        "name": "system_notice_x_fallback",
+        "normalized_bounds": {
+          "left": 0.4378,
+          "top": 0.7056,
+          "right": 0.5622,
+          "bottom": 0.7646
+        },
+        "center": {
+          "x": 0.5,
+          "y": 0.7351
+        },
+        "note": "qa-c 截图像素：系统公告下方空心白圆X中心约 y=0.735；勿用 0.85 以免点进正文／详情"
+      },
+      {
+        "name": "bottom_center_hollow_white_x",
+        "normalized_bounds": {
+          "left": 0.4,
+          "top": 0.7,
+          "right": 0.6,
+          "bottom": 0.8
+        },
+        "note": "公告／中间弹层白圆X搜索带；水平居中；偏高优先于偏低，防误进详情"
+      }
+    ],
+    "visual_close_priority": [
+      "pixel_circular_bottom_x",
+      "ui_tree_close_zones"
+    ],
+    "forbid_zones": [
+      {
+        "name": "ad_body_and_list_thumbs",
+        "normalized_bounds": {
+          "left": 0.0,
+          "top": 0.2,
+          "right": 1.0,
+          "bottom": 0.55
+        },
+        "note": "禁止点广告本体／列表缩略图（曾导致进Chrome FirstRun）"
+      }
+    ],
+    "system_notice": {
+      "screenshot_required": false,
+      "action": "tap_x_once",
+      "note": "系统公告不存广告图，点X后进底栏"
+    },
+    "action": "tap_bottom_hollow_x",
+    "after_all_closed": "bottom_tabs",
+    "note": "中间广告／系统公告：先截后点下方白圆X；qa-c 系统公告 X≈(0.50,0.735)；禁止 BACK 代关；禁止点广告本体。"
+  },
+  "bottom_navigation": {
+    "phase": "bottom_tabs",
+    "layout": {
+      "slot_count": 7,
+      "clickable_slot_indexes": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "forbidden_slot_indexes": [
+        6
+      ],
+      "y_from_bottom_px": 100,
+      "y_normalized_fallback": 0.945,
+      "note": "七格等分；只点0~5；qa-c 量测 y≈0.945，槽心 x≈0.071/0.214/0.357/0.500/0.643/0.785/0.928",
+      "slot_centers_norm": [
+        0.0713,
+        0.2139,
+        0.3565,
+        0.5,
+        0.6426,
+        0.7852,
+        0.9278
+      ]
+    },
+    "match_fields": [
+      "semantic_target",
+      "metadata.content_desc",
+      "metadata.text",
+      "metadata.label",
+      "metadata.resource_id",
+      "metadata.ui_tree_text",
+      "metadata.accessibility_text"
+    ],
+    "bounds": {
+      "min_top": 0.9,
+      "max_bottom": 1.02
+    },
+    "discovery_sources": [
+      "ui_tree",
+      "accessibility",
+      "vision",
+      "promoted_coverage",
+      "promoted_bottom_nav"
+    ],
+    "visual_pixel_priority": true,
+    "visual_band": {
+      "min_top": 0.9,
+      "max_bottom": 0.98,
+      "note": "qa-c 底栏触控带"
+    },
+    "ordered_tabs": [
+      {
+        "label": "首页",
+        "aliases": [
+          "首页",
+          "首頁",
+          "主页",
+          "主頁",
+          "home"
+        ],
+        "slot_index": 0,
+        "action": "tap_then_screenshot_then_swipe",
+        "click": true,
+        "page_types": [
+          "home"
+        ],
+        "swipes": 1,
+        "note": "qa-c 实采可见；点首页并截图"
+      },
+      {
+        "label": "精选",
+        "aliases": [
+          "精选",
+          "精選",
+          "精選推薦"
+        ],
+        "slot_index": 1,
+        "action": "tap_then_screenshot_then_swipe",
+        "click": true,
+        "page_types": [
+          "content_list",
+          "content_detail"
+        ],
+        "swipes": 1,
+        "note": "精选列表；可下钻详情"
+      },
+      {
+        "label": "片库",
+        "aliases": [
+          "片库",
+          "片庫",
+          "片庫推薦",
+          "影视",
+          "影視"
+        ],
+        "slot_index": 2,
+        "action": "tap_then_screenshot_then_swipe",
+        "click": true,
+        "page_types": [
+          "video_list",
+          "video_detail"
+        ],
+        "swipes": 1,
+        "note": "片库／视频列表；可下钻影片详情"
+      },
+      {
+        "label": "直播",
+        "aliases": [
+          "直播",
+          "Live",
+          "live"
+        ],
+        "slot_index": 3,
+        "action": "tap_then_screenshot_then_swipe",
+        "click": true,
+        "page_types": [
+          "activity"
+        ],
+        "swipes": 1,
+        "note": "直播／活动类入口"
+      },
+      {
+        "label": "AI科技",
+        "aliases": [
+          "AI科技",
+          "AI",
+          "ai",
+          "Ai",
+          "人工智能"
+        ],
+        "slot_index": 4,
+        "action": "tap_then_screenshot_then_swipe",
+        "click": true,
+        "page_types": [
+          "activity"
+        ],
+        "swipes": 1,
+        "note": "AI科技入口；少滑优先切栏"
+      },
+      {
+        "label": "圈子",
+        "aliases": [
+          "圈子",
+          "社區",
+          "社区",
+          "论坛",
+          "論壇"
+        ],
+        "slot_index": 5,
+        "action": "tap_then_screenshot_then_swipe",
+        "click": true,
+        "page_types": [
+          "post_list"
+        ],
+        "swipes": 1,
+        "note": "圈子／帖子列表；六栏终点（不含我的）"
+      },
+      {
+        "label": "我的",
+        "aliases": [
+          "我的",
+          "个人中心",
+          "個人中心",
+          "profile"
+        ],
+        "slot_index": 6,
+        "action": "forbid",
+        "click": false,
+        "page_types": [
+          "profile"
+        ],
+        "note": "第七格存在但本轮禁止点击；未登录常为门禁"
+      }
+    ],
+    "rules": [
+      "每帧只提升课纲下一未访栏，禁止一次塞满导致乱序",
+      "严格顺序：首页→精选→片库→直播→AI科技→圈子",
+      "禁止点「我的」／充值提交／下载／安装／登录提交／发帖提交",
+      "每栏最多下滑1次，优先切栏与进详情；画面不变即换栏",
+      "从详情返回后必须继续未完成底栏，禁止只卡在浮层关层空转",
+      "禁止未关完弹窗就切底栏",
+      "切栏后若再出中间弹窗，仅关中央偏下白圆X"
+    ],
+    "note": "qa-c 实采底栏七格：首页→精选→片库→直播→AI科技→圈子→我的；硬覆盖前六栏，禁止我的。"
+  },
+  "forbid_global": [
+    "点广告本体",
+    "点「我的」",
+    "充值提交",
+    "下载",
+    "安装",
+    "登录提交",
+    "发帖提交",
+    "系统BACK代关弹层",
+    "外链取证无限轮"
+  ],
+  "collection": {
+    "device_slot": "qa-c",
+    "adb_endpoint": "172.104.172.119:30907",
+    "collected_at": "2026-09-15T02:45:00Z",
+    "wm_override": {
+      "width": 1080,
+      "height": 2280
+    },
+    "wm_physical": {
+      "width": 1440,
+      "height": 3040
+    },
+    "evidence_dir": "F:\\\\aliothapp\\\\.tmp_hlapp_uitree_collect",
+    "note": "qa-c 实机安装 hlapp_1.8.9；年龄门／开屏跳过取自 uiautomator dump；系统公告 X／底栏七格取自截图像素量测（WebView 忙时 dump idle 失败）。"
+  },
+  "home_top_category_tabs": {
+    "phase": "home",
+    "page_types": [
+      "home"
+    ],
+    "must_screenshot_before_action": true,
+    "bounds": {
+      "min_top": 0.105,
+      "max_bottom": 0.155,
+      "note": "logo／搜索下方横向分类；qa-c 1080x2280 观测"
+    },
+    "layout": {
+      "slot_count": 6,
+      "y_center": 0.13,
+      "slot_height": 0.04,
+      "horizontal_pad": 0.02,
+      "usable_right": 0.92,
+      "click_width_ratio": 0.55,
+      "note": "观测：首页／热门吃瓜／反差女神／今日看料／禁播动漫／网赚（可横滑更多）"
+    },
+    "ordered_tabs": [
+      {
+        "label": "首页",
+        "aliases": [
+          "首页",
+          "首頁",
+          "home"
+        ],
+        "slot_index": 0,
+        "click": true
+      },
+      {
+        "label": "热门吃瓜",
+        "aliases": [
+          "热门吃瓜",
+          "熱門吃瓜"
+        ],
+        "slot_index": 1,
+        "click": true
+      },
+      {
+        "label": "反差女神",
+        "aliases": [
+          "反差女神"
+        ],
+        "slot_index": 2,
+        "click": true
+      },
+      {
+        "label": "今日看料",
+        "aliases": [
+          "今日看料"
+        ],
+        "slot_index": 3,
+        "click": true
+      },
+      {
+        "label": "禁播动漫",
+        "aliases": [
+          "禁播动漫",
+          "禁播動漫"
+        ],
+        "slot_index": 4,
+        "click": true
+      },
+      {
+        "label": "网赚",
+        "aliases": [
+          "网赚",
+          "網賺"
+        ],
+        "slot_index": 5,
+        "click": true
+      }
+    ],
+    "action": "tap_then_screenshot",
+    "after_all_visited": "bottom_tabs",
+    "note": "主页上方分类按序点并截图；完成后再切底栏。弹窗未清禁止点分类。"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "spreadsheet_id": "1NqpIamgatg4aMb6HE7I4Pxbu7XUgUPtzarxDf4zr8Sk",
+  "spreadsheet_url": "https://docs.google.com/spreadsheets/d/1NqpIamgatg4aMb6HE7I4Pxbu7XUgUPtzarxDf4zr8Sk/edit",
+  "sheet": "玉衡10月",
+  "sheet_id": 1678407108,
+  "changed_range": "D109",
+  "value": "按上周第4版规范补共享判定、写回和旧规则回归；仅消费现有正式原件，不改三端探索、动作规划和采集。\n10/19进展：已接目录、规程冻结、正式输入与原件核验；新增32完整同级导航等宽分项判读、S35既有H5本地展示动作的有限正确响应判读。失败与其他缺证并存时保留失败并入实际复核；未知新合同混批不影响旧规则。\n本轮综合66个唯一测试文件，1033项通过、3个下线Demo跳过；含受控浏览器、真实PG和旧规则回归。未提交、未推送、未发布或启用新规则，不代表三端产品验收。\n剩余：102受控政策/范围/广告排除及独立判读，App41承接身份，S72/S49/S73模块请求和业务过程，62广告正片完整过程，32文字边界/初始状态/真实横滚及S35其余义务。材料清单已分项列明；端侧材料由App星语、H5天枢、Web青云客交付，共享判读仍由立川维护。",
+  "owner": "立川",
+  "status": "进行中",
+  "readback_verified": true,
+  "formatting_preserved": true,
+  "wrap": "WRAP",
+  "visual_verification": "API样式核对；保留原紧凑行高，未做浏览器目视验收",
+  "other_cells_changed": false
+}

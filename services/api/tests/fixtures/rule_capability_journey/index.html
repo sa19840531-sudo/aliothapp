@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>玉衡能力验证首页</title>
+    <style>
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background: #f5f7fb;
+        color: #172033;
+        font-family: Arial, "Microsoft YaHei", sans-serif;
+      }
+      header, main, footer { max-width: 960px; margin: auto; padding: 20px; }
+      nav { display: flex; gap: 18px; align-items: center; }
+      a, button { min-width: 44px; min-height: 44px; }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+      }
+      .card {
+        min-height: 180px;
+        padding: 18px;
+        border: 1px solid #d8deea;
+        border-radius: 12px;
+        background: white;
+      }
+      .cover {
+        display: block;
+        width: 240px;
+        height: 135px;
+        object-fit: contain;
+        background: #e9eef8;
+      }
+      .price del { color: #7b8496; margin-left: 10px; }
+      .overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 100;
+        display: grid;
+        place-items: center;
+        background: rgb(8 15 28 / 70%);
+      }
+      .dialog {
+        position: relative;
+        width: min(420px, calc(100vw - 40px));
+        padding: 28px;
+        border-radius: 14px;
+        background: white;
+        box-shadow: 0 18px 70px rgb(0 0 0 / 35%);
+      }
+      .dialog-close {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: 44px;
+        height: 44px;
+      }
+      .status { color: #087f5b; }
+      @media (max-width: 640px) {
+        .grid { grid-template-columns: 1fr; }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav aria-label="主导航">
+        <strong>玉衡测试产品</strong>
+        <a href="./detail.html">内容详情</a>
+        <a href="https://example.com/" target="_blank" rel="noopener noreferrer">外部帮助</a>
+        <button id="logout" type="button">退出登录</button>
+      </nav>
+    </header>
+    <main>
+      <h1>推荐内容</h1>
+      <p class="status">页面加载正常，所有模块均已完整展示。</p>
+      <section class="grid" aria-label="内容模块">
+        <article class="card">
+          <h2>高清封面</h2>
+          <img
+            class="cover"
+            alt="几何比例正常的测试封面"
+            src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='640' height='360'%3E%3Crect width='640' height='360' fill='%233f66d5'/%3E%3Ctext x='320' y='190' fill='white' font-size='42' text-anchor='middle'%3EAlioth QA%3C/text%3E%3C/svg%3E"
+          />
+        </article>
+        <article class="card price">
+          <h2>会员套餐</h2>
+          <p>优惠价 ¥8.8 <del>原价 ¥10</del></p>
+          <button id="favorite" type="button" aria-pressed="false">收藏</button>
+          <span id="favorite-state">未收藏</span>
+        </article>
+        <article class="card">
+          <h2>上传要求</h2>
+          <p>支持 PNG、JPG 格式，文件大小不超过 5MB。</p>
+          <input type="file" accept=".png,.jpg,.jpeg" aria-label="上传封面" />
+        </article>
+        <article class="card">
+          <h2>播放预览</h2>
+          <video controls muted width="320" height="180"></video>
+          <button id="fullscreen" type="button">全屏播放</button>
+        </article>
+      </section>
+    </main>
+    <footer>测试页面仅用于自动化质检能力验证，不执行真实交易。</footer>
+
+    <div class="overlay" id="ad-overlay">
+      <section class="dialog" role="dialog" aria-modal="true" aria-label="广告弹窗测试">
+        <button class="dialog-close" id="ad-close" type="button" aria-label="关闭广告">×</button>
+        <h2>广告弹窗测试</h2>
+        <p>这是可安全关闭的本地验证弹窗。</p>
+        <p class="countdown" id="countdown">3 秒后可继续</p>
+      </section>
+    </div>
+
+    <script>
+      const overlay = document.querySelector('#ad-overlay')
+      const closeOverlay = () => overlay?.remove()
+      document.querySelector('#ad-close')?.addEventListener('click', closeOverlay)
+      overlay?.addEventListener('click', (event) => {
+        if (event.target === overlay) closeOverlay()
+      })
+
+      let seconds = 3
+      const timer = window.setInterval(() => {
+        seconds -= 1
+        const countdown = document.querySelector('#countdown')
+        if (countdown) countdown.textContent = `${Math.max(seconds, 0)} 秒后可继续`
+        if (seconds <= 0) window.clearInterval(timer)
+      }, 1000)
+
+      document.querySelector('#favorite')?.addEventListener('click', (event) => {
+        const button = event.currentTarget
+        const pressed = button.getAttribute('aria-pressed') !== 'true'
+        button.setAttribute('aria-pressed', String(pressed))
+        document.querySelector('#favorite-state').textContent = pressed ? '已收藏' : '未收藏'
+      })
+
+      document.querySelector('#fullscreen')?.addEventListener('click', async () => {
+        const video = document.querySelector('video')
+        if (video?.requestFullscreen) await video.requestFullscreen()
+      })
+    </script>
+  </body>
+</html>

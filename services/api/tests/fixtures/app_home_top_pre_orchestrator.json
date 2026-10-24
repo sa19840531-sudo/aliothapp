@@ -1,0 +1,247 @@
+{
+  "schema_version": "app-ui-tree-features.v1",
+  "playbook_id": "frozen_home_top_regression",
+  "home_top_category_tabs": {
+    "phase": "home",
+    "page_types": [
+      "home"
+    ],
+    "must_screenshot_before_action": true,
+    "bounds": {
+      "min_top": 0.11,
+      "max_bottom": 0.165,
+      "note": "搜索栏／状态栏下方横向文字分类；禁止点到搜索框（y过小）或圆图标行（y过大）"
+    },
+    "layout": {
+      "slot_count": 7,
+      "y_center": 0.135,
+      "slot_height": 0.04,
+      "horizontal_pad": 0.015,
+      "usable_right": 0.995,
+      "click_width_ratio": 0.55,
+      "note": "现窗七格：最新／精选短剧／推荐／国产／乱伦综／动漫／漫画。精选短剧是产品新增栏，只占槽位，不是课纲。点击只用槽位中心，避免点缝。"
+    },
+    "ordered_tabs": [
+      {
+        "label": "最新",
+        "aliases": [
+          "最新"
+        ],
+        "slot_index": 0,
+        "click": true
+      },
+      {
+        "label": "精选短剧",
+        "aliases": [
+          "精选短剧",
+          "精選短劇"
+        ],
+        "slot_index": 1,
+        "click": false,
+        "note": "产品新增栏，视觉会与旧课纲截图不一致；课纲不点、不取证"
+      },
+      {
+        "label": "推荐",
+        "aliases": [
+          "推荐",
+          "推薦"
+        ],
+        "slot_index": 2,
+        "click": false,
+        "note": "默认栏，课纲不再点此栏"
+      },
+      {
+        "label": "国产",
+        "aliases": [
+          "国产",
+          "國產"
+        ],
+        "slot_index": 3,
+        "click": true
+      },
+      {
+        "label": "动漫",
+        "aliases": [
+          "动漫",
+          "動漫"
+        ],
+        "slot_index": 5,
+        "click": true
+      },
+      {
+        "label": "漫画",
+        "aliases": [
+          "漫画",
+          "漫畫"
+        ],
+        "slot_index": 6,
+        "click": true,
+        "sample_match_texts": [
+          "3D漫画",
+          "3D漫畫",
+          "[3D漫画]",
+          "[3D漫畫]"
+        ],
+        "sample_target_bounds": {
+          "left": 0.33,
+          "top": 0.66,
+          "right": 0.52,
+          "bottom": 0.86
+        },
+        "sample_note": "漫画栏须按底栏同款视觉像素点红框「[3D漫画]」列表项进入第二屏截图取证，BACK 回主页后再切底栏；禁止点乱伦／日本AV／抢购。"
+      }
+    ],
+    "skip_labels": [
+      "精选短剧",
+      "精選短劇",
+      "推荐",
+      "推薦",
+      "乱伦",
+      "亂倫",
+      "乱伦综",
+      "亂倫綜",
+      "日本AV",
+      "日本av",
+      "欧美",
+      "歐美",
+      "制服",
+      "OnlyFans",
+      "onlyfans",
+      "Only Fans",
+      "华语原创",
+      "華語原創",
+      "三级片",
+      "三級片"
+    ],
+    "sample_first_entry": true,
+    "first_card": {
+      "normalized_bounds": {
+        "left": 0.03,
+        "top": 0.52,
+        "right": 0.48,
+        "bottom": 0.74
+      },
+      "note": "推荐／乱伦综现窗多了分类豆，视频卡在热门推荐下方；避开上方栏、分类豆、热门筛与底栏"
+    },
+    "evidence_page_types": [
+      "payment",
+      "video_detail",
+      "content_detail"
+    ],
+    "after_evidence": "back",
+    "mark_visited_after": "sample_back_home",
+    "action": "tap_tab_then_first_card_evidence_then_back",
+    "after_all_visited": "bottom_tabs",
+    "note": "主页上方分类：现窗多了精选短剧，默认也可能停在精选短剧；课纲仍只点最新→国产→动漫→漫画，不点精选短剧／推荐／乱伦综。每栏点开后须点列表进入第二屏截图取证，立即 BACK 回主页才记该栏已访；漫画栏须点红框「[3D漫画]」；全部上方栏取证完成后再切底栏短剧。"
+  },
+  "bottom_navigation": {
+    "phase": "bottom_tabs",
+    "match_fields": [
+      "semantic_target",
+      "metadata.content_desc",
+      "metadata.text",
+      "metadata.label",
+      "metadata.resource_id",
+      "metadata.ui_tree_text",
+      "metadata.accessibility_text"
+    ],
+    "bounds": {
+      "min_top": 0.78,
+      "max_bottom": 1.02
+    },
+    "discovery_sources": [
+      "ui_tree",
+      "accessibility",
+      "vision",
+      "promoted_coverage",
+      "promoted_bottom_nav"
+    ],
+    "visual_pixel_priority": true,
+    "visual_band": {
+      "min_top": 0.84,
+      "max_bottom": 0.955,
+      "note": "同帧像素槽优先于 a11y／Vision；触控中心勿落入手势带"
+    },
+    "ordered_tabs": [
+      {
+        "label": "主页",
+        "aliases": [
+          "主页",
+          "首页",
+          "首頁",
+          "顶部",
+          "頂部"
+        ],
+        "action": "screenshot_only",
+        "click": false,
+        "note": "落地只截不点；UI 文案偶发「顶部」"
+      },
+      {
+        "label": "短剧",
+        "aliases": [
+          "短剧",
+          "短劇",
+          "视频",
+          "視頻"
+        ],
+        "action": "tap_then_playback_then_top_left_exit",
+        "click": true,
+        "note": "点击短剧进入播放器；约等4分钟（或见解锁层/结束态）后点左上角CLICK返回（禁止系统BACK）；满3次仍停播放器则切下一栏暗网",
+        "playback": {
+          "ref": "ui_tree_features.short_drama"
+        }
+      },
+      {
+        "label": "暗网",
+        "aliases": [
+          "暗网",
+          "暗網"
+        ],
+        "action": "tap_then_screenshot",
+        "click": true,
+        "note": "点击暗网并截图后立刻下一栏"
+      },
+      {
+        "label": "AI",
+        "aliases": [
+          "AI",
+          "ai",
+          "Ai"
+        ],
+        "action": "tap_then_screenshot",
+        "click": true,
+        "note": "点击 AI 并截图后立刻下一栏"
+      },
+      {
+        "label": "社区",
+        "aliases": [
+          "社区",
+          "社區"
+        ],
+        "action": "tap_then_screenshot",
+        "click": true,
+        "note": "点击社区并截图后立刻下一栏"
+      },
+      {
+        "label": "我的",
+        "aliases": [
+          "我的",
+          "个人中心",
+          "個人中心"
+        ],
+        "action": "tap_then_screenshot",
+        "click": true,
+        "note": "点击我的并截图；若出账号凭证弹层须先点蓝色「保存凭证」再留证；六栏终点"
+      }
+    ],
+    "rules": [
+      "每帧只提升课纲下一未访栏，禁止一次塞满导致先点我的",
+      "主页只截不点",
+      "落点优先级：同帧视觉像素底栏 → a11y → Vision（抬升出手势带）→ 源水平槽安全合成",
+      "下一栏本帧未见：OBSERVE 等真实像素／UI Tree／a11y，禁止无截图证据的插值猜点／跳点后续可见栏",
+      "禁止未关完弹窗就切底栏",
+      "禁止点内容卡进详情"
+    ],
+    "note": "录屏底栏顺序：主页(只截)→短剧→暗网→AI→社区→我的；匹配只走 _filter_tabs_to_next_playbook_only；点栏须视觉像素优先。"
+  }
+}

@@ -1,0 +1,47 @@
+[
+  {
+    "schema_version": "journey-dsl.v2",
+    "definition_id": "h5-player-pause-observation",
+    "version": 1,
+    "name": "H5 暂停后连续呈现帧观测",
+    "surface_kinds": ["web"],
+    "checkpoints": [
+      {
+        "id": "pause",
+        "entry_condition": {"player_visible": true, "media_ready": true, "playing": true},
+        "expected": {"paused": true, "media_time_stopped": true},
+        "evidence_requirements": [
+          {"role": "baseline", "artifact_types": ["screenshot", "dom"], "capture_phase": "before_action"},
+          {"role": "pause_receipt", "artifact_types": ["dom", "action_receipt"]},
+          {"role": "presented_frames", "artifact_types": ["screenshot", "media_state"], "minimum_count": 2}
+        ],
+        "depends_on": [],
+        "exit_condition": {"stable_frame": true, "loaded_frame": true, "observation_complete": true},
+        "recovery_policy": "same_session",
+        "side_effect_policy": "read_only"
+      }
+    ]
+  },
+  {
+    "schema_version": "journey-dsl.v2",
+    "definition_id": "h5-payment-display-selection",
+    "version": 1,
+    "name": "H5 套餐只读展示反馈",
+    "surface_kinds": ["web"],
+    "checkpoints": [
+      {
+        "id": "select_plan",
+        "entry_condition": {"payment_display_visible": true},
+        "expected": {"payment_plan_selected": true},
+        "evidence_requirements": [
+          {"role": "baseline", "artifact_types": ["screenshot", "dom"], "capture_phase": "before_action"},
+          {"role": "selected_plan", "artifact_types": ["screenshot", "dom", "action_receipt"]}
+        ],
+        "depends_on": [],
+        "exit_condition": {"observation_complete": true},
+        "recovery_policy": "same_session",
+        "side_effect_policy": "read_only"
+      }
+    ]
+  }
+]

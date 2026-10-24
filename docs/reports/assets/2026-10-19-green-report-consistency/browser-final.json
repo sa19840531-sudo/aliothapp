@@ -1,0 +1,397 @@
+{
+  "config": {
+    "argv": [
+      "C:\\nvm4w\\nodejs\\node.exe",
+      "D:\\xm\\TYZX\\alioth\\tests\\frontend-e2e\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--project=workstation-chromium",
+      "green-report-consistency.spec.ts",
+      "report-audit-evidence.spec.ts",
+      "authenticated-report.spec.ts",
+      "green-rule-results.spec.ts",
+      "--workers=1",
+      "--reporter=json"
+    ],
+    "configFile": "D:\\xm\\TYZX\\alioth\\tests\\frontend-e2e\\playwright.config.ts",
+    "rootDir": "D:/xm/TYZX/alioth/tests/frontend-e2e/specs",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/xm/TYZX/alioth/tests/frontend-e2e/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "workstation-chromium",
+        "name": "workstation-chromium",
+        "testDir": "D:/xm/TYZX/alioth/tests/frontend-e2e/specs",
+        "testIgnore": [],
+        "testMatch": [
+          "/workstation\\/.*\\.spec\\.ts/"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "D:/xm/TYZX/alioth/tests/frontend-e2e/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "admin-chromium",
+        "name": "admin-chromium",
+        "testDir": "D:/xm/TYZX/alioth/tests/frontend-e2e/specs",
+        "testIgnore": [],
+        "testMatch": [
+          "/admin\\/.*\\.spec\\.ts/"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.62.1",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "workstation\\authenticated-report.spec.ts",
+      "file": "workstation/authenticated-report.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "报告说明与规则清单、执行缺口、间距和截图实际缩放",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "workstation-chromium",
+              "projectName": "workstation-chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2199,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-19T10:52:03.400Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "1666ec76874776f313a2-f49d9646329111f1828b",
+          "file": "workstation/authenticated-report.spec.ts",
+          "line": 4,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "workstation\\green-report-consistency.spec.ts",
+      "file": "workstation/green-report-consistency.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "明确模拟未封存绿色报告1280：缺证、当前复核、失联撤图及导出阻断",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "workstation-chromium",
+              "projectName": "workstation-chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 6456,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-19T10:52:05.721Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9c681ae1970e0fac664c-c4eddcb07055611d5fd3",
+          "file": "workstation/green-report-consistency.spec.ts",
+          "line": 129,
+          "column": 3
+        },
+        {
+          "title": "明确模拟已封存报告1280：旧结论、统计与原图保持原展示",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "workstation-chromium",
+              "projectName": "workstation-chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1442,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-19T10:52:12.183Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9c681ae1970e0fac664c-b444b42f59c342abb594",
+          "file": "workstation/green-report-consistency.spec.ts",
+          "line": 173,
+          "column": 3
+        },
+        {
+          "title": "明确模拟未封存绿色报告390：缺证、当前复核、失联撤图及导出阻断",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "workstation-chromium",
+              "projectName": "workstation-chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 6614,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-19T10:52:13.630Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9c681ae1970e0fac664c-29e221f361b0bc8d2e32",
+          "file": "workstation/green-report-consistency.spec.ts",
+          "line": 129,
+          "column": 3
+        },
+        {
+          "title": "明确模拟已封存报告390：旧结论、统计与原图保持原展示",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "workstation-chromium",
+              "projectName": "workstation-chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1406,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-19T10:52:20.251Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9c681ae1970e0fac664c-f1fd539371feddb90ec7",
+          "file": "workstation/green-report-consistency.spec.ts",
+          "line": 173,
+          "column": 3
+        }
+      ]
+    },
+    {
+      "title": "workstation\\green-rule-results.spec.ts",
+      "file": "workstation/green-rule-results.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "绿色分项1280：页面32、整体S35、缺证复核及精确原图",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "workstation-chromium",
+              "projectName": "workstation-chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4198,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-19T10:52:21.675Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "46b15c9b8602fbf5ce15-7a6f98ef84be41db7e25",
+          "file": "workstation/green-rule-results.spec.ts",
+          "line": 53,
+          "column": 3
+        },
+        {
+          "title": "绿色分项390：页面32、整体S35、缺证复核及精确原图",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "workstation-chromium",
+              "projectName": "workstation-chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3878,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-19T10:52:25.879Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "46b15c9b8602fbf5ce15-6298abda1d7546ab0df4",
+          "file": "workstation/green-rule-results.spec.ts",
+          "line": 53,
+          "column": 3
+        }
+      ]
+    },
+    {
+      "title": "workstation\\report-audit-evidence.spec.ts",
+      "file": "workstation/report-audit-evidence.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "模拟报告显示人工审计与原引用多证据，不把缺失材料或未执行补成结果",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "workstation-chromium",
+              "projectName": "workstation-chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 915,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-19T10:52:29.782Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "adeb4fe012a2a4be6ae9-8c7c5ff2e29390e9d658",
+          "file": "workstation/report-audit-evidence.spec.ts",
+          "line": 4,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-19T10:52:02.071Z",
+    "duration": 28907.670000000002,
+    "expected": 8,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

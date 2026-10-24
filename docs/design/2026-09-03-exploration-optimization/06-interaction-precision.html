@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="复合动作 · 弹窗关闭 · 外跳恢复；Alioth 七项探索优化专项设计。包含组件图、时序图、判断流程、算法、并发恢复与技术验收，不展开数据库表或具体数据结构。">
+  <meta name="color-scheme" content="light">
+  <title>专项六：交互精准度、弹窗处理与外跳恢复设计 · Alioth</title>
+  <style>
+:root { --accent: #b45a1b; --ink: #192b34; --muted: #526772; --line: #dfe6e8; --paper: #fff; --wash: #f3f6f7; color-scheme: light; }
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 24px; }
+body { margin: 0; color: var(--ink); background: var(--wash); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; -webkit-font-smoothing: antialiased; }
+a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+a:hover { text-decoration-thickness: 2px; }
+a:focus-visible, [tabindex]:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; }
+.skip { position: fixed; left: 16px; top: -100px; padding: 12px 18px; background: var(--paper); border: 2px solid var(--accent); z-index: 10; }
+.skip:focus { top: 12px; }
+.topbar { background: var(--paper); border-top: 5px solid var(--accent); border-bottom: 1px solid var(--line); }
+.topbar-inner { max-width: 1460px; margin: auto; padding: 22px 32px; display: flex; align-items: center; justify-content: space-between; gap: 18px; }
+.brand { text-decoration: none; color: var(--ink); display: flex; align-items: center; gap: 13px; }
+.brand-mark { width: 39px; height: 39px; background: var(--accent); color: #fff; display: grid; place-items: center; font-weight: 750; border-radius: 11px; }
+.brand strong { display: block; font-size: 16px; letter-spacing: .11em; }
+.brand small { display: block; color: var(--muted); font-size: 12px; margin-top: 4px; letter-spacing: .02em; }
+.top-meta { text-align: right; font-size: 12px; color: var(--muted); line-height: 1.8; }
+.layout { max-width: 1460px; margin: 30px auto 50px; padding: 0 32px; display: grid; grid-template-columns: 242px minmax(0, 1fr); gap: 30px; align-items: start; }
+.rail { position: sticky; top: 24px; max-height: calc(100vh - 48px); overflow-y: auto; padding: 4px 10px 12px 0; scrollbar-width: thin; }
+.rail-label { margin: 0 0 12px; font-size: 11px; font-weight: 750; letter-spacing: .13em; color: var(--muted); }
+.series { display: grid; gap: 4px; }
+.series-link { display: flex; gap: 12px; align-items: center; padding: 10px 12px; border: 1px solid transparent; border-radius: 9px; text-decoration: none; color: var(--muted); font-size: 13px; line-height: 1.35; }
+.series-link:hover { background: #e8eef0; text-decoration: none; }
+.series-link.active { background: var(--paper); border-color: var(--line); color: var(--accent); font-weight: 700; box-shadow: 0 3px 9px #20303a06; }
+.series-no { font-size: 11px; font-variant-numeric: tabular-nums; letter-spacing: .08em; opacity: .8; }
+.toc { margin-top: 26px; padding-top: 20px; border-top: 1px solid var(--line); display: grid; }
+.toc a { display: block; font-size: 12px; line-height: 1.55; color: var(--muted); padding: 6px 8px; text-decoration: none; border-left: 2px solid transparent; }
+.toc a:hover { border-left-color: var(--accent); color: var(--accent); background: #fff8; }
+.rail-note { margin: 20px 8px 0; color: var(--muted); font-size: 11px; line-height: 1.8; }
+.main-column { min-width: 0; }
+.doc-toolbar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 15px; padding: 0 3px; font-size: 12px; line-height: 1.5; color: var(--muted); }
+.breadcrumb { display: flex; flex-wrap: wrap; gap: 9px; align-items: center; }
+.breadcrumb a { text-decoration: none; }
+.toolbar-links { display: flex; gap: 17px; }
+.doc-paper { background: var(--paper); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; box-shadow: 0 12px 40px #152b3810; }
+.document-banner { border-bottom: 1px solid var(--line); padding: 21px 46px; display: flex; align-items: center; gap: 14px; background: linear-gradient(105deg, #f8fbfb, #fff); }
+.document-number { color: var(--accent); font-size: 30px; font-weight: 730; line-height: 1; letter-spacing: -.04em; font-variant-numeric: tabular-nums; }
+.document-kicker { font-size: 11px; letter-spacing: .13em; font-weight: 700; color: var(--accent); line-height: 1.7; }
+.document-subtitle { color: var(--muted); font-size: 12px; line-height: 1.7; margin-top: 2px; }
+.document-body { padding: 35px 46px 48px; font-size: 15px; line-height: 1.95; overflow-wrap: anywhere; }
+.document-body h1 { margin: 0 0 23px; font-size: clamp(26px, 2.5vw, 37px); line-height: 1.43; letter-spacing: -.025em; font-weight: 740; max-width: 950px; }
+.document-body h2 { font-size: 23px; line-height: 1.55; margin: 50px 0 18px; padding-top: 24px; border-top: 1px solid var(--line); color: var(--ink); letter-spacing: -.02em; }
+.document-body h3 { margin: 30px 0 12px; font-size: 18px; line-height: 1.65; color: var(--accent); }
+.document-body h4 { margin: 24px 0 10px; font-size: 16px; }
+.document-body h1, .document-body h2, .document-body h3 { scroll-margin-top: 24px; }
+.document-body p { margin: 0 0 16px; }
+.document-body blockquote { margin: 22px 0; padding: 17px 20px; border-left: 3px solid var(--accent); background: #f3f7f8; border-radius: 0 10px 10px 0; color: #3c5561; font-size: 14px; line-height: 1.85; }
+.document-body blockquote p { margin: 0 0 8px; }
+.document-body blockquote p:last-child { margin-bottom: 0; }
+.document-body h1 + blockquote { margin-bottom: 30px; }
+.document-body strong { font-weight: 680; color: #223e4b; }
+.document-body ul, .document-body ol { margin: 12px 0 22px; padding-left: 24px; }
+.document-body li { padding-left: 3px; margin: 7px 0; }
+.document-body li > p { margin-bottom: 7px; }
+.document-body code { padding: .1em .33em; border-radius: 4px; background: #edf2f4; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .86em; overflow-wrap: anywhere; }
+.document-body a code { background: none; padding: 0; }
+.document-body pre { padding: 20px; border: 1px solid var(--line); border-radius: 10px; overflow: auto; background: #f5f8f9; line-height: 1.7; white-space: pre-wrap; }
+.document-body pre code { padding: 0; background: none; }
+.document-body hr { border: 0; border-top: 1px solid var(--line); margin: 30px 0; }
+.table-scroll { overflow-x: auto; margin: 20px 0 25px; border: 1px solid var(--line); border-radius: 10px; background: #fff; scrollbar-width: thin; }
+table { width: 100%; min-width: 590px; border-collapse: collapse; text-align: left; font-size: 13px; line-height: 1.8; }
+thead { background: #ecf2f4; }
+th { padding: 13px 14px; font-weight: 680; color: #274350; vertical-align: top; border-bottom: 1px solid var(--line); }
+td { padding: 13px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+tr:last-child td { border-bottom: 0; }
+tbody tr:nth-child(even) { background: #f9fbfc; }
+tbody tr:hover { background: #f0f6f7; }
+td:first-child { font-weight: 530; }
+td p { margin: 0; }
+.doc-footer { margin-top: 22px; display: grid; grid-template-columns: 1fr auto 1fr; gap: 14px; padding: 20px 4px; border-top: 1px solid var(--line); }
+.doc-footer a { font-size: 13px; line-height: 1.65; text-decoration: none; }
+.doc-footer span { display: block; font-size: 11px; color: var(--muted); margin-bottom: 3px; }
+.doc-footer .next { text-align: right; }
+.doc-footer .back-top { text-align: center; }
+.page-note { text-align: center; color: var(--muted); font-size: 11px; line-height: 1.9; margin: 12px 0 20px; }
+@media (min-width: 1600px) { .document-body { font-size: 16px; } }
+@media (max-width: 1100px) { .layout { gap: 21px; grid-template-columns: 205px minmax(0, 1fr); padding: 0 22px; } .document-body { padding: 30px 30px 40px; } .document-banner { padding: 19px 30px; } }
+@media (max-width: 800px) { .topbar-inner { padding: 18px 20px; } .top-meta { font-size: 11px; } .layout { display: block; padding: 0 16px; margin-top: 19px; } .rail { position: static; max-height: none; overflow: visible; padding: 0; margin-bottom: 23px; } .series { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 5px; } .series-link { padding: 10px 8px; gap: 6px; font-size: 12px; border-color: var(--line); } .toc { margin-top: 15px; padding-top: 12px; grid-template-columns: repeat(2, minmax(0, 1fr)); max-height: 188px; overflow-y: auto; } .toc .rail-label { grid-column: 1/-1; margin-bottom: 5px; } .toc a { padding: 5px 7px; font-size: 11px; } .rail-note { display: none; } .doc-paper { border-radius: 12px; } .document-body { padding: 25px 24px 34px; } .document-banner { padding: 18px 24px; } .document-body h2 { font-size: 21px; margin-top: 38px; } }
+@media (max-width: 480px) { .top-meta { display: none; } .series { grid-template-columns: repeat(2, minmax(0, 1fr)); } .document-body { padding: 22px 18px 30px; font-size: 14px; } .document-banner { padding: 17px 18px; } .document-body h1 { font-size: 27px; } .document-body h2 { font-size: 20px; } .document-body h3 { font-size: 17px; } .doc-footer { gap: 10px; } .doc-footer a { font-size: 12px; } .doc-toolbar { font-size: 11px; } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+@media print { @page { size: A4; margin: 17mm 14mm; } body { background: #fff; font-size: 10pt; } .skip, .topbar, .rail, .doc-toolbar, .doc-footer, .page-note { display: none !important; } .layout { display: block; margin: 0; padding: 0; max-width: none; } .doc-paper { box-shadow: none; border: 0; border-radius: 0; overflow: visible; } .document-banner { padding: 0 0 11pt; margin-bottom: 14pt; background: #fff; } .document-body { padding: 0; font-size: 10pt; line-height: 1.65; } .document-body h1 { font-size: 23pt; } .document-body h2 { font-size: 16pt; margin-top: 24pt; padding-top: 13pt; break-after: avoid; } .document-body h3 { font-size: 12pt; break-after: avoid; } .document-body p, .document-body li { orphans: 3; widows: 3; } .table-scroll { overflow: visible; border-radius: 0; break-inside: auto; margin: 12pt 0; } table { min-width: 0; table-layout: fixed; font-size: 8.3pt; line-height: 1.55; } th, td { padding: 7pt 6pt; overflow-wrap: anywhere; } thead { display: table-header-group; } tr { break-inside: avoid; } .document-body blockquote { border: 1px solid #c4d0d5; border-left: 3px solid var(--accent); break-inside: avoid; font-size: 9pt; padding: 9pt 12pt; } a { color: inherit; text-decoration: underline; } }
+
+
+.technical-entry { margin:0 0 26px; padding:17px 20px; background:#edf6f3; border:1px solid #bbd9d0; border-radius:10px; font-size:13px; line-height:1.8; }
+.technical-entry strong { display:block; margin-bottom:9px; color:#1e6459; }
+.technical-entry div { display:flex; flex-wrap:wrap; gap:7px 16px; }
+.technical-entry p { margin:9px 0 0; color:#526c73; font-size:12px; }
+.technical-diagram { margin:25px -18px 30px; border:1px solid #d4e0e5; border-radius:11px; overflow:hidden; background:#fff; }
+.technical-diagram figcaption { padding:17px 18px 6px; font-weight:680; font-size:16px; color:#244453; }
+.technical-diagram .technical-legend { padding:0 18px 12px; margin:0; color:#58717e; font-size:11px; line-height:1.8; }
+.technical-controls { display:flex; gap:9px 15px; align-items:center; flex-wrap:wrap; border-block:1px solid #dbe5e9; padding:10px 12px; background:#f4f8fa; }
+.technical-controls[hidden],.technical-detail[hidden] { display:none; }
+.technical-controls label { display:flex; align-items:center; gap:7px; font-size:12px; flex:1; min-width:190px; }
+.technical-controls label select { min-width:0; flex:1; max-width:340px; }
+.technical-controls > div { display:flex; align-items:center; gap:5px; }
+.technical-controls button,.technical-controls select { font-family:inherit; font-size:12px; line-height:1.5; color:#254552; background:#fff; border:1px solid #bfd0d8; border-radius:6px; min-height:36px; padding:6px 9px; }
+.technical-controls button { cursor:pointer; }
+.technical-controls button:disabled { opacity:0.4; cursor:default; }
+.technical-controls output { min-width:40px; text-align:center; color:#5a707d; font-size:11px; font-variant-numeric:tabular-nums; }
+.technical-controls :focus-visible { outline:3px solid #34958a; outline-offset:3px; }
+.technical-viewport { overflow:auto; max-height:720px; scrollbar-width:thin; overscroll-behavior:contain; background:#fbfcfd; }
+.technical-viewport canvas { display:block; max-width:none; cursor:pointer; touch-action:pan-x pan-y; }
+.technical-diagram .technical-hint { margin:0; padding:9px 16px; border-top:1px solid #dbe5e9; color:#657b86; font-size:11px; }
+.technical-detail { border-top:1px solid #dbe5e9; background:#edf5f6; padding:13px 17px; font-size:13px; }
+.technical-detail strong { display:block; margin-bottom:6px; }
+.technical-detail p { margin:0; }
+.technical-source { border-top:1px solid #dbe5e9; padding:0 17px 10px; font-size:12px; }
+.technical-source summary { padding:11px 0; color:var(--accent); cursor:pointer; font-weight:600; }
+.technical-source pre { font-size:11px; margin:10px 0; }
+.technical-source ol { margin-top:4px; }
+@media (max-width:640px) {
+  .technical-diagram { margin-inline:-9px; }
+  .technical-controls label { flex-basis:100%; }
+  .technical-controls > div { flex-wrap:wrap; }
+  .technical-controls button,.technical-controls select { min-height:44px; }
+  .technical-viewport { max-height:570px; }
+}
+@media print {
+  .technical-entry,.technical-controls,.technical-hint,.technical-detail { display:none !important; }
+  .technical-diagram { margin:15pt 0; break-inside:avoid; }
+  .technical-viewport { max-height:none; overflow:visible; }
+  .technical-viewport canvas { max-width:100%; max-height:232mm; width:auto !important; height:auto !important; margin:auto; }
+  .technical-source { font-size:8pt; }
+}
+</style>
+<noscript><style>.technical-viewport,.technical-hint{display:none}</style></noscript>
+</head>
+<body>
+  <a class="skip" href="#document-top">跳到正文</a>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">衡</span><span><strong>ALIOTH · 玉衡</strong><small>有限自主探索 / 七项专项设计</small></span></a>
+      <div class="top-meta">TECHNICAL DESIGN · 2026.09.04<br>设计评审稿 · 不代表已实现或验收</div>
+    </div>
+  </header>
+  <div class="layout">
+    <aside class="rail" aria-label="文档导航">
+      <p class="rail-label">全系列 / 07 TOPICS</p>
+      <nav class="series" aria-label="七项专项导航"><a class="series-link" href="index.html"><span class="series-no">00</span><span>总览与闭环</span></a>
+<a class="series-link" href="01-controlled-exploration.html"><span class="series-no">01</span><span>受控探索</span></a>
+<a class="series-link" href="02-page-state-graph.html"><span class="series-no">02</span><span>页面状态图</span></a>
+<a class="series-link" href="03-targeted-recapture.html"><span class="series-no">03</span><span>精准补采</span></a>
+<a class="series-link" href="04-page-recognition.html"><span class="series-no">04</span><span>页面识别</span></a>
+<a class="series-link" href="05-capture-readiness.html"><span class="series-no">05</span><span>截图时机</span></a>
+<a class="series-link active" href="06-interaction-precision.html" aria-current="page"><span class="series-no">06</span><span>精准交互</span></a>
+<a class="series-link" href="07-trusted-evidence.html"><span class="series-no">07</span><span>可信证据</span></a></nav>
+      <nav class="toc" aria-label="本篇章节目录"><p class="rail-label">本篇目录 / 20 SECTIONS</p><a href="#section-1">1. 决策摘要与边界</a>
+<a href="#section-2">2. 问题 → 机制 → 收益 → 指标</a>
+<a href="#section-3">3. 现有基础与模块改动</a>
+<a href="#section-4">4. 职责边界</a>
+<a href="#section-5">5. 核心方案</a>
+<a href="#section-6">6. 标准流程</a>
+<a href="#section-7">7. 异常闭环</a>
+<a href="#section-8">8. H5/App 差异</a>
+<a href="#section-9">9. 其他专项协作</a>
+<a href="#section-10">10. 工作台与排障</a>
+<a href="#section-11">11. 安全、审计与权限</a>
+<a href="#section-12">12. 分期、兼容与回滚</a>
+<a href="#section-13">13. 验收场景和指标</a>
+<a href="#section-14">14. 团队反馈及待冻结参数</a>
+<a href="#section-15">15. 技术职责与接入点</a>
+<a href="#section-16">16. 时序与交接条件</a>
+<a href="#section-17">17. 算法与判断流程</a>
+<a href="#section-18">18. 并发、幂等、超时与恢复</a>
+<a href="#section-19">19. 故障推演与技术验收</a>
+<a href="#section-20">20. 关联文档依据</a></nav>
+      <p class="rail-note">HTML 与 Markdown 正文一致。<br>离线 Canvas 技术图。无外部运行依赖。<br>浏览器查找可检索全文，打印可导出 PDF。</p>
+    </aside>
+    <main class="main-column">
+      <div class="doc-toolbar">
+        <div class="breadcrumb"><a href="index.html">设计文档集</a><span aria-hidden="true">/</span><span>精准交互</span></div>
+        <div class="toolbar-links"><a href="06-interaction-precision.md">Markdown 原稿</a><a href="../2026-09-02-bounded-exploration-optimization-solution.html">完整方案 v1.1</a></div>
+      </div>
+      <div class="doc-paper">
+        <div class="document-banner"><span class="document-number">06</span><div><div class="document-kicker">SPECIALIZED DESIGN / 方案与设计</div><div class="document-subtitle">复合动作 · 弹窗关闭 · 外跳恢复</div></div></div>
+        <article id="document-content" class="document-body" data-markdown-sha256="153c0ffb9a4ed57ebdb391a853064044d73beb311ae3bd2b5f3ff74b81845442">
+<aside class="technical-entry"><strong>v1.1 技术深化 · 三张设计图 + 五章实现机制</strong><div><a href="#section-15">组件与接入</a><a href="#section-16">技术时序</a><a href="#section-17">算法与判断</a><a href="#section-18">并发与恢复</a><a href="#section-19">故障推演</a></div><p>保留原有方案和反馈；新增实现评审细节，不展开表设计或具体字段。</p></aside>
+<h1 id="document-top">专项六：交互精准度、弹窗处理与外跳恢复设计</h1>
+<blockquote>
+<p>日期：2026-09-04
+版本：技术深化 v1.1
+状态：待评审、尚未实施
+适用范围：H5/Web 与 App 的点击、滑动、返回、外跳、坐标追溯、动作后观察和失败恢复。
+设计边界：本稿不定义表设计、字段清单、具体 API 或 API 载荷；只定义动作意图、运行时边界、证据角色、排障和验收。
+关联稿件：同目录的 <a href="01-controlled-exploration.html">受控探索</a>、<a href="02-page-state-graph.html">页面状态图</a>、<a href="03-targeted-recapture.html">精准补采</a>、<a href="04-page-recognition.html">页面识别</a>、<a href="05-capture-readiness.html">Capture Readiness</a>、<a href="07-trusted-evidence.html">可信证据</a>。</p>
+</blockquote>
+<h2 id="section-1">1. 决策摘要与边界</h2>
+<p>交互精准度的最小单位不是“发出了一个 tap/click”，而是“从已验证的当前状态，以可追溯的目标和坐标执行一个有界动作，并观察到符合意图的后置结果”。</p>
+<ol>
+<li>点击、滑动、返回和外跳都必须绑定当前 Capture epoch；页面、Overlay、Frame、Activity、窗口或坐标变换变化后旧目标立即失效。</li>
+<li>“先滑到位置再点”作为有界 InteractionPlan 实现：每一步都要经过风险、租约、预算、目标容器、观察和后置条件，禁止盲串命令。</li>
+<li>目标来源分为 DOM/AX locator、原生 UIA/语义节点、视觉框和程序派发；它们的可信边界不同，必须在证据中分开。</li>
+<li>真实输入要追溯原图、模型缩放、适用的 DPR/旋转/系统栏/insets/letterbox/Frame/窗口、当前滚动和 epoch；不适用的变换要明确注明，不为 Native 虚构 CSS、DPR 或 Frame；不能用归一化坐标替代变换校验。</li>
+<li>JS <code>click</code>、dispatch 或 force click 没有物理点时不编造坐标，也不能声称自然点击通过；既有受约束 fallback 同样属于诊断，不构成另一个自然例外。</li>
+<li>动作成功、页面发生变化、动作后置条件满足、可信目标状态到达必须分别结算，只有最后一项才能形成成功页面边。</li>
+<li>UI 动作是 saga，不是数据库原子事务。崩溃、超时或进程重启后副作用未知，先观察再决定，提交、支付、授权、安装不能自动重按。</li>
+</ol>
+<p>本稿不承诺点击命中率、页面覆盖率或反风控能力；UA、分辨率和输入设备配置只用于可复现兼容性，不用于绕过验证码或平台风控。</p>
+<h2 id="section-2">2. 问题 → 机制 → 收益 → 指标</h2>
+<div class="table-scroll" role="region" aria-label="设计对照表，可横向滚动" tabindex="0"><table>
+<thead>
+<tr>
+<th>问题</th>
+<th>机制</th>
+<th>预期收益</th>
+<th>观察指标</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>旧 selector/坐标在页面变化后误点</td>
+<td>epoch、指纹、实时可见性和 hit-test 复验</td>
+<td>降低过期目标和误触</td>
+<td>过期目标拦截率、误点率</td>
+</tr>
+<tr>
+<td>连续滚动后直接点旧位置</td>
+<td>每步 Capture、重新解析容器、重新绑定目标</td>
+<td>提高虚拟列表和懒加载命中</td>
+<td>复绑成功率、滚动后误点数</td>
+</tr>
+<tr>
+<td>CSS 坐标、截图像素和设备坐标混用</td>
+<td>固定坐标空间与变换链，变换不明即拒绝</td>
+<td>提高跨 DPR/旋转/letterbox 一致性</td>
+<td>坐标拒绝率、命中偏差</td>
+</tr>
+<tr>
+<td>关闭控件、取消、支付确认语义混淆</td>
+<td>Overlay 分类、风险语义和动作后置分离</td>
+<td>防止危险动作被包装成关闭</td>
+<td>危险语义拦截率、关闭闭环率</td>
+</tr>
+<tr>
+<td>外跳后源页丢失或重复清障</td>
+<td>source/landing/return 三段观察与循环熔断</td>
+<td>保留失败事实并减少重复副作用</td>
+<td>外跳回源成功率、循环终止率</td>
+</tr>
+<tr>
+<td>命令送达但没有业务效果</td>
+<td>Receipt、effect、postcondition、arrival 四层结算</td>
+<td>不把 command success 当页面通过</td>
+<td>无效果误判率、后置证明率</td>
+</tr>
+</tbody></table></div>
+<p>这些指标只用于验证动作链改进，不替代 Completion Gate 的同一 Run/Epoch、覆盖、证据充分性、规则和资源收口判断。</p>
+<h2 id="section-3">3. 现有基础与模块改动</h2>
+<h3 id="section-3-1">3.1 H5/Web 现有基础</h3>
+<ul>
+<li><a href="../../../services/api/app/infrastructure/browser/page_capture.py">现有页面采集入口</a> 已衔接动作触发、目标定位和视觉观察上下文；后续在既有能力上收敛受控动作计划，不另开任意参数或执行通道。</li>
+<li>点击前后的导航、弹窗、转场和新页观察已在 <a href="../../../services/api/app/infrastructure/browser/page_capture.py"><code>_capture_on_page_impl</code></a> 串联；动作后仍需接入统一 Receipt/effect/postcondition 语义。</li>
+<li><a href="../../../services/api/app/infrastructure/browser/page_capture.py"><code>_collect_scroll_coverage_artifacts</code></a> 已在一次调用内做有界滚动、每段截图/UI snapshot 和终止原因；它是复合滚动计划的现有基础，不应再造无限滚动器。</li>
+<li><a href="../../../services/api/app/infrastructure/browser/page_capture.py"><code>_run_single_trigger</code></a> 已对关闭目标、顶层弹窗、实时结构和部分 fallback 做约束；需要把“点击完成”与“关闭后到达”继续拆开。</li>
+<li><a href="../../../services/api/app/infrastructure/browser/page_capture.py"><code>_click_popup_close_control_with_offscreen_fallback</code></a> 仅在已验证的关闭控件 actionability 超时后使用直接派发；它没有自然物理点击点，必须保留诊断语义。</li>
+</ul>
+<h3 id="section-3-2">3.2 H5 视觉坐标现有基础</h3>
+<ul>
+<li><a href="../../../services/api/app/infrastructure/browser/h5_visual_navigation_runtime.py"><code>_validate_coordinate_context</code></a> 已校验原始 PNG 尺寸、视口一致性、DPR、像素密度和视口截图限制；这应成为视觉目标执行前的硬门禁。</li>
+<li><a href="../../../services/api/app/domain/exploration/h5_visual_navigation.py"><code>normalize_flutter_rect_to_visual_viewport</code></a> 已将 Flutter host 局部矩形经过仿射变换和 viewport offset 映射到视觉视口；不应把局部坐标直接当 CSS 或设备坐标。</li>
+<li>Web Adapter 当前是单一 primary surface，能力声明中的 <code>same_context_new_surface</code> 与 <code>surface_pin</code> 为 false，不能把通用多标签隔离当成现状。参见 <a href="../../../services/api/app/infrastructure/browser/surface_driver.py"><code>surface_driver.py</code></a>。</li>
+</ul>
+<h3 id="section-3-3">3.3 App 现有基础</h3>
+<ul>
+<li><a href="../../../services/api/app/infrastructure/device/android_target_resolver.py"><code>CanonicalPointTargetResolver._resolve_point</code></a> 已支持 canonical/device/normalized 的点位解析和设备边界校验；它不负责证明目标当前仍可见。</li>
+<li><a href="../../../services/api/app/infrastructure/device/adb_ops.py"><code>map_point</code></a> 已完成 canonical 到实际设备的有限映射；旋转、系统栏、窗口 letterbox 等未由该函数单独证明，需由上游 Capture profile 补齐。</li>
+<li><a href="../../../services/api/app/infrastructure/device/android_runtime_observation.py"><code>AndroidRuntimeObservation.node_at_point</code></a> 已按可见、启用、边界命中和最小节点面积选择 UIA 目标；UIA 不可用时返回空目标，不可假装命中。</li>
+<li><a href="../../../services/api/app/infrastructure/device/android_surface_driver.py"><code>AndroidAdbSurfaceDriver.execute</code></a> 已将 TAP、SCROLL、BACK、INPUT、OBSERVE 等动作转为受控 ADB 操作，并区分会话不匹配、未准备和驱动失败；后续需补动作后 Capture 与未知副作用闭环。</li>
+<li>App 目前截图、显示尺寸、前台身份和 UIA 观察职责分散在 <a href="../../../services/api/app/infrastructure/device/android_surface_driver.py"><code>android_surface_driver.py</code></a>；没有 H5 同等级的 DOM hit-test、网络生命周期或统一坐标审计链。</li>
+</ul>
+<h3 id="section-3-4">3.4 需要改动的边界</h3>
+<ol>
+<li>在现有 Interaction Runtime/Broker 前增加有界 InteractionPlan 的确定性校验和每步状态绑定。</li>
+<li>将 H5 locator、Flutter Semantics、视觉框、Android UIA 和设备点位统一映射为“目标已验证/不可验证”的动作前结果。</li>
+<li>让 Runtime 在每个子步骤后触发 Capture Readiness 与 postcondition 观察，不能由 Agent 直接串下一步。</li>
+<li>让动作 Receipt、原始输入、诊断派发、坐标变换和后置证据进入同一审计链；原有 Capture/Writer/Manifest 继续复用。</li>
+<li>工作台只读显示计划步骤、拒绝原因、实际结果和恢复入口，不从浏览器端重发设备动作。</li>
+</ol>
+<h3 id="section-3-5">3.5 高/中模块改动范围</h3>
+<ul>
+<li><strong>高影响模块</strong>：Interaction Runtime/Broker、H5 目标解析与动作后 Capture、Android Surface Driver/目标解析、Receipt 与后置观察。这些模块决定动作是否真的发生以及能否证明发生了什么。</li>
+<li><strong>中影响模块</strong>：页面状态图、Overlay/外跳子流程、补采恢复、任务详情只读投影、规则动作 profile。它们消费统一动作结果，不另建一套点击语义。</li>
+<li><strong>回归关注模块</strong>：旧 selector/坐标兼容、历史任务展示、报告导出、局部失败提示和资源清理。兼容回退不能绕过身份、层级、风险和诊断污染门禁。</li>
+</ul>
+<p>设计推论借用官方边界：Playwright 的 <a href="https://playwright.dev/docs/actionability" target="_blank" rel="noopener noreferrer">Actionability</a> 与 <a href="https://playwright.dev/docs/input" target="_blank" rel="noopener noreferrer">Input</a> 支持可见、稳定、命中和启用的分离，<a href="https://playwright.dev/docs/pages" target="_blank" rel="noopener noreferrer">Pages</a> 与 <a href="https://playwright.dev/docs/auth#session-storage" target="_blank" rel="noopener noreferrer">Authentication</a> 说明多页/会话复用不是原标签状态克隆，<a href="https://playwright.dev/docs/emulation" target="_blank" rel="noopener noreferrer">Emulation</a> 只支持一致配置。它们不等于当前项目已实现全部动作门禁。</p>
+<h2 id="section-4">4. 职责边界</h2>
+<h3 id="section-4-1">4.1 Explorer/Planner</h3>
+<p>Explorer 只提出候选和用户意图，例如“关闭当前顶层提示”“滚动到详情按钮”“观察外跳落地”。它不能直接指定未经观察的 DOM、UIA 节点或任意坐标。</p>
+<h3 id="section-4-2">4.2 Broker/Runtime</h3>
+<p>Broker 负责会话租约、权限、风险、预算、Surface 所有权、目标复验、动作执行和 Receipt。Runtime 是唯一直接操作浏览器或设备的组件。</p>
+<h3 id="section-4-3">4.3 Settle Oracle</h3>
+<p>Oracle 负责动作后身份、展示层、结构/视觉稳定、网络能力和专属后置条件的观察；不选择动作，不决定业务规则 pass，也不重试危险副作用。</p>
+<h3 id="section-4-4">4.4 Judge 与 Gate</h3>
+<p>Judge 只消费封存证据，不能操作设备或直接点击；Gate 组合覆盖、证据角色、规则终态、外跳/恢复和资源终态。数据库幂等解决重复写入，不等于动作可重复。</p>
+<h2 id="section-5">5. 核心方案</h2>
+<h3 id="section-5-1">5.1 InteractionPlan 的基本语义</h3>
+<p>一个用户意图由有限步骤组成，每一步包含“从哪个已验证状态出发、目标如何绑定、风险是什么、允许多少次、完成后要观察什么”。它不是脚本字符串，也不是无检查的命令数组。</p>
+<p>计划进入执行前必须通过：当前 Session/Surface 所有权、任务权限、规则 scope、动作风险、剩余时间和副作用预算。任一检查失败则返回 blocked 或 manual，不进入设备。</p>
+<h3 id="section-5-2">5.2 复合滚动再点击</h3>
+<p>标准路径是：定位可滚动容器 → 有界 scroll → Capture/Presentation/Readiness → 重新解析候选 → 重新绑定 click → 动作后 Capture/后置条件。</p>
+<ul>
+<li>每次滚动都有安全轨迹、方向、步长和最大次数；避开系统边缘、固定栏、广告主体和未知可点击层。</li>
+<li>滚动后只接受当前容器、当前 epoch 的目标；旧矩形、旧 ref、旧 UIA node 一律失效。</li>
+<li>虚拟列表尚未挂载时只能有限发现；目标未出现就结算未发现/预算耗尽，不用隐藏元素或脚本直接触发。</li>
+<li>发现新 Overlay、页面变化、跨容器或 Activity 变化立即暂停，进入重新观察和计划重算。</li>
+</ul>
+<h3 id="section-5-3">5.3 点击前的目标证明</h3>
+<p>点击前至少要证明：目标唯一、可见、启用、当前层可操作、位于安全内区，实际命中对象与意图和风险语义一致。关闭按钮必须来自当前 Overlay 内可靠识别的关闭角色，不能误命中广告主体，也不能因为模型猜到右上角 X 就执行。规则授权测试广告有效性时，广告主体本身可以是正确目标，真实点击仍须经过风险检查和外跳闭环。</p>
+<p>DOM/AX locator 需要当前元素与 hit-test；UIA 需要节点可见、启用、可点击且边界命中；视觉目标需要原始帧、局部模板/锚点、视口和当前帧复核。证明不足就不点。</p>
+<h3 id="section-5-4">5.4 动作来源与可信等级</h3>
+<ol>
+<li><strong>真实 Playwright locator click/语义点击</strong>：优先使用运行时 actionability 和命中检查；它由 Playwright 对当前 locator 执行可见性、稳定性、启用和接收点校验，仍必须保存动作后观察。</li>
+<li><strong>真实坐标输入</strong>：由同帧视觉或 UIA 目标计算设备点，记录完整变换和复核结果。</li>
+<li><strong>既有受约束 fallback</strong>：包括经签名结构复验后的直接派发或关闭兜底；它们全部属于诊断，不是另一个自然例外。DOM 结构签名只能证明当前目标与来源结构相符，不能授权绕过风险或自然可点击性。</li>
+<li><strong>HTMLElement.click/DOM 事件派发/force click</strong>：没有浏览器真实输入点或物理触摸，不能生成虚构坐标、不能证明用户可点，也不能计自然点击通过。</li>
+</ol>
+<h3 id="section-5-5">5.5 坐标空间追溯</h3>
+<p>每个可执行视觉目标都要能从模型图点/框逆算到原图，再从原图映射到实际输入空间：模型图 → 原图像素 → CSS/视觉视口或 UIA 局部坐标 → Frame/WebView/窗口（若适用）→ 设备输入坐标。不能把源图到模型图的正向缩放直接当作点击点。DPR、旋转、insets、系统栏、滚动偏移、当前 epoch 和变换版本只在该运行面适用时证明；Native 不虚构 CSS、DPR 或 Frame。</p>
+<p>归一化坐标只便于传输或比较，不能替代同帧转换。适用的源图和当前帧尺寸、视口、DPR 或设备 profile 不一致，目标过小、边界越界、变换未知或命中不唯一时拒绝执行；不适用的维度要明确记为 not applicable。任一页面变化仍会使旧 epoch 失效并要求重新绑定。</p>
+<h3 id="section-5-6">5.6 滑动与返回</h3>
+<p>滑动的后置不是“手势返回成功”，而是容器内容锚点、可见范围、滚动状态或 UIA/视觉发生符合意图的变化。返回的后置不是“调用 back 成功”，而是重新识别后到达可信父状态或明确替代状态。</p>
+<p>优先应用内受信返回；其次 Web history/back 或 Android BACK。返回到启动广告、登录、支付、更新或其他弹窗时，先进入对应 Overlay 流程，不能假设已经回到底页。</p>
+<h3 id="section-5-7">5.7 外跳动作</h3>
+<p>Web 自然打开新 Tab/Window 时优先捕获真实 popup，保留 source；若规则只需观察已验证的安全 href，可用限域 sidecar 观察内容，但不证明原按钮可点击或 JS/POST 链路正确。source 是实际业务页，按其规则正常计覆盖；只有外部 landing 不计业务覆盖，重复回源不新增覆盖。</p>
+<p>JS 路由、POST、一次性 URL、原生 Activity 或外部浏览器不能默认克隆。旁路只允许 open/wait/observe/capture/close，且仍会执行脚本和网络请求，必须受域、重定向、时间和进程预算限制。source、landing、return 三段都要审计：source 可按业务规则计覆盖，landing 不计业务覆盖，return 只用于恢复证明。</p>
+<p>这里不泛称“会话克隆”：同一 BrowserContext 的多个 tab 共享部分浏览器状态，可能互相影响；独立 context 也不会自动继承原标签的 sessionStorage、JS 内存或 history。当前 Web Adapter 只有 primary surface，真正增加外部子面还需要 Surface 生命周期和浏览器侧 service；当前 Android 的 <a href="../../../services/api/app/domain/interaction/capabilities.py"><code>capabilities.py</code></a> 虽列出 <code>open_external</code> 能力，具体 <a href="../../../services/api/app/infrastructure/device/android_surface_driver.py"><code>android_surface_driver.py</code></a> 的 manifest 未完整接线，执行分支也未实现通用外部打开，不能在方案中承诺已支持。</p>
+<p>两个最小回退例子：自然 popup 先保留 source，子面只观察 landing 后关闭并回到 source；JS 同标签外跳若回源反复出现同一入口，则在签名循环预算耗尽时熔断，不再重复关弹窗或重启页面。</p>
+<h3 id="section-5-8">5.8 弹窗关闭闭环</h3>
+<p>弹窗不是单一广告类别。先按展示形式、业务语义、阻断范围和动作风险分类，再决定关闭路径：广告/营销层、充值或购买层、登录/凭证层、版本更新层、公告/权限层、网址通知或二维码保存提示，都可能表现为图片、对话框、底部抽屉、倒计时、系统层或外部跳转；形式相同不代表风险相同。</p>
+<p>标准闭环是：冻结适用采集计划与前态 → 识别当前顶层和安全 dismiss/取消 → 执行低风险关闭 → 采集后态与连续失败证据 → 交给 Judge。可以先处理阻断层，不必等待所有静态 Judge 完成；但关闭性判定必须等待动作后态，不能只看命令 Receipt。</p>
+<ul>
+<li>关闭一层后重新观察当前顶层；Overlay 的消失或换层不是业务页面成功边。</li>
+<li>倒计时未到先观察，不先判失败；没有关闭控件需区分已充分证明缺失和识别/能力不足，前者按规则可判失败，后者进入证据不足/人工。</li>
+<li>规则要求可关闭且动作后仍可证明不可关闭时，可判产品 fail；控件识别不足、网络/结构不可观测或能力缺口则判证据不足/人工。</li>
+<li>取消、支付、安装、更新确认和权限授予必须按风险分流；确认按钮不能被当作 dismiss。</li>
+<li>连续重现、无效果、误跳和回源循环分别计入失败/恢复终态，不能因重启把关闭预算归零。</li>
+</ul>
+<h3 id="section-5-9">5.9 四层动作结果</h3>
+<ul>
+<li><strong>command accepted</strong>：Broker 接受并发送了动作。</li>
+<li><strong>effect observed</strong>：有可观察的 UI、URL、Activity、滚动或文本变化。</li>
+<li><strong>postcondition satisfied</strong>：变化符合这一步动作的业务意图。</li>
+<li><strong>transition arrived</strong>：新页面/状态通过 identity、Presentation、Readiness 后成为可信目标。</li>
+</ul>
+<p>只有 transition arrived 才能形成可信成功边；其余结果必须保留为中间事实或失败原因。</p>
+<h2 id="section-6">6. 标准流程</h2>
+<ol>
+<li>冻结任务、规则 scope、允许域/Package、Session/Surface、设备/视口 profile、风险和预算。</li>
+<li>读取当前 Capture，确认身份、展示层、目标来源、epoch 和坐标上下文。</li>
+<li>由 Planner 生成有限 InteractionPlan；Broker 校验租约、风险、权限、预算和动作所有权。</li>
+<li>执行 preflight：重新解析 locator/UIA/视觉目标，检查唯一性、可见性、启用、hit-test、安全内区和当前层。</li>
+<li>发出一个子步骤；保存 command receipt 和原始动作来源。没有物理点的派发不写成物理坐标。</li>
+<li>立即取 transition witness，再由 Settle Oracle 进行有限观察和动作专属后置判定。</li>
+<li>只有后置条件满足时才生成下一步骤的候选；页面/Overlay/epoch 变化就暂停并重规划。</li>
+<li>对 scroll→click 计划重复第 4–7 步，不复用旧 ref、矩形、坐标或 UIA 节点。</li>
+<li>对外跳建立 source/landing/return 观察；对返回重新识别父状态，不盲用历史路径。</li>
+<li>产物先通过 Capture Writer/Manifest/证据角色校验，再交给 Judge；Judge 不执行恢复动作。</li>
+<li>计划完成、失败、预算耗尽或风险升级后结算分支；任务收口另行检查未完成工作、子 Surface、租约和 Gate。</li>
+</ol>
+<h2 id="section-7">7. 异常闭环</h2>
+<h3 id="section-7-1">7.1 目标陈旧或漂移</h3>
+<p>发现页面文本、Overlay、Frame、Activity、窗口、滚动容器、尺寸、DPR 或 epoch 变化时，立即拒绝旧目标。保留 stale 事实，重新采集并有限重绑；不通过扩大 selector 或容忍范围掩盖漂移。</p>
+<h3 id="section-7-2">7.2 命中不唯一或被遮挡</h3>
+<p>命中多个目标、错误父容器、遮罩或未知 top layer 时，结算 target ambiguous/obstructed；意图是关闭却命中广告主体，同样拒绝。规则授权的广告主体点击不属于此类误命中，按广告交互与外跳策略执行。先采集当前 Presentation 和 Overlay，不强行点击“最像”的元素。</p>
+<h3 id="section-7-3">7.3 点击送达但无效果</h3>
+<p>保存 receipt 与动作后帧；若无可观察变化，执行有限重观察而不是马上重按。无效果可因控件不可用、事件被拦截、需要滚动、网络未完成或业务不响应，分别进入排障原因。</p>
+<h3 id="section-7-4">7.4 关闭后仍可见</h3>
+<p>先判断当前规则是否要求可关闭、前态与后态证据是否充分。若要求可关闭且安全控件已被可靠识别，动作后仍可证明同一 Overlay 可见，可判产品 fail；控件未识别、层级/能力不可观测或前态不足，则判证据不足/人工，而不是笼统判“不可关闭”。</p>
+<p>关闭一层仍要重新观察当前层：可能消失、换成下一层、误跳外部、回到同一 Overlay 或暴露底页。Overlay 变化不能自动生成业务页面成功边，也不能通过删 DOM、隐藏样式或改 z-index 规避。</p>
+<h3 id="section-7-5">7.5 弹窗分类、倒计时与危险确认</h3>
+<p>广告、充值/购买、登录凭证、版本更新、公告/权限、网址通知和二维码/信息保存提示按展示形式与业务语义分别处理；图片弹层、对话框、底部抽屉、系统层和倒计时只是呈现形式，不决定风险。</p>
+<p>倒计时未到先观察并保存倒计时时间证据，达到可关闭条件后重新解析，不能提前判失败。无按钮需要分流：规则要求此时可关闭，且按有界检查充分证明没有任何允许的关闭入口时，可以判产品 fail；若视野、识别或层级能力不足以确认，则是证据不足/人工。可靠关闭动作后仍可证明无效，同样按规则判断失败。取消、支付、安装、更新确认和权限授予是不同风险，其中确认动作不能作为 dismiss 自动执行。</p>
+<p>标准闭环仍是前态留证 → 安全关闭 → 后态/连续失败证据 → Judge。可以先处理阻断弹窗，不必等所有静态 Judge 完成；但 Judge 的闭合性判定要等动作后态，关闭一层不代表底页已到达。</p>
+<h3 id="section-7-6">7.6 坐标变换失败</h3>
+<p>从模型图点/框逆算到原图，再映射到实际输入空间。仅在相关运行面适用的源帧尺寸、当前视口、DPR、旋转、insets、letterbox、Frame、窗口或设备 profile 缺失/不一致时拒绝坐标动作；Native 不要求也不虚构 CSS、DPR 或 Frame。保留可见目标作为诊断，不以猜测点位补救。</p>
+<h3 id="section-7-7">7.7 ADB、浏览器或 Surface 瞬断</h3>
+<p>先检查动作 Receipt、当前前台身份和最新截图，再选择 warm restore、重新绑定或人工。云手机 ADB 的有限重连不等于动作未发生；输入、支付和提交后的重连不能触发重复操作。</p>
+<h3 id="section-7-8">7.8 外跳回源循环</h3>
+<p>每次回源前比较入口和 Overlay 签名；同一弹窗/入口连续重现达到预算即终止为 restore loop detected。不能通过无限重启或八次重复关闭来制造“最终回源”。</p>
+<h3 id="section-7-9">7.9 Runtime 崩溃与晚到结果</h3>
+<p>崩溃恢复先观察事实，再按 Receipt 判断未知副作用；晚到的 after Capture/判定要校验同一 Run/Epoch，不能覆盖已封存输入，也不能让已经结束的 Run 自动继续补采。不可验证时由新的受控任务/Run 重新过门禁，不自动重放不可幂等动作。</p>
+<h2 id="section-8">8. H5/App 差异</h2>
+<div class="table-scroll" role="region" aria-label="设计对照表，可横向滚动" tabindex="0"><table>
+<thead>
+<tr>
+<th>维度</th>
+<th>H5/Web</th>
+<th>App</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>首选目标</td>
+<td>DOM/AX locator 与 hit-test，视觉用于层级和无结构区域</td>
+<td>UIA/语义节点，有能力时优先；否则视觉点位</td>
+</tr>
+<tr>
+<td>真实输入</td>
+<td>CSS/视觉视口坐标，受 Frame、DPR、页面滚动约束</td>
+<td>设备输入像素，受旋转、系统栏、letterbox 约束</td>
+</tr>
+<tr>
+<td>滑动</td>
+<td>先定位 scrollable container，再观察内容锚点</td>
+<td>ADB swipe 后通过截图/UIA/前台状态观察</td>
+</tr>
+<tr>
+<td>外跳</td>
+<td>真实 popup 优先，sidecar 只作内容观察</td>
+<td>Activity/浏览器/商店按真实转场处理，不默认克隆进程</td>
+</tr>
+<tr>
+<td>网络</td>
+<td>Playwright 请求事件可作为 readiness 辅助</td>
+<td>ADB 不等于应用 HTTPS 请求监听或解密</td>
+</tr>
+<tr>
+<td>Flutter</td>
+<td>Web Semantics 有则使用；没有才视觉降级</td>
+<td>UIA 可能为空；不可把框架名称当成树能力证明</td>
+</tr>
+</tbody></table></div>
+<p>App 现有 UIA 观察明确是运行时内存事实，截图写入仍是单独路径；H5 的 locator 自动滚动能力也不能免除计划级的每步 Capture 与后置验证。</p>
+<p>iOS 不走 ADB 路径；若未来接入，应提供独立 Surface Adapter、坐标空间和真实输入验收，不把 Android 规则直接套用。</p>
+<h2 id="section-9">9. 其他专项协作</h2>
+<ul>
+<li><strong>受控探索</strong>：提供候选意图、动作风险和预算；不直接下发任意 selector/坐标。</li>
+<li><strong>页面状态图</strong>：接收经过 postcondition 和 Readiness 证明的转移；命令接受或局部变化不自动建成功边。</li>
+<li><strong>页面识别</strong>：定义目标页型、动作语义和必要 landmark；动作 Runtime 不自行推断业务完成。</li>
+<li><strong>Capture Readiness</strong>：负责身份前后、可见层、网络能力、视觉/结构 quorum；动作只消费其结论。</li>
+<li><strong>专项六的弹窗子流程</strong>：先冻结适用采集计划与前态，再允许关闭和后态判定；不等所有 Judge 完成才处理阻断层。</li>
+<li><strong>精准补采</strong>：使用图路径和等价门禁追加证据；不使用 direct URL 或诊断动作伪造自然点击链。</li>
+<li><strong>可信证据</strong>：传播自然输入、程序派发、诊断、时间序列和外跳角色；原始帧不可覆盖。</li>
+<li><strong>资源与租约</strong>：为每个 Surface 维护唯一动作所有者；外部子面关闭、回源和租约释放必须进入终态。</li>
+<li><strong>工作台</strong>：展示计划、每步结果、原因、坐标审计和恢复入口；不提供绕过 Broker 的“重试按钮”。</li>
+</ul>
+<h2 id="section-10">10. 工作台与排障</h2>
+<p>现有任务详情通过 <a href="../../../app/workstation/src/modules/tasks/pages/TaskDetailView.vue"><code>TaskDetailView.vue</code></a> 展示页面时间线、当前节点、Frontier 终态和探索摘要，并在同一详情页展示 Publication、质检工作项和尝试状态；精准交互应嵌入这条详情链，不新增主菜单。</p>
+<p>建议新增只读区域：</p>
+<ol>
+<li>计划总览：当前意图、步骤顺序、已执行/暂停/失败/人工状态和剩余预算。</li>
+<li>目标卡片：来源 Capture、当前 epoch、DOM/AX/UIA/视觉来源、命中与遮挡结果。</li>
+<li>坐标审计：原图与模型变换、视口/DPR、旋转/insets/letterbox、Frame/窗口、最终输入空间和拒绝原因。</li>
+<li>动作后证据：receipt、effect、postcondition、arrival、Readiness、Presentation 和 source/landing/return。</li>
+<li>排障分支：重采、重新绑定、恢复路径、循环熔断、人工接管和“不可安全重试”说明。</li>
+</ol>
+<p>当前 <a href="../../../app/workstation/src/modules/tasks/pages/TaskDetailView.vue"><code>TaskDetailView.vue</code></a> 采用 <code>Promise.allSettled</code> 并行读取多个明细模块，新增交互投影应允许局部失败而不覆盖已有时间线。当前 <a href="../../../app/workstation/src/services/task-insight.api.ts"><code>task-insight.api.ts</code></a> 只提供时间线、规则、统计、截图、日志、App 阶段和工作项读取；新投影应保持只读，不在前端计算命中或发动作。</p>
+<p>排障页面必须清楚显示：命令已发送不等于效果、效果不等于后置、后置不等于稳定到达；JS fallback、force click、sidecar 和诊断隐藏不能与自然证据混在同一列表。</p>
+<h2 id="section-11">11. 安全、审计与权限</h2>
+<ul>
+<li>所有动作由 Broker 取得当前 Session/Surface 的唯一租约；Agent、Judge、工作台和旁路脚本不能绕过它直接操作设备。</li>
+<li>风险语义优先于关闭语义；下载、购买、充值、支付、安装、订阅、授权和更新确认不得因为包含“关闭”文案而降级。</li>
+<li>正式分支禁止删 DOM、隐藏被测层、改 z-index、force click、任意 JS 派发和代理改写；既有受约束 fallback 必须记录诊断污染并阻止自然通过。</li>
+<li>真实坐标审计不得记录秘密输入值；输入动作只保留必要的动作来源、长度/结果和证据引用。</li>
+<li>外跳 sidecar 限制域、协议、重定向、时间、下载/安装和权限动作；不得继续点击第三方广告或授予权限。</li>
+<li>UA、分辨率、触摸能力等 profile 要可审计、可复现，不得以兼容配置之名绕过 CAPTCHA 或风控。</li>
+<li>发生崩溃或超时，副作用未知先观察；不以数据库回滚、删除 Receipt 或重建 Session 伪造撤销。</li>
+<li>工作台动作入口仅用于查看、人工复核和经授权的恢复申请；恢复仍回到 Runtime 风险检查。</li>
+</ul>
+<h2 id="section-12">12. 分期、兼容与回滚</h2>
+<h3 id="section-12-1">A：影子计划与坐标审计</h3>
+<p>只在现有动作前后旁路计算目标唯一性、坐标链、epoch 和后置条件，不改变动作。对比旧链的点击结果、误拒和漏检，冻结坐标空间、风险词和循环预算。</p>
+<h3 id="section-12-2">B：H5 点击/滑动切换</h3>
+<p>先启用 DOM/AX 和视觉目标的 preflight、滚动复绑、Readiness after Capture；JS fallback 继续只在诊断开关下可用。旧 selector 结果保留作回归对照。</p>
+<h3 id="section-12-3">C：App 真实点位切换</h3>
+<p>先接 UIA 可得时的节点命中和 canonical 映射，再接视觉降级；旋转、系统栏和 letterbox 未完成真实验收前，相关 profile 只影子记录或人工。</p>
+<h3 id="section-12-4">D：外跳与恢复</h3>
+<p>先捕获真实 popup/source/landing，再启用 sidecar 和 warm resume；同标签回源循环必须有终止结果。原生 Activity 不在没有等价验证时启用克隆假设。</p>
+<h3 id="section-12-5">E：Gate 消费与回滚</h3>
+<p>待真实矩阵证明 postcondition、坐标和恢复指标后，才让 Gate 消费新的交互角色。回滚只切换消费路径和运行开关，保留原始 Receipt、Capture、失败和诊断标记。</p>
+<h3 id="section-12-6">兼容原则</h3>
+<ul>
+<li>历史动作没有 epoch/坐标审计时显示历史兼容，不补写可信命中。</li>
+<li>新计划读取失败时保留旧时间线和截图，并明确精准交互投影不可用。</li>
+<li>新逻辑超时或误拒退回旧动作只适用于低风险、可重复观察动作；高风险动作直接人工，不自动回退重按。</li>
+<li>任何回滚都不能撤销已经发生的 UI/网络/支付/授权副作用，必须进入未知效果排障。</li>
+</ul>
+<h2 id="section-13">13. 验收场景和指标</h2>
+<div class="table-scroll" role="region" aria-label="设计对照表，可横向滚动" tabindex="0"><table>
+<thead>
+<tr>
+<th>场景</th>
+<th>必须看到的结果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>虚拟列表滚动后按钮位置改变</td>
+<td>旧目标失效，重新观察并绑定；不点旧坐标</td>
+</tr>
+<tr>
+<td>目标被广告或遮罩覆盖</td>
+<td>hit-test/Presentation 阻断，保留遮挡证据，不强制点击</td>
+</tr>
+<tr>
+<td>Flutter 有 Semantics 与无 Semantics</td>
+<td>有结构时用语义；无结构时视觉降级并标记能力</td>
+</tr>
+<tr>
+<td>不同 DPR、旋转、insets、letterbox</td>
+<td>变换链正确；上下文不一致即拒绝</td>
+</tr>
+<tr>
+<td>JS click 无物理点</td>
+<td>可记录程序派发，但不伪造坐标，不计自然点击通过</td>
+</tr>
+<tr>
+<td>关闭一层后仍有支付/更新确认</td>
+<td>重新识别顶层并按风险处理，不当作到底页</td>
+</tr>
+<tr>
+<td>倒计时、无按钮、取消无效果</td>
+<td>合法倒计时不提前判失败；证明没有允许的关闭入口或取消无效时按规则判 fail，能力不足才转不足/人工；预算不因重现归零</td>
+</tr>
+<tr>
+<td>自然新 Tab、JS 同标签、POST/一次性链接</td>
+<td>source/landing/return 可追溯；sidecar 不替代真实点击链</td>
+</tr>
+<tr>
+<td>外部回源反复出现同一入口</td>
+<td>达到循环预算后熔断，不无限重复清障</td>
+</tr>
+<tr>
+<td>ADB/浏览器在动作后崩溃</td>
+<td>先查 Receipt/当前面再恢复，不盲重按危险动作</td>
+</tr>
+<tr>
+<td>Judge 提出补采</td>
+<td>只写请求，由 Runtime 重新过风险/epoch/等价门禁；Judge 不操作设备</td>
+</tr>
+</tbody></table></div>
+<p>建议 A 只建立基线：目标唯一性拦截率、滚动后重绑成功率、真实输入命中率、坐标拒绝准确率、postcondition 证明率、关闭闭环率、外跳回源率、循环熔断率、未知副作用误重试数、诊断动作进入自然通过数。目标值须由 H5/App、Flutter、云手机和真实外部 Activity 矩阵实测后冻结。</p>
+<h2 id="section-14">14. 团队反馈及待冻结参数</h2>
+<h3 id="section-14-1">已裁决反馈</h3>
+<ul>
+<li>采用“先滑动→观察→重新绑定→点击”的复合计划，每一步过风险、租约、预算和后置条件。</li>
+<li>采用适用维度的坐标审计；模型图点/框先逆算原图，再映射实际输入空间；Native 不虚构 CSS、DPR 或 Frame，变化仍触发重绑。</li>
+<li>真实 Playwright locator click 与 HTMLElement.click/DOM 事件派发分开；没有物理点就不编造，不计自然点击通过；既有受约束 fallback 全部属于诊断。</li>
+<li>弹窗按展示形式、业务语义、阻断范围和风险分类；先冻结前态采集计划，再安全关闭，再做后态/连续失败判定；关闭一层不等于到达底页。</li>
+<li>外跳 Web 以真实新 Tab/source 保留优先；direct URL 只证明内容观察，不能默认克隆 JS、POST、一次性 URL 或原生 Activity。</li>
+<li>sidecar 只允许有限 open/wait/observe/capture/close；仍承认外部页面会执行脚本和请求；只有 external landing 不计业务 coverage，source 按业务规则计入，重复回源不新增覆盖。</li>
+<li>ADB 不等于网络拦截，iOS 不走 ADB；Flutter 按 Semantics 能力决定结构/视觉组合。</li>
+</ul>
+<h3 id="section-14-2">A 待冻结</h3>
+<ol>
+<li>动作风险等级与不可自动重试的操作集合。</li>
+<li>InteractionPlan 最大步骤数、滚动方向/步长/次数、每步观察 deadline 和总预算。</li>
+<li>locator、UIA、视觉和程序派发的可信等级、诊断开关及污染传播。</li>
+<li>目标唯一性、可见性、内区、hit-test、遮挡和变换误差阈值。</li>
+<li>设备/浏览器坐标空间、DPR、旋转、insets、letterbox、Frame/窗口和 profile 版本。</li>
+<li>外跳 sidecar 的允许域、协议、重定向、脚本/网络观察边界、子面生命周期和循环阈值。</li>
+<li>崩溃后的 Receipt 查询窗口、未知副作用人工入口和租约释放时限。</li>
+<li>真实矩阵中的命中、误点、重绑、恢复、循环和人工接管目标值。</li>
+</ol>
+<h2 id="section-15">15. 技术职责与接入点</h2>
+<p>本章把精准交互拆成可接入的职责边界：谁产生目标、谁确认当前层、谁完成坐标换算、谁拥有真实动作、谁验证意图后置。它不新增表、字段、接口载荷或数据结构；实现评审只需据此核对既有模块的调用方向和缺口。</p>
+<h3 id="section-15-1">15.1 职责切面</h3>
+<ol>
+<li>Planner 从规则缺口、Frontier 候选或当前页面观察提出一个意图级动作，例如“展开导航”“关闭可验证的公告层”“进入支付路由页”。Planner 不把屏幕坐标当成稳定目标，也不能自行点击。</li>
+<li>Observation 读取当前 Surface 的页面身份、可见层级、稳定性、滚动位置和候选目标。启动弹窗、登录层、广告、系统权限框和业务页面分别记录呈现层，不把层级观察直接当成业务节点。</li>
+<li>Target Resolver 先做语义定位，再把唯一目标绑定到本次观察。它可以使用 H5 locator、可访问性语义、App 页面身份和视觉候选，但不能以标题相同或视觉相似替代对象身份。</li>
+<li>Coordinate Mapper 只在使用坐标输入时把语义目标转换到该 Driver 声明的输入空间，不默认都是物理像素。它需要保留截图、视口、Frame、滚动、DPR、旋转、系统栏和 letterbox 等上下文；上下文缺失就不向 Driver 交接坐标。</li>
+<li>Command Broker 复核风险、租约、目标新鲜度、动作来源和预算。唯一 Runtime 仍是动作所有者，Broker 不执行点击，Driver 也不能绕过 Broker。</li>
+<li>Runtime 串联动作前重观察、一次真实输入、原始回执、动作后新观察和后置判定。命令已提交、实际效果、意图后置和可信到达保持独立阶段。</li>
+<li>Capture/Readiness 负责稳定性、层级和证据用途。未稳定的新帧不能证明稳定业务到达，但加载或关闭失败的时间序列在满足规则来源与角色时可以支持正式失败判断。</li>
+<li>Evidence/Judge 只提证据请求并消费同一 Run/Epoch 的事实。外部 Surface 的打开、等待、观察、捕获、关闭由受控边界管理，不由 Judge 直接发送设备动作。</li>
+</ol>
+<p>下面的组件图只画一条受控动作路径。虚线是重新观察或补采反馈，不是第二个动作所有者；“坐标换算”也不能替代语义目标和层级确认。</p>
+<figure class="technical-diagram" data-technical-diagram="0" aria-labelledby="technical-title-1"><figcaption id="technical-title-1">技术图 01 · 组件职责与依赖</figcaption><p class="technical-legend">纵向阅读 · 菱形表示条件 · 虚线表示回流、事件或回执，以边上文字和正文为准。图均为设计目标。</p><div class="technical-controls" hidden><label>定位 <select aria-label="选择组件职责与依赖中的节点或消息"></select></label><div><button type="button" data-minus aria-label="缩小技术图">−</button><output>100%</output><button type="button" data-plus aria-label="放大技术图">＋</button><button type="button" data-fit>全图概览</button><button type="button" data-size>清晰原寸</button></div></div><div class="technical-viewport" role="region" tabindex="0" aria-label="组件职责与依赖，可上下和横向滚动"><canvas width="921" height="1652" role="img" aria-label="技术图 01 · 组件职责与依赖；完整关系见下方文字替代">技术图文字关系见下方。</canvas></div><p class="technical-hint">点击节点或消息查看交接关系；可缩放并在图内滚动。下方提供同源文字与 Mermaid 图源。</p><aside class="technical-detail" aria-live="polite" hidden></aside><details class="technical-source" open><summary>文字关系与 Mermaid 图源</summary><ol><li>Planner / 提出意图级动作 — 动作意图 → Observation / 当前帧与可见层</li><li>Observation / 当前帧与可见层 — 候选与层级 → Target Resolver / 语义唯一命中</li><li>Target Resolver / 语义唯一命中 — 唯一目标 → Coordinate Mapper / 坐标空间上下文</li><li>Coordinate Mapper / 坐标空间上下文 — 输入上下文 → Command Broker / 风险租约预算</li><li>Command Broker / 风险租约预算 — 一次授权 → 唯一 Runtime / 真实动作所有者</li><li>唯一 Runtime / 真实动作所有者 — 真实调用 → Provider/Driver / 受控物理输入</li><li>Provider/Driver / 受控物理输入 — 原始回执 → 唯一 Runtime / 真实动作所有者</li><li>唯一 Runtime / 真实动作所有者 — 前后观察 → Capture Coordinator / 前后态采集</li><li>Capture Coordinator / 前后态采集 — 新事实 → Settle/Readiness / 后置与稳定性</li><li>Settle/Readiness / 后置与稳定性 — 用途结论 → Evidence/Judge / 用途与收口</li><li>Settle/Readiness / 后置与稳定性 — 陈旧或失败 → Observation / 当前帧与可见层</li><li>Evidence/Judge / 用途与收口 — 证据缺口 → Planner / 提出意图级动作</li></ol><pre><code class="language-mermaid">flowchart TB
+P[&quot;Planner&lt;br/&gt;提出意图级动作&quot;]
+O[&quot;Observation&lt;br/&gt;当前帧与可见层&quot;]
+T[&quot;Target Resolver&lt;br/&gt;语义唯一命中&quot;]
+X[&quot;Coordinate Mapper&lt;br/&gt;坐标空间上下文&quot;]
+B[&quot;Command Broker&lt;br/&gt;风险租约预算&quot;]
+R[&quot;唯一 Runtime&lt;br/&gt;真实动作所有者&quot;]
+D[&quot;Provider/Driver&lt;br/&gt;受控物理输入&quot;]
+C[&quot;Capture Coordinator&lt;br/&gt;前后态采集&quot;]
+V[&quot;Settle/Readiness&lt;br/&gt;后置与稳定性&quot;]
+E[&quot;Evidence/Judge&lt;br/&gt;用途与收口&quot;]
+P --&gt;|动作意图| O
+O --&gt;|候选与层级| T
+T --&gt;|唯一目标| X
+X --&gt;|输入上下文| B
+B --&gt;|一次授权| R
+R --&gt;|真实调用| D
+D --&gt;|原始回执| R
+R --&gt;|前后观察| C
+C --&gt;|新事实| V
+V --&gt;|用途结论| E
+V -.-&gt;|陈旧或失败| O
+E -.-&gt;|证据缺口| P
+</code></pre></details></figure>
+<p>组件图中的 <code>D</code> 可能是 H5 的受控 Driver 或 App 的设备输入适配器。两者都必须接受 Runtime 已确认的当前目标和坐标上下文；不存在“先点击、再补身份”的快捷路径。<code>E</code> 的补采请求回到 Planner 后，仍需重新经过观察、解析、Broker 和 Runtime。</p>
+<h3 id="section-15-2">15.2 既有代码的接入位置</h3>
+<ul>
+<li>H5 页面捕获和视觉导航继续复用 <a href="../../../services/api/app/infrastructure/browser/page_capture.py"><code>page_capture.py</code></a>、<a href="../../../services/api/app/domain/exploration/h5_visual_navigation.py"><code>h5_visual_navigation.py</code></a>、<a href="../../../services/api/app/infrastructure/browser/h5_visual_navigation_runtime.py"><code>h5_visual_navigation_runtime.py</code></a> 和 <a href="../../../services/api/app/infrastructure/browser/surface_driver.py"><code>surface_driver.py</code></a>。深化重点是把语义目标、几何上下文和动作后捕获串成同一动作交接。</li>
+<li>App 目标解析、动作执行、运行时身份和动作后采集复用 <a href="../../../services/api/app/application/app_interaction_runtime.py"><code>app_interaction_runtime.py</code></a>。<a href="../../../services/api/app/application/app_screenshot_exploration.py"><code>app_screenshot_exploration.py</code></a> 仍负责探索轮次，但不应把截图候选直接视为可点击事实。</li>
+<li>App 的局部恢复由 <a href="../../../services/api/app/application/app_frontier_restoration.py"><code>app_frontier_restoration.py</code></a> 提出恢复意图；恢复后的可信到达和层级观察必须重新绑定目标。当前有局部恢复和等价实现，不等同于完整页面图规划。</li>
+<li>动作前后采集和补采用途沿用 <a href="../../../services/api/app/application/capture_coordinator.py"><code>capture_coordinator.py</code></a>、<a href="../../../services/api/app/domain/evidence/input_set.py"><code>input_set.py</code></a> 与 <a href="../../../services/api/app/application/supplemental_evidence_policy.py"><code>supplemental_evidence_policy.py</code></a>。生产补采仍由 <code>enabled</code> 与 <code>runtime_ready</code> 双门禁控制，未开放时只能保留不足或人工请求。</li>
+<li>Workbench 可以展示坐标审计、层级变化、外跳和后置缺口；它不获得第二套点击权限。现有组合和 Gate 校验继续作为运行入口边界。</li>
+</ul>
+<h3 id="section-15-3">15.3 语义目标到坐标的职责交接</h3>
+<p>语义目标先回答“要作用于哪个对象”，坐标换算再回答“Driver 在哪个输入空间落点”。H5 的 CSS 视口、视觉视口、Frame 内容区、页面滚动和设备像素不是同一坐标系；App 截图像素、设备物理像素、旋转方向、状态栏和 letterbox 也不能互相假定。</p>
+<p>目标绑定必须带着产生它的观察版本。滚动、窗口切换、旋转、外跳、弹窗层改变或应用重启都会使旧坐标失效；即使新帧中看起来仍在相同位置，也要重新确认语义目标、可见层和命中条件。无法完成换算或命中被遮挡时，目标不进入动作交接。</p>
+<h3 id="section-15-4">15.4 弹窗与外部 Surface 的职责交接</h3>
+<p>Overlay 分类由观察层完成，至少区分广告、登录/身份、购买/支付、更新/权限、公告、系统对话框、二维码/信息内联区域和未知层。分类用于决定风险、是否可关闭以及后置要求；“有关闭按钮”不代表可以安全关闭，也不代表关闭后就是首页。</p>
+<p>外跳由受控 Surface 边界持有打开、等待、观察、捕获和关闭的生命周期。当前页、同标签页、新标签页、系统浏览器、JS/POST 导航和回源结果分别验证；直接拼 URL 不能代替真实导航。回源后重新读取当前页面和层级，不复用外跳前的目标引用。</p>
+<h2 id="section-16">16. 时序与交接条件</h2>
+<p>本节给出一条精确交互从意图到后置的最小时序。图中没有把外跳或弹窗分支画成第二条主线；分支条件统一在第 17 节解释，避免“Driver 有回执”被误读为“目标已经到达”。</p>
+<figure class="technical-diagram" data-technical-diagram="1" aria-labelledby="technical-title-2"><figcaption id="technical-title-2">技术图 02 · 调用时序与交接</figcaption><p class="technical-legend">纵向阅读 · 菱形表示条件 · 虚线表示回流、事件或回执，以边上文字和正文为准。图均为设计目标。</p><div class="technical-controls" hidden><label>定位 <select aria-label="选择调用时序与交接中的节点或消息"></select></label><div><button type="button" data-minus aria-label="缩小技术图">−</button><output>100%</output><button type="button" data-plus aria-label="放大技术图">＋</button><button type="button" data-fit>全图概览</button><button type="button" data-size>清晰原寸</button></div></div><div class="technical-viewport" role="region" tabindex="0" aria-label="调用时序与交接，可上下和横向滚动"><canvas width="1266" height="1312" role="img" aria-label="技术图 02 · 调用时序与交接；完整关系见下方文字替代">技术图文字关系见下方。</canvas></div><p class="technical-hint">点击节点或消息查看交接关系；可缩放并在图内滚动。下方提供同源文字与 Mermaid 图源。</p><aside class="technical-detail" aria-live="polite" hidden></aside><details class="technical-source" open><summary>文字关系与 Mermaid 图源</summary><ol><li>1. 规划器 → 观察器：请求当前帧与可见层</li><li>2. 观察器 → 规划器：返回页面、目标和遮挡事实</li><li>3. 规划器 → 命令代理：提交单步意图与来源</li><li>4. 命令代理 → 规划器：返回租约、风险与预算结果</li><li>5. 规划器 → 唯一运行时：交接已授权动作</li><li>6. 唯一运行时 → 观察器：重新读取动作前事实</li><li>7. 观察器 → 唯一运行时：返回目标与坐标上下文</li><li>8. 唯一运行时 → 受控驱动：发送一次真实输入</li><li>9. 受控驱动 → 唯一运行时：返回回执或未知</li><li>10. 唯一运行时 → 观察器：请求动作后新观察</li><li>11. 观察器 → 唯一运行时：返回窗口、层级和变化</li><li>12. 唯一运行时 → 稳定性检查：提交后态与意图</li><li>13. 稳定性检查 → 唯一运行时：返回后置与稳定性</li><li>14. 唯一运行时 → 规划器：返回成功、失败或待补采</li><li>注释：唯一运行时 → 受控驱动：Driver 不拥有目标选择和重试权限</li><li>注释：观察器 → 稳定性检查：新观察用途决定能否形成证据</li></ol><pre><code class="language-mermaid">sequenceDiagram
+participant P as 规划器
+participant O as 观察器
+participant B as 命令代理
+participant R as 唯一运行时
+participant D as 受控驱动
+participant V as 稳定性检查
+P-&gt;&gt;O: 请求当前帧与可见层
+O--&gt;&gt;P: 返回页面、目标和遮挡事实
+P-&gt;&gt;B: 提交单步意图与来源
+B--&gt;&gt;P: 返回租约、风险与预算结果
+P-&gt;&gt;R: 交接已授权动作
+R-&gt;&gt;O: 重新读取动作前事实
+O--&gt;&gt;R: 返回目标与坐标上下文
+R-&gt;&gt;D: 发送一次真实输入
+D--&gt;&gt;R: 返回回执或未知
+R-&gt;&gt;O: 请求动作后新观察
+O--&gt;&gt;R: 返回窗口、层级和变化
+R-&gt;&gt;V: 提交后态与意图
+V--&gt;&gt;R: 返回后置与稳定性
+R--&gt;&gt;P: 返回成功、失败或待补采
+Note over R,D: Driver 不拥有目标选择和重试权限
+Note over O,V: 新观察用途决定能否形成证据
+</code></pre></details></figure>
+<p>第一轮观察只产生候选和层级事实。Broker 通过后，Runtime 仍要做动作前重新观察，因为目标可能在等待期间滚动、被覆盖或外跳。Driver 回执只说明输入调用阶段；后态必须来自动作后的新观察，不能使用点击前截图回填。</p>
+<h3 id="section-16-1">16.1 交接前条件</h3>
+<ol>
+<li>当前意图有明确的语义目标、动作类别和意图级后置；只有坐标或模糊标题的意图暂停。</li>
+<li>当前 Surface、页面身份和可见层已确认；目标位于允许操作的层，且没有未分类遮挡。</li>
+<li>目标通过唯一性、可见性、命中区域和坐标上下文检查；Frame、滚动、DPR 或旋转信息缺失时不发物理输入。</li>
+<li>风险、设备租约、Session、Run/Epoch 和动作预算通过；同一 Surface 没有另一个 Runtime 动作在途。</li>
+<li>若动作将打开外部 Surface 或关闭 Overlay，规则允许该层级转移并定义返回/关闭后的后置观察。</li>
+</ol>
+<h3 id="section-16-2">16.2 交接后条件</h3>
+<p>动作完成后至少生成一份动作后新观察。它应能回答：当前 Surface 是否仍是原 Surface、可见层是否改变、目标是否消失或产生预期变化、页面是否稳定、后置是否满足，以及是否形成可信到达。</p>
+<p>后置按意图定义，不按点击坐标定义。展开菜单要求新菜单层和目标项可见；滚动要求锚点或内容变化可证；关闭层要求该层确实消失且底层符合规则；返回要求回到预期父位置；外跳要求 landing、必要内容和回源路径分别可证。</p>
+<h3 id="section-16-3">16.3 层级、外跳和失败时间序列</h3>
+<p>启动广告关闭事件只能关联随后可信入口观察，不能生成 popup 到首页的业务导航边。层级事件与业务转场分离：Overlay 是质检目标，但不混成业务节点；支付路由页是真实业务页面；二维码内联区域不因悬浮外观自动成为浮层。</p>
+<p>若当前长页已到达目标页面，只缺一个局部锚点、按钮状态或展开结果，补采可以只观察、等待或滚动，不必制造回首页动作。若发生外跳，记录离开、landing、返回和原页重绑定；外跳循环或关闭失败达到预算即终止为不足/人工。</p>
+<p>未稳定的新帧不能证明稳定业务到达。不过，加载失败、关闭失败、权限拒绝等时间序列在来源可信、角色明确且规则允许时，可以进入正式失败判断。它们不能被改写成成功到达，也不能由相似页面补齐。</p>
+<h2 id="section-17">17. 算法与判断流程</h2>
+<p>决策图展示从当前观察到一次动作的必要门禁。虚线回流代表重新观察、重新绑定或有限补采，不代表重用旧目标；任何自然分支删除 DOM、改写页面或绕过命中测试都不属于恢复算法。</p>
+<figure class="technical-diagram" data-technical-diagram="2" aria-labelledby="technical-title-3"><figcaption id="technical-title-3">技术图 03 · 判定与异常流转</figcaption><p class="technical-legend">纵向阅读 · 菱形表示条件 · 虚线表示回流、事件或回执，以边上文字和正文为准。图均为设计目标。</p><div class="technical-controls" hidden><label>定位 <select aria-label="选择判定与异常流转中的节点或消息"></select></label><div><button type="button" data-minus aria-label="缩小技术图">−</button><output>100%</output><button type="button" data-plus aria-label="放大技术图">＋</button><button type="button" data-fit>全图概览</button><button type="button" data-size>清晰原寸</button></div></div><div class="technical-viewport" role="region" tabindex="0" aria-label="判定与异常流转，可上下和横向滚动"><canvas width="898" height="1942" role="img" aria-label="技术图 03 · 判定与异常流转；完整关系见下方文字替代">技术图文字关系见下方。</canvas></div><p class="technical-hint">点击节点或消息查看交接关系；可缩放并在图内滚动。下方提供同源文字与 Mermaid 图源。</p><aside class="technical-detail" aria-live="polite" hidden></aside><details class="technical-source" open><summary>文字关系与 Mermaid 图源</summary><ol><li>收到意图 / 绑定当前观察 — 初检 → 当前观察新鲜且目标层可操作？</li><li>当前观察新鲜且目标层可操作？ — 否 → 请求新观察 / 等待或记录失败序列</li><li>请求新观察 / 等待或记录失败序列 — 新帧 → 收到意图 / 绑定当前观察</li><li>当前观察新鲜且目标层可操作？ — 是 → 目标唯一且坐标上下文完整？</li><li>目标唯一且坐标上下文完整？ — 否 → 语义重绑与坐标换算 / 仍不明则转人工</li><li>语义重绑与坐标换算 / 仍不明则转人工 — 新绑定 → 收到意图 / 绑定当前观察</li><li>目标唯一且坐标上下文完整？ — 是 → 风险租约预算通过？</li><li>风险租约预算通过？ — 否 → 拒绝动作 / 保留证据缺口</li><li>风险租约预算通过？ — 是 → Runtime 执行一次动作 / 保存原始回执</li><li>Runtime 执行一次动作 / 保存原始回执 — 成功失败未知均需观察 → 动作后新观察 / 重新验证层级与状态</li><li>动作后新观察 / 重新验证层级与状态 — 只用新后态验证 → 意图级后置成立？</li><li>意图级后置成立？ — 否，先核对副作用 → 请求新观察 / 等待或记录失败序列</li><li>请求新观察 / 等待或记录失败序列 — 预算尽或无法消歧 → 拒绝动作 / 保留证据缺口</li><li>意图级后置成立？ — 是 → 可信到达或外跳事实成立？</li><li>可信到达或外跳事实成立？ — 是 → 追加证据并继续 / 或进入有限补采</li><li>可信到达或外跳事实成立？ — 否 → 拒绝动作 / 保留证据缺口</li></ol><pre><code class="language-mermaid">flowchart TB
+A[&quot;收到意图&lt;br/&gt;绑定当前观察&quot;]
+B{&quot;当前观察新鲜且目标层可操作？&quot;}
+C[&quot;请求新观察&lt;br/&gt;等待或记录失败序列&quot;]
+D{&quot;目标唯一且坐标上下文完整？&quot;}
+E[&quot;语义重绑与坐标换算&lt;br/&gt;仍不明则转人工&quot;]
+F{&quot;风险租约预算通过？&quot;}
+G[&quot;拒绝动作&lt;br/&gt;保留证据缺口&quot;]
+H[&quot;Runtime 执行一次动作&lt;br/&gt;保存原始回执&quot;]
+I{&quot;意图级后置成立？&quot;}
+J[&quot;动作后新观察&lt;br/&gt;重新验证层级与状态&quot;]
+K{&quot;可信到达或外跳事实成立？&quot;}
+L[&quot;追加证据并继续&lt;br/&gt;或进入有限补采&quot;]
+A --&gt;|初检| B
+B --&gt;|否| C
+C -.-&gt;|新帧| A
+B --&gt;|是| D
+D --&gt;|否| E
+E -.-&gt;|新绑定| A
+D --&gt;|是| F
+F --&gt;|否| G
+F --&gt;|是| H
+H --&gt;|成功失败未知均需观察| J
+J --&gt;|只用新后态验证| I
+I -.-&gt;|否，先核对副作用| C
+C --&gt;|预算尽或无法消歧| G
+I --&gt;|是| K
+K --&gt;|是| L
+K --&gt;|否| G
+</code></pre></details></figure>
+<h3 id="section-17-1">17.1 坐标换算与命中判断</h3>
+<p>H5 的换算顺序是语义目标到页面几何，再到 CSS/视觉视口、Frame 与滚动上下文，最后映射到 Driver 输入点。需要校验 DPR、缩放、页面偏移、固定头部、iframe 边界和当前滚动；任一上下文来自旧帧，都重新观察。</p>
+<p>App 的换算以当前截图和设备窗口为依据，校验旋转、状态栏/导航栏、显示裁剪、letterbox、密度和触控输入范围。不能把 H5 CSS 坐标直接套到 App，也不能把截图像素未经设备上下文校正就当作物理点。</p>
+<p>建议把换算拆为可独立校验的数学步骤，而不是在点击函数里散落比例：</p>
+<pre><code class="language-text">截图点 = 解除模型预览图的裁剪与缩放(模型输出点)
+可见内容点 = 解除letterbox与截图方向变换(截图点)
+输入点 = 当前Surface声明的“可见内容→Driver输入空间”变换(可见内容点)
+校验 = 反向变换(输入点)仍落在本次观察中目标的可交互区域
+</code></pre>
+<p>这里的变换是带明确来源和有效期的几何关系，不是新的接口结构。只有在确认同向、无裁剪、无偏移时，才允许简化为 <code>x输入=x截图×W输入/W截图</code>、<code>y输入=y截图×H输入/H截图</code>；存在旋转、Frame 偏移或视觉视口缩放时必须组合相应变换，不能只按分辨率做乘法。DOM locator 已由 Provider 解析时优先使用其语义路径，不再重复换算坐标；输入空间若是 CSS 像素，也不能再次无条件乘 DPR。</p>
+<p>命中检查同时看语义唯一性、可见性、顶层遮挡、可交互区域和坐标落点。视觉候选被弹窗、系统层或透明遮挡覆盖时，优先分类遮挡并重新绑定；不通过时不得通过缩小命中框、删除 DOM 或强制 dispatch 来制造成功。</p>
+<h3 id="section-17-2">17.2 滚动、重观察与重新绑定</h3>
+<p>滚动不是点击前的无证据前置动作。每一次滚动都要记录滚动前观察、滚动操作、稳定等待和滚动后新观察，再用锚点或语义关系找回目标。目标在新帧中重新解析，旧 bounding box、旧可见性和旧遮挡判断全部失效。</p>
+<p>若目标已在当前页面且只缺局部证据，补采可以只观察、等待或滚动，不必制造回首页动作。若页面身份或业务位置变了，才进入 Frontier/恢复流程；无法证明回到同一业务位置时，恢复结论只能是不足。</p>
+<h3 id="section-17-3">17.3 意图级后置和到达判定</h3>
+<p>每个意图先定义可观察的后置，再选择动作。后置不能写成“点击返回成功”这种命令回执，而要写成层级、对象、内容或路由的状态变化。例如“展开”需看到展开内容，“关闭”需看到目标层消失，“进入”需验证路由和业务对象，“提交”需验证结果或规则允许的明确失败。</p>
+<p>后置成立仍不自动等于可信到达。到达还需要页面身份、稳定性、层级、对象/路由语义和规则要求的证据角色；页面相同不代表广告、用户、价格或登录状态相同。缺一项就只记录效果或待补采。</p>
+<h3 id="section-17-4">17.4 Overlay 分类与外跳边界</h3>
+<p>广告、登录、支付、更新、权限、公告和系统对话框采用从严风险。二维码或帮助说明若只是当前页内联区域，保持当前业务页；若有真实 Surface 或业务路由变化，才记录外部转场。未知层不因视觉相似归入低风险。</p>
+<p>关闭动作需要证明目标层消失、未误点底层控件且下层状态可解释。嵌套弹窗逐层观察；关闭外层后出现内层不应直接记为“全部关闭”。发生新标签、系统浏览器或第三方支付时，外部 Surface 单独观察，完成后有界回源；没有回源事实不能把离开前页面当作完成。</p>
+<p>外部边界默认只允许受控打开、等待、观察、截图和必要清理，不继续点击落地页广告、购买、授权或提交信息。来源页确实被隔离保留时，验证来源仍在即可，不强造一次返回动作；同标签 JS/POST 跳转和原生外跳不能保证克隆会话或另开进程，必须保存真实转场并按能力有界回源。落地留证、回源成功、业务覆盖分别结算。</p>
+<h2 id="section-18">18. 并发、幂等、超时与恢复</h2>
+<h3 id="section-18-1">18.1 写入幂等不等于点击幂等</h3>
+<p>Capture、回执合并、后置结论和审计写入可以按同一动作交接去重：重复消息返回已有事实，不重复追加同一逻辑写入。但设备点击、关闭、返回、提交和支付不是天然幂等，即使写入端只出现一条记录，也可能已经产生两次真实副作用。</p>
+<p>因此同一 Surface 同时只允许一个 Runtime 动作在途。重复计划先查动作交接和当前状态；已知完成时复用原观察，未知时只读观察，不能因为数据库/日志没有第二条写入就再次点击。原动作是否执行必须由 Provider 回执和动作后观察共同证明。</p>
+<h3 id="section-18-2">18.2 目标引用与并发滚动</h3>
+<p>滚动、动画、异步加载和弹窗出现都可能让目标引用过期。Target Resolver 产生新绑定前，Broker 不接受旧坐标；并发的补采请求合并为同一缺口的有限请求，不能各自回放滚动或点击。</p>
+<p>长页补采优先保持当前业务位置。若一条请求需要“滚动后观察”，另一条请求需要“关闭层后观察”，按同一 Surface 串行化并在每步后重新判断层级；若冲突无法消解，终止为人工，不通过并发动作抢时间。</p>
+<h3 id="section-18-3">18.3 超时和未知状态</h3>
+<p>动作前定位、坐标换算、Driver 输入、动作后捕获、稳定等待和外部 Surface 等待使用独立截止点。任何一步超时都要说明最后可信观察和可能的副作用；不能把等待超时改写成点击失败或成功。</p>
+<p>Crash、连接断开或租约失效后，恢复先读取同一 Run/Epoch 的回执和当前 Surface。未知动作只允许观察、重新绑定和人工转交；登录、支付、购买、权限提交等不可逆动作禁止自动 fresh 替代或盲重试。</p>
+<h3 id="section-18-4">18.4 有界恢复和嵌套层</h3>
+<p>同一缺口共享动作、观察、时间和外部 Surface 预算；新请求不能重置预算。嵌套 Overlay 维护层级深度和关闭次数，出现循环、无新增观察、稳定性反复失败或预算耗尽即终态。终态可为明确失败、证据不足或人工，不继续制造动作。</p>
+<p>回滚时先停用新定位/外跳恢复的动作准入，独立观察并结清在途或副作用未知的动作，再对后续安全、重新规划的动作选择既有 Driver；不能用切换 Driver 重放未决点击。证据门禁、可信到达和 required 分母保持不变，回滚完成也不替代一次完整后置。</p>
+<h3 id="section-18-5">18.5 外部 Surface 的释放</h3>
+<p>外部 Surface 关闭、回源或超时后，确认原 Surface 的租约和页面身份，并在受控清理分支释放本次创建的外部资源。回源失败也必须执行可安全完成的清理、保留失败证据，不能因等待成功回源而泄漏资源；用户原有标签/进程不得被批量关闭。迟到的外部回执只保留同一动作的审计关联；原 Run 已收口时不改写覆盖，也不把相似 landing 认作回源。</p>
+<h2 id="section-19">19. 故障推演与技术验收</h2>
+<p>本节要求以真实交互的可归因性验收，而不是以“Driver 返回成功”验收。所有演练都应区分命令、效果、意图后置、可信到达和规则用途；不得删 DOM、强制事件派发或盲重放未知动作。</p>
+<h3 id="section-19-1">19.1 故障推演</h3>
+<ol>
+<li>长页滚动后旧坐标仍指向屏幕同一位置：系统必须先采新帧、找锚点和重绑；不能直接点击旧点。若只缺局部证据，就地补采，不回首页。</li>
+<li>目标被透明层或嵌套广告遮挡：命中检查失败，先分类层级并记录遮挡；不能缩小区域或通过自然分支删除页面节点。</li>
+<li>关闭外层弹窗后出现登录层：外层关闭效果可成立，但业务入口仍未到达；需要单独观察内层并按身份风险决定是否人工。</li>
+<li>点击广告后打开新标签或系统浏览器：记录原 Surface 离开、外部 landing、必要捕获和有界回源；没有回源不能写原页完成。</li>
+<li>支付或登录状态在原动作后失效：精确补采要求原上下文时，无法证明原发生实例就明确不足/人工，不能把另一次 fresh 状态当作原 exact 结论。</li>
+<li>Driver 超时但按钮状态改变：动作结果未知，先观察当前层、对象和后置；不能依据写入幂等或缺少重复日志再次点击。</li>
+<li>H5 locator 缺失或 App 没有可访问性语义：可以退到经过审计的视觉/坐标路径，但仍必须有坐标上下文和后置；能力未就绪则停在不足。</li>
+<li>外部 Surface 反复回到同一页面：达到循环或无新增观察阈值即终止；不能用相似页面或另一 Run 证据补通过。</li>
+</ol>
+<h3 id="section-19-2">19.2 技术验收阶段</h3>
+<p>阶段 A：静态职责验收。核对 Planner、Observation、Target Resolver、Coordinate Mapper、Broker、Runtime、Driver、Capture 和 Judge 的调用方向；确认只有 Runtime 产生真实动作。</p>
+<p>阶段 B：H5 受控交互验收。在可复现的页面中覆盖 locator、滚动、Frame、DPR、遮挡和新标签路径；验证每次滚动后都重新观察和重绑，影子执行只比较计划，不产生第二条设备动作。</p>
+<p>阶段 C：App 低风险验收。在隔离测试任务或单 Owner 低风险灰度中覆盖截图坐标、旋转、系统栏、letterbox、App 返回和局部弹窗；不以登录支付等不可逆动作作为首批真实执行。</p>
+<p>阶段 D：异常闭环验收。注入未稳定帧、透明遮挡、嵌套层、Driver 超时、Crash、外跳循环和回源失败，确认都能进入重新观察、有限补采、人工或不足终态。</p>
+<p>阶段 E：收口与回滚验收。确认同一 Run/Epoch 的动作、观察和证据用途可追溯，补采请求排空后再释放租约；停用新能力后仍保持既有证据门禁，不降低 required 分母。</p>
+<h3 id="section-19-3">19.3 硬性正确性与待基线指标</h3>
+<p>硬性正确性包括：目标不唯一或遮挡时零真实输入；旧坐标和旧层引用零执行；未知副作用零盲重试；滚动后零复用旧观察；命令成功与可信到达不混淆；外跳无 landing/回源证据不通过；原 exact 缺口不由 fresh 结果填补；一个动作所有者之外的路径零设备动作。</p>
+<p>效率指标待基线验证后冻结，至少观察目标解析耗时、滚动后重绑耗时、坐标拒绝率、误命中率、后置等待、外跳闭环耗时、未知结果占比、就地补采新增证据率和人工转交率。指标优化不能以减少观察或放宽风险为代价。</p>
+<h3 id="section-19-4">19.4 关联模块与范围提示</h3>
+<p>后端高范围影响集中在交互 Runtime、目标解析、动作前后捕获、Readiness/补采和外部 Surface 协调；中范围影响 H5/App Driver、Workbench 坐标审计和证据展示。高/中表示接口耦合与验收影响，不是伪精确的工作量百分比。</p>
+<p>本技术深化仍未实施。现有局部恢复和等价能力不代表完整页面图、精准补采或生产 Runtime 已开放；必须通过 <code>enabled</code> + <code>runtime_ready</code> 门禁、同 Run/Epoch 证据和 Completion Gate 后才能谈正式启用。</p>
+<h2 id="section-20">20. 关联文档依据</h2>
+<ul>
+<li>总设计第 16 节“交互精准度”、第 17 节“外部广告落地与边界”、第 14 节“Action Transaction”、第 18–19 节证据与补采。</li>
+<li>总设计第 35.1、35.2、35.3 节对外跳隔离、滚动复绑、坐标审计、Flutter/UIA、诊断隔离和优先级的裁决；第 36.1–36.6 节对动作、后置、崩溃、补采和真实场景的串联。</li>
+<li>H5 动作与采集基础：<a href="../../../services/api/app/infrastructure/browser/page_capture.py"><code>page_capture.py</code></a>。</li>
+<li>H5 坐标与视觉基础：<a href="../../../services/api/app/domain/exploration/h5_visual_navigation.py"><code>h5_visual_navigation.py</code></a>、<a href="../../../services/api/app/infrastructure/browser/h5_visual_navigation_runtime.py"><code>h5_visual_navigation_runtime.py</code></a>。</li>
+<li>App 目标与动作基础：<a href="../../../services/api/app/infrastructure/device/android_target_resolver.py"><code>android_target_resolver.py</code></a>、<a href="../../../services/api/app/infrastructure/device/adb_ops.py"><code>adb_ops.py</code></a>、<a href="../../../services/api/app/infrastructure/device/android_runtime_observation.py"><code>android_runtime_observation.py</code></a>、<a href="../../../services/api/app/infrastructure/device/android_surface_driver.py"><code>android_surface_driver.py</code></a>。</li>
+<li>外部 Surface 现状：<a href="../../../services/api/app/infrastructure/browser/surface_driver.py"><code>surface_driver.py</code></a>；动作证据合并：<a href="../../../services/api/app/infrastructure/browser/capture_runtime.py"><code>capture_runtime.py</code></a>。</li>
+<li>工作台现有入口：<a href="../../../app/workstation/src/modules/tasks/pages/TaskDetailView.vue"><code>TaskDetailView.vue</code></a>、<a href="../../../app/workstation/src/services/task-insight.api.ts"><code>task-insight.api.ts</code></a>。</li>
+<li>同目录设计稿：<a href="05-capture-readiness.html">Capture Readiness</a>、<a href="02-page-state-graph.html">页面状态图</a>、<a href="03-targeted-recapture.html">精准补采</a>、<a href="07-trusted-evidence.html">可信证据</a>。</li>
+</ul>
+<p>本稿只提供设计边界与实施验收依据；尚未修改任何运行时代码、规则启用状态、数据库或 API。</p>
+
+        </article>
+      </div>
+      <nav class="doc-footer" aria-label="前后篇导航"><a href="05-capture-readiness.html"><span>上一篇</span>截图时机</a>
+<a class="back-top" href="#document-top"><span>本篇</span>返回顶部 ↑</a>
+<a class="next" href="07-trusted-evidence.html"><span>下一篇</span>可信证据</a></nav>
+      <p class="page-note">正文按 Markdown 原稿生成 · 保留既有控制面 · 收益需基线与真实 H5 / App 验证<br>本篇不含表设计、字段定义或具体数据结构。</p>
+    </main>
+  </div>
+<script type="application/json" id="technical-diagram-data">[{"kind":"flow","width":921,"height":1652,"nodes":[{"id":"P","label":"Planner\n提出意图级动作","shape":"box","w":292,"lines":["Planner","提出意图级动作"],"h":88,"x":69.5,"y":48},{"id":"O","label":"Observation\n当前帧与可见层","shape":"box","w":292,"lines":["Observation","当前帧与可见层"],"h":88,"x":160,"y":227},{"id":"T","label":"Target Resolver\n语义唯一命中","shape":"box","w":292,"lines":["Target Resolver","语义唯一命中"],"h":88,"x":436.5,"y":406},{"id":"X","label":"Coordinate Mapper\n坐标空间上下文","shape":"box","w":292,"lines":["Coordinate Mapper","坐标空间上下文"],"h":88,"x":436.5,"y":585},{"id":"B","label":"Command Broker\n风险租约预算","shape":"box","w":292,"lines":["Command Broker","风险租约预算"],"h":88,"x":436.5,"y":764},{"id":"R","label":"唯一 Runtime\n真实动作所有者","shape":"box","w":292,"lines":["唯一 Runtime","真实动作所有者"],"h":88,"x":436.5,"y":943},{"id":"D","label":"Provider/Driver\n受控物理输入","shape":"box","w":292,"lines":["Provider/Driver","受控物理输入"],"h":88,"x":584.5,"y":1122},{"id":"C","label":"Capture Coordinator\n前后态采集","shape":"box","w":292,"lines":["Capture Coordinator","前后态采集"],"h":88,"x":250.5,"y":1122},{"id":"V","label":"Settle/Readiness\n后置与稳定性","shape":"box","w":292,"lines":["Settle/Readiness","后置与稳定性"],"h":88,"x":160,"y":1301},{"id":"E","label":"Evidence/Judge\n用途与收口","shape":"box","w":292,"lines":["Evidence/Judge","用途与收口"],"h":88,"x":69.5,"y":1480}],"edges":[{"id":"edge-0","from":"P","to":"O","dashed":false,"label":"动作意图","lines":["动作意图"],"points":[[259.99162011173183,136],[306,181.5],[306,227]],"labelX":306,"labelY":181.5,"labelW":64,"labelH":26},{"id":"edge-1","from":"O","to":"T","dashed":false,"label":"候选与层级","lines":["候选与层级"],"points":[[441.9329608938548,315],[582.5,360.5],[582.5,406]],"labelX":582.5,"labelY":360.5,"labelW":76,"labelH":26},{"id":"edge-2","from":"T","to":"X","dashed":false,"label":"唯一目标","lines":["唯一目标"],"points":[[582.5,494],[582.5,539.5],[582.5,585]],"labelX":582.5,"labelY":539.5,"labelW":64,"labelH":26},{"id":"edge-3","from":"X","to":"B","dashed":false,"label":"输入上下文","lines":["输入上下文"],"points":[[582.5,673],[582.5,718.5],[582.5,764]],"labelX":582.5,"labelY":718.5,"labelW":76,"labelH":26},{"id":"edge-4","from":"B","to":"R","dashed":false,"label":"一次授权","lines":["一次授权"],"points":[[582.5,852],[582.5,897.5],[582.5,943]],"labelX":582.5,"labelY":897.5,"labelW":64,"labelH":26},{"id":"edge-5","from":"R","to":"D","dashed":false,"label":"真实调用","lines":["真实调用"],"points":[[470.6564245810056,1031],[355,1076.5],[584.5,1131.2010652463382]],"labelX":355,"labelY":1076.5,"labelW":64,"labelH":26},{"id":"edge-6","from":"D","to":"R","dashed":false,"label":"原始回执","lines":["原始回执"],"points":[[762.4553072625698,1122],[795.5,1076.5],[687.2150837988827,1031]],"labelX":795.5,"labelY":1076.5,"labelW":64,"labelH":26},{"id":"edge-7","from":"R","to":"C","dashed":false,"label":"前后观察","lines":["前后观察"],"points":[[523.0139664804469,1031],[461.5,1076.5],[428.4553072625698,1122]],"labelX":461.5,"labelY":1076.5,"labelW":64,"labelH":26},{"id":"edge-8","from":"C","to":"V","dashed":false,"label":"新事实","lines":["新事实"],"points":[[396.5,1210],[396.5,1255.5],[350.49162011173183,1301]],"labelX":396.5,"labelY":1255.5,"labelW":52,"labelH":26},{"id":"edge-9","from":"V","to":"E","dashed":false,"label":"用途结论","lines":["用途结论"],"points":[[306,1389],[306,1434.5],[259.99162011173183,1480]],"labelX":306,"labelY":1434.5,"labelW":64,"labelH":26},{"id":"edge-10","from":"V","to":"O","dashed":true,"label":"陈旧或失败","lines":["陈旧或失败"],"points":[[261.50837988826817,1301],[215.5,1255.5],[215.5,1166],[215.5,1076.5],[215.5,987],[215.5,897.5],[215.5,808],[215.5,718.5],[215.5,629],[215.5,539.5],[215.5,450],[215.5,360.5],[261.50837988826817,315]],"labelX":215.5,"labelY":808,"labelW":76,"labelH":26},{"id":"edge-11","from":"E","to":"P","dashed":true,"label":"证据缺口","lines":["证据缺口"],"points":[[146.9189944134078,1480],[76,1434.5],[76,1345],[76,1255.5],[76,1166],[76,1076.5],[76,987],[76,897.5],[76,808],[76,718.5],[76,629],[76,539.5],[76,450],[76,360.5],[76,271],[76,181.5],[146.9189944134078,136]],"labelX":76,"labelY":808,"labelW":64,"labelH":26}],"source":"flowchart TB\nP[\"Planner\u003cbr/>提出意图级动作\"]\nO[\"Observation\u003cbr/>当前帧与可见层\"]\nT[\"Target Resolver\u003cbr/>语义唯一命中\"]\nX[\"Coordinate Mapper\u003cbr/>坐标空间上下文\"]\nB[\"Command Broker\u003cbr/>风险租约预算\"]\nR[\"唯一 Runtime\u003cbr/>真实动作所有者\"]\nD[\"Provider/Driver\u003cbr/>受控物理输入\"]\nC[\"Capture Coordinator\u003cbr/>前后态采集\"]\nV[\"Settle/Readiness\u003cbr/>后置与稳定性\"]\nE[\"Evidence/Judge\u003cbr/>用途与收口\"]\nP -->|动作意图| O\nO -->|候选与层级| T\nT -->|唯一目标| X\nX -->|输入上下文| B\nB -->|一次授权| R\nR -->|真实调用| D\nD -->|原始回执| R\nR -->|前后观察| C\nC -->|新事实| V\nV -->|用途结论| E\nV -.->|陈旧或失败| O\nE -.->|证据缺口| P","title":"技术图 01 · 组件职责与依赖"},{"kind":"sequence","width":1266,"height":1312,"participants":[{"id":"P","label":"规划器","x":108,"y":38,"w":180,"h":64,"lines":["规划器"]},{"id":"O","label":"观察器","x":318,"y":38,"w":180,"h":64,"lines":["观察器"]},{"id":"B","label":"命令代理","x":528,"y":38,"w":180,"h":64,"lines":["命令代理"]},{"id":"R","label":"唯一运行时","x":738,"y":38,"w":180,"h":64,"lines":["唯一运行时"]},{"id":"D","label":"受控驱动","x":948,"y":38,"w":180,"h":64,"lines":["受控驱动"]},{"id":"V","label":"稳定性检查","x":1158,"y":38,"w":180,"h":64,"lines":["稳定性检查"]}],"events":[{"kind":"message","from":"P","to":"O","dashed":false,"label":"请求当前帧与可见层","lines":["请求当前帧与可见层"],"number":1,"id":"event-0","x1":108,"x2":318,"self":false,"y":159,"textX":213,"textY":138,"points":[[108,159],[318,159]],"hitLeft":96,"hitRight":330},{"kind":"message","from":"O","to":"P","dashed":true,"label":"返回页面、目标和遮挡事实","lines":["返回页面、目标和遮挡事实"],"number":2,"id":"event-1","x1":318,"x2":108,"self":false,"y":226,"textX":213,"textY":205,"points":[[318,226],[108,226]],"hitLeft":96,"hitRight":330},{"kind":"message","from":"P","to":"B","dashed":false,"label":"提交单步意图与来源","lines":["提交单步意图与来源"],"number":3,"id":"event-2","x1":108,"x2":528,"self":false,"y":293,"textX":318,"textY":272,"points":[[108,293],[528,293]],"hitLeft":96,"hitRight":540},{"kind":"message","from":"B","to":"P","dashed":true,"label":"返回租约、风险与预算结果","lines":["返回租约、风险与预算结果"],"number":4,"id":"event-3","x1":528,"x2":108,"self":false,"y":360,"textX":318,"textY":339,"points":[[528,360],[108,360]],"hitLeft":96,"hitRight":540},{"kind":"message","from":"P","to":"R","dashed":false,"label":"交接已授权动作","lines":["交接已授权动作"],"number":5,"id":"event-4","x1":108,"x2":738,"self":false,"y":427,"textX":423,"textY":406,"points":[[108,427],[738,427]],"hitLeft":96,"hitRight":750},{"kind":"message","from":"R","to":"O","dashed":false,"label":"重新读取动作前事实","lines":["重新读取动作前事实"],"number":6,"id":"event-5","x1":738,"x2":318,"self":false,"y":494,"textX":528,"textY":473,"points":[[738,494],[318,494]],"hitLeft":306,"hitRight":750},{"kind":"message","from":"O","to":"R","dashed":true,"label":"返回目标与坐标上下文","lines":["返回目标与坐标上下文"],"number":7,"id":"event-6","x1":318,"x2":738,"self":false,"y":561,"textX":528,"textY":540,"points":[[318,561],[738,561]],"hitLeft":306,"hitRight":750},{"kind":"message","from":"R","to":"D","dashed":false,"label":"发送一次真实输入","lines":["发送一次真实输入"],"number":8,"id":"event-7","x1":738,"x2":948,"self":false,"y":628,"textX":843,"textY":607,"points":[[738,628],[948,628]],"hitLeft":726,"hitRight":960},{"kind":"message","from":"D","to":"R","dashed":true,"label":"返回回执或未知","lines":["返回回执或未知"],"number":9,"id":"event-8","x1":948,"x2":738,"self":false,"y":695,"textX":843,"textY":674,"points":[[948,695],[738,695]],"hitLeft":726,"hitRight":960},{"kind":"message","from":"R","to":"O","dashed":false,"label":"请求动作后新观察","lines":["请求动作后新观察"],"number":10,"id":"event-9","x1":738,"x2":318,"self":false,"y":762,"textX":528,"textY":741,"points":[[738,762],[318,762]],"hitLeft":306,"hitRight":750},{"kind":"message","from":"O","to":"R","dashed":true,"label":"返回窗口、层级和变化","lines":["返回窗口、层级和变化"],"number":11,"id":"event-10","x1":318,"x2":738,"self":false,"y":829,"textX":528,"textY":808,"points":[[318,829],[738,829]],"hitLeft":306,"hitRight":750},{"kind":"message","from":"R","to":"V","dashed":false,"label":"提交后态与意图","lines":["提交后态与意图"],"number":12,"id":"event-11","x1":738,"x2":1158,"self":false,"y":896,"textX":948,"textY":875,"points":[[738,896],[1158,896]],"hitLeft":726,"hitRight":1170},{"kind":"message","from":"V","to":"R","dashed":true,"label":"返回后置与稳定性","lines":["返回后置与稳定性"],"number":13,"id":"event-12","x1":1158,"x2":738,"self":false,"y":963,"textX":948,"textY":942,"points":[[1158,963],[738,963]],"hitLeft":726,"hitRight":1170},{"kind":"message","from":"R","to":"P","dashed":true,"label":"返回成功、失败或待补采","lines":["返回成功、失败或待补采"],"number":14,"id":"event-13","x1":738,"x2":108,"self":false,"y":1030,"textX":423,"textY":1009,"points":[[738,1030],[108,1030]],"hitLeft":96,"hitRight":750},{"kind":"note","from":"R","to":"D","label":"Driver 不拥有目标选择和重试权限","lines":["Driver 不拥有目标选择和重试权限"],"number":null,"id":"event-14","w":340,"h":43,"x":673,"y":1076},{"kind":"note","from":"O","to":"V","label":"新观察用途决定能否形成证据","lines":["新观察用途决定能否形成证据"],"number":null,"id":"event-15","w":950,"h":43,"x":263,"y":1149}],"source":"sequenceDiagram\nparticipant P as 规划器\nparticipant O as 观察器\nparticipant B as 命令代理\nparticipant R as 唯一运行时\nparticipant D as 受控驱动\nparticipant V as 稳定性检查\nP->>O: 请求当前帧与可见层\nO-->>P: 返回页面、目标和遮挡事实\nP->>B: 提交单步意图与来源\nB-->>P: 返回租约、风险与预算结果\nP->>R: 交接已授权动作\nR->>O: 重新读取动作前事实\nO-->>R: 返回目标与坐标上下文\nR->>D: 发送一次真实输入\nD-->>R: 返回回执或未知\nR->>O: 请求动作后新观察\nO-->>R: 返回窗口、层级和变化\nR->>V: 提交后态与意图\nV-->>R: 返回后置与稳定性\nR-->>P: 返回成功、失败或待补采\nNote over R,D: Driver 不拥有目标选择和重试权限\nNote over O,V: 新观察用途决定能否形成证据","title":"技术图 02 · 调用时序与交接"},{"kind":"flow","width":898,"height":1942,"nodes":[{"id":"A","label":"收到意图\n绑定当前观察","shape":"box","w":292,"lines":["收到意图","绑定当前观察"],"h":88,"x":311,"y":48},{"id":"B","label":"当前观察新鲜且目标层可操作？","shape":"decision","w":300,"lines":["当前观察新鲜且目标层可操","作？"],"h":173,"x":553.5,"y":227},{"id":"C","label":"请求新观察\n等待或记录失败序列","shape":"box","w":292,"lines":["请求新观察","等待或记录失败序列"],"h":88,"x":488,"y":1571},{"id":"D","label":"目标唯一且坐标上下文完整？","shape":"decision","w":300,"lines":["目标唯一且坐标上下文完整","？"],"h":173,"x":438,"y":491},{"id":"E","label":"语义重绑与坐标换算\n仍不明则转人工","shape":"box","w":292,"lines":["语义重绑与坐标换算","仍不明则转人工"],"h":88,"x":76,"y":775},{"id":"F","label":"风险租约预算通过？","shape":"decision","w":300,"lines":["风险租约预算通过？"],"h":128,"x":438,"y":755},{"id":"G","label":"拒绝动作\n保留证据缺口","shape":"box","w":292,"lines":["拒绝动作","保留证据缺口"],"h":88,"x":449,"y":1770},{"id":"H","label":"Runtime 执行一次动作\n保存原始回执","shape":"box","w":292,"lines":["Runtime 执行一次动作","保存原始回执"],"h":88,"x":72,"y":974},{"id":"I","label":"意图级后置成立？","shape":"decision","w":300,"lines":["意图级后置成立？"],"h":128,"x":68,"y":1332},{"id":"J","label":"动作后新观察\n重新验证层级与状态","shape":"box","w":292,"lines":["动作后新观察","重新验证层级与状态"],"h":88,"x":72,"y":1153},{"id":"K","label":"可信到达或外跳事实成立？","shape":"decision","w":300,"lines":["可信到达或外跳事实成立？"],"h":128,"x":68,"y":1551},{"id":"L","label":"追加证据并继续\n或进入有限补采","shape":"box","w":292,"lines":["追加证据并继续","或进入有限补采"],"h":88,"x":44,"y":1770}],"edges":[{"id":"edge-0","from":"A","to":"B","dashed":false,"label":"初检","lines":["初检"],"points":[[578.1843575418994,136],[703.5,181.5],[703.5,227]],"labelX":703.5,"labelY":181.5,"labelW":40,"labelH":26},{"id":"edge-1","from":"B","to":"C","dashed":false,"label":"否","lines":["否"],"points":[[738.4361240520306,379.8535017966624],[773,445.5],[773,577.5],[773,709.5],[773,819],[773,928.5],[773,1018],[773,1107.5],[773,1197],[773,1286.5],[773,1396],[773,1505.5],[689.8538812785388,1571]],"labelX":773,"labelY":1018,"labelW":28,"labelH":26},{"id":"edge-2","from":"C","to":"A","dashed":true,"label":"新帧","lines":["新帧"],"points":[[541.1780821917808,1571],[403,1505.5],[403,1396],[403,1286.5],[403,1197],[403,1107.5],[403,1018],[403,928.5],[403,819],[403,709.5],[403,577.5],[403,445.5],[403,313.5],[403,181.5],[430.45251396648047,136]],"labelX":403,"labelY":928.5,"labelW":40,"labelH":26},{"id":"edge-3","from":"B","to":"D","dashed":false,"label":"是","lines":["是"],"points":[[653.1953752423151,370.9909997230684],[588,445.5],[588,491]],"labelX":588,"labelY":445.5,"labelW":28,"labelH":26},{"id":"edge-4","from":"D","to":"E","dashed":false,"label":"否","lines":["否"],"points":[[503.3504887534449,615.1854485144866],[291.5,709.5],[249.92694063926942,775]],"labelX":291.5,"labelY":709.5,"labelW":28,"labelH":26},{"id":"edge-5","from":"E","to":"A","dashed":true,"label":"新绑定","lines":["新绑定"],"points":[[213.56164383561645,775],[201,709.5],[201,577.5],[201,445.5],[201,313.5],[201,181.5],[331.14525139664806,136]],"labelX":201,"labelY":445.5,"labelW":52,"labelH":26},{"id":"edge-6","from":"D","to":"F","dashed":false,"label":"是","lines":["是"],"points":[[588,664],[588,709.5],[588,755]],"labelX":588,"labelY":709.5,"labelW":28,"labelH":26},{"id":"edge-7","from":"F","to":"G","dashed":false,"label":"否","lines":["否"],"points":[[658.4035150066229,852.9611669305075],[815,928.5],[815,1018],[815,1107.5],[815,1197],[815,1286.5],[815,1396],[815,1505.5],[815,1615],[815,1724.5],[703.1564245810056,1770]],"labelX":815,"labelY":1286.5,"labelW":28,"labelH":26},{"id":"edge-8","from":"F","to":"H","dashed":false,"label":"是","lines":["是"],"points":[[499.4324897144994,845.2111956115198],[218,928.5],[218,974]],"labelX":218,"labelY":928.5,"labelW":28,"labelH":26},{"id":"edge-9","from":"H","to":"J","dashed":false,"label":"成功失败未知均需观察","lines":["成功失败未知均需观察"],"points":[[218,1062],[218,1107.5],[218,1153]],"labelX":218,"labelY":1107.5,"labelW":136,"labelH":26},{"id":"edge-10","from":"J","to":"I","dashed":false,"label":"只用新后态验证","lines":["只用新后态验证"],"points":[[218,1241],[218,1286.5],[218,1332]],"labelX":218,"labelY":1286.5,"labelW":100,"labelH":26},{"id":"edge-11","from":"I","to":"C","dashed":true,"label":"否，先核对副作用","lines":["否，先核对副作用"],"points":[[307.2461716765714,1421.9216334179962],[595,1505.5],[618.3287671232877,1571]],"labelX":595,"labelY":1505.5,"labelW":112,"labelH":26},{"id":"edge-12","from":"C","to":"G","dashed":false,"label":"预算尽或无法消歧","lines":["预算尽或无法消歧"],"points":[[634,1659],[634,1724.5],[614.1731843575419,1770]],"labelX":634,"labelY":1724.5,"labelW":112,"labelH":26},{"id":"edge-13","from":"I","to":"K","dashed":false,"label":"是","lines":["是"],"points":[[218,1460],[218,1505.5],[218,1551]],"labelX":218,"labelY":1505.5,"labelW":28,"labelH":26},{"id":"edge-14","from":"K","to":"L","dashed":false,"label":"是","lines":["是"],"points":[[203.24455179228192,1672.7043420980403],[190,1724.5],[190,1770]],"labelX":190,"labelY":1724.5,"labelW":28,"labelH":26},{"id":"edge-15","from":"K","to":"G","dashed":false,"label":"否","lines":["否"],"points":[[275.3813014548325,1654.5173113792714],[377,1724.5],[487.8268156424581,1770]],"labelX":377,"labelY":1724.5,"labelW":28,"labelH":26}],"source":"flowchart TB\nA[\"收到意图\u003cbr/>绑定当前观察\"]\nB{\"当前观察新鲜且目标层可操作？\"}\nC[\"请求新观察\u003cbr/>等待或记录失败序列\"]\nD{\"目标唯一且坐标上下文完整？\"}\nE[\"语义重绑与坐标换算\u003cbr/>仍不明则转人工\"]\nF{\"风险租约预算通过？\"}\nG[\"拒绝动作\u003cbr/>保留证据缺口\"]\nH[\"Runtime 执行一次动作\u003cbr/>保存原始回执\"]\nI{\"意图级后置成立？\"}\nJ[\"动作后新观察\u003cbr/>重新验证层级与状态\"]\nK{\"可信到达或外跳事实成立？\"}\nL[\"追加证据并继续\u003cbr/>或进入有限补采\"]\nA -->|初检| B\nB -->|否| C\nC -.->|新帧| A\nB -->|是| D\nD -->|否| E\nE -.->|新绑定| A\nD -->|是| F\nF -->|否| G\nF -->|是| H\nH -->|成功失败未知均需观察| J\nJ -->|只用新后态验证| I\nI -.->|否，先核对副作用| C\nC -->|预算尽或无法消歧| G\nI -->|是| K\nK -->|是| L\nK -->|否| G","title":"技术图 03 · 判定与异常流转"}]</script>
+<script id="technical-canvas-core">/* 同一绘图核心用于离线原生 Canvas 校验和文档阅读；不依赖网络、DOM 或业务运行时。 */
+(function(root) {
+  "use strict";
+  const fonts='"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif';
+  function rounded(ctx,x,y,w,h,r) {
+    ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();
+  }
+  function arrow(ctx,points,dashed,selected,dim) {
+    ctx.save();ctx.globalAlpha=dim?0.28:1;ctx.strokeStyle=selected?"#12695f":dashed?"#866ca4":"#617f91";ctx.fillStyle=ctx.strokeStyle;ctx.lineWidth=selected?2.7:1.7;ctx.lineJoin="round";ctx.lineCap="round";ctx.setLineDash(dashed?[7,5]:[]);
+    ctx.beginPath();ctx.moveTo(points[0][0],points[0][1]);for(const point of points.slice(1))ctx.lineTo(point[0],point[1]);ctx.stroke();ctx.setLineDash([]);
+    const end=points[points.length-1],previous=points[points.length-2],angle=Math.atan2(end[1]-previous[1],end[0]-previous[0]);
+    ctx.beginPath();ctx.moveTo(end[0],end[1]);ctx.lineTo(end[0]-9*Math.cos(angle-0.4),end[1]-9*Math.sin(angle-0.4));ctx.lineTo(end[0]-9*Math.cos(angle+0.4),end[1]-9*Math.sin(angle+0.4));ctx.closePath();ctx.fill();ctx.restore();
+  }
+  function centeredLines(ctx,lines,x,y,lineHeight,color,size,bold) {
+    ctx.save();ctx.font=(bold?"600 ":"")+size+"px "+fonts;ctx.fillStyle=color;ctx.textAlign="center";ctx.textBaseline="middle";
+    lines.forEach(function(line,index){ctx.fillText(line,x,y+index*lineHeight);});ctx.restore();
+  }
+  function flow(ctx,graph,selected) {
+    for(const edge of graph.edges) arrow(ctx,edge.points,edge.dashed,edge.id===selected || edge.from===selected || edge.to===selected,Boolean(selected && edge.id!==selected && edge.from!==selected && edge.to!==selected));
+    for(const edge of graph.edges) {
+      if(!edge.label)continue;
+      ctx.save();rounded(ctx,edge.labelX-edge.labelW/2,edge.labelY-edge.labelH/2,edge.labelW,edge.labelH,5);ctx.fillStyle="#fbfcfd";ctx.fill();
+      centeredLines(ctx,edge.lines,edge.labelX,edge.labelY-(edge.lines.length-1)*9,18,edge.dashed?"#775a99":"#476474",12,false);ctx.restore();
+    }
+    for(const node of graph.nodes) {
+      const isSelected=node.id===selected,decision=node.shape==="decision",limited=/(拒绝|隔离|禁止|失败|不足|人工|终结)/.test(node.label);
+      const accent=decision?"#9c6423":limited?"#876746":"#266d83";
+      ctx.save();
+      if(decision) {ctx.beginPath();ctx.moveTo(node.x+node.w/2,node.y);ctx.lineTo(node.x+node.w,node.y+node.h/2);ctx.lineTo(node.x+node.w/2,node.y+node.h);ctx.lineTo(node.x,node.y+node.h/2);ctx.closePath();}
+      else rounded(ctx,node.x,node.y,node.w,node.h,11);
+      ctx.fillStyle=isSelected?"#e6f3ee":decision?"#fff5e5":limited?"#f8f3eb":"#eef5f9";ctx.fill();ctx.strokeStyle=isSelected?"#12695f":decision?"#d5b17c":limited?"#cfbca2":"#aac6d4";ctx.lineWidth=isSelected?2.7:1.15;ctx.stroke();
+      if(!decision){ctx.fillStyle=accent;rounded(ctx,node.x+12,node.y+18,4,node.h-36,2);ctx.fill();}
+      centeredLines(ctx,node.lines,node.x+node.w/2,node.y+node.h/2-(node.lines.length-1)*12.5,25,"#213a46",16,false);
+      ctx.restore();
+    }
+  }
+  function sequence(ctx,graph,selected) {
+    for(const participant of graph.participants) {
+      ctx.save();ctx.strokeStyle="#c6d2d9";ctx.lineWidth=1.2;ctx.setLineDash([4,5]);ctx.beginPath();ctx.moveTo(participant.x,participant.y+participant.h);ctx.lineTo(participant.x,graph.height-57);ctx.stroke();ctx.setLineDash([]);
+      rounded(ctx,participant.x-participant.w/2,participant.y,participant.w,participant.h,9);ctx.fillStyle="#edf4fa";ctx.fill();ctx.strokeStyle="#aac1d4";ctx.stroke();
+      centeredLines(ctx,participant.lines,participant.x,participant.y+participant.h/2-(participant.lines.length-1)*10.5,21,"#23465b",15,true);
+      rounded(ctx,participant.x-participant.w/2,graph.height-58,participant.w,40,7);ctx.fillStyle="#f0f5f8";ctx.fill();ctx.strokeStyle="#c6d2d9";ctx.stroke();
+      centeredLines(ctx,[participant.label],participant.x,graph.height-38,20,"#617984",12,false);ctx.restore();
+    }
+    for(const event of graph.events) {
+      if(event.kind==="note") {
+        ctx.save();rounded(ctx,event.x,event.y,event.w,event.h,7);ctx.fillStyle="#fff7e8";ctx.fill();ctx.strokeStyle="#dac394";ctx.stroke();
+        centeredLines(ctx,event.lines,event.x+event.w/2,event.y+event.h/2-(event.lines.length-1)*10.5,21,"#7a613b",14,false);ctx.restore();continue;
+      }
+      const active=event.id===selected;
+      if(active){ctx.fillStyle="#eaf4ef";ctx.fillRect(24,event.textY-15,graph.width-48,event.y-event.textY+(event.self?49:24));}
+      arrow(ctx,event.points,event.dashed,active,Boolean(selected && !active));
+      const lineWidth=Math.max.apply(null,event.lines.map(function(line){ctx.font="14px "+fonts;return ctx.measureText(line).width;}))+14;
+      ctx.fillStyle=active?"#eaf4ef":"#fbfcfd";ctx.fillRect(event.textX-lineWidth/2,event.textY-11,lineWidth,event.lines.length*21);
+      centeredLines(ctx,event.lines,event.textX,event.textY,21,event.dashed?"#795d99":"#2b5265",14,false);
+      ctx.save();ctx.beginPath();ctx.arc(Math.min(event.x1,event.x2)-17,event.y,10,0,Math.PI*2);ctx.fillStyle=active?"#12695f":"#e4edf2";ctx.fill();centeredLines(ctx,[String(event.number)],Math.min(event.x1,event.x2)-17,event.y,16,active?"#fff":"#547381",10,true);ctx.restore();
+    }
+  }
+  function draw(ctx,graph,selected) {
+    ctx.save();ctx.clearRect(0,0,graph.width,graph.height);ctx.fillStyle="#fbfcfd";ctx.fillRect(0,0,graph.width,graph.height);
+    ctx.fillStyle="#dfe8ed";for(let x=18;x<graph.width;x+=24)for(let y=18;y<graph.height;y+=24){ctx.beginPath();ctx.arc(x,y,0.6,0,Math.PI*2);ctx.fill();}
+    if(graph.kind==="sequence")sequence(ctx,graph,selected);else flow(ctx,graph,selected);
+    ctx.restore();
+  }
+  function items(graph) {
+    if(graph.kind==="sequence")return graph.events.filter(function(event){return event.kind==="message";}).map(function(event){
+      const byId=new Map(graph.participants.map(function(participant){return[participant.id,participant.label];}));
+      return {id:event.id,label:String(event.number).padStart(2,"0")+" "+event.label,detail:byId.get(event.from)+" → "+byId.get(event.to)+"："+event.label+(event.dashed?"；虚线回执/消息，具体语义以正文为准。":"；交接条件及失败分支见图后正文。"),x:event.textX,y:event.textY};
+    });
+    return graph.nodes.map(function(node){
+      const incoming=graph.edges.filter(function(edge){return edge.to===node.id;}).map(function(edge){return graph.nodes.find(function(item){return item.id===edge.from;}).label.replace(/\n/g," / ")+"："+(edge.label||"交接");});
+      const outgoing=graph.edges.filter(function(edge){return edge.from===node.id;}).map(function(edge){return(edge.label||"交接")+" → "+graph.nodes.find(function(item){return item.id===edge.to;}).label.replace(/\n/g," / ");});
+      const detail=graph.relationDiagram?"关联到本对象："+(incoming.join("；")||"本图归属入口")+"。本对象关联："+(outgoing.join("；")||"其他约束见正文")+"。箭头表达引用或包含，不是执行时序。":"进入："+(incoming.join("；")||"流程入口")+"。继续："+(outgoing.join("；")||"本图终点，终态约束见正文")+"。";
+      return {id:node.id,label:node.label.replace(/\n/g," / "),detail:detail,x:node.x+node.w/2,y:node.y};
+    });
+  }
+  function hit(graph,x,y) {
+    if(graph.kind==="sequence")return graph.events.find(function(event){return event.kind==="message" && x>=event.hitLeft && x<=event.hitRight && y>=event.textY-15 && y<=event.y+(event.self?32:12);})?.id || null;
+    return graph.nodes.find(function(node){
+      if(node.shape==="decision")return Math.abs(x-node.x-node.w/2)/(node.w/2)+Math.abs(y-node.y-node.h/2)/(node.h/2)<=1;
+      return x>=node.x && x<=node.x+node.w && y>=node.y && y<=node.y+node.h;
+    })?.id || null;
+  }
+  root.AliothTechnicalCanvas=Object.freeze({draw:draw,items:items,hit:hit,fonts:fonts});
+})(globalThis);
+</script>
+<script id="technical-canvas-interface">/* 文档交互只控制阅读状态；不会请求网络、访问设备或改变业务数据。 */
+(function() {
+  "use strict";
+  const core=globalThis.AliothTechnicalCanvas,data=JSON.parse(document.getElementById("technical-diagram-data").textContent),states=[];
+  for(const figure of document.querySelectorAll("[data-technical-diagram]")) {
+    const graph=data[figure.dataset.technicalDiagram],canvas=figure.querySelector("canvas"),viewport=figure.querySelector(".technical-viewport"),ctx=canvas.getContext("2d");
+    if(!ctx)continue;
+    const picker=figure.querySelector("select"),output=figure.querySelector("output"),detail=figure.querySelector(".technical-detail");
+    const choices=core.items(graph),state={figure,canvas,ctx,viewport,graph,scale:1,selected:null,manual:false};states.push(state);
+    const all=document.createElement("option");all.value="";all.textContent=graph.kind==="sequence"?"查看全部消息":"查看全部组件 / 节点";picker.append(all);
+    for(const item of choices){const option=document.createElement("option");option.value=item.id;option.textContent=item.label;picker.append(option);}
+    function paint() {
+      // 高分屏大图限制单张位图面积，避免放大时无界申请内存；CSS 阅读比例不受影响。
+      const ratio=Math.min(window.devicePixelRatio||1,2,Math.sqrt(16000000/(graph.width*graph.height*state.scale*state.scale)));
+      canvas.width=Math.ceil(graph.width*state.scale*ratio);canvas.height=Math.ceil(graph.height*state.scale*ratio);
+      canvas.style.width=graph.width*state.scale+"px";canvas.style.height=graph.height*state.scale+"px";
+      ctx.setTransform(ratio*state.scale,0,0,ratio*state.scale,0,0);core.draw(ctx,graph,state.selected);
+      output.textContent=Math.round(state.scale*100)+"%";
+      figure.querySelector("[data-minus]").disabled=state.scale<=0.2;figure.querySelector("[data-plus]").disabled=state.scale>=1.6;
+    }
+    function fit(readable) {
+      const target=Math.min(1,(Math.max(260,viewport.clientWidth)-1)/graph.width);
+      state.scale=readable?Math.max(0.8,target):Math.max(0.2,target);viewport.scrollLeft=0;viewport.scrollTop=0;paint();
+    }
+    function select(id,jump) {
+      const item=choices.find(function(value){return value.id===id;});state.selected=item?item.id:null;picker.value=item?item.id:"";
+      detail.hidden=!item;detail.replaceChildren();
+      if(item){const heading=document.createElement("strong"),paragraph=document.createElement("p");heading.textContent=item.label;paragraph.textContent=item.detail;detail.append(heading,paragraph);if(jump){viewport.scrollTop=Math.max(0,(item.y-36)*state.scale);viewport.scrollLeft=Math.max(0,item.x*state.scale-viewport.clientWidth/2);}}
+      paint();
+    }
+    function zoom(delta) {
+      state.manual=true;const previous=state.scale,cx=(viewport.scrollLeft+viewport.clientWidth/2)/previous,cy=(viewport.scrollTop+viewport.clientHeight/2)/previous;
+      state.scale=Math.max(0.2,Math.min(1.6,Math.round((state.scale+delta)*100)/100));paint();viewport.scrollLeft=Math.max(0,cx*state.scale-viewport.clientWidth/2);viewport.scrollTop=Math.max(0,cy*state.scale-viewport.clientHeight/2);
+    }
+    canvas.addEventListener("click",function(event){const bounds=canvas.getBoundingClientRect();select(core.hit(graph,(event.clientX-bounds.left)*graph.width/bounds.width,(event.clientY-bounds.top)*graph.height/bounds.height),false);});
+    picker.addEventListener("change",function(){select(picker.value,true);});
+    figure.querySelector("[data-minus]").addEventListener("click",function(){zoom(-0.1);});
+    figure.querySelector("[data-plus]").addEventListener("click",function(){zoom(0.1);});
+    figure.querySelector("[data-fit]").addEventListener("click",function(){state.manual=true;fit(false);});
+    figure.querySelector("[data-size]").addEventListener("click",function(){state.manual=true;state.scale=1;paint();});
+    figure.querySelector(".technical-controls").hidden=false;figure.querySelector(".technical-source").open=false;
+    state.paint=paint;state.fit=fit;fit(true);
+  }
+  let frame=0;
+  window.addEventListener("resize",function(){cancelAnimationFrame(frame);frame=requestAnimationFrame(function(){for(const state of states)state.manual?state.paint():state.fit(true);});});
+  if(document.fonts && document.fonts.ready)document.fonts.ready.then(function(){for(const state of states)state.paint();});
+  window.addEventListener("beforeprint",function(){for(const state of states){state.previousScale=state.scale;state.scale=1;state.paint();}});
+  window.addEventListener("afterprint",function(){for(const state of states){state.scale=state.previousScale||state.scale;state.paint();}});
+  document.documentElement.dataset.technicalCanvasReady=String(states.length);
+})();
+</script>
+</body>
+</html>

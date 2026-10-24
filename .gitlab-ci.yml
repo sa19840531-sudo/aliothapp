@@ -1,0 +1,328 @@
+stages:
+  - lint
+  - test
+  - publish
+  - deploy
+  - verify
+
+variables:
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+  PIP_DEFAULT_TIMEOUT: "60"
+
+default:
+  tags:
+    - alioth-ci
+  interruptible: true
+
+workflow:
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_BRANCH == "dev" && $CI_OPEN_MERGE_REQUESTS'
+      when: never
+    - if: '$CI_COMMIT_BRANCH == "dev"'
+    - if: '$CI_COMMIT_TAG'
+
+.full-validation:
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
+      when: never
+    - when: on_success
+
+backend-lint:
+  extends: .full-validation
+  stage: lint
+  image: python:3.12-slim
+  allow_failure: false
+  cache:
+    key: pip-$CI_COMMIT_REF_SLUG
+    paths:
+      - .cache/pip
+  script:
+    - pip install -e ".[dev]"
+    - python -m ruff check services scripts
+
+production-compose-lint:
+  extends: .full-validation
+  stage: lint
+  image: docker:27-cli
+  before_script:
+    - apk add --no-cache bash
+  script:
+    - docker compose version
+    - sh -n infra/scripts/deploy-production.sh infra/scripts/verify-production.sh
+    - bash -n infra/scripts/redeploy-local-production.sh
+    - infra/scripts/redeploy-local-production.sh --help
+    - >-
+      docker compose
+      --env-file infra/env/compose.production.example
+      -f infra/docker-compose.production.yml
+      --profile ops
+      config --quiet
+
+backend-test:
+  extends: .full-validation
+  stage: test
+  image: python:3.12-slim
+  variables:
+    # DevUI 实体在导入时构建客户端；测试只验证本地契约，不允许使用生产 LLM 密钥。
+    ALIOTH_LLM_API_KEY: "ci-test-key-no-network"
+    PLAYWRIGHT_BROWSERS_PATH: "$CI_PROJECT_DIR/.cache/ms-playwright"
+  cache:
+    key:
+      files:
+        - pyproject.toml
+      prefix: backend-test
+    paths:
+      - .cache/pip
+      - .cache/ms-playwright
+  script:
+    - pip install -e ".[dev]"
+    - apt-get update
+    - apt-get install -y --no-install-recommends procps nodejs
+    - python -m playwright install --with-deps chromium
+    - python -m pytest services/api/tests -q --durations=25 -o faulthandler_timeout=60 --junitxml=backend-results.xml
+  artifacts:
+    when: always
+    expire_in: 7 days
+    reports:
+      junit: backend-results.xml
+    paths:
+      - backend-results.xml
+
+h5-postgres-test:
+  extends: .full-validation
+  stage: test
+  image: python:3.12-slim
+  services:
+    - name: pgvector/pgvector:0.8.2-pg17-bookworm
+      alias: postgres
+    - name: redis:7-alpine
+      alias: redis
+  variables:
+    POSTGRES_DB: alioth_h5_test
+    POSTGRES_USER: postgres
+    POSTGRES_PASSWORD: postgres
+    ALIOTH_DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:5432/postgres
+    ALIOTH_TEST_DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:5432/alioth_h5_test
+    ALIOTH_QUEUE_CAPACITY_TEST_REDIS_URL: redis://127.0.0.1:16379/0
+    ALIOTH_LLM_API_KEY: "ci-test-key-no-network"
+    PLAYWRIGHT_BROWSERS_PATH: "$CI_PROJECT_DIR/.cache/ms-playwright"
+  cache:
+    key:
+      files:
+        - pyproject.toml
+      prefix: h5-postgres-test
+    paths:
+      - .cache/pip
+      - .cache/ms-playwright
+  script:
+    - apt-get update
+    - apt-get install -y --no-install-recommends socat procps nodejs
+    - rm -rf /var/lib/apt/lists/*
+    - socat TCP-LISTEN:5432,bind=127.0.0.1,reuseaddr,fork TCP:postgres:5432 &
+    - socat TCP-LISTEN:16379,bind=127.0.0.1,reuseaddr,fork TCP:redis:6379 &
+    - pip install -e ".[dev]"
+    - python -m playwright install --with-deps chromium
+    - ALIOTH_DATABASE_URL="$ALIOTH_TEST_DATABASE_URL" python -m alembic -c services/api/migrations/alembic.ini upgrade head
+    - >-
+      python -m pytest
+      $(find services/api/tests -maxdepth 1 -name 'test_h5*.py'
+      ! -name 'test_h5_acceptance_fixture_server.py' -print)
+      $(find services/api/tests -maxdepth 1 -name 'test_green*.py' -print)
+      services/api/tests/test_migration_revision_uniqueness.py
+      services/api/tests/test_journey_run_plans_postgres.py
+      services/api/tests/test_checkpoint_evidence_postgres.py
+      services/api/tests/test_checkpoint_recovery_postgres.py
+      services/api/tests/test_journey_consumption_postgres.py
+      services/api/tests/test_journey_rule_selection_postgres.py
+      services/api/tests/test_evidence_redaction_postgres.py
+      services/api/tests/test_evidence_redaction_api_postgres.py
+      services/api/tests/test_journey_cross_session_e2e_postgres.py
+      services/api/tests/test_web_sequence_seed_lineage_postgres.py
+      services/api/tests/test_workstation_task_list_postgres.py
+      services/api/tests/test_workstation_task_cancellation_postgres.py
+      services/api/tests/test_workstation_read_query_postgres.py
+      services/api/tests/test_rule_org_management_postgres.py
+      services/api/tests/test_report_rule_page_postgres.py
+      services/api/tests/test_workstation_review_postgres.py
+      services/api/tests/test_delivery_incident_query_postgres.py
+      services/api/tests/test_cost_report_read_postgres.py
+      services/api/tests/test_evidence_gap_query_postgres.py
+      services/api/tests/test_rule_execution_read_postgres.py
+      services/api/tests/test_agent_evidence_handoff_postgres.py
+      services/api/tests/test_report_error_document_postgres.py
+      services/api/tests/test_worker_capacity_and_controls.py
+      services/api/tests/test_web_guide_lifecycle_controls.py
+      services/api/tests/test_web_guide_claim_cleanup.py
+      services/api/tests/test_worker_stalled_finalization_postgres.py
+      services/api/tests/test_app_publication_handoff_recovery_postgres.py
+      services/api/tests/test_app_bootstrap_settlement_postgres.py
+      services/api/tests/test_app_bootstrap_finalization_recovery_postgres.py
+      services/api/tests/test_app_capture_session_auth_postgres.py
+      services/api/tests/test_app_visual_inspection_wakeup_postgres.py
+      services/api/tests/test_app_rule_coverage_facts_postgres.py
+      services/api/tests/test_app_task_timeline_postgres.py
+      services/api/tests/test_app_inspection_scope_postgres.py
+      services/api/tests/test_app_publication_visual_page_state_postgres.py
+      services/api/tests/test_app_action_scene_repository_postgres.py
+      services/api/tests/test_app_complete_action_pair_publish.py
+      services/api/tests/test_app_startup_result_pair_publish.py
+      services/api/tests/test_app_rule_action_facts_postgres.py
+      services/api/tests/test_app_list_interaction_transition_postgres.py
+      services/api/tests/test_rule_judge_formal_packet_postgres.py
+      services/api/tests/test_app_rule_inventory_completion_gate_postgres.py
+      services/api/tests/test_app_aggregate_recovery_postgres.py
+      services/api/tests/test_app_aggregate_disposition_postgres.py
+      services/api/tests/test_aggregate_rule_inventory_postgres.py
+      services/api/tests/test_task_rule_inventory_postgres.py
+      -v --durations=25 -o faulthandler_timeout=60
+      --junitxml=h5-postgres-results.xml
+  artifacts:
+    when: always
+    expire_in: 7 days
+    reports:
+      junit: h5-postgres-results.xml
+    paths:
+      - h5-postgres-results.xml
+
+workstation-build:
+  extends: .full-validation
+  stage: test
+  image: node:22-bookworm-slim
+  script:
+    - cd app/workstation
+    - npm ci
+    - npm run build
+
+workstation-test:
+  extends: .full-validation
+  stage: test
+  image: node:22-bookworm-slim
+  script:
+    - cd app/workstation
+    - npm ci
+    - npm run test
+
+frontend-e2e:
+  extends: .full-validation
+  stage: test
+  image: mcr.microsoft.com/playwright:v1.62.1-noble
+  variables:
+    PLAYWRIGHT_BROWSERS_PATH: /ms-playwright
+  script:
+    - npm --prefix app/workstation ci
+    - npm --prefix tests/frontend-e2e ci
+    - npm --prefix tests/frontend-e2e run typecheck
+    - npm --prefix tests/frontend-e2e test
+  artifacts:
+    when: always
+    expire_in: 7 days
+    reports:
+      junit: tests/frontend-e2e/test-results/junit.xml
+    paths:
+      - tests/frontend-e2e/playwright-report/
+      - tests/frontend-e2e/test-results/
+
+main-promotion-check:
+  stage: test
+  image: alpine:3.21
+  variables:
+    GIT_DEPTH: "0"
+  before_script:
+    - apk add --no-cache git
+  script:
+    - git fetch --no-tags origin '+refs/heads/dev:refs/remotes/origin/dev'
+    - >-
+      git merge-base --is-ancestor "$CI_COMMIT_SHA" origin/dev ||
+      { echo "待合入 main 的提交尚未进入 dev，请先完成 dev 验收。"; exit 1; }
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
+      when: on_success
+    - when: never
+
+docker-images:
+  stage: publish
+  image: docker:27-cli
+  services:
+    - name: docker:27-dind
+  variables:
+    DOCKER_HOST: "tcp://docker:2376"
+    DOCKER_TLS_CERTDIR: "/certs"
+    DOCKER_TLS_VERIFY: "1"
+    DOCKER_CERT_PATH: "/certs/client"
+  before_script:
+    - echo "$CI_REGISTRY_PASSWORD" | docker login "$CI_REGISTRY" -u "$CI_REGISTRY_USER" --password-stdin
+  script:
+    - docker build -f infra/docker/api/Dockerfile.production -t "$CI_REGISTRY_IMAGE/api:$CI_COMMIT_SHA" .
+    - docker build -f infra/docker/workstation/Dockerfile -t "$CI_REGISTRY_IMAGE/workstation:$CI_COMMIT_SHA" .
+    - docker build -f infra/docker/gateway/Dockerfile -t "$CI_REGISTRY_IMAGE/gateway:$CI_COMMIT_SHA" .
+    - docker push "$CI_REGISTRY_IMAGE/api:$CI_COMMIT_SHA"
+    - docker push "$CI_REGISTRY_IMAGE/workstation:$CI_COMMIT_SHA"
+    - docker push "$CI_REGISTRY_IMAGE/gateway:$CI_COMMIT_SHA"
+  rules:
+    - if: '$CI_COMMIT_TAG && $ALIOTH_REGISTRY_PUBLISH_ENABLED == "1"'
+
+.ssh-deploy:
+  image: alpine:3.21
+  before_script:
+    - apk add --no-cache openssh-client
+    - install -m 700 -d ~/.ssh
+    - cp "$DEPLOY_SSH_PRIVATE_KEY" ~/.ssh/id_ed25519
+    - chmod 600 ~/.ssh/id_ed25519
+    - cp "$DEPLOY_SSH_KNOWN_HOSTS" ~/.ssh/known_hosts
+
+deploy-acceptance:
+  extends: .ssh-deploy
+  stage: deploy
+  resource_group: alioth-dev
+  interruptible: false
+  timeout: 90m
+  environment:
+    name: dev
+    url: http://192.46.230.40/
+  needs:
+    - backend-lint
+    - production-compose-lint
+    - backend-test
+    - h5-postgres-test
+    - workstation-build
+    - workstation-test
+    - frontend-e2e
+  script:
+    - >-
+      ssh
+      -p "$DEPLOY_PORT"
+      -o BatchMode=yes
+      -o IdentitiesOnly=yes
+      "$DEPLOY_USER@$DEPLOY_HOST"
+      "cd /opt/alioth/current &&
+      git fetch origin
+      '+refs/heads/dev:refs/remotes/origin/dev' &&
+      git checkout --detach '$CI_COMMIT_SHA' &&
+      infra/scripts/redeploy-local-production.sh
+      --branch dev
+      --commit '$CI_COMMIT_SHA'"
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "dev" && $CI_PIPELINE_SOURCE == "push"'
+      when: on_success
+      allow_failure: false
+    - when: never
+
+verify-acceptance:
+  extends: .ssh-deploy
+  stage: verify
+  needs:
+    - deploy-acceptance
+  script:
+    - >-
+      ssh
+      -p "$DEPLOY_PORT"
+      -o BatchMode=yes
+      -o IdentitiesOnly=yes
+      "$DEPLOY_USER@$DEPLOY_HOST"
+      "cd /opt/alioth/current && infra/scripts/verify-production.sh"
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "dev" && $CI_PIPELINE_SOURCE == "push"'
+      when: on_success
+    - when: never

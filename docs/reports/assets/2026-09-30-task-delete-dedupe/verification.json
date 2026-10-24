@@ -1,0 +1,121 @@
+{
+  "base_url": "http://127.0.0.1:4174",
+  "real_api_calls": 0,
+  "cases": [
+    {
+      "portal": "admin",
+      "rows": [
+        {
+          "status": "failed",
+          "input_delete_count": 6,
+          "rendered_delete_count": 1,
+          "rendered_actions": [
+            "查看详情",
+            "复制任务",
+            "删除"
+          ]
+        },
+        {
+          "status": "review",
+          "input_delete_count": 37,
+          "rendered_delete_count": 1,
+          "rendered_actions": [
+            "查看详情",
+            "复制任务",
+            "删除"
+          ]
+        },
+        {
+          "status": "canceled",
+          "input_delete_count": 6,
+          "rendered_delete_count": 1,
+          "rendered_actions": [
+            "查看详情",
+            "复制任务",
+            "删除"
+          ]
+        },
+        {
+          "status": "done",
+          "input_delete_count": 6,
+          "rendered_delete_count": 1,
+          "rendered_actions": [
+            "查看详情",
+            "复制任务",
+            "删除"
+          ]
+        },
+        {
+          "status": "running",
+          "input_delete_count": 6,
+          "rendered_delete_count": 0,
+          "rendered_actions": [
+            "查看详情",
+            "取消"
+          ]
+        }
+      ],
+      "repeated_list_reads": 3,
+      "confirmation": {
+        "cancel_made_no_request": true,
+        "confirmed_mock_delete_requests": 1
+      },
+      "unmocked": [],
+      "errors": []
+    },
+    {
+      "portal": "workstation",
+      "rows": [
+        {
+          "status": "failed",
+          "input_delete_count": 6,
+          "rendered_delete_count": 0,
+          "rendered_actions": [
+            "查看详情",
+            "复制任务"
+          ]
+        },
+        {
+          "status": "review",
+          "input_delete_count": 37,
+          "rendered_delete_count": 0,
+          "rendered_actions": [
+            "查看详情",
+            "复制任务"
+          ]
+        },
+        {
+          "status": "canceled",
+          "input_delete_count": 6,
+          "rendered_delete_count": 0,
+          "rendered_actions": [
+            "查看详情",
+            "复制任务"
+          ]
+        },
+        {
+          "status": "done",
+          "input_delete_count": 6,
+          "rendered_delete_count": 0,
+          "rendered_actions": [
+            "查看详情",
+            "复制任务"
+          ]
+        },
+        {
+          "status": "running",
+          "input_delete_count": 6,
+          "rendered_delete_count": 0,
+          "rendered_actions": [
+            "查看详情",
+            "取消"
+          ]
+        }
+      ],
+      "repeated_list_reads": 2,
+      "confirmation": null,
+      "unmocked": [],
+      "errors": []
+    }
+  ]
+}

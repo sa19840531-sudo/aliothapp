@@ -1,0 +1,21 @@
+{
+  "database": "alioth_green_shared_test",
+  "role": "green_shared_test",
+  "container_port": 5432,
+  "postgres_version": "PostgreSQL 16.14 (Debian 16.14-1.pgdg12+1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 12.2.0-14+deb12u1) 12.2.0, 64-bit",
+  "alembic_head": "20261016_0140",
+  "container_name": "alioth-green-shared-pg-20261019",
+  "host_endpoint": "127.0.0.1:25420",
+  "migration_scope": "Dedicated test database only",
+  "cases": 46,
+  "passed": 46,
+  "skipped": 0,
+  "scope_notice": "Controlled database and evidence integration; no live model, browser/device capture, or product acceptance.",
+  "files": [
+    "test_task_rule_inventory_postgres.py",
+    "test_rule_judge_formal_packet_postgres.py",
+    "test_journey_cross_session_e2e_postgres.py",
+    "test_aggregate_disposition_postgres.py",
+    "test_review_finalization_recovery_postgres.py"
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "contract": "green-rule-contract.v2",
+  "rule_version": 4,
+  "schedule_row": 109,
+  "production_scope": "shared evidence consumers and original result writers only",
+  "unchanged_boundaries": [
+    "services/api/app/infrastructure/browser",
+    "services/api/app/agents/explorer",
+    "services/api/migrations"
+  ],
+  "boundary_changes": [],
+  "source_changed_during_final_tests": [],
+  "consumer_limits": {
+    "32": "proven complete sibling widths; original container needed for positive distribution; native text bounds, initial state, actual horizontal scroll still missing",
+    "s35": "authoritative H5 Task only; existing local display probe causal response; no fail inferred from transition or absent feedback",
+    "other_rules": "explicit per-subitem insufficiency, no unsupported visual or HTTP success fallback"
+  },
+  "not_business_acceptance": true
+}

@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="验证式恢复 · 状态等价 · 缺口闭环；Alioth 七项探索优化专项设计。包含组件图、时序图、判断流程、算法、并发恢复与技术验收，不展开数据库表或具体数据结构。">
+  <meta name="color-scheme" content="light">
+  <title>专项三：基于页面图的精准补采设计 · Alioth</title>
+  <style>
+:root { --accent: #88501c; --ink: #192b34; --muted: #526772; --line: #dfe6e8; --paper: #fff; --wash: #f3f6f7; color-scheme: light; }
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 24px; }
+body { margin: 0; color: var(--ink); background: var(--wash); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; -webkit-font-smoothing: antialiased; }
+a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+a:hover { text-decoration-thickness: 2px; }
+a:focus-visible, [tabindex]:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; }
+.skip { position: fixed; left: 16px; top: -100px; padding: 12px 18px; background: var(--paper); border: 2px solid var(--accent); z-index: 10; }
+.skip:focus { top: 12px; }
+.topbar { background: var(--paper); border-top: 5px solid var(--accent); border-bottom: 1px solid var(--line); }
+.topbar-inner { max-width: 1460px; margin: auto; padding: 22px 32px; display: flex; align-items: center; justify-content: space-between; gap: 18px; }
+.brand { text-decoration: none; color: var(--ink); display: flex; align-items: center; gap: 13px; }
+.brand-mark { width: 39px; height: 39px; background: var(--accent); color: #fff; display: grid; place-items: center; font-weight: 750; border-radius: 11px; }
+.brand strong { display: block; font-size: 16px; letter-spacing: .11em; }
+.brand small { display: block; color: var(--muted); font-size: 12px; margin-top: 4px; letter-spacing: .02em; }
+.top-meta { text-align: right; font-size: 12px; color: var(--muted); line-height: 1.8; }
+.layout { max-width: 1460px; margin: 30px auto 50px; padding: 0 32px; display: grid; grid-template-columns: 242px minmax(0, 1fr); gap: 30px; align-items: start; }
+.rail { position: sticky; top: 24px; max-height: calc(100vh - 48px); overflow-y: auto; padding: 4px 10px 12px 0; scrollbar-width: thin; }
+.rail-label { margin: 0 0 12px; font-size: 11px; font-weight: 750; letter-spacing: .13em; color: var(--muted); }
+.series { display: grid; gap: 4px; }
+.series-link { display: flex; gap: 12px; align-items: center; padding: 10px 12px; border: 1px solid transparent; border-radius: 9px; text-decoration: none; color: var(--muted); font-size: 13px; line-height: 1.35; }
+.series-link:hover { background: #e8eef0; text-decoration: none; }
+.series-link.active { background: var(--paper); border-color: var(--line); color: var(--accent); font-weight: 700; box-shadow: 0 3px 9px #20303a06; }
+.series-no { font-size: 11px; font-variant-numeric: tabular-nums; letter-spacing: .08em; opacity: .8; }
+.toc { margin-top: 26px; padding-top: 20px; border-top: 1px solid var(--line); display: grid; }
+.toc a { display: block; font-size: 12px; line-height: 1.55; color: var(--muted); padding: 6px 8px; text-decoration: none; border-left: 2px solid transparent; }
+.toc a:hover { border-left-color: var(--accent); color: var(--accent); background: #fff8; }
+.rail-note { margin: 20px 8px 0; color: var(--muted); font-size: 11px; line-height: 1.8; }
+.main-column { min-width: 0; }
+.doc-toolbar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 15px; padding: 0 3px; font-size: 12px; line-height: 1.5; color: var(--muted); }
+.breadcrumb { display: flex; flex-wrap: wrap; gap: 9px; align-items: center; }
+.breadcrumb a { text-decoration: none; }
+.toolbar-links { display: flex; gap: 17px; }
+.doc-paper { background: var(--paper); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; box-shadow: 0 12px 40px #152b3810; }
+.document-banner { border-bottom: 1px solid var(--line); padding: 21px 46px; display: flex; align-items: center; gap: 14px; background: linear-gradient(105deg, #f8fbfb, #fff); }
+.document-number { color: var(--accent); font-size: 30px; font-weight: 730; line-height: 1; letter-spacing: -.04em; font-variant-numeric: tabular-nums; }
+.document-kicker { font-size: 11px; letter-spacing: .13em; font-weight: 700; color: var(--accent); line-height: 1.7; }
+.document-subtitle { color: var(--muted); font-size: 12px; line-height: 1.7; margin-top: 2px; }
+.document-body { padding: 35px 46px 48px; font-size: 15px; line-height: 1.95; overflow-wrap: anywhere; }
+.document-body h1 { margin: 0 0 23px; font-size: clamp(26px, 2.5vw, 37px); line-height: 1.43; letter-spacing: -.025em; font-weight: 740; max-width: 950px; }
+.document-body h2 { font-size: 23px; line-height: 1.55; margin: 50px 0 18px; padding-top: 24px; border-top: 1px solid var(--line); color: var(--ink); letter-spacing: -.02em; }
+.document-body h3 { margin: 30px 0 12px; font-size: 18px; line-height: 1.65; color: var(--accent); }
+.document-body h4 { margin: 24px 0 10px; font-size: 16px; }
+.document-body h1, .document-body h2, .document-body h3 { scroll-margin-top: 24px; }
+.document-body p { margin: 0 0 16px; }
+.document-body blockquote { margin: 22px 0; padding: 17px 20px; border-left: 3px solid var(--accent); background: #f3f7f8; border-radius: 0 10px 10px 0; color: #3c5561; font-size: 14px; line-height: 1.85; }
+.document-body blockquote p { margin: 0 0 8px; }
+.document-body blockquote p:last-child { margin-bottom: 0; }
+.document-body h1 + blockquote { margin-bottom: 30px; }
+.document-body strong { font-weight: 680; color: #223e4b; }
+.document-body ul, .document-body ol { margin: 12px 0 22px; padding-left: 24px; }
+.document-body li { padding-left: 3px; margin: 7px 0; }
+.document-body li > p { margin-bottom: 7px; }
+.document-body code { padding: .1em .33em; border-radius: 4px; background: #edf2f4; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .86em; overflow-wrap: anywhere; }
+.document-body a code { background: none; padding: 0; }
+.document-body pre { padding: 20px; border: 1px solid var(--line); border-radius: 10px; overflow: auto; background: #f5f8f9; line-height: 1.7; white-space: pre-wrap; }
+.document-body pre code { padding: 0; background: none; }
+.document-body hr { border: 0; border-top: 1px solid var(--line); margin: 30px 0; }
+.table-scroll { overflow-x: auto; margin: 20px 0 25px; border: 1px solid var(--line); border-radius: 10px; background: #fff; scrollbar-width: thin; }
+table { width: 100%; min-width: 590px; border-collapse: collapse; text-align: left; font-size: 13px; line-height: 1.8; }
+thead { background: #ecf2f4; }
+th { padding: 13px 14px; font-weight: 680; color: #274350; vertical-align: top; border-bottom: 1px solid var(--line); }
+td { padding: 13px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+tr:last-child td { border-bottom: 0; }
+tbody tr:nth-child(even) { background: #f9fbfc; }
+tbody tr:hover { background: #f0f6f7; }
+td:first-child { font-weight: 530; }
+td p { margin: 0; }
+.doc-footer { margin-top: 22px; display: grid; grid-template-columns: 1fr auto 1fr; gap: 14px; padding: 20px 4px; border-top: 1px solid var(--line); }
+.doc-footer a { font-size: 13px; line-height: 1.65; text-decoration: none; }
+.doc-footer span { display: block; font-size: 11px; color: var(--muted); margin-bottom: 3px; }
+.doc-footer .next { text-align: right; }
+.doc-footer .back-top { text-align: center; }
+.page-note { text-align: center; color: var(--muted); font-size: 11px; line-height: 1.9; margin: 12px 0 20px; }
+@media (min-width: 1600px) { .document-body { font-size: 16px; } }
+@media (max-width: 1100px) { .layout { gap: 21px; grid-template-columns: 205px minmax(0, 1fr); padding: 0 22px; } .document-body { padding: 30px 30px 40px; } .document-banner { padding: 19px 30px; } }
+@media (max-width: 800px) { .topbar-inner { padding: 18px 20px; } .top-meta { font-size: 11px; } .layout { display: block; padding: 0 16px; margin-top: 19px; } .rail { position: static; max-height: none; overflow: visible; padding: 0; margin-bottom: 23px; } .series { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 5px; } .series-link { padding: 10px 8px; gap: 6px; font-size: 12px; border-color: var(--line); } .toc { margin-top: 15px; padding-top: 12px; grid-template-columns: repeat(2, minmax(0, 1fr)); max-height: 188px; overflow-y: auto; } .toc .rail-label { grid-column: 1/-1; margin-bottom: 5px; } .toc a { padding: 5px 7px; font-size: 11px; } .rail-note { display: none; } .doc-paper { border-radius: 12px; } .document-body { padding: 25px 24px 34px; } .document-banner { padding: 18px 24px; } .document-body h2 { font-size: 21px; margin-top: 38px; } }
+@media (max-width: 480px) { .top-meta { display: none; } .series { grid-template-columns: repeat(2, minmax(0, 1fr)); } .document-body { padding: 22px 18px 30px; font-size: 14px; } .document-banner { padding: 17px 18px; } .document-body h1 { font-size: 27px; } .document-body h2 { font-size: 20px; } .document-body h3 { font-size: 17px; } .doc-footer { gap: 10px; } .doc-footer a { font-size: 12px; } .doc-toolbar { font-size: 11px; } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+@media print { @page { size: A4; margin: 17mm 14mm; } body { background: #fff; font-size: 10pt; } .skip, .topbar, .rail, .doc-toolbar, .doc-footer, .page-note { display: none !important; } .layout { display: block; margin: 0; padding: 0; max-width: none; } .doc-paper { box-shadow: none; border: 0; border-radius: 0; overflow: visible; } .document-banner { padding: 0 0 11pt; margin-bottom: 14pt; background: #fff; } .document-body { padding: 0; font-size: 10pt; line-height: 1.65; } .document-body h1 { font-size: 23pt; } .document-body h2 { font-size: 16pt; margin-top: 24pt; padding-top: 13pt; break-after: avoid; } .document-body h3 { font-size: 12pt; break-after: avoid; } .document-body p, .document-body li { orphans: 3; widows: 3; } .table-scroll { overflow: visible; border-radius: 0; break-inside: auto; margin: 12pt 0; } table { min-width: 0; table-layout: fixed; font-size: 8.3pt; line-height: 1.55; } th, td { padding: 7pt 6pt; overflow-wrap: anywhere; } thead { display: table-header-group; } tr { break-inside: avoid; } .document-body blockquote { border: 1px solid #c4d0d5; border-left: 3px solid var(--accent); break-inside: avoid; font-size: 9pt; padding: 9pt 12pt; } a { color: inherit; text-decoration: underline; } }
+
+
+.technical-entry { margin:0 0 26px; padding:17px 20px; background:#edf6f3; border:1px solid #bbd9d0; border-radius:10px; font-size:13px; line-height:1.8; }
+.technical-entry strong { display:block; margin-bottom:9px; color:#1e6459; }
+.technical-entry div { display:flex; flex-wrap:wrap; gap:7px 16px; }
+.technical-entry p { margin:9px 0 0; color:#526c73; font-size:12px; }
+.technical-diagram { margin:25px -18px 30px; border:1px solid #d4e0e5; border-radius:11px; overflow:hidden; background:#fff; }
+.technical-diagram figcaption { padding:17px 18px 6px; font-weight:680; font-size:16px; color:#244453; }
+.technical-diagram .technical-legend { padding:0 18px 12px; margin:0; color:#58717e; font-size:11px; line-height:1.8; }
+.technical-controls { display:flex; gap:9px 15px; align-items:center; flex-wrap:wrap; border-block:1px solid #dbe5e9; padding:10px 12px; background:#f4f8fa; }
+.technical-controls[hidden],.technical-detail[hidden] { display:none; }
+.technical-controls label { display:flex; align-items:center; gap:7px; font-size:12px; flex:1; min-width:190px; }
+.technical-controls label select { min-width:0; flex:1; max-width:340px; }
+.technical-controls > div { display:flex; align-items:center; gap:5px; }
+.technical-controls button,.technical-controls select { font-family:inherit; font-size:12px; line-height:1.5; color:#254552; background:#fff; border:1px solid #bfd0d8; border-radius:6px; min-height:36px; padding:6px 9px; }
+.technical-controls button { cursor:pointer; }
+.technical-controls button:disabled { opacity:0.4; cursor:default; }
+.technical-controls output { min-width:40px; text-align:center; color:#5a707d; font-size:11px; font-variant-numeric:tabular-nums; }
+.technical-controls :focus-visible { outline:3px solid #34958a; outline-offset:3px; }
+.technical-viewport { overflow:auto; max-height:720px; scrollbar-width:thin; overscroll-behavior:contain; background:#fbfcfd; }
+.technical-viewport canvas { display:block; max-width:none; cursor:pointer; touch-action:pan-x pan-y; }
+.technical-diagram .technical-hint { margin:0; padding:9px 16px; border-top:1px solid #dbe5e9; color:#657b86; font-size:11px; }
+.technical-detail { border-top:1px solid #dbe5e9; background:#edf5f6; padding:13px 17px; font-size:13px; }
+.technical-detail strong { display:block; margin-bottom:6px; }
+.technical-detail p { margin:0; }
+.technical-source { border-top:1px solid #dbe5e9; padding:0 17px 10px; font-size:12px; }
+.technical-source summary { padding:11px 0; color:var(--accent); cursor:pointer; font-weight:600; }
+.technical-source pre { font-size:11px; margin:10px 0; }
+.technical-source ol { margin-top:4px; }
+@media (max-width:640px) {
+  .technical-diagram { margin-inline:-9px; }
+  .technical-controls label { flex-basis:100%; }
+  .technical-controls > div { flex-wrap:wrap; }
+  .technical-controls button,.technical-controls select { min-height:44px; }
+  .technical-viewport { max-height:570px; }
+}
+@media print {
+  .technical-entry,.technical-controls,.technical-hint,.technical-detail { display:none !important; }
+  .technical-diagram { margin:15pt 0; break-inside:avoid; }
+  .technical-viewport { max-height:none; overflow:visible; }
+  .technical-viewport canvas { max-width:100%; max-height:232mm; width:auto !important; height:auto !important; margin:auto; }
+  .technical-source { font-size:8pt; }
+}
+</style>
+<noscript><style>.technical-viewport,.technical-hint{display:none}</style></noscript>
+</head>
+<body>
+  <a class="skip" href="#document-top">跳到正文</a>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">衡</span><span><strong>ALIOTH · 玉衡</strong><small>有限自主探索 / 七项专项设计</small></span></a>
+      <div class="top-meta">TECHNICAL DESIGN · 2026.09.04<br>设计评审稿 · 不代表已实现或验收</div>
+    </div>
+  </header>
+  <div class="layout">
+    <aside class="rail" aria-label="文档导航">
+      <p class="rail-label">全系列 / 07 TOPICS</p>
+      <nav class="series" aria-label="七项专项导航"><a class="series-link" href="index.html"><span class="series-no">00</span><span>总览与闭环</span></a>
+<a class="series-link" href="01-controlled-exploration.html"><span class="series-no">01</span><span>受控探索</span></a>
+<a class="series-link" href="02-page-state-graph.html"><span class="series-no">02</span><span>页面状态图</span></a>
+<a class="series-link active" href="03-targeted-recapture.html" aria-current="page"><span class="series-no">03</span><span>精准补采</span></a>
+<a class="series-link" href="04-page-recognition.html"><span class="series-no">04</span><span>页面识别</span></a>
+<a class="series-link" href="05-capture-readiness.html"><span class="series-no">05</span><span>截图时机</span></a>
+<a class="series-link" href="06-interaction-precision.html"><span class="series-no">06</span><span>精准交互</span></a>
+<a class="series-link" href="07-trusted-evidence.html"><span class="series-no">07</span><span>可信证据</span></a></nav>
+      <nav class="toc" aria-label="本篇章节目录"><p class="rail-label">本篇目录 / 20 SECTIONS</p><a href="#section-1">1. 决策摘要与边界</a>
+<a href="#section-2">2. 现状问题与收益</a>
+<a href="#section-3">3. 当前基础与模块改动</a>
+<a href="#section-4">4. 职责边界</a>
+<a href="#section-5">5. 核心设计</a>
+<a href="#section-6">6. 标准流程</a>
+<a href="#section-7">7. 异常闭环</a>
+<a href="#section-8">8. H5 与 App 差异</a>
+<a href="#section-9">9. 与其余专项协作</a>
+<a href="#section-10">10. 工作台与排障</a>
+<a href="#section-11">11. 权限、审计与安全</a>
+<a href="#section-12">12. 分期、兼容与回滚</a>
+<a href="#section-13">13. 验收与指标</a>
+<a href="#section-14">14. 团队反馈与待冻结项</a>
+<a href="#section-15">15. 技术组件与代码接入</a>
+<a href="#section-16">16. 调用时序与交接</a>
+<a href="#section-17">17. 算法与决策</a>
+<a href="#section-18">18. 一致性、并发与恢复</a>
+<a href="#section-19">19. 故障推演与技术验收</a>
+<a href="#section-20">20. 关联文档依据</a></nav>
+      <p class="rail-note">HTML 与 Markdown 正文一致。<br>离线 Canvas 技术图。无外部运行依赖。<br>浏览器查找可检索全文，打印可导出 PDF。</p>
+    </aside>
+    <main class="main-column">
+      <div class="doc-toolbar">
+        <div class="breadcrumb"><a href="index.html">设计文档集</a><span aria-hidden="true">/</span><span>精准补采</span></div>
+        <div class="toolbar-links"><a href="03-targeted-recapture.md">Markdown 原稿</a><a href="../2026-09-02-bounded-exploration-optimization-solution.html">完整方案 v1.1</a></div>
+      </div>
+      <div class="doc-paper">
+        <div class="document-banner"><span class="document-number">03</span><div><div class="document-kicker">SPECIALIZED DESIGN / 方案与设计</div><div class="document-subtitle">验证式恢复 · 状态等价 · 缺口闭环</div></div></div>
+        <article id="document-content" class="document-body" data-markdown-sha256="ba12028b733052cfcde1bcab72b89a3237ede078692df322d3d455cabb2f3fdc">
+<aside class="technical-entry"><strong>v1.1 技术深化 · 三张设计图 + 五章实现机制</strong><div><a href="#section-15">组件与接入</a><a href="#section-16">技术时序</a><a href="#section-17">算法与判断</a><a href="#section-18">并发与恢复</a><a href="#section-19">故障推演</a></div><p>保留原有方案和反馈；新增实现评审细节，不展开表设计或具体字段。</p></aside>
+<h1 id="document-top">专项三：基于页面图的精准补采设计</h1>
+<blockquote>
+<p>日期：2026-09-04</p>
+<p>版本：技术深化 v1.1</p>
+<p>状态：设计未实现</p>
+<p>范围：H5、桌面 Web、Android/iOS App 在证据不足、状态恢复和规则重判场景下的有界补采。</p>
+<p>限制：本文说明机制、流程、边界与验收；不展开表设计、字段清单、API 载荷、详细数据结构或 SQL。</p>
+</blockquote>
+<p>精准补采不是把原流程盲目重播一遍，也不是用相似页面或别的 Run 的证据填洞。</p>
+<p>它是基于同一 Run/Epoch 的页面状态图，针对明确规则缺口提出的可审计追加观测。</p>
+<p>本系列：<a href="01-controlled-exploration.html">01-controlled-exploration.md</a> · <a href="02-page-state-graph.html">02-page-state-graph.md</a> · <a href="03-targeted-recapture.html">03-targeted-recapture.md</a> · <a href="04-page-recognition.html">04-page-recognition.md</a> · <a href="05-capture-readiness.html">05-capture-readiness.md</a> · <a href="06-interaction-precision.html">06-interaction-precision.md</a> · <a href="07-trusted-evidence.html">07-trusted-evidence.md</a> · <a href="index.html">README.md</a></p>
+<p>总设计依据：<a href="../2026-09-02-bounded-exploration-page-state-graph-design.md">2026-09-02 有限探索、页面状态图与可信证据详细设计</a>。</p>
+<h2 id="section-1">1. 决策摘要与边界</h2>
+<p>补采的发起原因必须是可定位的证据缺口、规则请求或恢复需要。</p>
+<p>每个规则先声明 exact、equivalent、fresh 或 manual，Runtime 再按声明选择路径。</p>
+<p>支付、登录、凭证、授权、价格和一次性链接默认从严，不能用普通页面等价替代。</p>
+<p>补采前检查实时 Session、租约、预算、授权、运行面能力和目标状态是否仍然存在。</p>
+<p>补采能力同时满足 enabled 和 runtime_ready 两道门禁；只配置 enabled 不代表可以执行。</p>
+<p>Judge 只能提出证据请求，Runtime 是唯一操作设备、浏览器和外部 Surface 的组件。</p>
+<p>路径成本综合风险、成功率、剩余预算、前置条件和状态副作用，不只选择最短路径。</p>
+<p>每条边都要重新观察、重新绑定目标、重新做 Readiness 和可见层后置验证。</p>
+<p>不允许把旧坐标、旧元素句柄或一串宏命令当作恢复证明。</p>
+<p>新 Capture、InputSet 和规则尝试只追加，旧结论不覆盖。</p>
+<p>同一页面不代表相同广告、用户、价格、登录状态或一次性上下文。</p>
+<p>崩溃后无法确定副作用时先观察当前 Surface，不能因缺少完成标志就盲重试。</p>
+<p>无法恢复时明确证据不足、阻断或人工处理，不借用其他 Run 或相似页通过。</p>
+<p>收口要排空补采请求和异步工作，并把 Gate 结果与租约释放结果分开报告。</p>
+<h2 id="section-2">2. 现状问题与收益</h2>
+<div class="table-scroll" role="region" aria-label="设计对照表，可横向滚动" tabindex="0"><table>
+<thead>
+<tr>
+<th>问题</th>
+<th>机制</th>
+<th>提升</th>
+<th>指标</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>证据不足只能盲找</td>
+<td>图路径定位缺口来源</td>
+<td>找回路径可解释</td>
+<td>缺口闭环率</td>
+</tr>
+<tr>
+<td>旧坐标失效</td>
+<td>每边重新观察和绑定</td>
+<td>降低误点</td>
+<td>重绑定成功率</td>
+</tr>
+<tr>
+<td>页面相同被误认为等价</td>
+<td>明确 exact/equivalent/fresh</td>
+<td>降低错证据</td>
+<td>等价误用率</td>
+</tr>
+<tr>
+<td>Judge 直接驱动设备</td>
+<td>请求与执行分离</td>
+<td>降低越权和副作用</td>
+<td>Judge 设备调用数</td>
+</tr>
+<tr>
+<td>补采覆盖旧结论</td>
+<td>追加版本和尝试</td>
+<td>历史可审计</td>
+<td>旧结论覆盖率</td>
+</tr>
+<tr>
+<td>enabled 被当成可执行</td>
+<td>enabled/runtime_ready 双门禁</td>
+<td>失败更早可解释</td>
+<td>未就绪执行率</td>
+</tr>
+<tr>
+<td>崩溃后盲重试</td>
+<td>先观察副作用</td>
+<td>降低重复支付等风险</td>
+<td>不确定重试率</td>
+</tr>
+</tbody></table></div>
+<p>精准补采首先提升证据正确性和可追溯性。</p>
+<p>设备分钟、Token 和动作次数的减少只有在同一分母、同一规则要求下才有意义。</p>
+<h2 id="section-3">3. 当前基础与模块改动</h2>
+<p>现有页面身份、Frontier、恢复兜底、补充证据策略、Capture 编排、InputSet 和证据链可作为补采基础。</p>
+<p>恢复目标的身份匹配可复用 <a href="../../../services/api/app/domain/exploration/app_page_identity.py">App 页面身份</a>。</p>
+<p>候选队列可复用 <a href="../../../services/api/app/domain/exploration/app_frontier.py">App Frontier</a>，恢复兜底可复用 <a href="../../../services/api/app/application/app_frontier_restoration.py">Frontier Restoration</a>。</p>
+<p>已有恢复入口提供有限 fallback 和恢复检查，但不等于完整图规划；路线仍需由页面状态图按风险和可验证性选择。</p>
+<p>补充证据策略可复用 <a href="../../../services/api/app/application/supplemental_evidence_policy.py">Supplemental Evidence Policy</a>，Capture 编排可复用 <a href="../../../services/api/app/application/capture_coordinator.py">Capture Coordinator</a>。</p>
+<p>输入集合语义可复用 <a href="../../../services/api/app/domain/evidence/input_set.py">Input Set</a>，运行目标可复用 <a href="../../../services/api/app/application/app_exploration_target.py">App 探索目标</a>。</p>
+<p>App 运行编排可复用 <a href="../../../services/api/app/application/app_global_frontier.py">App 全局 Frontier</a>；证据需求与清单收口可复用 <a href="../../../services/api/app/application/capture_evidence_readiness.py">证据就绪服务</a>。画面稳定性由专项五衔接现有采集能力，不能把清单就绪当成画面已经稳定。</p>
+<p>证据追加和封存可复用 <a href="../../../services/api/app/application/evidence_manifest_writer.py">Manifest Writer</a>。</p>
+<p>规则缺口和范围判断可复用 <a href="../../../services/api/app/application/aggregate_rule_config.py">Rule 配置</a> 与 <a href="../../../services/api/app/application/task_query.py">Task Query</a>。</p>
+<p>现有 enabled + runtime_ready 是补采前置门禁；本文保持双门禁，不将 enabled 当成可执行。</p>
+<p>当前改动集中在 EvidenceRequest 到 Runtime 的编排、图路径查询、等价性门禁、追加证据和排空收口。</p>
+<p>恢复编排、状态等价与证据追加属于高影响主链路；图查询和工作台路径诊断属于中等影响扩展。继续复用权限、租约与规则执行，不重建第二套控制面；与其他专项的改动范围重叠，不能相加。</p>
+<p>不新增第二个设备控制面，不让 Judge 复制 Runtime 操作逻辑。</p>
+<h2 id="section-4">4. 职责边界</h2>
+<div class="table-scroll" role="region" aria-label="设计对照表，可横向滚动" tabindex="0"><table>
+<thead>
+<tr>
+<th>角色</th>
+<th>负责</th>
+<th>不负责</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Judge</td>
+<td>根据封存输入识别缺口并提出请求</td>
+<td>选择设备动作、操作页面、直接重试</td>
+</tr>
+<tr>
+<td>EvidenceRequest 编排</td>
+<td>解释规则声明、预算和优先级</td>
+<td>伪造已满足条件</td>
+</tr>
+<tr>
+<td>图路径规划</td>
+<td>选择可验证的候选路线</td>
+<td>只按最短路绕过风险</td>
+</tr>
+<tr>
+<td>Runtime/Broker</td>
+<td>检查门禁、逐边执行、提交追加事实</td>
+<td>使用旧句柄、绕过租约或扩大范围</td>
+</tr>
+<tr>
+<td>Readiness/Presentation</td>
+<td>证明帧稳定、层级和可见目标</td>
+<td>以视觉相似替代业务等价</td>
+</tr>
+<tr>
+<td>Manifest/InputSet</td>
+<td>封存新证据及其来源</td>
+<td>覆盖原始证据或旧结论</td>
+</tr>
+<tr>
+<td>RuleExecution</td>
+<td>基于新输入重判并保留版本</td>
+<td>直接请求设备或修改历史结果</td>
+</tr>
+<tr>
+<td>Gate/收口</td>
+<td>检查请求、规则、证据和资源终态</td>
+<td>将释放资源当作通过</td>
+</tr>
+</tbody></table></div>
+<p>补采请求的提出和补采动作的执行必须能在审计链中区分。</p>
+<h2 id="section-5">5. 核心设计</h2>
+<h3 id="section-5-1">5.1 缺口先分类</h3>
+<p>每个缺口先定位到规则、页面状态、动作边、Overlay occurrence 或证据角色。</p>
+<p>exact 表示原规则相关上下文严格一致；只有规则明确要求原发生实例时才要求同一 occurrence；equivalent 允许规则声明的等价状态；fresh 必须获得当前时刻新观测；manual 表示证据强度或副作用风险不足而转人工。</p>
+<p>原 exact 请求不能由 Runtime 改成 fresh；原状态无法证明时结算不足或人工，另有规则声明的新 fresh 请求和新结论必须独立。</p>
+<p>分类由规则合同声明，不能由补采 Runtime 为了成功自行放宽。</p>
+<h3 id="section-5-2">5.2 双门禁与运行前检查</h3>
+<p>enabled 只表示策略允许尝试，runtime_ready 还要证明 Provider、Session、租约、权限和证据写入路径可用。</p>
+<p>任一门禁失败都不执行，缺口结算为 blocked 或 evidence_insufficient；开始前再次核对取消状态、Run/Epoch、预算、测试授权和目标范围。</p>
+<p>网络能力未知不能解释为网络正常，也不能自动切换危险旁路。</p>
+<h3 id="section-5-3">5.3 目标上下文与等价性</h3>
+<p>目标上下文包括来源 PageState、用户会话、产品版本、规则版本、展示层、广告位置和外部转场语义。</p>
+<p>同一 PageNode 或同一截图不证明广告素材、价格、用户、登录态、前置条件和后置状态相同。</p>
+<p>exact 要求原规则相关上下文严格一致；只有规则明确要求原发生实例时才要求同一 occurrence，已消失的一次性事件不能重现原实例。equivalent 要逐项验证规则允许的状态、位置、素材和时间范围；fresh 要标明新观测时间和触发原因。</p>
+<h3 id="section-5-4">5.4 图路径规划</h3>
+<p>正式恢复路线优先来自同一运行允许使用的可信成功边。尚未验证的候选动作单列为探索机会，不当作已知可达路线；是否额外尝试由有限发现策略和独立预算决定。</p>
+<p>路径成本同时考虑风险、成功率、动作数、等待、预算、租约剩余时间和副作用；最短路径若经过支付或一次性授权，不优先于较长的低风险路径。</p>
+<p>失败边只能用于避让和诊断；没有可信路径时结算不足或人工，不用固定脚本猜测。</p>
+<h3 id="section-5-5">5.5 逐边重新绑定</h3>
+<p>进入每条边前重新确认当前 Surface、PageState、可见层和目标候选，旧 Capture 的坐标、DOM 引用、Accessibility 节点和窗口序号默认失效。</p>
+<p>动作前再次检查风险和范围，动作后等待 settle 并采集新观测；出现 Overlay、页型改判、外跳或层级变化就暂停并重新分类。</p>
+<p>成功边要求可信 after Capture、目标状态证明和通过的后置条件；命令成功但目标不变只记 no_effect。</p>
+<h3 id="section-5-6">5.6 Readiness 与可见层后置验证</h3>
+<p>Readiness 判断采集时机稳定，Presentation 判断目标在正确层级、窗口和 Surface 可见，两者都不直接替代业务到达判断。</p>
+<p>未稳定帧不能证明稳定业务到达；但加载/关闭失败时间序列若满足来源、完整性和证据角色规则，可进入正式失败判断。</p>
+<p>补采材料不总需要动作；当前页只缺局部证据时可就地观察或补帧，不编造 after 动作。</p>
+<p>自然用户证据不能用诊断隐藏、DOM 修改或程序派发替代；长页按原帧顺序追加，派生拼接不能遮掩缺帧和加载缺口。</p>
+<p>结构缺失可以降级视觉判断，但必须保留能力限制和可信度边界。</p>
+<h3 id="section-5-7">5.7 证据追加和规则重判</h3>
+<p>新 Capture 先通过来源、完整性、Readiness 和 Presentation 检查；是否进入正式规则输入由证据角色决定，未稳定帧不得声称稳定到达，但合法的加载/关闭失败时间序列可以用于正式失败判断。</p>
+<p>新 InputSet 只引用本次合法证据，不修改原 InputSet。</p>
+<p>新规则尝试保留规则版本、缺口来源和补采原因；旧结论不可变，新结果以 revision 或独立尝试表达。</p>
+<p>证据复用要记录来源、等价判断和失效原因，Judge 只消费封存输入，不读 Runtime 临时状态。</p>
+<h3 id="section-5-8">5.8 外跳、Overlay 与一次性上下文</h3>
+<p>自然 popup、同标签 JS、POST 落地和原生外部 Activity 的恢复能力不同；旁路只记录允许的外部观察，不计入被测业务覆盖。</p>
+<p>回源必须重新观察启动层；相同弹窗触发循环预算。支付、登录、授权即使视觉相似，也不能用普通页面证据替代。</p>
+<p>二维码内联区域不是自动 Overlay，真实路由支付页按业务页面处理。</p>
+<h3 id="section-5-9">5.9 崩溃、不确定副作用与收口</h3>
+<p>崩溃后先读取当前 Surface、最后 Receipt、最近 Capture 和租约状态；若动作可能已发生，先观察后态和副作用，再决定补偿或人工。</p>
+<p>不能因为执行状态缺失就再次点击支付、提交或授权；收口前排空请求、运行中动作、迟到写入和规则重判。</p>
+<p>同一缺口请求去重并共享重试、时间和调用预算，新请求不能重置预算；排空后再做 Gate，资源释放单独结算。</p>
+<h3 id="section-5-10">5.10 有界迭代与就地补采</h3>
+<p>目标已在当前页面且等价可证时优先就地补帧，避免回首页；缺局部证据可只观察，不强造动作。</p>
+<p>已知可信路线与未验证候选分开标记；无路径时若策略另允许探索，使用独立有限发现预算，候选不计恢复成功边。</p>
+<p>恢复失败、超时、无新增证据和收口排空均为终态，不无限递归创建请求。</p>
+<h2 id="section-6">6. 标准流程</h2>
+<ol>
+<li>Judge 从封存输入确认具体规则缺口及证据角色。</li>
+<li>规则声明 exact、equivalent、fresh 或 manual。</li>
+<li>编排器绑定原 PageState、动作边、Run/Epoch 和补采原因。</li>
+<li>检查 enabled、runtime_ready、Session、租约、预算、授权和目标范围。</li>
+<li>从图中计算至少一条低风险可验证路径和放弃条件。</li>
+<li>Runtime 到达路径起点并重新确认当前状态。</li>
+<li>每条边重新发现候选、绑定目标、执行、settle 和观察。</li>
+<li>发生漂移、Overlay 或外跳时暂停并重新分类，不盲接下一步。</li>
+<li>完成目标后做 Readiness、Presentation 和后置条件验证。</li>
+<li>追加 Capture、Manifest、InputSet 和规则尝试。</li>
+<li>Judge 消费新封存输入并重判；仍有缺口则创建下一请求。</li>
+<li>所有请求和动作进入终态后，Gate 独立判定并报告资源释放。</li>
+</ol>
+<h2 id="section-7">7. 异常闭环</h2>
+<p><strong>完整例子一：当前长页的局部证据缺口。</strong></p>
+<p>规则只缺当前长页某段内容，运行面已经停在该段，目标在视口内可见但上次材料未完整留存。编排器检查状态等价后就地补帧，不回首页，也不编造点击。</p>
+<p>先检查 Readiness、目标区域和可见层，再追加原帧与封存输入，Judge 基于新材料判断。若目标尚在屏幕下方，则由专项六执行有界滚动、观察与重绑，每次滚动都保留真实前后态。单纯缺帧仍是证据缺口，只有合法序列确实证明加载或关闭异常时，才支持对应失败判断。</p>
+<p>同一广告位出现不同素材：位置覆盖不能因素材复用而消失，规则复用需声明版本关系。</p>
+<p>登录已过期：不能用匿名页面补采登录后规则，转阻断或人工授权。</p>
+<p><strong>完整例子二：原登录/支付状态失效。</strong></p>
+<p>原 exact 请求要求原登录/支付上下文；当前状态失效或价格变化时，Runtime 不能改成 fresh，原请求明确不足或人工。</p>
+<p>若规则事先另允许当前事实评估，独立创建 fresh 请求和新结论，不能填补原 exact 缺口；一次性事件已消失也不能重现原 occurrence。</p>
+<p>取消更新按钮无效：记录关闭失败和后态，不能把 Overlay 删除后继续。</p>
+<p>一次性链接已消费：图上仍可看到历史边，但不能重播；按 manual 或 evidence_insufficient 结算。</p>
+<p>旧坐标落在新广告层：Presentation 后置验证失败，当前边作 misroute 或 no_effect。</p>
+<p>滚动后虚拟列表重排：旧目标失效，重新观察列表和目标区域，不复用旧坐标。</p>
+<p>H5 direct URL 可打开落地页：只证明内容可达，不证明原点击链或产品内覆盖。</p>
+<p>App 外部 Activity 返回失败：保留外部转场和回源失败，不把外部截图放入业务页面证据。</p>
+<p>Runtime 崩溃在提交动作后：先观察副作用和 Receipt，禁止重复支付、登录或授权。</p>
+<p>补采预算耗尽：保留规则缺口和放弃原因，不能使用相似页或别 Run 的 Capture。</p>
+<p>Gate 计算故障：报告 unavailable；租约释放成功仍单独报告。</p>
+<h2 id="section-8">8. H5 与 App 差异</h2>
+<div class="table-scroll" role="region" aria-label="设计对照表，可横向滚动" tabindex="0"><table>
+<thead>
+<tr>
+<th>维度</th>
+<th>H5</th>
+<th>App</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>路径来源</td>
+<td>href、History、DOM 和截图</td>
+<td>视觉、Native Tree、Semantics、返回栈</td>
+</tr>
+<tr>
+<td>可用旁路</td>
+<td>可有限使用 direct URL 观察内容</td>
+<td>不能普遍克隆进程或原生 Surface</td>
+</tr>
+<tr>
+<td>会话恢复</td>
+<td>Cookie、Storage、标签和 History 需核对</td>
+<td>进程、Activity、Window、设备状态需核对</td>
+</tr>
+<tr>
+<td>Overlay 风险</td>
+<td>CSS 层、popup、异步脚本</td>
+<td>Dialog、系统权限、WebView、原生支付</td>
+</tr>
+<tr>
+<td>等价验证</td>
+<td>路由、DOM、用户态和网络窗口</td>
+<td>视觉层级、设备配置、生命周期和返回语义</td>
+</tr>
+</tbody></table></div>
+<p>H5 的网络辅助信号不能单独证明页面已稳定。</p>
+<p>App 的纯视觉降级不能自动放宽支付、登录和授权等价性。</p>
+<p>两端都必须记录实际能力缺口，不把 unavailable 当作无缺口。</p>
+<h2 id="section-9">9. 与其余专项协作</h2>
+<p>与 <a href="01-controlled-exploration.html">01-controlled-exploration.md</a> 协作，补采不能扩大原策略、域名、Package 或预算边界。</p>
+<p>与 <a href="02-page-state-graph.html">02-page-state-graph.md</a> 协作，图提供路线，补采逐边重新证明。</p>
+<p>与 <a href="04-page-recognition.html">04-page-recognition.md</a> 协作，页型改判追加 revision 并触发范围复核。</p>
+<p>与 <a href="05-capture-readiness.html">05-capture-readiness.md</a> 协作，未稳定帧不能证明稳定到达；满足来源和角色规则的加载/关闭失败时间序列仍可进入正式失败判断。</p>
+<p>与 <a href="06-interaction-precision.html">06-interaction-precision.md</a> 协作，每步都要重新绑定坐标和可见目标。</p>
+<p>与 <a href="07-trusted-evidence.html">07-trusted-evidence.md</a> 协作，补采证据角色、来源和自然/诊断边界不可混用。</p>
+<p>Judge、Runtime、Manifest 和 Gate 之间通过既有任务事实与异步工作衔接。</p>
+<h2 id="section-10">10. 工作台与排障</h2>
+<p>工作台首先显示缺口来源：规则、Capture、页面状态、动作边还是 Presentation。</p>
+<p>然后显示候选路径、风险解释、预计成本、放弃条件和当前门禁状态。</p>
+<p>每条补采边应能展开前态、重新绑定结果、Receipt、settle、后态和后置条件。</p>
+<p>等价性视图区分规则声明、实际观测和未证明项。</p>
+<p>证据视图区分原始 Capture、派生产物、新旧 InputSet 和规则尝试。</p>
+<p>排障先看当前 Surface 和副作用，再看执行状态；不从“未完成”推断“未执行”。</p>
+<p>同一缺口多次失败时，显示失败原因分布和预算消耗，不只显示最后错误。</p>
+<p>收口视图分开展示请求排空、规则排空、Gate 状态和租约释放。</p>
+<h2 id="section-11">11. 权限、审计与安全</h2>
+<p>补采请求必须继承原任务的租户、owner、规则和 Artifact 访问范围。</p>
+<p>Runtime 继续遵守现有 Session、设备租约与策略，并接入专项一设计的 Command Broker；不能将拟新增的 Broker 说成当前已经完整实现。</p>
+<p>Judge 输出、页面文本、链接和外部内容都是不可信输入，不能扩大补采权限。</p>
+<p>支付、登录、授权和凭证动作需要显式授权；缺授权直接 blocked，不尝试绕过。</p>
+<p>补采不得把 secrets、完整会话凭证或外部响应敏感内容写入诊断事实。</p>
+<p>自然证据和诊断证据分开标识，诊断修改不能被规则当作自然用户结果。</p>
+<p>所有补采写入都保留原因、来源和 Run/Epoch，便于复核与撤销读侧。</p>
+<h2 id="section-12">12. 分期、兼容与回滚</h2>
+<p>A 冻结 exact/equivalent/fresh/manual 的规则声明和失败分类。</p>
+<p>B 仅记录缺口和候选路径，不执行自动补采，建立真实基线。</p>
+<p>C 对低风险路径做影子规划和门禁计算，只比较计划，不产生第二条设备动作。</p>
+<p>D 接入追加 Capture、Manifest、InputSet 和规则尝试，保持旧结论不可变。</p>
+<p>E 对 H5 低风险场景灰度启用，真实执行只在隔离测试任务或单一动作所有者的低风险灰度；App 维持更严格能力和授权门禁。</p>
+<p>F 接入外跳、Overlay、一次性上下文和崩溃恢复场景。</p>
+<p>G 通过对账和收口门禁后，才允许影响正式证据缺口闭环。</p>
+<p>回滚时停止新补采请求和 Runtime 执行，保留已追加事实和旧结论。</p>
+<p>回滚不删除 Capture、不合并尝试、不把追加结果写回历史输入。</p>
+<h2 id="section-13">13. 验收与指标</h2>
+<p>硬性正确性：</p>
+<ul>
+<li>每个补采都有明确缺口、规则声明和 Run/Epoch。</li>
+<li>Judge 不直接调用设备或浏览器。</li>
+<li>enabled 不足以启动补采，runtime_ready 必须同时成立。</li>
+<li>每条路径边都重新观察、重新绑定并验证后置条件。</li>
+<li>没有可信 after Capture 的结果不得声称成功到达；加载/关闭失败时间序列若满足来源、完整性和证据角色要求，可以进入正式失败判断。</li>
+<li>exact/equivalent/fresh/manual 不得在 Runtime 内隐式放宽。</li>
+<li>新 Capture、InputSet 和规则尝试只追加，旧结论不覆盖。</li>
+<li>不能使用其他 Run、相似页面或未证明等价证据通过。</li>
+<li>不确定副作用先观察，不盲重试高风险动作。</li>
+<li>请求、动作、规则、Gate 和租约释放分别进入可解释终态。</li>
+</ul>
+<p>效率指标需待真实基线后比较：</p>
+<div class="table-scroll" role="region" aria-label="设计对照表，可横向滚动" tabindex="0"><table>
+<thead>
+<tr>
+<th>指标</th>
+<th>观察意义</th>
+<th>不能单独说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>缺口闭环率</td>
+<td>规则证据恢复效果</td>
+<td>没有等价误用</td>
+</tr>
+<tr>
+<td>平均恢复动作数</td>
+<td>路径效率</td>
+<td>高风险安全</td>
+</tr>
+<tr>
+<td>恢复设备分钟</td>
+<td>资源效率</td>
+<td>证据可信</td>
+</tr>
+<tr>
+<td>重绑定成功率</td>
+<td>交互适应性</td>
+<td>业务到达</td>
+</tr>
+<tr>
+<td>追加后重判率</td>
+<td>规则链路完整性</td>
+<td>规则正确性</td>
+</tr>
+<tr>
+<td>失败原因可分类率</td>
+<td>排障质量</td>
+<td>自动恢复能力</td>
+</tr>
+<tr>
+<td>不确定重试率</td>
+<td>副作用控制</td>
+<td>全部崩溃已恢复</td>
+</tr>
+</tbody></table></div>
+<p>验收必须覆盖支付、登录、授权、广告 occurrence、外跳、慢加载、长页、崩溃、取消和 Gate unavailable。</p>
+<h2 id="section-14">14. 团队反馈与待冻结项</h2>
+<p>已纳入 exact/equivalent/fresh/manual 声明、支付/登录/凭证/价格/一次性状态从严和 enabled/runtime_ready 双门禁；路径成本不只看最短、逐边重绑定、不盲宏回放、同页不等价、新证据追加、旧结论不覆盖、Judge 请求与 Runtime 操作分离。</p>
+<p>已纳入崩溃未知副作用先观察、无法恢复转不足/人工和收口排空；待冻结各规则的等价性证明项、上下文变化和 freshness 窗口，以及各平台/Provider/外部 Surface 的 runtime_ready 最小条件。</p>
+<p>待冻结补采预算、循环阈值、人工接管入口和 Gate unavailable 报告格式；冻结前只能影子验证，不能声称已实现。</p>
+<h2 id="section-15">15. 技术组件与代码接入</h2>
+<p>本章把精准补采接到既有 EvidenceRequest、Frontier、Runtime、Capture 和规则链，不新增设备控制面、第二套权限模型或新的证据权威。Frontier 已有来源、状态、部分路径和恢复事实，不是只做发现；补采编排应消费这些事实，并把未验证候选与可信成功边分开。</p>
+<p><code>AppFrontierItem</code> 的来源 Capture、业务身份、候选指纹、navigation path、优先级和任务归属用于定位缺口来源；<code>AppFrontierRestoration</code> 的当前帧重绑定、BACK/warm restore 和有界 restore-only 继续承担普通局部恢复。H5 Frontier 同样保留来源状态、lineage、sibling 和终态，不由补采重新发明路径事实。</p>
+<p>正式补采要经过既有 <code>SupplementalEvidencePolicy</code> 的 enabled 与 runtime_ready 双门禁。当前生产策略的正式补采 <code>runtime_ready=False</code>，因此只能记录缺口、规划路径或报告不可执行，不能把 enabled 当成生产可执行；普通局部恢复已有能力与正式补采能力必须分别结算。</p>
+<p><code>CaptureCoordinator</code> 继续保证动作前后 Capture、settle、lease owner 和 finalization epoch；<code>CaptureEvidenceReadiness</code> 负责证据需求/清单就绪，不替代专项五的画面稳定判断。<code>EvidenceManifestWriter</code>、InputSet 和 RuleExecution 只追加合法证据与新尝试，旧结论不可变。</p>
+<p>Page identity、PageTypeAssessment、Rule 配置和 Task Query 只提供目标上下文与适用性判断。图路径是可信观察的选路投影，树只用于展示/恢复视图；Coverage 仍由既有覆盖服务/快照提供，Gate 消费覆盖与排空事实。补采成功回执不能替代二者，也不能修改任务提交时冻结的 required 分母。</p>
+<figure class="technical-diagram" data-technical-diagram="0" aria-labelledby="technical-title-1"><figcaption id="technical-title-1">技术图 01 · 组件职责与依赖</figcaption><p class="technical-legend">纵向阅读 · 菱形表示条件 · 虚线表示回流、事件或回执，以边上文字和正文为准。图均为设计目标。</p><div class="technical-controls" hidden><label>定位 <select aria-label="选择组件职责与依赖中的节点或消息"></select></label><div><button type="button" data-minus aria-label="缩小技术图">−</button><output>100%</output><button type="button" data-plus aria-label="放大技术图">＋</button><button type="button" data-fit>全图概览</button><button type="button" data-size>清晰原寸</button></div></div><div class="technical-viewport" role="region" tabindex="0" aria-label="组件职责与依赖，可上下和横向滚动"><canvas width="622" height="1831" role="img" aria-label="技术图 01 · 组件职责与依赖；完整关系见下方文字替代">技术图文字关系见下方。</canvas></div><p class="technical-hint">点击节点或消息查看交接关系；可缩放并在图内滚动。下方提供同源文字与 Mermaid 图源。</p><aside class="technical-detail" aria-live="polite" hidden></aside><details class="technical-source" open><summary>文字关系与 Mermaid 图源</summary><ol><li>Rule Gap / 缺口与证据角色 — 定位请求 → Request Orchestrator / 声明与门禁</li><li>Request Orchestrator / 声明与门禁 — 读取来源与路径 → Frontier/Graph / 可信路径投影</li><li>Frontier/Graph / 可信路径投影 — 受限候选 → Runtime/Broker / 唯一动作所有者</li><li>Runtime/Broker / 唯一动作所有者 — 重新观察 → Actual Observation / 独立实际状态</li><li>Actual Observation / 独立实际状态 — 逐边绑定 → Readiness/Presentation / 稳定与可见层</li><li>Readiness/Presentation / 稳定与可见层 — 合法材料 → Capture/Manifest / 追加并封存</li><li>Capture/Manifest / 追加并封存 — 追加输入 → InputSet/RuleExecution / 新尝试重判</li><li>InputSet/RuleExecution / 新尝试重判 — 同Run/Epoch结论 → Coverage/Gate / 既有权威</li><li>Frontier/Graph / 可信路径投影 — 展示或恢复投影 → Tree/Recovery View / 只读选路视图</li><li>Tree/Recovery View / 只读选路视图 — 不能替代实际状态 → Runtime/Broker / 唯一动作所有者</li><li>Coverage/Gate / 既有权威 — Coverage权威不搬家 → Request Orchestrator / 声明与门禁</li></ol><pre><code class="language-mermaid">flowchart TB
+  A[&quot;Rule Gap&lt;br/&gt;缺口与证据角色&quot;]
+  B[&quot;Request Orchestrator&lt;br/&gt;声明与门禁&quot;]
+  C[&quot;Frontier/Graph&lt;br/&gt;可信路径投影&quot;]
+  D[&quot;Runtime/Broker&lt;br/&gt;唯一动作所有者&quot;]
+  E[&quot;Actual Observation&lt;br/&gt;独立实际状态&quot;]
+  F[&quot;Readiness/Presentation&lt;br/&gt;稳定与可见层&quot;]
+  G[&quot;Capture/Manifest&lt;br/&gt;追加并封存&quot;]
+  H[&quot;InputSet/RuleExecution&lt;br/&gt;新尝试重判&quot;]
+  I[&quot;Coverage/Gate&lt;br/&gt;既有权威&quot;]
+  J[&quot;Tree/Recovery View&lt;br/&gt;只读选路视图&quot;]
+  A --&gt;|定位请求| B
+  B --&gt;|读取来源与路径| C
+  C --&gt;|受限候选| D
+  D --&gt;|重新观察| E
+  E --&gt;|逐边绑定| F
+  F --&gt;|合法材料| G
+  G --&gt;|追加输入| H
+  H --&gt;|同Run/Epoch结论| I
+  C -.-&gt;|展示或恢复投影| J
+  J -.-&gt;|不能替代实际状态| D
+  I -.-&gt;|Coverage权威不搬家| B
+</code></pre></details></figure>
+<p>接入顺序固定为“先受理缺口、再复核门禁、再读图选路、逐边执行并重新证明、最后追加证据和重判”。Judge 只提出请求，Runtime/Broker 才能操作设备、浏览器和外部 Surface；工作台不能从树路径生成成功证据。</p>
+<h2 id="section-16">16. 调用时序与交接</h2>
+<p>补采请求的提出、路径规划、动作执行、证据封存和重判必须保持可区分的交接。请求继承任务已冻结的 required 分母、规则版本和目标 Run/Epoch，交接时核对而非重新定义这些基线；动作 owner 是可到期的执行许可，不是永久冻结值。每个边检查点都重新读取实际状态。</p>
+<figure class="technical-diagram" data-technical-diagram="1" aria-labelledby="technical-title-2"><figcaption id="technical-title-2">技术图 02 · 调用时序与交接</figcaption><p class="technical-legend">纵向阅读 · 菱形表示条件 · 虚线表示回流、事件或回执，以边上文字和正文为准。图均为设计目标。</p><div class="technical-controls" hidden><label>定位 <select aria-label="选择调用时序与交接中的节点或消息"></select></label><div><button type="button" data-minus aria-label="缩小技术图">−</button><output>100%</output><button type="button" data-plus aria-label="放大技术图">＋</button><button type="button" data-fit>全图概览</button><button type="button" data-size>清晰原寸</button></div></div><div class="technical-viewport" role="region" tabindex="0" aria-label="调用时序与交接，可上下和横向滚动"><canvas width="1266" height="1571" role="img" aria-label="技术图 02 · 调用时序与交接；完整关系见下方文字替代">技术图文字关系见下方。</canvas></div><p class="technical-hint">点击节点或消息查看交接关系；可缩放并在图内滚动。下方提供同源文字与 Mermaid 图源。</p><aside class="technical-detail" aria-live="polite" hidden></aside><details class="technical-source" open><summary>文字关系与 Mermaid 图源</summary><ol><li>1. 缺口编排 → Manifest与Rule/Gate：读取封存输入与具体规则缺口</li><li>2. Manifest与Rule/Gate → 缺口编排：返回缺口证据角色和旧结论</li><li>3. 缺口编排 → Frontier与恢复：读取同Run/Epoch可信边和部分路径</li><li>4. Frontier与恢复 → 缺口编排：返回可验证路径与普通恢复事实</li><li>5. 缺口编排 → Runtime/Broker：交接声明类型与原冻结边界并核对执行门禁</li><li>6. Runtime/Broker → 受控Surface：独立读取当前Surface与实际状态</li><li>7. 受控Surface → Runtime/Broker：返回实际状态而非计划目标</li><li>8. Runtime/Broker → Readiness与Capture：请求动作前Capture并重新绑定目标</li><li>9. Readiness与Capture → Runtime/Broker：返回新观察和目标可执行性</li><li>10. Runtime/Broker → 受控Surface：复核owner与许可后只执行当前一步</li><li>11. 受控Surface → Runtime/Broker：返回回执或副作用未知</li><li>12. Runtime/Broker → Readiness与Capture：请求动作后新Capture与Presentation</li><li>13. Readiness与Capture → Runtime/Broker：返回角色校验材料及独立实际后态</li><li>14. Runtime/Broker → Runtime/Broker：验证该边后置与原声明的不变量</li><li>15. Runtime/Broker → Manifest与Rule/Gate：提交可接纳材料并追加封存输入</li><li>16. Manifest与Rule/Gate → 缺口编排：返回新尝试与覆盖事实供Gate消费</li><li>注释：缺口编排 → Runtime/Broker：expected只作比较，restored必须来自独立实际状态</li><li>注释：Runtime/Broker → Readiness与Capture：每条路径边重复观察和验证，失败不能跳到封存成功</li></ol><pre><code class="language-mermaid">sequenceDiagram
+  participant A as 缺口编排
+  participant B as Frontier与恢复
+  participant C as Runtime/Broker
+  participant S as 受控Surface
+  participant D as Readiness与Capture
+  participant E as Manifest与Rule/Gate
+  A-&gt;&gt;E:读取封存输入与具体规则缺口
+  E--&gt;&gt;A:返回缺口证据角色和旧结论
+  A-&gt;&gt;B:读取同Run/Epoch可信边和部分路径
+  B--&gt;&gt;A:返回可验证路径与普通恢复事实
+  A-&gt;&gt;C:交接声明类型与原冻结边界并核对执行门禁
+  C-&gt;&gt;S:独立读取当前Surface与实际状态
+  S--&gt;&gt;C:返回实际状态而非计划目标
+  C-&gt;&gt;D:请求动作前Capture并重新绑定目标
+  D--&gt;&gt;C:返回新观察和目标可执行性
+  C-&gt;&gt;S:复核owner与许可后只执行当前一步
+  S--&gt;&gt;C:返回回执或副作用未知
+  C-&gt;&gt;D:请求动作后新Capture与Presentation
+  D--&gt;&gt;C:返回角色校验材料及独立实际后态
+  C-&gt;&gt;C:验证该边后置与原声明的不变量
+  C-&gt;&gt;E:提交可接纳材料并追加封存输入
+  E--&gt;&gt;A:返回新尝试与覆盖事实供Gate消费
+  Note over A,C:expected只作比较，restored必须来自独立实际状态
+  Note over C,D:每条路径边重复观察和验证，失败不能跳到封存成功
+</code></pre></details></figure>
+<p>形式化补采在生产仍视为未就绪：</p>
+<pre><code class="language-text">policy = current_supplemental_policy()
+if not policy.enabled or not policy.runtime_ready:
+    return blocked_or_insufficient(&quot;正式补采运行面未就绪&quot;)
+if request.run_epoch.is_closed or request.denominator.is_not_frozen:
+    return defer(&quot;Run/Epoch或必检分母不满足收口边界&quot;)
+permit = runtime.claim_single_owner(request.session)
+if permit.owner_conflicts or permit.lease_expired:
+    return defer(&quot;同一Runtime不能并发执行补采&quot;)
+actual = runtime.observe_independently()
+target = rebind_from_actual(actual, request.source_state)
+if target is None:
+    return replan_or_manual(actual)
+before = capture_fresh_before_and_rebind(target)
+if not executable_now(before, permit):
+    return replan_or_manual(before)
+receipt = runtime.execute_one_authorized_step(before.target)
+after = capture_fresh_after(receipt)
+if not arrival_and_declared_context_proven(after, request):
+    preserve_gap_and_old_conclusion()
+    return evaluate_allowed_failure_sequence_or_insufficient(before, receipt, after)
+accepted = adjudicate_material_for_requested_role(after, request)
+if not accepted:
+    return preserve_old_conclusion_and_replan(after)
+return append_and_rejudge(accepted, same_run_epoch=request.run_epoch)
+</code></pre>
+<p><code>request.source_state</code> 和规则声明只约束要证明什么，不得被注入当前 <code>actual</code> 或 <code>restored</code>。如果恢复结果只是在 expected 上合并出来，或无法证明观察来自真实 Surface，验收必须失败闭环。</p>
+<h2 id="section-17">17. 算法与决策</h2>
+<p>补采决策先确定结论类型，再确定缺口边界和路径。exact、equivalent、fresh、manual 是事前规则声明，不是 Runtime 运行中的放宽旋钮；fresh 即使成功，也不能修复原 exact 缺口，只能产生独立的新请求和新结论。</p>
+<figure class="technical-diagram" data-technical-diagram="2" aria-labelledby="technical-title-3"><figcaption id="technical-title-3">技术图 03 · 判定与异常流转</figcaption><p class="technical-legend">纵向阅读 · 菱形表示条件 · 虚线表示回流、事件或回执，以边上文字和正文为准。图均为设计目标。</p><div class="technical-controls" hidden><label>定位 <select aria-label="选择判定与异常流转中的节点或消息"></select></label><div><button type="button" data-minus aria-label="缩小技术图">−</button><output>100%</output><button type="button" data-plus aria-label="放大技术图">＋</button><button type="button" data-fit>全图概览</button><button type="button" data-size>清晰原寸</button></div></div><div class="technical-viewport" role="region" tabindex="0" aria-label="判定与异常流转，可上下和横向滚动"><canvas width="1420" height="1830" role="img" aria-label="技术图 03 · 判定与异常流转；完整关系见下方文字替代">技术图文字关系见下方。</canvas></div><p class="technical-hint">点击节点或消息查看交接关系；可缩放并在图内滚动。下方提供同源文字与 Mermaid 图源。</p><aside class="technical-detail" aria-live="polite" hidden></aside><details class="technical-source" open><summary>文字关系与 Mermaid 图源</summary><ol><li>Rule Gap / 规则与缺口定位 — 核对enabled与runtime_ready → 执行门禁与冻结边界有效？</li><li>执行门禁与冻结边界有效？ — 否，仅允许规划报告 → 保留原缺口 / 不足阻断或人工</li><li>执行门禁与冻结边界有效？ — 是 → 事先声明哪种类型？</li><li>事先声明哪种类型？ — manual或缺声明 → 保留原缺口 / 不足阻断或人工</li><li>事先声明哪种类型？ — exact → exact / 要求原实例不变量</li><li>事先声明哪种类型？ — equivalent → equivalent / 仅使用已声明等价维度</li><li>事先声明哪种类型？ — fresh且非替代原exact → fresh / 独立新请求与结论</li><li>exact / 要求原实例不变量 — 上下文可恢复才选路 → 选路与风险排序 / 就地优先再可信边</li><li>equivalent / 仅使用已声明等价维度 — 等价维度可验证才选路 → 选路与风险排序 / 就地优先再可信边</li><li>fresh / 独立新请求与结论 — 原请求仍独立保留 → 选路与风险排序 / 就地优先再可信边</li><li>选路与风险排序 / 就地优先再可信边 — 无可行路线 → 保留原缺口 / 不足阻断或人工</li><li>选路与风险排序 / 就地优先再可信边 — 低风险可执行 → 逐边重观察与执行 / 失败即停止当前路线</li><li>逐边重观察与执行 / 失败即停止当前路线 — 新后态 → 实际后态与原声明相符？</li><li>实际后态与原声明相符？ — 否，检查失败序列用途 → 保留原缺口 / 不足阻断或人工</li><li>实际后态与原声明相符？ — 是 → 材料满足所需证据角色？</li><li>材料满足所需证据角色？ — 否 → 保留原缺口 / 不足阻断或人工</li><li>材料满足所需证据角色？ — 是 → 追加证据与新尝试 / 旧输入与结论不变</li><li>追加证据与新尝试 / 旧输入与结论不变 — 产生新缺口才回流 → Rule Gap / 规则与缺口定位</li></ol><pre><code class="language-mermaid">flowchart TB
+  A[&quot;Rule Gap&lt;br/&gt;规则与缺口定位&quot;]
+  B{&quot;执行门禁与冻结边界有效？&quot;}
+  C[&quot;保留原缺口&lt;br/&gt;不足阻断或人工&quot;]
+  D{&quot;事先声明哪种类型？&quot;}
+  E[&quot;exact&lt;br/&gt;要求原实例不变量&quot;]
+  F[&quot;equivalent&lt;br/&gt;仅使用已声明等价维度&quot;]
+  G[&quot;fresh&lt;br/&gt;独立新请求与结论&quot;]
+  H[&quot;选路与风险排序&lt;br/&gt;就地优先再可信边&quot;]
+  I[&quot;逐边重观察与执行&lt;br/&gt;失败即停止当前路线&quot;]
+  J{&quot;实际后态与原声明相符？&quot;}
+  K{&quot;材料满足所需证据角色？&quot;}
+  L[&quot;追加证据与新尝试&lt;br/&gt;旧输入与结论不变&quot;]
+  A --&gt;|核对enabled与runtime_ready| B
+  B --&gt;|否，仅允许规划报告| C
+  B --&gt;|是| D
+  D --&gt;|manual或缺声明| C
+  D --&gt;|exact| E
+  D --&gt;|equivalent| F
+  D --&gt;|fresh且非替代原exact| G
+  E --&gt;|上下文可恢复才选路| H
+  F --&gt;|等价维度可验证才选路| H
+  G --&gt;|原请求仍独立保留| H
+  H --&gt;|无可行路线| C
+  H --&gt;|低风险可执行| I
+  I --&gt;|新后态| J
+  J --&gt;|否，检查失败序列用途| C
+  J --&gt;|是| K
+  K --&gt;|否| C
+  K --&gt;|是| L
+  L -.-&gt;|产生新缺口才回流| A
+</code></pre></details></figure>
+<p>图中的三条声明分支互不回退：exact 验证失败不能接着尝试 equivalent 或 fresh；缺少原上下文时回到缺口/人工。停止补采成功路径不等于丢弃材料：若规则允许，完整的加载或关闭失败序列仍可形成一项有来源的新失败判断，但不得宣称原目标已恢复。</p>
+<p>缺口合并只允许在同一规则、同一 Run/Epoch、同一证据角色和兼容目标上下文下进行；不同 occurrence、不同登录/价格/素材窗口或不同结论类型必须保持独立。equivalent 的逐项证明缺一项就不能合并，fresh 不得回写 exact 请求。</p>
+<p>路径排序把当前实际页上的就地观察放在第一层；其次是同一运行的可信成功边；再次才是低风险、可重新绑定的恢复边和有限发现候选。动作数量较少但会触发支付、授权、一次性链接、跨 Surface 或不可逆副作用的路径，不因“最短”而优先。</p>
+<p>每条边均有动作前状态、目标重绑定、动作 Receipt、settle/Readiness、动作后实际观察、Presentation 和后置条件。Overlay 可质检但通常不进入业务图，外部跳转只留来源/落地/回源证据且不计业务覆盖。</p>
+<p>条件化决策伪代码：</p>
+<pre><code class="language-text">kind = request.declared_kind
+if kind == &quot;exact&quot; and not can_prove_original_context(request):
+    return insufficient(&quot;exact上下文不可证明&quot;)
+if kind == &quot;equivalent&quot; and not prove_each_declared_dimension(request):
+    return insufficient(&quot;equivalent仍有未证明项&quot;)
+if kind == &quot;fresh&quot; and request.replaces_original_exact:
+    return reject(&quot;fresh不能修复旧exact缺口&quot;)
+if target_is_visible_on_current_actual_state():
+    plan = local_observation_before_navigation()
+elif trusted_path_exists_in_same_run():
+    plan = rank_trusted_paths_by_risk_and_budget()
+elif limited_discovery_is_allowed():
+    plan = bounded_candidate_attempt_without_coverage()
+else:
+    return manual_or_insufficient(&quot;没有可验证路线&quot;)
+for edge in plan:
+    actual = observe_independently()
+    if not rebind_execute_capture_and_verify(edge, actual):
+        preserve_partial_observations_without_claiming_target_recovery()
+        return bounded_replan_or_terminal_from_independent_actual_state()
+final_actual = observe_target_without_injecting_expected()
+if not proves_declared_invariants_and_evidence_role(final_actual, request):
+    return allowed_failure_judgment_or_insufficient_without_closing_original_gap()
+return append_only_evidence_and_new_attempt(final_actual)
+</code></pre>
+<h2 id="section-18">18. 一致性、并发与恢复</h2>
+<p>补采缺口的受理边界是“可定位、可归属、可声明、未被同一结论终态覆盖”。相同规则和同一上下文的重复请求可以幂等合并；只要 Run/Epoch、证据角色、occurrence、用户态、价格、素材或 freshness 窗口不同，就必须拆开。合并不会删除任何原始 Capture 或旧结论。</p>
+<p>事件乱序时先按事实来源和 Run/Epoch重建缺口视图，再决定是否可继续；重复事件只确认一次。若相同动作收到冲突的 after 观测，保留两份事实并把结论标为冲突/不足，不能以最后一条消息自证成功。</p>
+<p>逐边检查点至少覆盖当前实际状态、目标绑定、动作回执和后置条件。检查点失败时从最新独立实际状态重规划，不能从原计划索引继续盲跑，也不能把树上最短路径当成真实恢复图。</p>
+<p>同一 Runtime 由单一 action owner 持有设备动作权；Frontier sibling、Judge 和图查询只能排队或读取。owner 失效、租约过期、取消或 deadline 到达时停止新动作，保留已追加事实。新 owner 接管必须先只读核对未决动作；策略和期限仍允许且未知副作用已处理后，才可重新规划，不能从旧路径索引自动重放。</p>
+<p>生产正式补采继续保持 <code>runtime_ready=False</code>，因此所有生产请求都必须走 blocked/insufficient/manual 的真实报告分支；普通局部 restore-only 仍可按既有能力和恢复次数执行，但不能把它伪装成正式补采。</p>
+<p>required 分母从任务提交起保持冻结。收口先停止新请求准入，再按现有边界排空已接纳的动作、Capture 和规则工作；排空期内合法的在途结果仍须核对 Run/Epoch 后接纳。最终封存 InputSet/覆盖快照后，迟到 Capture、Outbox 或重判只进审计或新的受控运行，不能改写本次封存输入与 Gate。资源释放、请求排空和 Gate 结论分别报告。</p>
+<pre><code class="language-text">merge_request(existing, incoming):
+    if not same_run_epoch(existing, incoming):
+        return keep_separate(&quot;Run/Epoch不同&quot;)
+    if not same_rule_and_evidence_role(existing, incoming):
+        return keep_separate(&quot;规则或证据角色不同&quot;)
+    if not compatible_context(existing, incoming):
+        return keep_separate(&quot;上下文或occurrence不同&quot;)
+    if existing.kind != incoming.kind:
+        return keep_separate(&quot;exact/equivalent/fresh/manual不可隐式合并&quot;)
+    return idempotently_merge_request_without_overwriting_history()
+
+after_edge_failure(edge):
+    actual = runtime.observe_independently()
+    if actual.is_external_or_obstructed:
+        return preserve_external_or_overlay_evidence(actual)
+    if owner_or_deadline_invalid():
+        return terminal_without_retry(&quot;owner/期限门禁失败&quot;)
+    return replan_from(actual, allowed_by_existing_budget=True)
+</code></pre>
+<p>恢复验收只接受“独立实际状态与声明目标相符、来源可信、逐边后置条件通过”的结果。<code>expected</code> 是比较项，<code>restored</code> 必须由实际观察解析；不得把 expected、树选择或旧 Capture 注入 restored。</p>
+<h2 id="section-19">19. 故障推演与技术验收</h2>
+<p>以下失败重试矩阵沿用既有预算、租约、取消和 Run/Epoch 门禁；未授权的重试不因为“请求还没成功”而自动增加次数。</p>
+<div class="table-scroll" role="region" aria-label="设计对照表，可横向滚动" tabindex="0"><table>
+<thead>
+<tr>
+<th>故障</th>
+<th>首次处理</th>
+<th>允许的重试或重规划</th>
+<th>终态与结论</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>enabled=false</td>
+<td>不创建执行动作</td>
+<td>仅等待策略变更后的新请求</td>
+<td>blocked，不产生补采证据</td>
+</tr>
+<tr>
+<td>生产 runtime_ready=false</td>
+<td>记录能力未就绪</td>
+<td>可规划/报告，不能操作设备</td>
+<td>insufficient 或 manual</td>
+</tr>
+<tr>
+<td>Frontier 只有未验证候选</td>
+<td>与可信边分开</td>
+<td>仅在独立有限发现预算内尝试</td>
+<td>不计恢复成功边</td>
+</tr>
+<tr>
+<td>当前目标未重现</td>
+<td>保存当前实际状态和原因</td>
+<td>从当前状态重绑或走已有恢复边</td>
+<td>无路线则 blocked/manual</td>
+</tr>
+<tr>
+<td>Readiness/Presentation失败</td>
+<td>不封存为稳定到达</td>
+<td>按采集预算补观察，不盲重放</td>
+<td>evidence_insufficient</td>
+</tr>
+<tr>
+<td>owner冲突、租约过期</td>
+<td>停止新动作并保留未决记录</td>
+<td>新 owner 先只读核对副作用，再在有效期限内重新规划</td>
+<td>无法消歧则 insufficient/manual</td>
+</tr>
+<tr>
+<td>取消或deadline到达</td>
+<td>立即停止新动作</td>
+<td>不跨截止时刻重试</td>
+<td>资源与结论分开报告</td>
+</tr>
+<tr>
+<td>exact上下文消失</td>
+<td>保留原 exact 缺口</td>
+<td>不能改成 fresh；另有声明才新建请求</td>
+<td>原结论不足/人工</td>
+</tr>
+<tr>
+<td>duplicate/乱序证据</td>
+<td>幂等接纳或等待重建</td>
+<td>只重试消费，不重复动作</td>
+<td>不重复追加结论</td>
+</tr>
+<tr>
+<td>Overlay或外部落地</td>
+<td>留 occurrence、来源和回源证据</td>
+<td>按安全恢复候选有限尝试</td>
+<td>默认不计业务覆盖</td>
+</tr>
+<tr>
+<td>Gate或收口不可用</td>
+<td>标记 Gate unavailable</td>
+<td>不用租约释放或请求排空冒充通过</td>
+<td>质检结论未闭合</td>
+</tr>
+</tbody></table></div>
+<p>技术验收要逐项证明：缺口能追溯到同一 Run/Epoch 的规则、Capture、状态或边；Frontier 的来源/状态/部分路径/恢复事实没有丢失；身份与 <code>page_type</code> 解耦；图只投影可信观察，树只作展示/恢复视图；普通局部恢复与正式补采区分；生产正式补采保持 <code>runtime_ready=False</code>；恢复实际状态独立读取；exact/equivalent/fresh/manual 预声明且 fresh 不修复旧 exact；同一 Runtime 单一 owner；冻结 required 分母；Coverage 权威和 Gate 门禁不搬家。</p>
+<p>静态影子验收至少覆盖当前页就地补帧、多入口恢复、局部状态变化、弹窗遮挡、外部回源、一次性上下文消失、动作后崩溃、租约失效、乱序事件和迟到封存。每个案例都要同时检查旧结论、新 Capture/InputSet、重判 revision、失败原因和 Gate 状态，不能只看“请求已完成”。</p>
+<p>本技术深化仍是未实施设计。进入实施前需由产品、质检和运行时负责人确认各规则的等价性证明项、fresh 窗口、缺口合并边界、恢复重试上限、人工接管入口、事件重建窗口及正式补采未就绪时的外部报告格式。文档和图示不代表运行面已启用。</p>
+<h2 id="section-20">20. 关联文档依据</h2>
+<p>总设计第 16–21 节提供交互、外跳、证据、图恢复、持久化复用、事件和同 Run/Epoch 原则；第 23–30 节提供 Gate、安全、错误、指标、实施、测试、验收和回滚约束。</p>
+<p>总设计第 35 节裁决补采等价性、外跳、层级、广告复用和能力门禁反馈；第 36 节给出 Judge、Runtime、异步质检、补采、收口和释放闭环。本文件只是精准补采专项设计，不表示源码已经完成对应能力。</p>
+
+        </article>
+      </div>
+      <nav class="doc-footer" aria-label="前后篇导航"><a href="02-page-state-graph.html"><span>上一篇</span>页面状态图</a>
+<a class="back-top" href="#document-top"><span>本篇</span>返回顶部 ↑</a>
+<a class="next" href="04-page-recognition.html"><span>下一篇</span>页面识别</a></nav>
+      <p class="page-note">正文按 Markdown 原稿生成 · 保留既有控制面 · 收益需基线与真实 H5 / App 验证<br>本篇不含表设计、字段定义或具体数据结构。</p>
+    </main>
+  </div>
+<script type="application/json" id="technical-diagram-data">[{"kind":"flow","width":622,"height":1831,"nodes":[{"id":"A","label":"Rule Gap\n缺口与证据角色","shape":"box","w":292,"lines":["Rule Gap","缺口与证据角色"],"h":88,"x":161.47999954223633,"y":48},{"id":"B","label":"Request Orchestrator\n声明与门禁","shape":"box","w":292,"lines":["Request Orchestrator","声明与门禁"],"h":88,"x":161.47999954223633,"y":227},{"id":"C","label":"Frontier/Graph\n可信路径投影","shape":"box","w":292,"lines":["Frontier/Graph","可信路径投影"],"h":88,"x":285.2199993133545,"y":406},{"id":"D","label":"Runtime/Broker\n唯一动作所有者","shape":"box","w":292,"lines":["Runtime/Broker","唯一动作所有者"],"h":88,"x":285.2199993133545,"y":764},{"id":"E","label":"Actual Observation\n独立实际状态","shape":"box","w":292,"lines":["Actual Observation","独立实际状态"],"h":88,"x":285.2199993133545,"y":943},{"id":"F","label":"Readiness/Presentation\n稳定与可见层","shape":"box","w":292,"lines":["Readiness/Presentation","稳定与可见层"],"h":88,"x":285.2199993133545,"y":1122},{"id":"G","label":"Capture/Manifest\n追加并封存","shape":"box","w":292,"lines":["Capture/Manifest","追加并封存"],"h":88,"x":285.2199993133545,"y":1301},{"id":"H","label":"InputSet/RuleExecution\n新尝试重判","shape":"box","w":292,"lines":["InputSet/RuleExecution","新尝试重判"],"h":88,"x":285.2199993133545,"y":1480},{"id":"I","label":"Coverage/Gate\n既有权威","shape":"box","w":292,"lines":["Coverage/Gate","既有权威"],"h":88,"x":161.47999954223633,"y":1659},{"id":"J","label":"Tree/Recovery View\n只读选路视图","shape":"box","w":292,"lines":["Tree/Recovery View","只读选路视图"],"h":88,"x":178.7199993133545,"y":585}],"edges":[{"id":"edge-0","from":"A","to":"B","dashed":false,"label":"定位请求","lines":["定位请求"],"points":[[307.4799995422363,136],[307.4799995422363,181.5],[307.4799995422363,227]],"labelX":307.4799995422363,"labelY":181.5,"labelW":64,"labelH":26},{"id":"edge-1","from":"B","to":"C","dashed":false,"label":"读取来源与路径","lines":["读取来源与路径"],"points":[[368.31307205541174,315],[431.2199993133545,360.5],[431.2199993133545,406]],"labelX":431.2199993133545,"labelY":360.5,"labelW":100,"labelH":26},{"id":"edge-2","from":"C","to":"D","dashed":false,"label":"受限候选","lines":["受限候选"],"points":[[483.57754121279584,494],[537.7199993133545,539.5],[537.7199993133545,629],[537.7199993133545,718.5],[483.57754121279584,764]],"labelX":537.7199993133545,"labelY":629,"labelW":64,"labelH":26},{"id":"edge-3","from":"D","to":"E","dashed":false,"label":"重新观察","lines":["重新观察"],"points":[[431.2199993133545,852],[431.2199993133545,897.5],[431.2199993133545,943]],"labelX":431.2199993133545,"labelY":897.5,"labelW":64,"labelH":26},{"id":"edge-4","from":"E","to":"F","dashed":false,"label":"逐边绑定","lines":["逐边绑定"],"points":[[431.2199993133545,1031],[431.2199993133545,1076.5],[431.2199993133545,1122]],"labelX":431.2199993133545,"labelY":1076.5,"labelW":64,"labelH":26},{"id":"edge-5","from":"F","to":"G","dashed":false,"label":"合法材料","lines":["合法材料"],"points":[[431.2199993133545,1210],[431.2199993133545,1255.5],[431.2199993133545,1301]],"labelX":431.2199993133545,"labelY":1255.5,"labelW":64,"labelH":26},{"id":"edge-6","from":"G","to":"H","dashed":false,"label":"追加输入","lines":["追加输入"],"points":[[431.2199993133545,1389],[431.2199993133545,1434.5],[431.2199993133545,1480]],"labelX":431.2199993133545,"labelY":1434.5,"labelW":64,"labelH":26},{"id":"edge-7","from":"H","to":"I","dashed":false,"label":"同Run/Epoch结论","lines":["同Run/Epoch结论"],"points":[[431.2199993133545,1568],[431.2199993133545,1613.5],[368.31307205541174,1659]],"labelX":431.2199993133545,"labelY":1613.5,"labelW":118.55000305175781,"labelH":26},{"id":"edge-8","from":"C","to":"J","dashed":true,"label":"展示或恢复投影","lines":["展示或恢复投影"],"points":[[378.86245741391315,494],[324.7199993133545,539.5],[324.7199993133545,585]],"labelX":324.7199993133545,"labelY":539.5,"labelW":100,"labelH":26},{"id":"edge-9","from":"J","to":"D","dashed":true,"label":"不能替代实际状态","lines":["不能替代实际状态"],"points":[[324.7199993133545,673],[324.7199993133545,718.5],[378.86245741391315,764]],"labelX":324.7199993133545,"labelY":718.5,"labelW":112,"labelH":26},{"id":"edge-10","from":"I","to":"B","dashed":true,"label":"Coverage权威不搬家","lines":["Coverage权威不搬家"],"points":[[210.63083753106315,1659],[110.47999954223633,1613.5],[110.47999954223633,1524],[110.47999954223633,1434.5],[110.47999954223633,1345],[110.47999954223633,1255.5],[110.47999954223633,1166],[110.47999954223633,1076.5],[110.47999954223633,987],[110.47999954223633,897.5],[110.47999954223633,808],[110.47999954223633,718.5],[110.47999954223633,629],[110.47999954223633,539.5],[110.47999954223633,450],[110.47999954223633,360.5],[210.63083753106315,315]],"labelX":110.47999954223633,"labelY":987,"labelW":132.95999908447266,"labelH":26}],"source":"flowchart TB\n  A[\"Rule Gap\u003cbr/>缺口与证据角色\"]\n  B[\"Request Orchestrator\u003cbr/>声明与门禁\"]\n  C[\"Frontier/Graph\u003cbr/>可信路径投影\"]\n  D[\"Runtime/Broker\u003cbr/>唯一动作所有者\"]\n  E[\"Actual Observation\u003cbr/>独立实际状态\"]\n  F[\"Readiness/Presentation\u003cbr/>稳定与可见层\"]\n  G[\"Capture/Manifest\u003cbr/>追加并封存\"]\n  H[\"InputSet/RuleExecution\u003cbr/>新尝试重判\"]\n  I[\"Coverage/Gate\u003cbr/>既有权威\"]\n  J[\"Tree/Recovery View\u003cbr/>只读选路视图\"]\n  A -->|定位请求| B\n  B -->|读取来源与路径| C\n  C -->|受限候选| D\n  D -->|重新观察| E\n  E -->|逐边绑定| F\n  F -->|合法材料| G\n  G -->|追加输入| H\n  H -->|同Run/Epoch结论| I\n  C -.->|展示或恢复投影| J\n  J -.->|不能替代实际状态| D\n  I -.->|Coverage权威不搬家| B","title":"技术图 01 · 组件职责与依赖"},{"kind":"sequence","width":1266,"height":1571,"participants":[{"id":"A","label":"缺口编排","x":108,"y":38,"w":180,"h":64,"lines":["缺口编排"]},{"id":"B","label":"Frontier与恢复","x":318,"y":38,"w":180,"h":64,"lines":["Frontier与恢复"]},{"id":"C","label":"Runtime/Broker","x":528,"y":38,"w":180,"h":64,"lines":["Runtime/Broker"]},{"id":"S","label":"受控Surface","x":738,"y":38,"w":180,"h":64,"lines":["受控Surface"]},{"id":"D","label":"Readiness与Capture","x":948,"y":38,"w":180,"h":64,"lines":["Readiness与Capture"]},{"id":"E","label":"Manifest与Rule/Gate","x":1158,"y":38,"w":180,"h":64,"lines":["Manifest与Rule/Gate"]}],"events":[{"kind":"message","from":"A","to":"E","dashed":false,"label":"读取封存输入与具体规则缺口","lines":["读取封存输入与具体规则缺口"],"number":1,"id":"event-0","x1":108,"x2":1158,"self":false,"y":159,"textX":633,"textY":138,"points":[[108,159],[1158,159]],"hitLeft":96,"hitRight":1170},{"kind":"message","from":"E","to":"A","dashed":true,"label":"返回缺口证据角色和旧结论","lines":["返回缺口证据角色和旧结论"],"number":2,"id":"event-1","x1":1158,"x2":108,"self":false,"y":226,"textX":633,"textY":205,"points":[[1158,226],[108,226]],"hitLeft":96,"hitRight":1170},{"kind":"message","from":"A","to":"B","dashed":false,"label":"读取同Run/Epoch可信边和部分路径","lines":["读取同Run/Epoch可信边和","部分路径"],"number":3,"id":"event-2","x1":108,"x2":318,"self":false,"y":314,"textX":213,"textY":272,"points":[[108,314],[318,314]],"hitLeft":96,"hitRight":330},{"kind":"message","from":"B","to":"A","dashed":true,"label":"返回可验证路径与普通恢复事实","lines":["返回可验证路径与普通恢复","事实"],"number":4,"id":"event-3","x1":318,"x2":108,"self":false,"y":402,"textX":213,"textY":360,"points":[[318,402],[108,402]],"hitLeft":96,"hitRight":330},{"kind":"message","from":"A","to":"C","dashed":false,"label":"交接声明类型与原冻结边界并核对执行门禁","lines":["交接声明类型与原冻结边界并核对执行门禁"],"number":5,"id":"event-4","x1":108,"x2":528,"self":false,"y":469,"textX":318,"textY":448,"points":[[108,469],[528,469]],"hitLeft":96,"hitRight":540},{"kind":"message","from":"C","to":"S","dashed":false,"label":"独立读取当前Surface与实际状态","lines":["独立读取当前Surface与实","际状态"],"number":6,"id":"event-5","x1":528,"x2":738,"self":false,"y":557,"textX":633,"textY":515,"points":[[528,557],[738,557]],"hitLeft":516,"hitRight":750},{"kind":"message","from":"S","to":"C","dashed":true,"label":"返回实际状态而非计划目标","lines":["返回实际状态而非计划目标"],"number":7,"id":"event-6","x1":738,"x2":528,"self":false,"y":624,"textX":633,"textY":603,"points":[[738,624],[528,624]],"hitLeft":516,"hitRight":750},{"kind":"message","from":"C","to":"D","dashed":false,"label":"请求动作前Capture并重新绑定目标","lines":["请求动作前Capture并重新绑定目标"],"number":8,"id":"event-7","x1":528,"x2":948,"self":false,"y":691,"textX":738,"textY":670,"points":[[528,691],[948,691]],"hitLeft":516,"hitRight":960},{"kind":"message","from":"D","to":"C","dashed":true,"label":"返回新观察和目标可执行性","lines":["返回新观察和目标可执行性"],"number":9,"id":"event-8","x1":948,"x2":528,"self":false,"y":758,"textX":738,"textY":737,"points":[[948,758],[528,758]],"hitLeft":516,"hitRight":960},{"kind":"message","from":"C","to":"S","dashed":false,"label":"复核owner与许可后只执行当前一步","lines":["复核owner与许可后只执行","当前一步"],"number":10,"id":"event-9","x1":528,"x2":738,"self":false,"y":846,"textX":633,"textY":804,"points":[[528,846],[738,846]],"hitLeft":516,"hitRight":750},{"kind":"message","from":"S","to":"C","dashed":true,"label":"返回回执或副作用未知","lines":["返回回执或副作用未知"],"number":11,"id":"event-10","x1":738,"x2":528,"self":false,"y":913,"textX":633,"textY":892,"points":[[738,913],[528,913]],"hitLeft":516,"hitRight":750},{"kind":"message","from":"C","to":"D","dashed":false,"label":"请求动作后新Capture与Presentation","lines":["请求动作后新Capture与Presentation"],"number":12,"id":"event-11","x1":528,"x2":948,"self":false,"y":980,"textX":738,"textY":959,"points":[[528,980],[948,980]],"hitLeft":516,"hitRight":960},{"kind":"message","from":"D","to":"C","dashed":true,"label":"返回角色校验材料及独立实际后态","lines":["返回角色校验材料及独立实际后态"],"number":13,"id":"event-12","x1":948,"x2":528,"self":false,"y":1047,"textX":738,"textY":1026,"points":[[948,1047],[528,1047]],"hitLeft":516,"hitRight":960},{"kind":"message","from":"C","to":"C","dashed":false,"label":"验证该边后置与原声明的不变量","lines":["验证该边后置与原声明的不","变量"],"number":14,"id":"event-13","x1":528,"x2":528,"self":true,"y":1135,"textX":620,"textY":1093,"points":[[528,1135],[606,1135],[606,1159],[528,1159]],"hitLeft":516,"hitRight":717},{"kind":"message","from":"C","to":"E","dashed":false,"label":"提交可接纳材料并追加封存输入","lines":["提交可接纳材料并追加封存输入"],"number":15,"id":"event-14","x1":528,"x2":1158,"self":false,"y":1222,"textX":843,"textY":1201,"points":[[528,1222],[1158,1222]],"hitLeft":516,"hitRight":1170},{"kind":"message","from":"E","to":"A","dashed":true,"label":"返回新尝试与覆盖事实供Gate消费","lines":["返回新尝试与覆盖事实供Gate消费"],"number":16,"id":"event-15","x1":1158,"x2":108,"self":false,"y":1289,"textX":633,"textY":1268,"points":[[1158,1289],[108,1289]],"hitLeft":96,"hitRight":1170},{"kind":"note","from":"A","to":"C","label":"expected只作比较，restored必须来自独立实际状态","lines":["expected只作比较，restored必须来自独立实际状态"],"number":null,"id":"event-16","w":530,"h":43,"x":53,"y":1335},{"kind":"note","from":"C","to":"D","label":"每条路径边重复观察和验证，失败不能跳到封存成功","lines":["每条路径边重复观察和验证，失败不能跳到封存成功"],"number":null,"id":"event-17","w":530,"h":43,"x":473,"y":1408}],"source":"sequenceDiagram\n  participant A as 缺口编排\n  participant B as Frontier与恢复\n  participant C as Runtime/Broker\n  participant S as 受控Surface\n  participant D as Readiness与Capture\n  participant E as Manifest与Rule/Gate\n  A->>E:读取封存输入与具体规则缺口\n  E-->>A:返回缺口证据角色和旧结论\n  A->>B:读取同Run/Epoch可信边和部分路径\n  B-->>A:返回可验证路径与普通恢复事实\n  A->>C:交接声明类型与原冻结边界并核对执行门禁\n  C->>S:独立读取当前Surface与实际状态\n  S-->>C:返回实际状态而非计划目标\n  C->>D:请求动作前Capture并重新绑定目标\n  D-->>C:返回新观察和目标可执行性\n  C->>S:复核owner与许可后只执行当前一步\n  S-->>C:返回回执或副作用未知\n  C->>D:请求动作后新Capture与Presentation\n  D-->>C:返回角色校验材料及独立实际后态\n  C->>C:验证该边后置与原声明的不变量\n  C->>E:提交可接纳材料并追加封存输入\n  E-->>A:返回新尝试与覆盖事实供Gate消费\n  Note over A,C:expected只作比较，restored必须来自独立实际状态\n  Note over C,D:每条路径边重复观察和验证，失败不能跳到封存成功","title":"技术图 02 · 调用时序与交接"},{"kind":"flow","width":1420,"height":1830,"nodes":[{"id":"A","label":"Rule Gap\n规则与缺口定位","shape":"box","w":292,"lines":["Rule Gap","规则与缺口定位"],"h":88,"x":606,"y":48},{"id":"B","label":"执行门禁与冻结边界有效？","shape":"decision","w":300,"lines":["执行门禁与冻结边界有效？"],"h":128,"x":887.5,"y":245},{"id":"C","label":"保留原缺口\n不足阻断或人工","shape":"box","w":292,"lines":["保留原缺口","不足阻断或人工"],"h":88,"x":953.7050018310547,"y":1658},{"id":"D","label":"事先声明哪种类型？","shape":"decision","w":300,"lines":["事先声明哪种类型？"],"h":128,"x":752,"y":464},{"id":"E","label":"exact\n要求原实例不变量","shape":"box","w":292,"lines":["exact","要求原实例不变量"],"h":88,"x":897,"y":683},{"id":"F","label":"equivalent\n仅使用已声明等价维度","shape":"box","w":292,"lines":["equivalent","仅使用已声明等价维度"],"h":88,"x":563,"y":683},{"id":"G","label":"fresh\n独立新请求与结论","shape":"box","w":292,"lines":["fresh","独立新请求与结论"],"h":88,"x":229,"y":683},{"id":"H","label":"选路与风险排序\n就地优先再可信边","shape":"box","w":292,"lines":["选路与风险排序","就地优先再可信边"],"h":88,"x":515.5,"y":862},{"id":"I","label":"逐边重观察与执行\n失败即停止当前路线","shape":"box","w":292,"lines":["逐边重观察与执行","失败即停止当前路线"],"h":88,"x":383.5,"y":1041},{"id":"J","label":"实际后态与原声明相符？","shape":"decision","w":300,"lines":["实际后态与原声明相符？"],"h":128,"x":379.5,"y":1220},{"id":"K","label":"材料满足所需证据角色？","shape":"decision","w":300,"lines":["材料满足所需证据角色？"],"h":128,"x":253,"y":1439},{"id":"L","label":"追加证据与新尝试\n旧输入与结论不变","shape":"box","w":292,"lines":["追加证据与新尝试","旧输入与结论不变"],"h":88,"x":44,"y":1658}],"edges":[{"id":"edge-0","from":"A","to":"B","dashed":false,"label":"核对enabled与runtime_ready","lines":["核对enabled与","runtime_ready"],"points":[[879.5329949238578,136],[1037.5,190.5],[1037.5,245]],"labelX":1037.5,"labelY":190.5,"labelW":101.30999755859375,"labelH":44},{"id":"edge-1","from":"B","to":"C","dashed":false,"label":"否，仅允许规划报告","lines":["否，仅允许规划报告"],"points":[[1115.293734064066,339.8080067993318],[1314,418.5],[1314,528],[1314,637.5],[1314,727],[1314,816.5],[1314,906],[1314,995.5],[1314,1085],[1314,1174.5],[1314,1284],[1314,1393.5],[1314,1503],[1314,1612.5],[1205.0567327744468,1658]],"labelX":1314,"labelY":995.5,"labelW":124,"labelH":26},{"id":"edge-2","from":"B","to":"D","dashed":false,"label":"是","lines":["是"],"points":[[985.6691038769574,350.8854843208352],[902,418.5],[902,464]],"labelX":902,"labelY":418.5,"labelW":28,"labelH":26},{"id":"edge-3","from":"D","to":"C","dashed":false,"label":"manual或缺声明","lines":["manual或缺声明"],"points":[[985.4714983933249,556.385494018848],[1224,637.5],[1224,727],[1224,816.5],[1224,906],[1224,995.5],[1224,1085],[1224,1174.5],[1224,1284],[1224,1393.5],[1224,1503],[1224,1612.5],[1160.810922718581,1658]],"labelX":1224,"labelY":1085,"labelW":106.58999633789062,"labelH":26},{"id":"edge-4","from":"D","to":"E","dashed":false,"label":"exact","lines":["exact"],"points":[[955.1887304019805,569.306141695155],[1043,637.5],[1043,683]],"labelX":1043,"labelY":637.5,"labelW":48.029998779296875,"labelH":26},{"id":"edge-5","from":"D","to":"F","dashed":false,"label":"equivalent","lines":["equivalent"],"points":[[837.6152482885637,564.5291726031205],[709,637.5],[709,683]],"labelX":709,"labelY":637.5,"labelW":76.47000122070312,"labelH":26},{"id":"edge-6","from":"D","to":"G","dashed":false,"label":"fresh且非替代原exact","lines":["fresh且非替代原exact"],"points":[[801.1246784838395,548.9598628197715],[375,637.5],[375,683]],"labelX":375,"labelY":637.5,"labelW":139.0999984741211,"labelH":26},{"id":"edge-7","from":"E","to":"H","dashed":false,"label":"上下文可恢复才选路","lines":["上下文可恢复才选路"],"points":[[1043,771],[1043,816.5],[807.5,871.7483617300131]],"labelX":1043,"labelY":816.5,"labelW":124,"labelH":26},{"id":"edge-8","from":"F","to":"H","dashed":false,"label":"等价维度可验证才选路","lines":["等价维度可验证才选路"],"points":[[709,771],[709,816.5],[684.8519553072625,862]],"labelX":709,"labelY":816.5,"labelW":136,"labelH":26},{"id":"edge-9","from":"G","to":"H","dashed":false,"label":"原请求仍独立保留","lines":["原请求仍独立保留"],"points":[[375,771],[375,816.5],[520.6508379888269,862]],"labelX":375,"labelY":816.5,"labelW":112,"labelH":26},{"id":"edge-10","from":"H","to":"C","dashed":false,"label":"无可行路线","lines":["无可行路线"],"points":[[807.5,936.2930896940804],[1092.8525009155273,995.5],[1092.8525009155273,1085],[1092.8525009155273,1174.5],[1092.8525009155273,1284],[1092.8525009155273,1393.5],[1092.8525009155273,1503],[1092.8525009155273,1612.5],[1096.3361745653206,1658]],"labelX":1092.8525009155273,"labelY":1284,"labelW":76,"labelH":26},{"id":"edge-11","from":"H","to":"I","dashed":false,"label":"低风险可执行","lines":["低风险可执行"],"points":[[596.6061452513967,950],[529.5,995.5],[529.5,1041]],"labelX":529.5,"labelY":995.5,"labelW":88,"labelH":26},{"id":"edge-12","from":"I","to":"J","dashed":false,"label":"新后态","lines":["新后态"],"points":[[529.5,1129],[529.5,1174.5],[529.5,1220]],"labelX":529.5,"labelY":1174.5,"labelW":52,"labelH":26},{"id":"edge-13","from":"J","to":"C","dashed":false,"label":"否，检查失败序列用途","lines":["否，检查失败序列用途"],"points":[[611.5449057739487,1312.9941735364484],[839.3525009155273,1393.5],[839.3525009155273,1503],[839.3525009155273,1612.5],[971.7104762412982,1658]],"labelX":839.3525009155273,"labelY":1503,"labelW":136,"labelH":26},{"id":"edge-14","from":"J","to":"K","dashed":false,"label":"是","lines":["是"],"points":[[479.97510297296196,1326.8693772684637],[403,1393.5],[403,1439]],"labelX":403,"labelY":1393.5,"labelW":28,"labelH":26},{"id":"edge-15","from":"K","to":"C","dashed":false,"label":"否","lines":["否"],"points":[[482.4288196842258,1533.1103702680637],[691.8525009155273,1612.5],[953.7050018310547,1669.9614567259785]],"labelX":691.8525009155273,"labelY":1612.5,"labelW":28,"labelH":26},{"id":"edge-16","from":"K","to":"L","dashed":false,"label":"是","lines":["是"],"points":[[370.315842102757,1553.0547592971764],[331.5,1612.5],[259.56424581005587,1658]],"labelX":331.5,"labelY":1612.5,"labelW":28,"labelH":26},{"id":"edge-17","from":"L","to":"A","dashed":true,"label":"产生新缺口才回流","lines":["产生新缺口才回流"],"points":[[190,1658],[190,1612.5],[190,1503],[190,1393.5],[190,1284],[190,1174.5],[190,1085],[190,995.5],[190,906],[190,816.5],[190,727],[190,637.5],[190,528],[190,418.5],[190,309],[190,190.5],[606,117.58896797153025]],"labelX":190,"labelY":906,"labelW":112,"labelH":26}],"source":"flowchart TB\n  A[\"Rule Gap\u003cbr/>规则与缺口定位\"]\n  B{\"执行门禁与冻结边界有效？\"}\n  C[\"保留原缺口\u003cbr/>不足阻断或人工\"]\n  D{\"事先声明哪种类型？\"}\n  E[\"exact\u003cbr/>要求原实例不变量\"]\n  F[\"equivalent\u003cbr/>仅使用已声明等价维度\"]\n  G[\"fresh\u003cbr/>独立新请求与结论\"]\n  H[\"选路与风险排序\u003cbr/>就地优先再可信边\"]\n  I[\"逐边重观察与执行\u003cbr/>失败即停止当前路线\"]\n  J{\"实际后态与原声明相符？\"}\n  K{\"材料满足所需证据角色？\"}\n  L[\"追加证据与新尝试\u003cbr/>旧输入与结论不变\"]\n  A -->|核对enabled与runtime_ready| B\n  B -->|否，仅允许规划报告| C\n  B -->|是| D\n  D -->|manual或缺声明| C\n  D -->|exact| E\n  D -->|equivalent| F\n  D -->|fresh且非替代原exact| G\n  E -->|上下文可恢复才选路| H\n  F -->|等价维度可验证才选路| H\n  G -->|原请求仍独立保留| H\n  H -->|无可行路线| C\n  H -->|低风险可执行| I\n  I -->|新后态| J\n  J -->|否，检查失败序列用途| C\n  J -->|是| K\n  K -->|否| C\n  K -->|是| L\n  L -.->|产生新缺口才回流| A","title":"技术图 03 · 判定与异常流转"}]</script>
+<script id="technical-canvas-core">/* 同一绘图核心用于离线原生 Canvas 校验和文档阅读；不依赖网络、DOM 或业务运行时。 */
+(function(root) {
+  "use strict";
+  const fonts='"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif';
+  function rounded(ctx,x,y,w,h,r) {
+    ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();
+  }
+  function arrow(ctx,points,dashed,selected,dim) {
+    ctx.save();ctx.globalAlpha=dim?0.28:1;ctx.strokeStyle=selected?"#12695f":dashed?"#866ca4":"#617f91";ctx.fillStyle=ctx.strokeStyle;ctx.lineWidth=selected?2.7:1.7;ctx.lineJoin="round";ctx.lineCap="round";ctx.setLineDash(dashed?[7,5]:[]);
+    ctx.beginPath();ctx.moveTo(points[0][0],points[0][1]);for(const point of points.slice(1))ctx.lineTo(point[0],point[1]);ctx.stroke();ctx.setLineDash([]);
+    const end=points[points.length-1],previous=points[points.length-2],angle=Math.atan2(end[1]-previous[1],end[0]-previous[0]);
+    ctx.beginPath();ctx.moveTo(end[0],end[1]);ctx.lineTo(end[0]-9*Math.cos(angle-0.4),end[1]-9*Math.sin(angle-0.4));ctx.lineTo(end[0]-9*Math.cos(angle+0.4),end[1]-9*Math.sin(angle+0.4));ctx.closePath();ctx.fill();ctx.restore();
+  }
+  function centeredLines(ctx,lines,x,y,lineHeight,color,size,bold) {
+    ctx.save();ctx.font=(bold?"600 ":"")+size+"px "+fonts;ctx.fillStyle=color;ctx.textAlign="center";ctx.textBaseline="middle";
+    lines.forEach(function(line,index){ctx.fillText(line,x,y+index*lineHeight);});ctx.restore();
+  }
+  function flow(ctx,graph,selected) {
+    for(const edge of graph.edges) arrow(ctx,edge.points,edge.dashed,edge.id===selected || edge.from===selected || edge.to===selected,Boolean(selected && edge.id!==selected && edge.from!==selected && edge.to!==selected));
+    for(const edge of graph.edges) {
+      if(!edge.label)continue;
+      ctx.save();rounded(ctx,edge.labelX-edge.labelW/2,edge.labelY-edge.labelH/2,edge.labelW,edge.labelH,5);ctx.fillStyle="#fbfcfd";ctx.fill();
+      centeredLines(ctx,edge.lines,edge.labelX,edge.labelY-(edge.lines.length-1)*9,18,edge.dashed?"#775a99":"#476474",12,false);ctx.restore();
+    }
+    for(const node of graph.nodes) {
+      const isSelected=node.id===selected,decision=node.shape==="decision",limited=/(拒绝|隔离|禁止|失败|不足|人工|终结)/.test(node.label);
+      const accent=decision?"#9c6423":limited?"#876746":"#266d83";
+      ctx.save();
+      if(decision) {ctx.beginPath();ctx.moveTo(node.x+node.w/2,node.y);ctx.lineTo(node.x+node.w,node.y+node.h/2);ctx.lineTo(node.x+node.w/2,node.y+node.h);ctx.lineTo(node.x,node.y+node.h/2);ctx.closePath();}
+      else rounded(ctx,node.x,node.y,node.w,node.h,11);
+      ctx.fillStyle=isSelected?"#e6f3ee":decision?"#fff5e5":limited?"#f8f3eb":"#eef5f9";ctx.fill();ctx.strokeStyle=isSelected?"#12695f":decision?"#d5b17c":limited?"#cfbca2":"#aac6d4";ctx.lineWidth=isSelected?2.7:1.15;ctx.stroke();
+      if(!decision){ctx.fillStyle=accent;rounded(ctx,node.x+12,node.y+18,4,node.h-36,2);ctx.fill();}
+      centeredLines(ctx,node.lines,node.x+node.w/2,node.y+node.h/2-(node.lines.length-1)*12.5,25,"#213a46",16,false);
+      ctx.restore();
+    }
+  }
+  function sequence(ctx,graph,selected) {
+    for(const participant of graph.participants) {
+      ctx.save();ctx.strokeStyle="#c6d2d9";ctx.lineWidth=1.2;ctx.setLineDash([4,5]);ctx.beginPath();ctx.moveTo(participant.x,participant.y+participant.h);ctx.lineTo(participant.x,graph.height-57);ctx.stroke();ctx.setLineDash([]);
+      rounded(ctx,participant.x-participant.w/2,participant.y,participant.w,participant.h,9);ctx.fillStyle="#edf4fa";ctx.fill();ctx.strokeStyle="#aac1d4";ctx.stroke();
+      centeredLines(ctx,participant.lines,participant.x,participant.y+participant.h/2-(participant.lines.length-1)*10.5,21,"#23465b",15,true);
+      rounded(ctx,participant.x-participant.w/2,graph.height-58,participant.w,40,7);ctx.fillStyle="#f0f5f8";ctx.fill();ctx.strokeStyle="#c6d2d9";ctx.stroke();
+      centeredLines(ctx,[participant.label],participant.x,graph.height-38,20,"#617984",12,false);ctx.restore();
+    }
+    for(const event of graph.events) {
+      if(event.kind==="note") {
+        ctx.save();rounded(ctx,event.x,event.y,event.w,event.h,7);ctx.fillStyle="#fff7e8";ctx.fill();ctx.strokeStyle="#dac394";ctx.stroke();
+        centeredLines(ctx,event.lines,event.x+event.w/2,event.y+event.h/2-(event.lines.length-1)*10.5,21,"#7a613b",14,false);ctx.restore();continue;
+      }
+      const active=event.id===selected;
+      if(active){ctx.fillStyle="#eaf4ef";ctx.fillRect(24,event.textY-15,graph.width-48,event.y-event.textY+(event.self?49:24));}
+      arrow(ctx,event.points,event.dashed,active,Boolean(selected && !active));
+      const lineWidth=Math.max.apply(null,event.lines.map(function(line){ctx.font="14px "+fonts;return ctx.measureText(line).width;}))+14;
+      ctx.fillStyle=active?"#eaf4ef":"#fbfcfd";ctx.fillRect(event.textX-lineWidth/2,event.textY-11,lineWidth,event.lines.length*21);
+      centeredLines(ctx,event.lines,event.textX,event.textY,21,event.dashed?"#795d99":"#2b5265",14,false);
+      ctx.save();ctx.beginPath();ctx.arc(Math.min(event.x1,event.x2)-17,event.y,10,0,Math.PI*2);ctx.fillStyle=active?"#12695f":"#e4edf2";ctx.fill();centeredLines(ctx,[String(event.number)],Math.min(event.x1,event.x2)-17,event.y,16,active?"#fff":"#547381",10,true);ctx.restore();
+    }
+  }
+  function draw(ctx,graph,selected) {
+    ctx.save();ctx.clearRect(0,0,graph.width,graph.height);ctx.fillStyle="#fbfcfd";ctx.fillRect(0,0,graph.width,graph.height);
+    ctx.fillStyle="#dfe8ed";for(let x=18;x<graph.width;x+=24)for(let y=18;y<graph.height;y+=24){ctx.beginPath();ctx.arc(x,y,0.6,0,Math.PI*2);ctx.fill();}
+    if(graph.kind==="sequence")sequence(ctx,graph,selected);else flow(ctx,graph,selected);
+    ctx.restore();
+  }
+  function items(graph) {
+    if(graph.kind==="sequence")return graph.events.filter(function(event){return event.kind==="message";}).map(function(event){
+      const byId=new Map(graph.participants.map(function(participant){return[participant.id,participant.label];}));
+      return {id:event.id,label:String(event.number).padStart(2,"0")+" "+event.label,detail:byId.get(event.from)+" → "+byId.get(event.to)+"："+event.label+(event.dashed?"；虚线回执/消息，具体语义以正文为准。":"；交接条件及失败分支见图后正文。"),x:event.textX,y:event.textY};
+    });
+    return graph.nodes.map(function(node){
+      const incoming=graph.edges.filter(function(edge){return edge.to===node.id;}).map(function(edge){return graph.nodes.find(function(item){return item.id===edge.from;}).label.replace(/\n/g," / ")+"："+(edge.label||"交接");});
+      const outgoing=graph.edges.filter(function(edge){return edge.from===node.id;}).map(function(edge){return(edge.label||"交接")+" → "+graph.nodes.find(function(item){return item.id===edge.to;}).label.replace(/\n/g," / ");});
+      const detail=graph.relationDiagram?"关联到本对象："+(incoming.join("；")||"本图归属入口")+"。本对象关联："+(outgoing.join("；")||"其他约束见正文")+"。箭头表达引用或包含，不是执行时序。":"进入："+(incoming.join("；")||"流程入口")+"。继续："+(outgoing.join("；")||"本图终点，终态约束见正文")+"。";
+      return {id:node.id,label:node.label.replace(/\n/g," / "),detail:detail,x:node.x+node.w/2,y:node.y};
+    });
+  }
+  function hit(graph,x,y) {
+    if(graph.kind==="sequence")return graph.events.find(function(event){return event.kind==="message" && x>=event.hitLeft && x<=event.hitRight && y>=event.textY-15 && y<=event.y+(event.self?32:12);})?.id || null;
+    return graph.nodes.find(function(node){
+      if(node.shape==="decision")return Math.abs(x-node.x-node.w/2)/(node.w/2)+Math.abs(y-node.y-node.h/2)/(node.h/2)<=1;
+      return x>=node.x && x<=node.x+node.w && y>=node.y && y<=node.y+node.h;
+    })?.id || null;
+  }
+  root.AliothTechnicalCanvas=Object.freeze({draw:draw,items:items,hit:hit,fonts:fonts});
+})(globalThis);
+</script>
+<script id="technical-canvas-interface">/* 文档交互只控制阅读状态；不会请求网络、访问设备或改变业务数据。 */
+(function() {
+  "use strict";
+  const core=globalThis.AliothTechnicalCanvas,data=JSON.parse(document.getElementById("technical-diagram-data").textContent),states=[];
+  for(const figure of document.querySelectorAll("[data-technical-diagram]")) {
+    const graph=data[figure.dataset.technicalDiagram],canvas=figure.querySelector("canvas"),viewport=figure.querySelector(".technical-viewport"),ctx=canvas.getContext("2d");
+    if(!ctx)continue;
+    const picker=figure.querySelector("select"),output=figure.querySelector("output"),detail=figure.querySelector(".technical-detail");
+    const choices=core.items(graph),state={figure,canvas,ctx,viewport,graph,scale:1,selected:null,manual:false};states.push(state);
+    const all=document.createElement("option");all.value="";all.textContent=graph.kind==="sequence"?"查看全部消息":"查看全部组件 / 节点";picker.append(all);
+    for(const item of choices){const option=document.createElement("option");option.value=item.id;option.textContent=item.label;picker.append(option);}
+    function paint() {
+      // 高分屏大图限制单张位图面积，避免放大时无界申请内存；CSS 阅读比例不受影响。
+      const ratio=Math.min(window.devicePixelRatio||1,2,Math.sqrt(16000000/(graph.width*graph.height*state.scale*state.scale)));
+      canvas.width=Math.ceil(graph.width*state.scale*ratio);canvas.height=Math.ceil(graph.height*state.scale*ratio);
+      canvas.style.width=graph.width*state.scale+"px";canvas.style.height=graph.height*state.scale+"px";
+      ctx.setTransform(ratio*state.scale,0,0,ratio*state.scale,0,0);core.draw(ctx,graph,state.selected);
+      output.textContent=Math.round(state.scale*100)+"%";
+      figure.querySelector("[data-minus]").disabled=state.scale<=0.2;figure.querySelector("[data-plus]").disabled=state.scale>=1.6;
+    }
+    function fit(readable) {
+      const target=Math.min(1,(Math.max(260,viewport.clientWidth)-1)/graph.width);
+      state.scale=readable?Math.max(0.8,target):Math.max(0.2,target);viewport.scrollLeft=0;viewport.scrollTop=0;paint();
+    }
+    function select(id,jump) {
+      const item=choices.find(function(value){return value.id===id;});state.selected=item?item.id:null;picker.value=item?item.id:"";
+      detail.hidden=!item;detail.replaceChildren();
+      if(item){const heading=document.createElement("strong"),paragraph=document.createElement("p");heading.textContent=item.label;paragraph.textContent=item.detail;detail.append(heading,paragraph);if(jump){viewport.scrollTop=Math.max(0,(item.y-36)*state.scale);viewport.scrollLeft=Math.max(0,item.x*state.scale-viewport.clientWidth/2);}}
+      paint();
+    }
+    function zoom(delta) {
+      state.manual=true;const previous=state.scale,cx=(viewport.scrollLeft+viewport.clientWidth/2)/previous,cy=(viewport.scrollTop+viewport.clientHeight/2)/previous;
+      state.scale=Math.max(0.2,Math.min(1.6,Math.round((state.scale+delta)*100)/100));paint();viewport.scrollLeft=Math.max(0,cx*state.scale-viewport.clientWidth/2);viewport.scrollTop=Math.max(0,cy*state.scale-viewport.clientHeight/2);
+    }
+    canvas.addEventListener("click",function(event){const bounds=canvas.getBoundingClientRect();select(core.hit(graph,(event.clientX-bounds.left)*graph.width/bounds.width,(event.clientY-bounds.top)*graph.height/bounds.height),false);});
+    picker.addEventListener("change",function(){select(picker.value,true);});
+    figure.querySelector("[data-minus]").addEventListener("click",function(){zoom(-0.1);});
+    figure.querySelector("[data-plus]").addEventListener("click",function(){zoom(0.1);});
+    figure.querySelector("[data-fit]").addEventListener("click",function(){state.manual=true;fit(false);});
+    figure.querySelector("[data-size]").addEventListener("click",function(){state.manual=true;state.scale=1;paint();});
+    figure.querySelector(".technical-controls").hidden=false;figure.querySelector(".technical-source").open=false;
+    state.paint=paint;state.fit=fit;fit(true);
+  }
+  let frame=0;
+  window.addEventListener("resize",function(){cancelAnimationFrame(frame);frame=requestAnimationFrame(function(){for(const state of states)state.manual?state.paint():state.fit(true);});});
+  if(document.fonts && document.fonts.ready)document.fonts.ready.then(function(){for(const state of states)state.paint();});
+  window.addEventListener("beforeprint",function(){for(const state of states){state.previousScale=state.scale;state.scale=1;state.paint();}});
+  window.addEventListener("afterprint",function(){for(const state of states){state.scale=state.previousScale||state.scale;state.paint();}});
+  document.documentElement.dataset.technicalCanvasReady=String(states.length);
+})();
+</script>
+</body>
+</html>

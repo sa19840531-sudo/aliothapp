@@ -1,0 +1,17 @@
+{
+  "removed_container": {
+    "name": "alioth-green-shared-pg-20261019",
+    "id": "da063e7e67cf531fd5c84599bc5d557b839bf3fcf0b185e69ba87df6d30cef9c",
+    "exit_code": 0
+  },
+  "preserved_volume": "alioth-green-shared-20261019-pgdata",
+  "pgdata": "/var/lib/postgresql/data",
+  "database": "alioth_green_shared_test",
+  "migration": "20261016_0140",
+  "other_connections_before_shutdown": 0,
+  "port_25420_released": true,
+  "own_remaining_containers": [],
+  "network_or_image_created": false,
+  "main_services": "same 5 Alioth container IDs still running; unrelated TgBot retained",
+  "source_isolation": "shared source can hot reload; database isolated"
+}

@@ -1,0 +1,166 @@
+{
+  "captured_at_utc": "2026-10-19T08:13:53.9455879Z",
+  "git_head": "9021bd9a3fc5128cd09013f734fbe4eac5fb6d5d",
+  "source_isolation": "独立运行实例；代码来自当前共享主目录，只读挂载，不是源码隔离",
+  "containers": [
+    {
+      "id": "7d339b45ae0e9703433630f5384604a8b2f840442bb4c948ceb33b8bbb5b2a34",
+      "name": "/alioth-checkpoint-results-pg-20261019",
+      "image_id": "sha256:1d533553fefe4f12e5d80c7b80622ba0c382abb5758856f52983d8789179f0fb",
+      "command": [
+        "postgres"
+      ],
+      "state": "running",
+      "mounts": [
+        {
+          "Type": "volume",
+          "Name": "alioth-checkpoint-results-20261019-pgdata",
+          "Source": "/var/lib/docker/volumes/alioth-checkpoint-results-20261019-pgdata/_data",
+          "Destination": "/var/lib/postgresql/data",
+          "RW": true
+        }
+      ],
+      "ports": {
+        "5432/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "25419"
+          }
+        ]
+      }
+    },
+    {
+      "id": "83a5ec0d60b4224b74db7c4776bd060a01a2d59a739ab04fc44701ce67febea7",
+      "name": "/alioth-checkpoint-results-api-20261019",
+      "image_id": "sha256:f6c30b821986feb61fdcffcdebb7552ca96cd453d9714b9fc39bb40fddddacef",
+      "command": [
+        "uvicorn",
+        "services.api.app.main:app",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "8000"
+      ],
+      "state": "running",
+      "mounts": [
+        {
+          "Type": "bind",
+          "Name": null,
+          "Source": "D:/xm/TYZX/alioth",
+          "Destination": "/workspace",
+          "RW": false
+        },
+        {
+          "Type": "bind",
+          "Name": null,
+          "Source": "D:/xm/TYZX/alioth/outputs/checkpoint-rule-results-20261019",
+          "Destination": "/validation",
+          "RW": false
+        }
+      ],
+      "ports": {
+        "8000/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "18119"
+          }
+        ]
+      }
+    }
+  ],
+  "source_hashes": [
+    {
+      "path": "services/api/app/application/h5_shortflow_rule_results.py",
+      "sha256": "2ffd8f56b70660d0e7081b0df71ce0b9fd3c75355a3f93ccd9865a74cc3d34dc"
+    },
+    {
+      "path": "services/api/app/infrastructure/db/h5_shortflow_rule_results.py",
+      "sha256": "0428f34388904e52f4aa6bccdd0d607253e5ca47e1bc2029ea1f765479ac875d"
+    },
+    {
+      "path": "services/api/app/infrastructure/db/h5_shortflow_read_repository.py",
+      "sha256": "c1d413f3d60ded43aee47777e103afcff5267ea47dc493a902c1e12337aa3b03"
+    },
+    {
+      "path": "scripts/validation/checkpoint_rule_results_seed.py",
+      "sha256": "e6de40f7127c4bf3c0fdaebf698668a1ac729ea7e60c99287de8073a802dd481"
+    },
+    {
+      "path": "scripts/validation/checkpoint_rule_results_verify.py",
+      "sha256": "36c613da14fb176fbb33dd41659c7c0068da96f21826ad6c1bb13816cee64a40"
+    }
+  ],
+  "fixture_notice": "展示任务、动作台账、观测JSON和PNG均是受控夹具；未运行真实产品采集",
+  "evidence_saved_at_utc": "2026-10-19T08:24:23.8493518Z",
+  "final_scope": "受控展示数据的独立PG/API/真实登录与浏览器读侧验证；非真实产品采集或绿色八条业务验收",
+  "final_cleanup": {
+    "completed_at_utc": "2026-10-19T08:26:30.6522012Z",
+    "removed_containers": [
+      {
+        "name": "alioth-checkpoint-results-api-20261019",
+        "id": "83a5ec0d60b4224b74db7c4776bd060a01a2d59a739ab04fc44701ce67febea7"
+      },
+      {
+        "name": "alioth-checkpoint-results-pg-20261019",
+        "id": "7d339b45ae0e9703433630f5384604a8b2f840442bb4c948ceb33b8bbb5b2a34"
+      }
+    ],
+    "removed_network": {
+      "name": "alioth-checkpoint-results-20261019",
+      "id": "dd0051863ea7ac8ccf8b54e8949bb3233e87c8cedc19bb398d5c169081568fc9"
+    },
+    "preserved_database_volume": {
+      "name": "alioth-checkpoint-results-20261019-pgdata",
+      "mountpoint": "/var/lib/docker/volumes/alioth-checkpoint-results-20261019-pgdata/_data",
+      "labels": {
+        "alioth.validation": "checkpoint-rule-results-20261019"
+      },
+      "data_directory": "/var/lib/postgresql/data",
+      "database": "alioth_checkpoint_results_test",
+      "system_identifier": "7698286980384509990",
+      "shutdown_exit_code": 0
+    },
+    "temporary_private_files_removed": [
+      "seed-manifest.json",
+      "test-db.env"
+    ],
+    "remaining_owned_containers": [],
+    "remaining_owned_networks": [],
+    "remaining_owned_listeners": [],
+    "main_services": [
+      {
+        "name": "/alioth-api",
+        "id": "2059125b2b6c2de4f7bf5eba08725961b07706446e6f341294c48609435e744c",
+        "state": "running",
+        "started_at": "2026-10-19T01:55:31.5524399Z"
+      },
+      {
+        "name": "/alioth-worker",
+        "id": "0ec803c433ee779700583f4586e7b99056b250368f81114ece5e425730a0d7cd",
+        "state": "running",
+        "started_at": "2026-10-19T01:55:31.5559357Z"
+      },
+      {
+        "name": "/alioth-web",
+        "id": "5f1ab940956eb8de62f2815651c7a3814f977900135558846335fe2ba895dca0",
+        "state": "running",
+        "started_at": "2026-10-19T01:55:31.5058515Z"
+      },
+      {
+        "name": "/alioth-postgres",
+        "id": "07025048a170144a250e470b65f0b0943bb67a2372ac0060232a6311882dc24d",
+        "state": "running",
+        "started_at": "2026-10-19T01:55:31.5635674Z"
+      },
+      {
+        "name": "/alioth-redis",
+        "id": "0535d5381262363d7ce182a17a7c9698598b701b7427cb1b53ecf17fc72b370d",
+        "state": "running",
+        "started_at": "2026-10-19T01:55:31.5297778Z"
+      }
+    ],
+    "images": "未构建本轮专用镜像；共享既有镜像保留",
+    "evidence": "源码、docs证据及原始夹具字节保留；未执行数据卷删除"
+  },
+  "database_preservation": "本轮API/PG容器和独立网络均已移除；专用PG数据卷、源码、docs证据及原件保留。containers字段为清理前历史快照，以final_cleanup为当前状态。"
+}

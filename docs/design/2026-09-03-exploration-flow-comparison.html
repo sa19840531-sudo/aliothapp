@@ -1,0 +1,2137 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="description" content="Alioth 探索流程竖向对比：H5 与 App 各 12 个阶段，当前和优化方案左右逐行对齐，以原生 Canvas 展示每个节点的变化、问题与提升，并附完整闭环与代码依据。">
+  <title>探索流程：现状与优化方案竖向对比 · Alioth</title>
+  <style>
+    :root { --ink:#19313b; --muted:#536b76; --line:#dce5e8; --paper:#fff; --wash:#f3f6f7; --blue:#275f93; --teal:#12695f; --amber:#925514; --red:#a44340; --violet:#6b559c; }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; scroll-padding-top:24px; }
+    body { margin:0; background:var(--wash); color:var(--ink); font:15px/1.85 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif; -webkit-font-smoothing:antialiased; }
+    a { color:var(--teal); text-underline-offset:3px; overflow-wrap:anywhere; }
+    a:hover { text-decoration-thickness:2px; }
+    button,select { font:inherit; }
+    button { cursor:pointer; }
+    button,select { border:1px solid #c5d3d9; border-radius:7px; background:#fff; color:var(--ink); padding:7px 11px; min-height:38px; }
+    button:hover { background:#edf4f5; }
+    button:disabled { opacity:.4; cursor:default; }
+    :focus-visible { outline:3px solid #339caa; outline-offset:4px; }
+    .skip { position:fixed; top:-90px; left:16px; padding:10px 16px; background:#fff; z-index:20; }
+    .skip:focus { top:12px; }
+    .masthead { border-top:4px solid var(--teal); border-bottom:1px solid var(--line); background:#fff; }
+    .masthead-inner { max-width:1520px; margin:auto; padding:18px 32px; display:flex; align-items:center; justify-content:space-between; gap:18px; }
+    .brand { display:flex; align-items:center; gap:12px; color:var(--ink); text-decoration:none; }
+    .brand-mark { width:38px; height:38px; border-radius:10px; background:var(--teal); color:#fff; display:grid; place-items:center; font-weight:750; }
+    .brand strong { display:block; letter-spacing:.1em; font-size:15px; }
+    .brand small { color:var(--muted); font-size:12px; }
+    .masthead-meta { text-align:right; color:var(--muted); font-size:12px; line-height:1.7; }
+    .layout { max-width:1520px; margin:28px auto 60px; padding:0 32px; display:grid; grid-template-columns:210px minmax(0,1fr); gap:30px; align-items:start; }
+    .rail { position:sticky; top:24px; max-height:calc(100vh - 48px); overflow:auto; padding-right:10px; }
+    .rail-label,.eyebrow { color:var(--teal); font-size:11px; font-weight:750; letter-spacing:.14em; }
+    .rail nav { display:grid; gap:4px; margin:12px 0 22px; }
+    .rail nav a { color:var(--muted); text-decoration:none; font-size:13px; line-height:1.6; padding:8px 10px; border-left:2px solid transparent; }
+    .rail nav a:hover { color:var(--teal); background:#e7eff0; border-left-color:var(--teal); }
+    .rail-sub { margin-top:18px; border-top:1px solid var(--line); padding-top:18px; font-size:12px; color:var(--muted); }
+    .rail-sub a { display:block; margin:7px 0; }
+    main { min-width:0; }
+    h1,h2,h3,h4,p,figure { margin-top:0; }
+    h1 { font-size:34px; line-height:1.3; letter-spacing:-.04em; margin:9px 0 16px; }
+    h2 { font-size:24px; line-height:1.4; letter-spacing:-.025em; margin:0 0 13px; }
+    h3 { font-size:19px; line-height:1.5; margin:0 0 10px; }
+    h4 { font-size:14px; margin:0 0 6px; }
+    p { margin-bottom:13px; }
+    ul,ol { padding-left:23px; margin:10px 0 16px; }
+    li { margin:5px 0; }
+    code { font:12px/1.7 "SFMono-Regular",Consolas,monospace; background:#edf2f4; border-radius:4px; padding:2px 5px; overflow-wrap:anywhere; }
+    .intro,.section { background:#fff; border:1px solid var(--line); border-radius:13px; padding:28px; margin-bottom:23px; }
+    .intro { border-top:3px solid var(--teal); }
+    .lead { max-width:900px; font-size:17px; line-height:1.85; }
+    .meta-row,.legend,.row-actions { display:flex; flex-wrap:wrap; gap:9px 17px; align-items:center; }
+    .meta-row { color:var(--muted); font-size:12px; padding-top:14px; border-top:1px solid var(--line); }
+    .pill { display:inline-flex; align-items:center; border-radius:5px; padding:2px 8px; font-size:11px; line-height:1.8; font-weight:650; white-space:nowrap; background:#edf2f4; color:var(--muted); }
+    .pill.blue { color:var(--blue); background:#eaf2f9; }
+    .pill.teal { color:var(--teal); background:#e8f4ef; }
+    .pill.amber { color:var(--amber); background:#fff2df; }
+    .pill.violet { color:var(--violet); background:#f1ecf9; }
+    .section-no { color:var(--teal); font:12px/1.5 "SFMono-Regular",Consolas,monospace; display:block; margin-bottom:7px; }
+    .section-intro { color:var(--muted); max-width:940px; }
+    .compare-headline { display:grid; grid-template-columns:1fr 1fr; gap:15px; margin:20px 0; }
+    .position { border:1px solid var(--line); border-left:4px solid var(--blue); padding:18px; border-radius:8px; }
+    .position.future { border-left-color:var(--teal); background:#f6fbf8; }
+    .position h3 { font-size:17px; margin-top:8px; }
+    .position p { font-size:13px; margin:0; color:var(--muted); }
+    .callout { border-left:3px solid var(--teal); background:#f0f7f5; padding:13px 17px; margin:17px 0; border-radius:0 7px 7px 0; font-size:13px; }
+    .callout.warning { background:#fff8eb; border-color:#c18735; }
+    .callout p:last-child { margin-bottom:0; }
+    .table-scroll { overflow:auto; margin:18px 0; border:1px solid var(--line); border-radius:8px; scrollbar-width:thin; }
+    table { width:100%; border-collapse:collapse; text-align:left; font-size:13px; min-width:690px; line-height:1.75; }
+    table.wide { min-width:920px; }
+    th { background:#edf3f5; font-weight:650; }
+    th,td { padding:12px 13px; vertical-align:top; border-bottom:1px solid var(--line); }
+    tbody tr:last-child td { border-bottom:0; }
+    tbody tr:nth-child(even) { background:#fafcfc; }
+    td:first-child { font-weight:600; }
+    .legend { font-size:12px; color:var(--muted); margin:14px 0; }
+    .legend span { display:inline-flex; align-items:center; gap:7px; }
+    .swatch { width:10px; height:10px; border-radius:3px; display:inline-block; background:#275f93; }
+    .swatch.enhance { background:#12695f; }
+    .swatch.new { background:#6b559c; }
+    .swatch.risk { background:#b47422; }
+    .swatch.missing { background:#f4f5f7; border:1px dashed #697987; }
+    .line-key { display:inline-block; width:26px; border-top:2px dashed #6b559c; }
+    .diagram { border:1px solid var(--line); border-radius:10px; margin:21px 0 26px; overflow:hidden; }
+    .diagram:last-child { margin-bottom:0; }
+    .diagram-title { padding:18px 19px 10px; display:flex; gap:12px; align-items:baseline; justify-content:space-between; }
+    .diagram-title h3 { margin:0; font-size:17px; }
+    .diagram-caption { margin:0; padding:0 19px 13px; font-size:13px; color:var(--muted); }
+    .diagram-toolbar { padding:10px 15px; border-block:1px solid var(--line); display:flex; gap:10px 20px; align-items:center; flex-wrap:wrap; background:#f8fafb; }
+    .diagram-toolbar[hidden],.node-detail[hidden],.js-only[hidden] { display:none; }
+    .node-picker { display:flex; align-items:center; gap:8px; font-size:12px; flex:1; min-width:230px; }
+    .node-picker select { width:min(100%,330px); min-width:0; font-size:12px; padding-block:6px; }
+    .zoom-tools { display:flex; align-items:center; gap:6px; }
+    .zoom-tools button { font-size:12px; padding:5px 10px; }
+    .zoom-tools output { min-width:42px; text-align:center; font-size:12px; font-variant-numeric:tabular-nums; color:var(--muted); }
+    .canvas-viewport { width:100%; overflow:auto; overscroll-behavior-x:contain; background:#fbfcfd; scrollbar-width:thin; }
+    .comparison .canvas-viewport,.vertical-loop .canvas-viewport { max-height:760px; overscroll-behavior:contain; }
+    .compare-guide { display:flex; justify-content:space-between; flex-wrap:wrap; gap:6px 18px; padding:8px 18px; background:#eff5f6; border-bottom:1px solid var(--line); color:var(--muted); font-size:12px; }
+    .compare-guide strong:first-child { color:var(--blue); }
+    .compare-guide strong:last-child { color:var(--teal); }
+    canvas { display:block; max-width:none; cursor:pointer; touch-action:pan-x pan-y; }
+    .diagram-hint { padding:9px 18px; margin:0; color:var(--muted); font-size:11px; border-top:1px solid var(--line); }
+    .node-detail { padding:15px 19px; border-top:1px solid var(--line); background:#f4f8fa; font-size:13px; min-height:104px; }
+    .node-detail h4 { display:flex; align-items:center; gap:10px; font-size:14px; margin-bottom:8px; }
+    .node-detail p { margin:0 0 7px; }
+    .node-detail a { font-size:12px; }
+    .node-pair-detail { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:12px; }
+    .node-pair-detail > div { border:1px solid var(--line); border-radius:7px; padding:12px 14px; background:#fff; }
+    .node-pair-detail h4 { display:block; line-height:1.7; font-size:13px; }
+    .node-pair-detail .pill { display:table; margin-bottom:7px; }
+    .print-slices { display:none; }
+    .diagram-text { border-top:1px solid var(--line); padding:0 19px; font-size:13px; }
+    summary { cursor:pointer; }
+    .diagram-text summary { padding:12px 0; color:var(--teal); font-weight:600; }
+    .diagram-text ol { margin-top:0; }
+    .diagram-text .loop-note { color:var(--muted); padding-bottom:3px; }
+    .pair-note { display:grid; grid-template-columns:1fr 1fr; gap:18px; font-size:13px; margin-top:17px; }
+    .pair-note strong { display:block; margin-bottom:5px; }
+    .pair-note p { margin:0; color:var(--muted); }
+    .point { border:1px solid var(--line); border-radius:9px; margin:12px 0; }
+    .point > summary { padding:16px; display:flex; align-items:center; gap:11px; font-weight:650; list-style:none; }
+    .point > summary::-webkit-details-marker { display:none; }
+    .point > summary::after { content:"＋"; margin-left:auto; color:var(--muted); }
+    .point[open] > summary::after { content:"−"; }
+    .point-num { font:12px "SFMono-Regular",Consolas,monospace; color:var(--teal); }
+    .point-body { padding:0 18px 19px; border-top:1px solid var(--line); font-size:13px; }
+    .point-grid { display:grid; grid-template-columns:1fr 1fr; gap:17px 23px; padding-top:18px; }
+    .point-grid p { margin:0; color:var(--muted); }
+    .point-grid h4 { color:var(--ink); }
+    .measure { border-top:1px dashed var(--line); padding-top:11px; margin:14px 0 0; color:var(--muted); }
+    .source-note { font-size:12px; color:var(--muted); margin:11px 0 0; }
+    .scenario { border-top:1px solid var(--line); padding-top:19px; margin-top:19px; }
+    .scenario h3 { font-size:16px; }
+    .scenario .compare-headline { margin:12px 0; }
+    .scenario .position { padding:14px; }
+    .scenario .position h4 { font-size:13px; margin-bottom:7px; }
+    .scenario .position p { font-size:13px; }
+    .guardrails { columns:2; column-gap:35px; font-size:13px; }
+    .guardrails li { break-inside:avoid; margin-bottom:11px; }
+    .source-list { display:grid; grid-template-columns:1fr 1fr; gap:11px 22px; padding:0; list-style:none; font-size:12px; }
+    .source-list li { margin:0; padding:11px 0; border-bottom:1px solid var(--line); overflow-wrap:anywhere; }
+    .source-list strong { display:block; font-size:13px; margin-bottom:4px; }
+    .source-list a { display:block; }
+    .doc-footer { color:var(--muted); font-size:12px; display:flex; justify-content:space-between; gap:14px; flex-wrap:wrap; padding:3px 3px 0; }
+    .print-action { font-size:12px; }
+    .notice { font-size:12px; color:var(--muted); }
+    [id] { scroll-margin-top:24px; }
+    @media (max-width:1100px) {
+      .layout { display:block; padding:0 22px; }
+      .rail { position:static; max-height:none; padding:0; margin-bottom:20px; }
+      .rail nav { display:flex; flex-wrap:wrap; gap:2px 5px; margin:7px 0; }
+      .rail nav a { padding:5px 8px; border:0; }
+      .rail-label,.rail-sub { display:none; }
+      .intro,.section { padding:24px; }
+    }
+    @media (max-width:640px) {
+      .masthead-inner { padding:13px 16px; }
+      .masthead-meta { font-size:10px; }
+      .brand small { display:none; }
+      .layout { margin:16px auto 30px; padding:0 12px; }
+      .intro,.section { padding:18px 15px; border-radius:10px; margin-bottom:15px; }
+      h1 { font-size:27px; }
+      h2 { font-size:21px; }
+      .lead { font-size:15px; }
+      .compare-headline,.point-grid,.pair-note,.source-list,.node-pair-detail { grid-template-columns:1fr; }
+      .guardrails { columns:1; }
+      .diagram-title { align-items:flex-start; flex-wrap:wrap; padding:14px 13px 8px; }
+      .diagram-title h3 { font-size:15px; }
+      .diagram-caption { padding-inline:13px; }
+      .diagram-toolbar { padding:9px; gap:8px; }
+      .node-picker { min-width:0; width:100%; flex-basis:100%; }
+      .node-picker select { flex:1; }
+      .zoom-tools { flex-wrap:wrap; }
+      .comparison .canvas-viewport,.vertical-loop .canvas-viewport { max-height:600px; }
+      button,select { min-height:44px; }
+      .node-detail,.diagram-text { padding-inline:13px; }
+      .point > summary { padding:14px 12px; font-size:14px; }
+      .point-body { padding-inline:13px; }
+      .meta-row { gap:5px 12px; }
+    }
+    @media (prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } }
+    @media print {
+      @page { size:A4 portrait; margin:13mm; }
+      html,body { background:#fff; font-size:10pt; scroll-behavior:auto; }
+      .masthead,.rail,.skip,.print-action,.diagram-toolbar,.diagram-hint,.node-detail,.js-only { display:none !important; }
+      .layout { display:block; padding:0; margin:0; max-width:none; }
+      .intro,.section { border:0; border-radius:0; padding:0; margin-bottom:22px; }
+      h1 { font-size:23pt; }
+      h2 { font-size:17pt; break-after:avoid; }
+      h3,h4,summary { break-after:avoid; }
+      p,li { orphans:3; widows:3; }
+      .diagram { break-inside:avoid; border-color:#b8c8cf; }
+      .canvas-viewport { overflow:visible; }
+      canvas { width:100% !important; height:auto !important; }
+      .comparison,.vertical-loop { break-inside:auto; }
+      .comparison .canvas-viewport,.vertical-loop .canvas-viewport { max-height:none; }
+      .comparison[data-print-slices="ready"] > .canvas-viewport,.comparison[data-print-slices="ready"] > .diagram-text,.vertical-loop > .canvas-viewport,.compare-guide { display:none; }
+      .comparison[data-print-slices="ready"] > .print-slices { display:block; }
+      .print-slice { break-inside:avoid; padding:12px 0; }
+      .print-slice h4 { padding:0 15px; font-size:10pt; }
+      .diagram-text { font-size:9pt; }
+      details > :not(summary) { display:block !important; }
+      .point { break-inside:avoid; }
+      .point-grid { display:grid !important; grid-template-columns:1fr 1fr; }
+      .table-scroll { overflow:visible; }
+      table,table.wide { min-width:0; font-size:9pt; }
+      th,td { padding:7px; }
+      thead { display:table-header-group; }
+      tr { break-inside:avoid; }
+      .source-list { font-size:9pt; }
+      .source-list a { color:#284856; text-decoration:none; }
+      .position { break-inside:avoid; }
+      * { print-color-adjust:exact; -webkit-print-color-adjust:exact; }
+    }
+  </style>
+  <noscript><style>.canvas-viewport,.diagram-hint{display:none}.diagram-text>div{display:block}</style></noscript>
+</head>
+<body>
+  <a class="skip" href="#main">跳到正文</a>
+  <header class="masthead">
+    <div class="masthead-inner">
+      <a class="brand" href="2026-09-03-exploration-optimization/index.html"><span class="brand-mark" aria-hidden="true">衡</span><span><strong>ALIOTH · 玉衡</strong><small>探索优化 · 流程对比评审</small></span></a>
+      <div class="masthead-meta">2026-09-03 · 竖向对照版 v1.1<br>当前代码事实 × 目标方案</div>
+    </div>
+  </header>
+  <div class="layout">
+    <aside class="rail" aria-label="文档导航">
+      <div class="rail-label">阅读路线</div>
+      <nav>
+        <a href="#overview">01　先看全局差异</a>
+        <a href="#current">02　H5 / App 竖向对照</a>
+        <a href="#proposed">03　优化后的完整闭环</a>
+        <a href="#seven">04　七项优化逐项对照</a>
+        <a href="#root-causes">05　核心问题关联图</a>
+        <a href="#scenarios">06　典型场景前后对比</a>
+        <a href="#iteration">07　迭代价值与实施顺序</a>
+        <a href="#sources">08　代码依据与验收边界</a>
+      </nav>
+      <div class="rail-sub">配套设计<a href="2026-09-03-exploration-optimization/index.html">七项专项设计总览 →</a><a href="2026-09-02-bounded-exploration-optimization-solution.html">完整优化方案 v1.1 →</a><a href="README.md">设计文档索引 →</a></div>
+    </aside>
+    <main id="main">
+      <header class="intro">
+        <div class="eyebrow">EXPLORATION · CURRENT / PROPOSED</div>
+        <h1>探索流程：现状与优化方案<br>逐阶段竖向对照</h1>
+        <p class="lead">从“候选驱动、分散的专项保护”，演进为“可信页面状态与证据缺口驱动”的探索闭环。保留已有控制面，提升到达证明、恢复能力和证据可信度。</p>
+        <p class="section-intro">左列是当前代码，右列是对应优化；同一阶段处于同一横行，两列分别从上向下推进。中间直接写明变化与解决的问题；点击任一节点，可同时查看该阶段的前后对比、提升和依据。</p>
+        <div class="meta-row"><span>代码基线：dev_1.5 · c9dfb7c73</span><span>检查日期：2026-09-03</span><span class="pill amber">目标方案尚未实施</span><button class="print-action js-only" type="button" data-print hidden>打印 / 保存 PDF</button></div>
+      </header>
+
+      <section class="section" id="overview">
+        <span class="section-no">01 / OVERVIEW</span><h2>先校正现状，再比较改动</h2>
+        <p class="section-intro">当前平台已经有动态 Frontier、动作前后采集、稳定性检查、局部恢复、证据清单和完成门禁。问题是这些能力尚未充分围绕统一页面事实协同，不能概括为“没有智能探索”。</p>
+        <div class="compare-headline">
+          <div class="position"><span class="pill blue">当前基础</span><h3>能够发现、执行、观察和局部恢复</h3><p>H5 与 App 各有成熟片段；候选、识别、遮挡、恢复和证据消费仍包含不同层的专项衔接。</p></div>
+          <div class="position future"><span class="pill teal">目标变化</span><h3>每一步都能说明为何继续、为何停止</h3><p>用可信页面图关联动作与证据；将缺证回流为有界补采，并持续保留任务目标、风险和最终收口约束。</p></div>
+        </div>
+        <div class="table-scroll"><table><caption class="notice">当前执行模式边界：独立探索结束，不等于完整质检通过。</caption><thead><tr><th>实际链路</th><th>当前职责</th><th>结束意味着什么</th></tr></thead><tbody>
+          <tr><td>Web 独立探索</td><td>Web Handler 的页面采集与 URL 队列；不启动正式规则工作和报告收口。</td><td>探索阶段终态。不是 Completion Gate 通过。</td></tr>
+          <tr><td>H5 / Web 完整质检</td><td>Web FULL_INSPECTION 转入 H5 V2；动态探索、页型评估、规则与证据、正式收口。</td><td>探索停止后仍需规则、证据、覆盖等完成条件成立。</td></tr>
+          <tr><td>App 探索 / 质检</td><td>冻结产品目标，安装启动、截图理解、候选交互、覆盖评估；按任务模式衔接质检。</td><td>设备就绪、业务页到达、探索结束和正式质检完成分别判断。</td></tr>
+        </tbody></table></div>
+        <p class="source-note">模式事实：<a href="#src-mode">Worker 模式分流 :870</a>。动态发现、显式目标、产品声明等目标来源，与“是否执行完整质检”是不同维度，不能混为同一个开关。</p>
+        <div class="callout"><strong>这不是一次全量替换。</strong> 任务、租约、Driver、Frontier、Capture、Catalog、规则执行和 Gate 继续复用；CLI / ADB 是受控执行器，Skills 是操作知识，均不替代平台权限与证据控制。</div>
+      </section>
+
+      <section class="section" id="current">
+        <span class="section-no">02 / VERTICAL COMPARISON</span><h2>逐节点对照：当前做什么，优化改变什么</h2>
+        <p class="section-intro">H5、App 各按 12 个相同职责阶段对齐。这是便于评审的阶段映射，不是函数调用逐行一一替换，也不要求规则与探索必须串行。中间横向虚线仅表示对应关系；继续探索和恢复成功的回流统一放在下方 C 闭环图，避免交叉线遮挡差异。</p>
+        <div class="legend"><span><i class="swatch" aria-hidden="true"></i>已实现 / 复用</span><span><i class="swatch enhance" aria-hidden="true"></i>增强 / 统一</span><span><i class="swatch new" aria-hidden="true"></i>新增共享机制</span><span><i class="swatch missing" aria-hidden="true"></i>当前未开放，不是执行步骤</span></div>
+
+        <figure class="diagram comparison" data-diagram="h5" aria-labelledby="h5-title">
+          <div class="diagram-title"><h3 id="h5-title">A. H5 / Web 完整质检：现状 ↔ 优化</h3><span class="pill blue">12 阶段 · 左右逐行对齐</span></div>
+          <p class="diagram-caption">把现有 H5 V2 主链映射到同一组目标阶段。已有 Frontier、Capture、Catalog 和 Gate 均保留；第 11 行明确标出正式补采生产闭环尚未开放。</p>
+          <div class="diagram-toolbar" hidden><label class="node-picker">定位阶段 <select aria-label="选择H5对照阶段"></select></label><div class="zoom-tools"><button type="button" data-zoom-out aria-label="缩小H5对照图">−</button><output aria-label="H5图缩放比例">100%</output><button type="button" data-zoom-in aria-label="放大H5对照图">＋</button><button type="button" data-fit>两列概览</button><button type="button" data-original>清晰原寸</button></div></div>
+          <div class="compare-guide"><strong>左列：当前代码事实</strong><span>中间：节点变化 / 解决问题</span><strong>右列：优化设计目标</strong></div>
+          <div class="canvas-viewport" tabindex="0" role="region" aria-label="H5当前与优化方案竖向对照图，可上下和横向滚动"><canvas width="1160" height="2290" role="img" aria-label="H5当前流程与优化流程的十二阶段竖向对照，文字版本在下方">H5竖向对照的文字版本见下方。</canvas></div>
+          <p class="diagram-hint">从上向下阅读；选择阶段或点击任一侧节点，会同时高亮左右对应节点。虚线灰框表示当前生产能力尚未开放，不是已经执行的步骤。</p><aside class="node-detail" aria-live="polite" hidden></aside>
+          <details class="diagram-text" open><summary>12 个阶段的完整文字对照</summary><div><div class="table-scroll"><table class="wide"><thead><tr><th>阶段</th><th>当前代码</th><th>优化方案</th><th>变化、解决问题与提升</th></tr></thead><tbody><tr><td>01 任务目标与范围</td><td><strong>任务模式与目标初始化</strong><br>FULL_INSPECTION 进入 H5 V2；目标 / 规则 / 登录 / 预算</td><td><strong>冻结目标与产品声明</strong><br>原始必检分母不可静默缩小；观察仅调整优先级与解释</td><td><span class="pill blue">保留并统一</span><br><strong>解决：</strong>避免产品识别反向缩水；统一目标与适用性解释<br><strong>提升：</strong>原始必检分母、权限、账号、范围和预算有唯一来源；运行时观察只能调整优先级和解释，不能静默删除目标。</td></tr><tr><td>02 会话与执行能力</td><td><strong>受管浏览器与现有 Driver</strong><br>Playwright 主 Surface；会话、域名和动作由平台约束</td><td><strong>受控 CLI Provider</strong><br>能力探测 + 命令白名单；唯一动作入口与会话归属</td><td><span class="pill teal">增强</span><br><strong>解决：</strong>执行器与控制面分离；杜绝任意 Shell 与双执行方<br><strong>提升：</strong>CLI / ADB 成为可替换 Provider，平台继续掌握会话、租约、权限、风险、预算与审计。</td></tr><tr><td>03 入口观察与可见层</td><td><strong>Capture、settle 与清障</strong><br>DOM / 截图 / OCR / 媒体；已有 loader、transition、网络检查</td><td><strong>真实入口观察与层级协议</strong><br>先保存可见前态，再识别产品；弹窗分型，不伪造背后首页</td><td><span class="pill teal">增强</span><br><strong>解决：</strong>不再把遮挡底页当首页；区分弹窗目标和业务页面<br><strong>提升：</strong>先保存真实入口，再判断启动广告、权限、登录、升级、公告、充值等层级，业务页未可见时允许保持未知。</td></tr><tr><td>04 产品与页面识别</td><td><strong>Catalog 多模态页型评估</strong><br>完整 Catalog + DOM + 截图；已有未知 / 冲突与动态候选</td><td><strong>产品能力 + 页型判别指南</strong><br>描述、正反例与层级证据；未知、冲突、修订均可追溯</td><td><span class="pill teal">增强</span><br><strong>解决：</strong>降低同页型漂移；补上产品能力前置评估<br><strong>提升：</strong>共享判别指南、描述、正反例和冲突出口；页型可修订，产品评估只分配优先级与规则语境。</td></tr><tr><td>05 页面身份与状态</td><td><strong>任务 Frontier 调度记忆</strong><br>visited / executed / lineage；来源状态、部分路径与恢复计数</td><td><strong>可信页面状态图</strong><br>稳定身份 + 状态版本 + 转场；树只作展示和恢复投影</td><td><span class="pill violet">新增共享事实</span><br><strong>解决：</strong>身份不再随页型漂移；为恢复提供可信路径<br><strong>提升：</strong>稳定页面身份与类型判断解耦；Tab、筛选、展开默认记录为状态，弹窗保留质检对象但不污染业务页面树。</td></tr><tr><td>06 候选与规则规划</td><td><strong>候选发布与规则页型匹配</strong><br>动态候选、去重、sibling；规则工作可与探索并行</td><td><strong>目标 / 缺证 / 价值联合调度</strong><br>必检优先，有限度自由发现；规则频率和复用边界显式</td><td><span class="pill teal">增强</span><br><strong>解决：</strong>有限自由不等于漫游；规则范围按合同执行<br><strong>提升：</strong>必检目标、证据缺口、新发现价值、风险和成本共同排队；静态可复用与逐曝光、逐交互规则分别定义。</td></tr><tr><td>07 定位与分步执行</td><td><strong>before Capture → Driver</strong><br>点击 / 滚动 / 返回等；已有会话绑定和执行门禁</td><td><strong>定位 → 操作 → 新观察 → 重绑</strong><br>滚动后重取坐标和控件；外跳独立留证并有界回源</td><td><span class="pill teal">增强</span><br><strong>解决：</strong>减少误点与旧坐标复用；控制外跳和高风险副作用<br><strong>提升：</strong>每步执行定位、门禁、操作、新观察和重绑定；滚动后不沿用旧坐标，未知结果先观察而不是重复点击。</td></tr><tr><td>08 动作后观察与就绪</td><td><strong>after Capture 与重新 settle</strong><br>动作后材料与重试；再做页型和候选评估</td><td><strong>面向目标的就绪证明</strong><br>内容稳定 + 结构 / 媒体 / 网络；超时和信号缺失均显式</td><td><span class="pill teal">增强</span><br><strong>解决：</strong>避免未加载或错帧截图；网络信号不再被绝对化<br><strong>提升：</strong>按动作和目标组合内容、结构、稳定窗口、加载指示、媒体和可得网络信号；超时保留原因，不把网络不可见当作零请求。</td></tr><tr><td>09 可信到达与继续探索</td><td><strong>更新评估并继续或局部恢复</strong><br>新观察回到 Frontier；已有有限恢复与停止原因</td><td><strong>五项后置校验后记到达</strong><br>窗口 / 对象 / 层级 / 效果 / 页面；可信到达才更新业务图</td><td><span class="pill teal">增强</span><br><strong>解决：</strong>命令成功不再等于到达；外跳不再污染业务覆盖<br><strong>提升：</strong>窗口、对象、层级、动作效果与页面到达分别验证；只有可信业务到达更新图，外部落地页默认只留证。</td></tr><tr><td>10 证据与规则判断</td><td><strong>证据清单、规则与输入封存</strong><br>规则可并行，末端统一收敛；已有 Manifest 与 Run / Epoch 约束</td><td><strong>统一证据可信度门禁</strong><br>来源 / 对象 / 时间 / 层级 / 用途；Judge 只消费冻结材料</td><td><span class="pill teal">增强</span><br><strong>解决：</strong>治理错层、错对象和串证；区分失败证据与页面证据<br><strong>提升：</strong>所有 Writer 和消费者统一校验来源、对象、时间、可见层、用途和 Run / Epoch；合法失败序列不冒充稳定页面。</td></tr><tr><td>11 缺证处理与恢复</td><td><strong>正式精准补采尚未开放</strong><br>已有局部恢复与等价组件；生产 runtime_ready = false</td><td><strong>图路径精准补采</strong><br>就地优先，已证路径逐边恢复；exact / equivalent / fresh / manual</td><td><span class="pill violet">正式新增</span><br><strong>解决：</strong>缺证不再依赖全量重跑；高风险场景保持从严<br><strong>提升：</strong>就地补采优先，再按已证路径逐边恢复；规则明确 exact、equivalent、fresh 或 manual，无法证明时保持不足。</td></tr><tr><td>12 完成门禁与报告</td><td><strong>探索终态 → Completion Gate</strong><br>正式模式检查覆盖、规则与证据；独立探索不经过同一正式收口</td><td><strong>冻结同 Run / Epoch 后分维度报告</strong><br>Gate、质量、缺口和技术状态分开；资源释放单独结算</td><td><span class="pill blue">保留并收紧</span><br><strong>解决：</strong>探索终态不再冒充通过；质量与执行状态分维度<br><strong>提升：</strong>停止新动作并终结已接纳工作后冻结输入；覆盖、规则结果、证据缺口、技术异常、Gate 和资源释放分别报告。</td></tr></tbody></table></div><p class="loop-note">按职责阶段对齐，不表示规则线程与探索线程必须逐行串行。 继续探索、局部恢复和精准补采回流详见 C 图。</p></div></details>
+          <div class="print-slices" aria-hidden="true"></div>
+        </figure>
+
+        <figure class="diagram comparison" data-diagram="app" aria-labelledby="app-title">
+          <div class="diagram-title"><h3 id="app-title">B. App 探索与质检：现状 ↔ 优化</h3><span class="pill blue">12 阶段 · 左右逐行对齐</span></div>
+          <p class="diagram-caption">把 App 的目标冻结、设备、Bootstrap、识别、动作、恢复和收口逐项对齐。APP_READY、稳定业务页到达、探索终态和正式 Gate 继续分开。</p>
+          <div class="diagram-toolbar" hidden><label class="node-picker">定位阶段 <select aria-label="选择App对照阶段"></select></label><div class="zoom-tools"><button type="button" data-zoom-out aria-label="缩小App对照图">−</button><output aria-label="App图缩放比例">100%</output><button type="button" data-zoom-in aria-label="放大App对照图">＋</button><button type="button" data-fit>两列概览</button><button type="button" data-original>清晰原寸</button></div></div>
+          <div class="compare-guide"><strong>左列：当前代码事实</strong><span>中间：节点变化 / 解决问题</span><strong>右列：优化设计目标</strong></div>
+          <div class="canvas-viewport" tabindex="0" role="region" aria-label="App当前与优化方案竖向对照图，可上下和横向滚动"><canvas width="1160" height="2290" role="img" aria-label="App当前流程与优化流程的十二阶段竖向对照，文字版本在下方">App竖向对照的文字版本见下方。</canvas></div>
+          <p class="diagram-hint">从上向下阅读；选择阶段或点击任一侧节点，会同时高亮左右对应节点。虚线灰框表示当前生产能力尚未开放，不是已经执行的步骤。</p><aside class="node-detail" aria-live="polite" hidden></aside>
+          <details class="diagram-text" open><summary>12 个阶段的完整文字对照</summary><div><div class="table-scroll"><table class="wide"><thead><tr><th>阶段</th><th>当前代码</th><th>优化方案</th><th>变化、解决问题与提升</th></tr></thead><tbody><tr><td>01 任务目标与范围</td><td><strong>冻结 AppTargetProfile</strong><br>产品声明 / 必检页型 / 包边界；提交后保持目标分母</td><td><strong>保留静态目标，补运行时评估</strong><br>包边界和必检目标继续冻结；观察只调整探索优先级</td><td><span class="pill blue">保留并统一</span><br><strong>解决：</strong>避免产品识别反向缩水；统一目标与适用性解释<br><strong>提升：</strong>原始必检分母、权限、账号、范围和预算有唯一来源；运行时观察只能调整优先级和解释，不能静默删除目标。</td></tr><tr><td>02 会话与执行能力</td><td><strong>设备租约、安装与受管 Driver</strong><br>目标包绑定 + 真实前台读取；设备动作属于当前任务</td><td><strong>受控 ADB Provider + Skills</strong><br>能力探测与有限 Shell 策略；单执行方、超时、审计、杀停</td><td><span class="pill teal">增强</span><br><strong>解决：</strong>执行器与控制面分离；杜绝任意 Shell 与双执行方<br><strong>提升：</strong>CLI / ADB 成为可替换 Provider，平台继续掌握会话、租约、权限、风险、预算与审计。</td></tr><tr><td>03 入口观察与可见层</td><td><strong>Bootstrap Capture 与 APP_READY</strong><br>启动、前台和首屏采集；就绪合同 ≠ 稳定业务首页</td><td><strong>首帧真实观察与阻断分层</strong><br>截图 + 可得 UI Tree + 前台来源；业务底页不可见则保持未知</td><td><span class="pill teal">增强</span><br><strong>解决：</strong>不再把遮挡底页当首页；区分弹窗目标和业务页面<br><strong>提升：</strong>先保存真实入口，再判断启动广告、权限、登录、升级、公告、充值等层级，业务页未可见时允许保持未知。</td></tr><tr><td>04 产品与页面识别</td><td><strong>截图理解 + UI Tree 候选融合</strong><br>视觉页型代码与通用提示；结构可得时补充候选</td><td><strong>跨模态产品与页面判别</strong><br>视觉为主、结构按可信度辅助；统一描述、反例和冲突出口</td><td><span class="pill teal">增强</span><br><strong>解决：</strong>降低同页型漂移；补上产品能力前置评估<br><strong>提升：</strong>共享判别指南、描述、正反例和冲突出口；页型可修订，产品评估只分配优先级与规则语境。</td></tr><tr><td>05 页面身份与状态</td><td><strong>核心身份 + 全局 Frontier</strong><br>package / activity / page_type；候选指纹、来源与导航路径</td><td><strong>业务身份与状态图解耦</strong><br>业务对象、地标、转场共同定锚；页型判断可修订</td><td><span class="pill violet">新增共享事实</span><br><strong>解决：</strong>身份不再随页型漂移；为恢复提供可信路径<br><strong>提升：</strong>稳定页面身份与类型判断解耦；Tab、筛选、展开默认记录为状态，弹窗保留质检对象但不污染业务页面树。</td></tr><tr><td>06 候选与规则规划</td><td><strong>动态候选与必检覆盖评估</strong><br>截图 / UI Tree 候选融合；目标、风险和预算参与选择</td><td><strong>有限自由的联合调度</strong><br>必检 / 缺证 / 新发现价值；风险、恢复和总预算共享</td><td><span class="pill teal">增强</span><br><strong>解决：</strong>有限自由不等于漫游；规则范围按合同执行<br><strong>提升：</strong>必检目标、证据缺口、新发现价值、风险和成本共同排队；静态可复用与逐曝光、逐交互规则分别定义。</td></tr><tr><td>07 定位与分步执行</td><td><strong>来源、几何、风险与前台门禁</strong><br>截图签名 / 尺寸方向 / 唯一性；包名 / Activity / 租约核对</td><td><strong>分步动作与滚动后重绑定</strong><br>目标可见 → 操作 → 新 Capture；不复用旧坐标串行点击</td><td><span class="pill teal">增强</span><br><strong>解决：</strong>减少误点与旧坐标复用；控制外跳和高风险副作用<br><strong>提升：</strong>每步执行定位、门禁、操作、新观察和重绑定；滚动后不沿用旧坐标，未知结果先观察而不是重复点击。</td></tr><tr><td>08 动作后观察与就绪</td><td><strong>动作后 Capture 与状态变化</strong><br>保存新截图和实际前台；作为后续候选和覆盖输入</td><td><strong>App 就绪与动作效果证明</strong><br>前台 / 对象 / 层级 / 内容稳定；网络仅在可观测时作为辅助</td><td><span class="pill teal">增强</span><br><strong>解决：</strong>避免未加载或错帧截图；网络信号不再被绝对化<br><strong>提升：</strong>按动作和目标组合内容、结构、稳定窗口、加载指示、媒体和可得网络信号；超时保留原因，不把网络不可见当作零请求。</td></tr><tr><td>09 可信到达与继续探索</td><td><strong>评估到达、继续或有限恢复</strong><br>更新候选、状态和覆盖材料；控件 / 锚点 / BACK / WARM_RESTORE</td><td><strong>可信到达后更新页面图</strong><br>窗口 / 对象 / 层级 / 效果 / 页面；弹窗失败与业务页到达分开</td><td><span class="pill teal">增强</span><br><strong>解决：</strong>命令成功不再等于到达；外跳不再污染业务覆盖<br><strong>提升：</strong>窗口、对象、层级、动作效果与页面到达分别验证；只有可信业务到达更新图，外部落地页默认只留证。</td></tr><tr><td>10 证据与规则判断</td><td><strong>规则、证据与覆盖处理</strong><br>探索结果进入正式质检链路；覆盖终态 ≠ Gate 通过</td><td><strong>可见层优先的证据门禁</strong><br>原图 / 长图 / 滚动序列用途分开；诊断影响沿全链传播</td><td><span class="pill teal">增强</span><br><strong>解决：</strong>治理错层、错对象和串证；区分失败证据与页面证据<br><strong>提升：</strong>所有 Writer 和消费者统一校验来源、对象、时间、可见层、用途和 Run / Epoch；合法失败序列不冒充稳定页面。</td></tr><tr><td>11 缺证处理与恢复</td><td><strong>正式精准补采尚未开放</strong><br>已有局部恢复和等价 Gate 组件；生产 runtime_ready = false</td><td><strong>按规则验证的图路径补采</strong><br>就地 → 已证路径 → 新观察；高风险 exact 无法恢复则不足 / 人工</td><td><span class="pill violet">正式新增</span><br><strong>解决：</strong>缺证不再依赖全量重跑；高风险场景保持从严<br><strong>提升：</strong>就地补采优先，再按已证路径逐边恢复；规则明确 exact、equivalent、fresh 或 manual，无法证明时保持不足。</td></tr><tr><td>12 完成门禁与报告</td><td><strong>按任务模式继续正式收口</strong><br>规则 / 证据 / Completion Gate；与设备释放分别判断</td><td><strong>停止动作、冻结输入、统一 Gate</strong><br>同 Run / Epoch 的事实闭合；质量、缺口、故障和资源分维度</td><td><span class="pill blue">保留并收紧</span><br><strong>解决：</strong>探索终态不再冒充通过；质量与执行状态分维度<br><strong>提升：</strong>停止新动作并终结已接纳工作后冻结输入；覆盖、规则结果、证据缺口、技术异常、Gate 和资源释放分别报告。</td></tr></tbody></table></div><p class="loop-note">APP_READY、业务页到达、探索结束和正式质检完成仍是不同事实。 继续探索、局部恢复和精准补采回流详见 C 图。</p></div></details>
+          <div class="print-slices" aria-hidden="true"></div>
+        </figure>
+        <div class="pair-note"><div><strong>已经具备，不重复建设</strong><p>动态候选、来源约束、局部恢复、真实后态、证据清单、规则工作与最终 Gate。</p></div><div><strong>方案新增或统一</strong><p>受控 CLI / ADB Provider、入口层级协议、稳定身份、跨端页面图、按目标就绪，以及缺证到恢复再到判断的正式闭环。</p></div></div>
+      </section>
+
+      <section class="section" id="proposed">
+        <span class="section-no">03 / TARGET LOOP</span><h2>优化后：以可信页面状态和证据缺口驱动</h2>
+        <p class="section-intro">图中颜色表达改造性质，不表示质量优劣。蓝色复用控制面，绿色增强已有能力，紫色表示新增的共享机制。页面图来自可信观察和转场事实，树只是展示或恢复路径投影。</p>
+        <div class="legend"><span><i class="swatch" aria-hidden="true"></i>复用</span><span><i class="swatch enhance" aria-hidden="true"></i>增强 / 统一</span><span><i class="swatch new" aria-hidden="true"></i>新增共享机制</span><span><i class="line-key" aria-hidden="true"></i>反馈 / 恢复</span></div>
+        <figure class="diagram vertical-loop" data-diagram="future" aria-labelledby="future-title">
+          <div class="diagram-title"><h3 id="future-title">C. 优化后的竖向端到端闭环</h3><span class="pill violet">设计目标 · 未实施</span></div>
+          <p class="diagram-caption">中间主链从上向下推进；右侧是按需补采分支，两侧长回路分别表示可信观察更新页面图，以及阻断证据回到统一质量门禁。</p>
+          <div class="diagram-toolbar" hidden><label class="node-picker">查看节点 <select aria-label="选择优化闭环节点"></select></label><div class="zoom-tools"><button type="button" data-zoom-out aria-label="缩小优化闭环图">−</button><output aria-label="优化图缩放比例">100%</output><button type="button" data-zoom-in aria-label="放大优化闭环图">＋</button><button type="button" data-fit>图形概览</button><button type="button" data-original>清晰原寸</button></div></div>
+          <div class="canvas-viewport" tabindex="0" role="region" aria-label="优化闭环图，可上下和横向滚动"><canvas width="1160" height="2320" role="img" aria-label="优化后的探索、证据、判断和补采竖向闭环，文字版本在下方">优化闭环的文字说明见下方。</canvas></div>
+          <p class="diagram-hint">紫色虚线：缺证进入补采并回到同一调度器。绿色虚线：可信新观察更新图。橙色虚线：阻断证据进入质量门禁。图内可上下滚动。</p><aside class="node-detail" aria-live="polite" hidden></aside>
+          <details class="diagram-text" open><summary>文字闭环与所有失败出口</summary><div><ol><li>冻结任务、规则、账号、范围和预算；原必检分母不能被模型静默缩小。</li><li>建立受管会话，探测执行与观察能力；CLI / ADB 只通过受控入口执行。</li><li>保存入口真实观察，辨认可见层。启动广告遮挡时，不先创建一个假首页。</li><li>有阻断层则保存必要前态、安全处理并观察后态；无阻断或安全移除后，才按可见业务内容继续。</li><li>识别当前业务页和暂定产品能力，允许未知、冲突和后续修订。</li><li>确认稳定页面身份与状态，维护图事实；菜单和链接仍只是候选，不能计已到达。</li><li>规划规则目标和可复用范围，将合法材料送入证据侧，将入口和缺口送入 Frontier。</li><li>按必检目标、缺证、发现价值与预算调度；交互按“定位 → 操作 → 新观察 → 重绑定”逐步执行。</li><li>动作后验证窗口、对象、可见层、动作效果与就绪；只有可信到达更新业务图。</li><li>统一证据质量和用途门禁，封存实际输入；Judge 消费证据，不直接操作设备。</li><li>缺证先就地补采，再选择已验证路径，逐边恢复；按原状态、等价状态、新观察或人工策略验收。</li><li>全部工作有界收敛后，停止新动作，冻结本次 Run / Epoch 输入，执行 Gate 并分别报告覆盖、规则结果、缺口与技术异常。</li></ol><p class="loop-note">关闭失败、加载超时、外跳、风险阻断、预算耗尽、取消和技术错误都保留真实原因。合法失败序列可进入对应规则判断，却不能作为稳定页面到达。原状态无法证明时，补采保持不足或转人工；另建新观察不能让原 exact 缺口消失。</p></div></details>
+        </figure>
+        <div class="callout"><strong>同步关系：</strong>静态 Rule Judge 可与探索并行；“可关闭、跳转有效”等规则必须等合法后态或序列。无需等待所有静态规则判完再清障。所有设备动作仍由同一个受控 Runtime 负责。</div>
+        <ul class="guardrails">
+          <li><strong>页面与状态：</strong>局部 Tab / 筛选 / 展开默认同节点不同状态；实质改变业务职责、对象、路由或返回语义再判新页面。</li>
+          <li><strong>页面与弹窗：</strong>弹窗也是质检目标，但通常不进入业务页面树；独立支付路由仍是页面，内联二维码可能只是区域。</li>
+          <li><strong>页面与外跳：</strong>源页保留自身事实；外部广告落地默认只留证，不计业务覆盖，回源也不新增重复覆盖。</li>
+          <li><strong>产品与目标：</strong>观察到导航型首页可以调整探索优先级，但没找到、被阻断、预算不足不能自动变成“不适用”。</li>
+          <li><strong>自然与诊断：</strong>删 DOM、隐藏层、强制或脚本派发点击等诊断方式不能制造正式自然通过；限制沿后续证据链传播。</li>
+          <li><strong>失败与不足：</strong>材料充分证明关不掉可支持规则失败；缺前后态则不足。证据质量通过不等于产品规则通过。</li>
+        </ul>
+      </section>
+
+      <section class="section" id="seven">
+        <span class="section-no">04 / SEVEN CHANGES</span><h2>七项优化：具体解决什么，提升在哪里</h2>
+        <p class="section-intro">每项都区分“已有基础、当前不足、设计机制、预期收益”。下面的收益均为待验证目标，不是已测得的提升比例。</p>
+        <div class="table-scroll"><table class="wide"><thead><tr><th>专项</th><th>现状的主要不足</th><th>优化后的核心变化</th><th>直接价值</th></tr></thead><tbody>
+          <tr><td>01 受控探索</td><td>候选、动作组合与专项适配牵动多层。</td><td>CLI / ADB 作为受控执行器，统一能力、风险、预算和回执。</td><td>提高操作组合能力，降低执行适配成本。</td></tr>
+          <tr><td>02 页面图</td><td>已有候选路径，但身份、状态和完整页面关系不统一。</td><td>从可信观察形成页面状态图；页型可修订，树只是投影。</td><td>减少重复和错误合并，让覆盖与恢复有共同依据。</td></tr>
+          <tr><td>03 精准补采</td><td>局部恢复已有，正式缺证恢复闭环未开放。</td><td>缺口 → 就地 / 图路径恢复 → 实际等价验证 → 新证据与新判断。</td><td>降低重跑成本，避免错状态补证。</td></tr>
+          <tr><td>04 精准识别</td><td>H5 / App 判别输入不对齐，页型漂移会影响后续。</td><td>统一判别指南，分开产品能力、业务页型、展示层与规则范围。</td><td>减少模板误套、类型漂移和规则错配。</td></tr>
+          <tr><td>05 截图时机</td><td>已有整体 settle，仍需动作和规则目标相关证明。</td><td>窗口 / 对象 / 可见层 / 后置 / 内容 / 网络共同判断。</td><td>提高首份可用证据比例，减少过早和错帧采集。</td></tr>
+          <tr><td>06 精准交互</td><td>单步保护已有，连续操作、弹窗和外跳需统一验证。</td><td>逐步观察重绑、语义化清障、条件旁路与共享恢复预算。</td><td>减少误触、旧坐标失败和重复清障。</td></tr>
+          <tr><td>07 可信证据</td><td>材料齐全不足以证明对象和当前可见层正确。</td><td>时间、对象、层级、角色、来源及诊断影响贯穿消费链。</td><td>减少错证据进入正式判断，提高复核与重判能力。</td></tr>
+        </tbody></table></div>
+        <div class="row-actions"><span class="notice">展开查看每项依据、收益和验收指标。</span><button type="button" class="js-only" data-expand-points hidden>展开全部专项</button></div>
+
+        <details class="point" id="point-01"><summary><span class="point-num">01</span>受控 CLI / ADB / Skills：提升组合能力</summary><div class="point-body"><div class="point-grid">
+          <div><h4>当前基础</h4><p>已有 Playwright / App Driver、动态候选和控制面。灵活性不仅受 Tool 形式影响，也受候选生成、过滤和运行时专项逻辑影响。</p></div>
+          <div><h4>不足与根因</h4><p>新交互可能同时改识别、候选、执行和恢复；仅换成 Bash 不会自动提高候选质量或到达正确率，反而会扩大未受控操作面。</p></div>
+          <div><h4>设计机制</h4><p>统一受控命令入口，绑定会话 / 租约 / 域名或包名 / 参数 / 风险 / 预算。Skills 提供知识，命令回执说明做了什么，后态再证明效果。连续动作每一步重新检查。</p></div>
+          <div><h4>直接与迭代收益</h4><p>支持有界滚动、定位和点击组合；后续可更换执行器、增加观察能力，而不重写规则、页面身份和完成逻辑。Android 使用 ADB，不能将其泛化为 iOS 执行器。</p></div>
+        </div><p class="measure">验收：同预算可信覆盖、无效动作比例、越权拒绝、无归属命令数、总耗时与 Token。只读影子适配后再单执行方灰度，禁止双写设备动作。</p><p class="source-note"><a href="2026-09-03-exploration-optimization/01-controlled-exploration.html">专项设计 01</a> · <a href="#src-provider">当前执行器能力</a> · <a href="https://github.com/microsoft/playwright-cli">Playwright CLI 官方说明</a></p></div></details>
+
+        <details class="point" id="point-02"><summary><span class="point-num">02</span>页面状态图：从候选记忆到可信地图</summary><div class="point-body"><div class="point-grid">
+          <div><h4>当前基础</h4><p>H5 Frontier 已有 visited / executed、动作指纹、来源状态、父状态和 lineage；App 候选有来源截图、身份和导航路径。并非“只有发现、没有路径”。</p></div>
+          <div><h4>不足与根因</h4><p>这些信息主要服务调度，尚不是统一页面图。App 核心身份仍含包名 / Activity / 页型：改判页型可能改变身份；同 Activity 的同类详情又可能具有同一核心身份。</p></div>
+          <div><h4>设计机制</h4><p>稳定身份与页型修订解耦；用业务位置、对象和可靠地标支持分组，缺证则保留未知。图支持多入口和循环，树用于展示。到达、探索、证据与规则状态分别表达。</p></div>
+          <div><h4>直接与迭代收益</h4><p>减少错误去重、重复探索与覆盖失真；后续精准补采、增量探索、路径选择和工作台诊断可以复用同一事实基础。图上存在不等于现在一定能恢复。</p></div>
+        </div><p class="measure">验收：同状态重复节点率、不同对象错误合并率、转场证明完整率、冻结分母一致性。初始化时先影子投影，不以图推测直接新增业务覆盖。</p><p class="source-note"><a href="2026-09-03-exploration-optimization/02-page-state-graph.html">专项设计 02</a> · <a href="#src-frontier">现有 Frontier</a> · <a href="#src-identity">App 核心身份 :318</a></p></div></details>
+
+        <details class="point" id="point-03"><summary><span class="point-num">03</span>精准补采：让证据缺口返回探索侧</summary><div class="point-body"><div class="point-grid">
+          <div><h4>当前基础</h4><p>已有 BACK / WARM_RESTORE、导航锚点、有限重试与 StateEquivalenceGate。生产构造却固定 runtime_ready=False，正式补采闭环未开放；普通 after Capture 不等于精准补采。</p></div>
+          <div><h4>不足与根因</h4><p>局部恢复不是图路径规划。恢复含类型级父路径启发，不能证明真实产品路线。仅开启配置不能补齐执行、状态验证、证据追加和请求终结。</p></div>
+          <div><h4>设计机制</h4><p>先明确规则缺哪个对象 / 区域 / 前后态，优先就地补采，再按已验证路径逐边恢复。按原状态、等价状态、新观察或人工策略验收，不重放旧坐标，也不放宽高风险状态约束。</p></div>
+          <div><h4>直接与迭代收益</h4><p>减少全量重跑和错目标补证，支持局部重检。恢复失败留下原因与缺口；新材料和新判断只追加，不能覆盖旧失败，也不能拿新的 fresh 判断填平旧 exact 请求。</p></div>
+        </div><div class="callout warning"><strong>启用前必须处理的风险：</strong>当前 Probe 挂回会把目标不变量合并进恢复快照。正式等价判断必须依赖恢复后的独立观察，不能用目标值证明目标已恢复。这是待启用链路风险，不是本轮已证实的线上错判。</div><p class="measure">验收：合法恢复成功率、错误等价放行数、补采动作数及 P50 / P95 耗时、缺口终态完整率。支付、登录等高风险规则从严。</p><p class="source-note"><a href="2026-09-03-exploration-optimization/03-targeted-recapture.html">专项设计 03</a> · <a href="#src-supplement">生产双门禁</a> · <a href="#src-probe">Probe 事实来源风险</a></p></div></details>
+
+        <details class="point" id="point-04"><summary><span class="point-num">04</span>精准识别：统一判别依据，而不只是补一句描述</summary><div class="point-body"><div class="point-grid">
+          <div><h4>当前基础</h4><p>Catalog 已有 signals、entry / exit hints 和 remark。H5 注入完整目录，App 视觉模型主要接收页型代码与通用视觉说明；静态产品画像已经存在。</p></div>
+          <div><h4>不足与根因</h4><p>跨端判别依据不对齐；相似卡片布局难以区分导航、广告聚合和内容列表；当前页型、产品整体能力及可见层容易互相代替。</p></div>
+          <div><h4>设计机制</h4><p>版本化判别指南包含用途、关键证据、相邻类型差异和反例。入口观察后形成暂定产品能力，允许未知与修订。原冻结目标不能因“没找到”而被删除。</p></div>
+          <div><h4>直接与迭代收益</h4><p>减少模板误套、类型漂移和错配规则。按规则合同复用静态素材 / 全局结果；广告位、曝光、关闭与有效性仍按相应页面状态、位置或发生实例检查。</p></div>
+        </div><p class="measure">验收：人工标注误判率、同状态不合理漂移率、规则错配率、无依据“不适用”数量和必要规则范围保留率。不能通过永远保留第一次错误判断来制造“零漂移”。</p><p class="source-note"><a href="2026-09-03-exploration-optimization/04-page-recognition.html">专项设计 04</a> · <a href="#src-recognition">H5 / App 识别输入对照</a></p></div></details>
+
+        <details class="point" id="point-05"><summary><span class="point-num">05</span>截图时机：由动作和规则用途决定何时可用</summary><div class="point-body"><div class="point-grid">
+          <div><h4>当前基础</h4><p>H5 已检查 DOM、核心容器、媒体、loader / transition、Flutter bootstrap 和相关在途请求；不能把现状说成固定 sleep 后盲拍。</p></div>
+          <div><h4>不足与根因</h4><p>整体稳定不等于目标出现。网络安静但正文没出来、按钮消失却外跳、底页加载完但被弹层挡住，都不能证明当前取证条件成立。</p></div>
+          <div><h4>设计机制</h4><p>按动作检查运行面 / 业务对象 / 可见层 / 预期效果 / 核心内容，并进行采集前后身份检查。网络 2～3 秒安静仅作辅助，还要考虑未完成、失败和不可观测情况。</p></div>
+          <div><h4>直接与迭代收益</h4><p>提高首采可用率，减少过早与错帧取证。按导航、关闭、滚动、媒体等分别调优。加载超时和关闭失败可保留为时间证据，不冒充稳定到达。</p></div>
+        </div><p class="measure">验收：首采可用率、错帧接受数、等待超时原因覆盖、重采次数和时间成本。网络不可见不是零请求；ADB 不自动赋予任意 App 网络可见性。</p><p class="source-note"><a href="2026-09-03-exploration-optimization/05-capture-readiness.html">专项设计 05</a> · <a href="#src-settle">已有 settle</a> · <a href="https://playwright.dev/docs/api/class-page#page-wait-for-load-state">Playwright 就绪边界</a></p></div></details>
+
+        <details class="point" id="point-06"><summary><span class="point-num">06</span>精准交互：连续操作、弹窗和外跳的验证闭环</summary><div class="point-body"><div class="point-grid">
+          <div><h4>当前基础</h4><p>已有候选截图绑定、图像签名、几何 / 风险 / 前台检查和动作前后 Capture；已有有限遮挡清理与各层观察。</p></div>
+          <div><h4>不足与根因</h4><p>单次定位不能贯穿滚动后的整个操作串。弹窗控件消失不等于安全关闭。当前主 Web Driver 未开放独立多 Surface 生命周期，外跳不能一律按复制标签处理。</p></div>
+          <div><h4>设计机制</h4><p>逐步“定位 → 操作 → 观察 → 重绑”。区分广告、登录、充值、更新、公告与系统提示；保存前态、验证关闭后态，循环共享预算。分辨率、缩放、方向和安全区按实际坐标链处理。</p></div>
+          <div><h4>直接与迭代收益</h4><p>减少误触与重复清障。天然新标签保留源页；已知允许 URL 可旁路补充内容，但不替代 JS / POST / 一次性点击链证明。支持复杂列表、自绘控件与不同设备规格。</p></div>
+        </div><p class="measure">验收：按动作意图区分误触率、正确关闭率、外跳回源成功率、重复阻断次数与未知副作用重试数。UA / 分辨率用于可复现环境，不承诺绕过人机校验。</p><p class="source-note"><a href="2026-09-03-exploration-optimization/06-interaction-precision.html">专项设计 06</a> · <a href="#src-action">动作门禁</a> · <a href="#src-provider">多 Surface 边界</a> · <a href="https://playwright.dev/docs/actionability">可操作性不等于业务到达</a></p></div></details>
+
+        <details class="point" id="point-07"><summary><span class="point-num">07</span>可信证据：正确格式之外，还要对象、层级和用途正确</summary><div class="point-body"><div class="point-grid">
+          <div><h4>当前基础</h4><p>已有附件、角色、数量和文本齐全性裁决；Observation Packet 另有身份和状态检查，InputSet / Gate 负责输入封存和收口。当前 DOM 也有清理与超限截断。</p></div>
+          <div><h4>不足与根因</h4><p>文件正确不等于证明内容正确。标注详情却截到充值弹窗，不能靠格式、大小和时间纠正。多个 Writer 和消费者需要一致的层级与用途约束。</p></div>
+          <div><h4>设计机制</h4><p>校验来源、对象、状态、可见区域、时间关系和规则充分性。区分视口原图、整页扩展图、滚动序列与拼接派生图；区分采集载荷、清洗阅读版、存储压缩和模型有界读取。</p></div>
+          <div><h4>直接与迭代收益</h4><p>减少错层、错对象、错状态材料进入正式判断，支持复核和新版本重判。诊断影响贯穿后续证据链；新证据只追加，本次报告不借用其他 Run 的成功材料。</p></div>
+        </div><div class="callout warning">当前确有受限高 z-index 样式隐藏兜底，选项默认关闭；不是普遍删 DOM，也不能据此断言所有历史证据受污染。正式自然分支不得用删改页面制造“可用”的产品事实。</div><p class="measure">验收：错层 / 错对象放行数、原图与派生图回溯率、规则输入重放一致率、跨运行串证数。Manifest 质量通过 ≠ 规则通过 ≠ 页面覆盖 ≠ Completion Gate 通过。</p><p class="source-note"><a href="2026-09-03-exploration-optimization/07-trusted-evidence.html">专项设计 07</a> · <a href="#src-evidence">现有证据门禁</a> · <a href="#src-dom">DOM 和清障边界</a></p></div></details>
+      </section>
+
+      <section class="section" id="root-causes">
+        <span class="section-no">05 / ROOT CAUSES</span><h2>核心问题：四类根因如何放大成本</h2>
+        <p class="section-intro">这里画的是基于代码结构的风险关联，不是本轮运行实测出的故障序列或发生概率。已有局部门禁会拦截部分问题，但不应依赖末端 Gate 替代上游语义正确性。</p>
+        <figure class="diagram" data-diagram="causes" aria-labelledby="causes-title">
+          <div class="diagram-title"><h3 id="causes-title">D. 根因 → 风险表现 → 对应治理</h3><span class="pill amber">风险关联示意</span></div>
+          <p class="diagram-caption">最重要的基础是稳定身份、可见层与后置证明、缺证回流。候选更多，只有在这些条件成立时才会转化为可信覆盖。</p>
+          <div class="diagram-toolbar" hidden><label class="node-picker">查看节点 <select aria-label="选择根因关联节点"></select></label><div class="zoom-tools"><button type="button" data-zoom-out aria-label="缩小根因图">−</button><output aria-label="根因图缩放比例">100%</output><button type="button" data-zoom-in aria-label="放大根因图">＋</button><button type="button" data-fit>图形概览</button><button type="button" data-original>清晰原寸</button></div></div>
+          <div class="canvas-viewport" tabindex="0" role="region" aria-label="根因关联图，可横向滚动"><canvas width="1160" height="870" role="img" aria-label="四类根因、风险表现和七项优化的关系，文字版本在下方">根因关联的文字说明见下方。</canvas></div>
+          <p class="diagram-hint">橙色表示待治理风险，绿色表示对应机制；中间列虚线仅表示可能的放大关系，不表示已经发生。</p><aside class="node-detail" aria-live="polite" hidden></aside>
+          <details class="diagram-text" open><summary>文字关联与核心判断</summary><div><ol><li>身份与页型仍耦合 → 重复或错误合并 → 专项 02 / 04：稳定身份、状态版本和可修订识别。</li><li>目标、可见层和后置证明分散 → 错层、错帧或误触风险 → 专项 05 / 06 / 07：统一观察、动作验证和证据用途。</li><li>局部恢复与正式补采未形成生产闭环 → 缺证可能依赖重复探索 → 专项 02 / 03：已验证路径与规则等价验收。</li><li>专项适配跨层牵动 → 接入新产品容易扩大回归范围 → 专项 01 / 04：受控执行能力和共享判别语义。</li></ol><p class="loop-note">页型错误可能影响身份与候选，再影响规则目标和取证，最后放大修复成本。优化要切断这种风险传播，而不是仅增加操作次数或让 Gate 更宽松。</p></div></details>
+        </figure>
+      </section>
+
+      <section class="section" id="scenarios">
+        <span class="section-no">06 / SCENARIOS</span><h2>三个典型场景：前后差异更直观</h2>
+        <p class="section-intro">下面是流程设计对照，不是本轮重新跑出的设备结果；“当前”说明已有机制的边界，不表示每次一定失败。</p>
+        <article class="scenario"><h3>场景一：启动广告挡住了导航 / 广告列表首页</h3><div class="compare-headline"><div class="position"><h4>当前：有识别与清障，但目标解释分散</h4><p>可以识别启动广告、生成关闭候选并采集后态；产品静态目标与运行时可见内容仍需衔接，不能仅凭未发现详情就证明产品没有详情。</p></div><div class="position future"><h4>优化：先观察层，再解释业务</h4><p>保留广告前态 → 允许的关闭 → 新观察 → 识别导航型入口 → 候选进入 Frontier。关不掉则按前后态与规则结算，不创建假首页，不删 DOM 制造通过。</p></div></div><p class="source-note">主要协作：04 识别与范围 + 06 清障 + 05 就绪 + 07 证据；02 仅从可信到达建立业务图。</p></article>
+        <article class="scenario"><h3>场景二：列表滚动后点击，广告在原标签执行 JS 外跳</h3><div class="compare-headline"><div class="position"><h4>当前：有坐标门禁和有限回源</h4><p>旧截图候选可能被门禁拒绝；外跳后的返回和清障依赖当前恢复链。没有可靠 href 时，静态 URL 发现不能替代真正点击后的观察。</p></div><div class="position future"><h4>优化：每步重绑，外跳和业务覆盖分开</h4><p>滚动 → 新帧 → 重定位 → 按真实意图点击 → 来源 / 落地留证。天然新标签保留源页；原标签有限回源；反复弹窗共享预算。另开 URL 只补充获准内容，不伪造按钮有效性。</p></div></div><p class="source-note">主要协作：01 受控组合 + 06 交互与回源 + 05 后置观察 + 07 成对证据。关闭意图误点广告是误触；获准的广告有效性点击不是误触。</p></article>
+        <article class="scenario"><h3>场景三：支付页缺少关键证据，原价格或一次性上下文已变化</h3><div class="compare-headline"><div class="position"><h4>当前：有恢复组件，但正式补采未开放</h4><p>同 Activity、同标题或同页型不足以证明同一订单、账号、金额和发生实例。仅把页面找回来，不能宣告原规则的证据缺口被修复。</p></div><div class="position future"><h4>优化：先声明等价条件，再决定能否补</h4><p>按规则核对原目标 → 就地 / 图路径恢复 → 读取真实新状态 → 对照允许的不变量。原 exact 无法证明则保持不足或转人工；独立允许的新观察另建判断，不覆盖旧缺口。</p></div></div><p class="source-note">主要协作：03 补采策略 + 02 路径 + 05 就绪 + 07 输入封存；支付、登录等高风险场景不能在执行中放宽约束。</p></article>
+      </section>
+
+      <section class="section" id="iteration">
+        <span class="section-no">07 / VALUE & DELIVERY</span><h2>后续迭代优势与落地顺序</h2>
+        <div class="table-scroll"><table><thead><tr><th>迭代方向</th><th>可以复用的基础</th><th>带来的长期优势</th></tr></thead><tbody>
+          <tr><td>接入新产品</td><td>产品声明、入口观察、运行时能力解释和真实转场。</td><td>减少模板式寻页和每个产品重写路线；保留未知，不缩小冻结分母。</td></tr>
+          <tr><td>更换模型</td><td>版本化判别指南、可信观察和有来源的修订记录。</td><td>可离线比较识别与判别策略；离线分析不冒充新的设备到达或改写已封存报告。</td></tr>
+          <tr><td>新增规则</td><td>明确目标、角色、发生范围与封存输入。</td><td>复用真正合格的材料，减少重复判断，同时保留位置与交互应检范围。</td></tr>
+          <tr><td>更换执行器</td><td>受控入口、会话与能力声明、真实回执和后态。</td><td>逐步接入 CLI 或新 Driver，身份、规则和 Gate 不随工具形式重建。</td></tr>
+          <tr><td>故障排查</td><td>页面图、动作前后态、阻断层、规则缺口和最终原因。</td><td>从报告反查发生位置和执行过程，减少人工拼日志的成本。</td></tr>
+          <tr><td>持续提效</td><td>同目标 / 规则 / 环境 / 预算下的成本和有效覆盖事实。</td><td>优化候选优先级、就绪策略和恢复路径；收益不是靠删证据或放宽标准获得。</td></tr>
+        </tbody></table></div>
+        <h3>建议实施依赖</h3>
+        <div class="table-scroll"><table><thead><tr><th>阶段</th><th>优先实施</th><th>进入下一阶段的条件</th></tr></thead><tbody>
+          <tr><td>M0 · 基线</td><td>冻结目标、规则、等价标准和风险边界；记录可信覆盖、耗时与缺证原因。</td><td>比较口径一致，区分环境问题、产品失败、证据不足与技术异常。</td></tr>
+          <tr><td>M1 · 事实正确</td><td>优先 05 / 06 / 07：就绪、后置、层级和证据；02 页面图只做影子投影。</td><td>新图不污染覆盖；真实观察与自然 / 诊断证据可追溯。</td></tr>
+          <tr><td>M2 · 统一语义</td><td>完善 02 / 04：身份与页型解耦、产品能力解释、规则目标与复用范围。</td><td>减少错误合并与漂移，原始必检分母和既有权限不变。</td></tr>
+          <tr><td>M3 · 受控灵活性</td><td>01 先只读适配，再单执行方、低风险灰度。</td><td>CLI / ADB 每个操作有来源、边界、回执和真实后态，可回退到现有 Driver。</td></tr>
+          <tr><td>M4 · 精准修复</td><td>03 图路径补采、实际状态等价和新证据追加，完善工作台诊断。</td><td>真实 H5 / App 的成功与失败分支都能有界收口；不能仅开配置绕过未就绪门禁。</td></tr>
+        </tbody></table></div>
+        <h3>如何证明真的改善</h3>
+        <ul><li><strong>正确性：</strong>页型误判、重复 / 错误合并、错层错对象放行、错误等价、跨运行串证。</li><li><strong>有效产出：</strong>同预算下可信业务覆盖、首采可用率、规则应检范围、缺口终态完整率。</li><li><strong>操作质量：</strong>按意图区分误触、关闭成功、回源成功、重复阻断与未知副作用重试。</li><li><strong>资源成本：</strong>动作数、等待和重采次数、补采 P50 / P95 耗时、Token、总耗时与人工复核成本。</li></ul>
+        <div class="callout warning"><strong>收益有成本，不能先报百分比。</strong> 更多检查、状态管理与取证可能增加单步延迟；净收益应来自减少无效探索、错误判断和重复修复。七项修改会落到共同模块，不能把影响范围机械相加，也不应一次全量切换。</div>
+      </section>
+
+      <section class="section" id="sources">
+        <span class="section-no">08 / EVIDENCE & BOUNDARIES</span><h2>代码依据与验收边界</h2>
+        <p class="section-intro">代码依据来自 2026-09-03 对当前工作区的只读核查，基准提交 c9dfb7c73。下列本地链接指向真实文件，冒号后的行号用于编辑器定位；浏览器打开源文件时不保证自动跳到该行。</p>
+        <ul class="source-list">
+          <li id="src-mode"><strong>任务执行模式</strong><a href="../../services/api/app/worker.py">worker.py :870 — Web 独立探索与完整质检分流</a><a href="../../services/api/app/application/app_exploration_target.py">app_exploration_target.py :357 — App 目标冻结</a></li>
+          <li id="src-h5"><strong>H5 当前主链</strong><a href="../../services/api/app/application/h5_exploration_workflow.py">h5_exploration_workflow.py :556 — 识别、Frontier、后继工作</a><a href="../../services/api/app/application/h5_runtime_composition.py">h5_runtime_composition.py :2364 — 运行时组合与恢复接线</a></li>
+          <li id="src-app"><strong>App 当前主链</strong><a href="../../services/api/app/application/app_screenshot_exploration.py">app_screenshot_exploration.py :499 — 截图理解与动态探索</a><a href="../../services/api/app/domain/interaction/app_workflow.py">app_workflow.py :111 — APP_READY 合同</a></li>
+          <li id="src-frontier"><strong>Frontier 已有路径与状态</strong><a href="../../services/api/app/domain/exploration/h5_frontier.py">h5_frontier.py :251 — 任务快照、状态与去重</a><a href="../../services/api/app/domain/exploration/app_frontier.py">app_frontier.py :61 — 带来源和导航路径的候选</a><a href="../../services/api/app/application/app_global_frontier.py">app_global_frontier.py :50 — App 全局候选登记</a></li>
+          <li id="src-identity"><strong>身份与恢复</strong><a href="../../services/api/app/domain/exploration/app_page_identity.py">app_page_identity.py :318 — 核心身份仍含 page_type</a><a href="../../services/api/app/application/app_frontier_restoration.py">app_frontier_restoration.py :151 — 类型级父路径启发；:161 — 有限恢复</a></li>
+          <li id="src-supplement"><strong>正式补采未开放</strong><a href="../../services/api/app/application/supplemental_evidence_policy.py">supplemental_evidence_policy.py :177 — runtime_ready=False</a><a href="../../services/api/app/application/state_equivalence.py">state_equivalence.py :75 — 已有三方等价门禁</a><a href="../../services/api/app/worker.py">worker.py :4816 — 启动时就绪校验</a></li>
+          <li id="src-probe"><strong>补采启用前风险</strong><a href="../../services/api/app/application/app_probe_hangback.py">app_probe_hangback.py :293 — 目标不变量并入恢复快照</a><span>未来必须从原始与恢复后的独立观察取事实，不能目标自证。</span></li>
+          <li id="src-recognition"><strong>识别输入与目录</strong><a href="../../services/api/app/domain/page/catalog.py">catalog.py :63 — signals、hints、remark 已存在</a><a href="../../services/api/app/agents/tools/page_detection_tools.py">page_detection_tools.py :1572 — H5 完整目录注入</a><a href="../../services/api/app/infrastructure/app_vision/llm.py">app_vision/llm.py :1211 — App 页型代码与通用说明</a></li>
+          <li id="src-settle"><strong>现有就绪与遮挡观察</strong><a href="../../services/api/app/infrastructure/browser/page_capture.py">page_capture.py :2336 — DOM、业务内容、媒体、网络等 settle</a><a href="../../services/api/app/infrastructure/browser/page_capture.py">page_capture.py :5815 — 有界遮挡链与观察帧</a></li>
+          <li id="src-action"><strong>动作前后和安全门禁</strong><a href="../../services/api/app/application/capture_coordinator.py">capture_coordinator.py :443 — before / execute / after 与恢复</a><a href="../../services/api/app/application/app_interaction_runtime.py">app_interaction_runtime.py :1333 — 候选、几何、风险与前台约束</a></li>
+          <li id="src-provider"><strong>运行面能力边界</strong><a href="../../services/api/app/infrastructure/browser/surface_driver.py">surface_driver.py :161 — 主 Playwright Surface；:199 — 多 Surface 能力未开放</a></li>
+          <li id="src-evidence"><strong>证据与完成门禁</strong><a href="../../services/api/app/application/evidence_completeness.py">evidence_completeness.py :69 — 证据齐全性裁决</a><a href="../../services/api/app/application/observation_packet.py">observation_packet.py :674 — 身份、状态等输入质量检查</a><a href="../../services/api/app/domain/evidence/input_set.py">input_set.py :168 — 封存规则输入</a><a href="../../services/api/app/domain/task/completion.py">completion.py :151 — 正式完成条件</a></li>
+          <li id="src-dom"><strong>DOM / 诊断边界</strong><a href="../../services/api/app/infrastructure/browser/page_capture.py">page_capture.py :528 — 样式隐藏选项默认关闭</a><a href="../../services/api/app/infrastructure/browser/page_capture.py">page_capture.py :7158 — 受限脚本点击兜底；:9236 — DOM 清理与截断</a></li>
+          <li id="src-design"><strong>设计与官方能力参考</strong><a href="2026-09-03-exploration-optimization/index.html">七项专项设计 · HTML / Markdown</a><a href="2026-09-03-exploration-optimization/README.md">设计总览 · 决策、反馈、依赖和闭环</a><a href="https://github.com/microsoft/playwright-cli">Playwright CLI 官方仓库</a><a href="https://playwright.dev/docs/actionability">Playwright 可操作性检查</a><a href="https://playwright.dev/docs/api/class-page#page-wait-for-load-state">Playwright 就绪与 networkidle 边界</a></li>
+        </ul>
+        <div class="callout"><strong>文档不等于验收。</strong>本次交付只生成对比文档与流程图，不修改业务代码、数据库、规则开关或设备状态。结构、脚本和 Canvas 绘制检查只验证文档产物；不能替代浏览器整页布局、真实 H5 / App、完成门禁或生产验收。</div>
+        <noscript><p class="callout warning">当前浏览器未启用 JavaScript，Canvas 交互不可用。正文和各图的文字流程仍可阅读；启用 JavaScript 后可查看缩放图和节点说明。</p></noscript>
+      </section>
+      <footer class="doc-footer"><span>Alioth · 探索流程竖向对照 · v1.1</span><span><a href="2026-09-03-exploration-optimization/index.html">返回七项设计</a> · <a href="#main">回到顶部</a></span></footer>
+    </main>
+  </div>
+
+<script type="application/json" id="flow-data">
+{
+  "h5": {
+    "comparison": true,
+    "key": "h5",
+    "width": 1160,
+    "height": 2290,
+    "caption": "H5 / Web 完整质检 · 当前与优化方案逐阶段对照",
+    "note": "按职责阶段对齐，不表示规则线程与探索线程必须逐行串行。",
+    "rows": [
+      {
+        "number": "01",
+        "stage": "任务目标与范围",
+        "change": "保留并统一",
+        "changeKind": "reuse",
+        "solve": [
+          "避免产品识别反向缩水",
+          "统一目标与适用性解释"
+        ],
+        "benefit": "原始必检分母、权限、账号、范围和预算有唯一来源；运行时观察只能调整优先级和解释，不能静默删除目标。",
+        "current": {
+          "title": "任务模式与目标初始化",
+          "lines": [
+            "FULL_INSPECTION 进入 H5 V2",
+            "目标 / 规则 / 登录 / 预算"
+          ],
+          "kind": "reuse",
+          "detail": "Web 完整质检与独立探索已有模式分流；当前任务目标、规则和预算由控制面初始化。",
+          "ref": "src-mode"
+        },
+        "proposed": {
+          "title": "冻结目标与产品声明",
+          "lines": [
+            "原始必检分母不可静默缩小",
+            "观察仅调整优先级与解释"
+          ],
+          "kind": "reuse",
+          "detail": "保留现有任务合同，并明确产品能力评估不能反向删除用户明确要求的目标。",
+          "ref": "point-04"
+        }
+      },
+      {
+        "number": "02",
+        "stage": "会话与执行能力",
+        "change": "增强",
+        "changeKind": "enhance",
+        "solve": [
+          "执行器与控制面分离",
+          "杜绝任意 Shell 与双执行方"
+        ],
+        "benefit": "CLI / ADB 成为可替换 Provider，平台继续掌握会话、租约、权限、风险、预算与审计。",
+        "current": {
+          "title": "受管浏览器与现有 Driver",
+          "lines": [
+            "Playwright 主 Surface",
+            "会话、域名和动作由平台约束"
+          ],
+          "kind": "reuse",
+          "detail": "已有受管浏览器和 Driver；当前并未开放任意 CLI Shell，多 Surface 固定能力也仍有限。",
+          "ref": "src-provider"
+        },
+        "proposed": {
+          "title": "受控 CLI Provider",
+          "lines": [
+            "能力探测 + 命令白名单",
+            "唯一动作入口与会话归属"
+          ],
+          "kind": "enhance",
+          "detail": "官方 CLI 可提高探索表达力，但只能位于现有控制面之下；Skills 提供操作知识，不提供权限。",
+          "ref": "point-01"
+        }
+      },
+      {
+        "number": "03",
+        "stage": "入口观察与可见层",
+        "change": "增强",
+        "changeKind": "enhance",
+        "solve": [
+          "不再把遮挡底页当首页",
+          "区分弹窗目标和业务页面"
+        ],
+        "benefit": "先保存真实入口，再判断启动广告、权限、登录、升级、公告、充值等层级，业务页未可见时允许保持未知。",
+        "current": {
+          "title": "Capture、settle 与清障",
+          "lines": [
+            "DOM / 截图 / OCR / 媒体",
+            "已有 loader、transition、网络检查"
+          ],
+          "kind": "reuse",
+          "detail": "H5 已有较丰富的采集稳定性和分层遮挡处理，不是完全依赖固定等待；层级与用途仍需跨入口统一。",
+          "ref": "src-settle"
+        },
+        "proposed": {
+          "title": "真实入口观察与层级协议",
+          "lines": [
+            "先保存可见前态，再识别产品",
+            "弹窗分型，不伪造背后首页"
+          ],
+          "kind": "enhance",
+          "detail": "统一广告、登录、充值、升级、公告、权限等阻断层协议；自然证据与诊断性清障严格分流。",
+          "ref": "point-07"
+        }
+      },
+      {
+        "number": "04",
+        "stage": "产品与页面识别",
+        "change": "增强",
+        "changeKind": "enhance",
+        "solve": [
+          "降低同页型漂移",
+          "补上产品能力前置评估"
+        ],
+        "benefit": "共享判别指南、描述、正反例和冲突出口；页型可修订，产品评估只分配优先级与规则语境。",
+        "current": {
+          "title": "Catalog 多模态页型评估",
+          "lines": [
+            "完整 Catalog + DOM + 截图",
+            "已有未知 / 冲突与动态候选"
+          ],
+          "kind": "reuse",
+          "detail": "H5 已向模型提供完整 Catalog 与页面材料；不足在于产品能力前置判断、跨端判别语义和身份解耦仍未形成统一合同。",
+          "ref": "src-recognition"
+        },
+        "proposed": {
+          "title": "产品能力 + 页型判别指南",
+          "lines": [
+            "描述、正反例与层级证据",
+            "未知、冲突、修订均可追溯"
+          ],
+          "kind": "enhance",
+          "detail": "先基于真正可见的业务内容作暂定产品评估，再识别页面；导航页与广告聚合页明确分开。",
+          "ref": "point-04"
+        }
+      },
+      {
+        "number": "05",
+        "stage": "页面身份与状态",
+        "change": "新增共享事实",
+        "changeKind": "new",
+        "solve": [
+          "身份不再随页型漂移",
+          "为恢复提供可信路径"
+        ],
+        "benefit": "稳定页面身份与类型判断解耦；Tab、筛选、展开默认记录为状态，弹窗保留质检对象但不污染业务页面树。",
+        "current": {
+          "title": "任务 Frontier 调度记忆",
+          "lines": [
+            "visited / executed / lineage",
+            "来源状态、部分路径与恢复计数"
+          ],
+          "kind": "reuse",
+          "detail": "现有 Frontier 不只是页面发现，已记录来源、状态和部分路径；但它以候选调度为中心，不是共享页面状态图。",
+          "ref": "src-frontier"
+        },
+        "proposed": {
+          "title": "可信页面状态图",
+          "lines": [
+            "稳定身份 + 状态版本 + 转场",
+            "树只作展示和恢复投影"
+          ],
+          "kind": "new",
+          "detail": "图事实仅来自可信观察和转场；类型标签可修订而节点身份稳定，弹窗和外跳按边界单独记录。",
+          "ref": "point-02"
+        }
+      },
+      {
+        "number": "06",
+        "stage": "候选与规则规划",
+        "change": "增强",
+        "changeKind": "enhance",
+        "solve": [
+          "有限自由不等于漫游",
+          "规则范围按合同执行"
+        ],
+        "benefit": "必检目标、证据缺口、新发现价值、风险和成本共同排队；静态可复用与逐曝光、逐交互规则分别定义。",
+        "current": {
+          "title": "候选发布与规则页型匹配",
+          "lines": [
+            "动态候选、去重、sibling",
+            "规则工作可与探索并行"
+          ],
+          "kind": "reuse",
+          "detail": "当前已动态生成候选并匹配规则；优先级、缺证回流与规则复用范围尚未统一进同一规划合同。",
+          "ref": "src-h5"
+        },
+        "proposed": {
+          "title": "目标 / 缺证 / 价值联合调度",
+          "lines": [
+            "必检优先，有限度自由发现",
+            "规则频率和复用边界显式"
+          ],
+          "kind": "enhance",
+          "detail": "探索价值不由链接可爬性单独决定；候选仍需证据确认，并与风险、成本、预算和恢复任务共同排队。",
+          "ref": "point-01"
+        }
+      },
+      {
+        "number": "07",
+        "stage": "定位与分步执行",
+        "change": "增强",
+        "changeKind": "enhance",
+        "solve": [
+          "减少误点与旧坐标复用",
+          "控制外跳和高风险副作用"
+        ],
+        "benefit": "每步执行定位、门禁、操作、新观察和重绑定；滚动后不沿用旧坐标，未知结果先观察而不是重复点击。",
+        "current": {
+          "title": "before Capture → Driver",
+          "lines": [
+            "点击 / 滚动 / 返回等",
+            "已有会话绑定和执行门禁"
+          ],
+          "kind": "reuse",
+          "detail": "当前已有动作前采集和受管 Driver，动作结果未知也有恢复保护；并非看到坐标就直接点击。",
+          "ref": "src-action"
+        },
+        "proposed": {
+          "title": "定位 → 操作 → 新观察 → 重绑",
+          "lines": [
+            "滚动后重取坐标和控件",
+            "外跳独立留证并有界回源"
+          ],
+          "kind": "enhance",
+          "detail": "连续操作拆成可证明步骤；脚本派发、强制点击和 DOM 修改仅用于受限诊断，不能制造自然通过。",
+          "ref": "point-06"
+        }
+      },
+      {
+        "number": "08",
+        "stage": "动作后观察与就绪",
+        "change": "增强",
+        "changeKind": "enhance",
+        "solve": [
+          "避免未加载或错帧截图",
+          "网络信号不再被绝对化"
+        ],
+        "benefit": "按动作和目标组合内容、结构、稳定窗口、加载指示、媒体和可得网络信号；超时保留原因，不把网络不可见当作零请求。",
+        "current": {
+          "title": "after Capture 与重新 settle",
+          "lines": [
+            "动作后材料与重试",
+            "再做页型和候选评估"
+          ],
+          "kind": "reuse",
+          "detail": "已有 after Capture 和加载检查；但不同入口对对象、层级、预期效果和就绪的判断仍需收拢。",
+          "ref": "src-action"
+        },
+        "proposed": {
+          "title": "面向目标的就绪证明",
+          "lines": [
+            "内容稳定 + 结构 / 媒体 / 网络",
+            "超时和信号缺失均显式"
+          ],
+          "kind": "enhance",
+          "detail": "2–3 秒网络安静只可作为适用场景的一项信号，不能替代目标元素、可见内容和加载状态验证。",
+          "ref": "point-05"
+        }
+      },
+      {
+        "number": "09",
+        "stage": "可信到达与继续探索",
+        "change": "增强",
+        "changeKind": "enhance",
+        "solve": [
+          "命令成功不再等于到达",
+          "外跳不再污染业务覆盖"
+        ],
+        "benefit": "窗口、对象、层级、动作效果与页面到达分别验证；只有可信业务到达更新图，外部落地页默认只留证。",
+        "current": {
+          "title": "更新评估并继续或局部恢复",
+          "lines": [
+            "新观察回到 Frontier",
+            "已有有限恢复与停止原因"
+          ],
+          "kind": "reuse",
+          "detail": "新观察会更新后继工作，已有继续和恢复回路；可信到达、覆盖追加和外跳用途还需要统一语义。",
+          "ref": "src-h5"
+        },
+        "proposed": {
+          "title": "五项后置校验后记到达",
+          "lines": [
+            "窗口 / 对象 / 层级 / 效果 / 页面",
+            "可信到达才更新业务图"
+          ],
+          "kind": "enhance",
+          "detail": "外部广告落地默认只保存来源和落地证据，不在业务覆盖中新增页面；回源失败保留真实原因。",
+          "ref": "point-06"
+        }
+      },
+      {
+        "number": "10",
+        "stage": "证据与规则判断",
+        "change": "增强",
+        "changeKind": "enhance",
+        "solve": [
+          "治理错层、错对象和串证",
+          "区分失败证据与页面证据"
+        ],
+        "benefit": "所有 Writer 和消费者统一校验来源、对象、时间、可见层、用途和 Run / Epoch；合法失败序列不冒充稳定页面。",
+        "current": {
+          "title": "证据清单、规则与输入封存",
+          "lines": [
+            "规则可并行，末端统一收敛",
+            "已有 Manifest 与 Run / Epoch 约束"
+          ],
+          "kind": "reuse",
+          "detail": "当前已经有证据完整性、封存输入和规则处理，不是单纯保存文件；层级、对象、目的与生产消费仍需统一加固。",
+          "ref": "src-evidence"
+        },
+        "proposed": {
+          "title": "统一证据可信度门禁",
+          "lines": [
+            "来源 / 对象 / 时间 / 层级 / 用途",
+            "Judge 只消费冻结材料"
+          ],
+          "kind": "enhance",
+          "detail": "稳定页面、阻断层、交互前后态、外跳和诊断材料按用途接受；格式完整不能替代语义正确。",
+          "ref": "point-07"
+        }
+      },
+      {
+        "number": "11",
+        "stage": "缺证处理与恢复",
+        "change": "正式新增",
+        "changeKind": "new",
+        "solve": [
+          "缺证不再依赖全量重跑",
+          "高风险场景保持从严"
+        ],
+        "benefit": "就地补采优先，再按已证路径逐边恢复；规则明确 exact、equivalent、fresh 或 manual，无法证明时保持不足。",
+        "current": {
+          "title": "正式精准补采尚未开放",
+          "lines": [
+            "已有局部恢复与等价组件",
+            "生产 runtime_ready = false"
+          ],
+          "kind": "missing",
+          "detail": "当前组件基础可复用，但正式规则缺口到路径恢复再到 Judge 的生产闭环未开放；普通 after Capture 不等于精准补采。",
+          "ref": "src-supplement"
+        },
+        "proposed": {
+          "title": "图路径精准补采",
+          "lines": [
+            "就地优先，已证路径逐边恢复",
+            "exact / equivalent / fresh / manual"
+          ],
+          "kind": "new",
+          "detail": "恢复结果必须来自独立新观察；不能把目标不变量合并进恢复快照后再用它自证成功。",
+          "ref": "point-03"
+        }
+      },
+      {
+        "number": "12",
+        "stage": "完成门禁与报告",
+        "change": "保留并收紧",
+        "changeKind": "reuse",
+        "solve": [
+          "探索终态不再冒充通过",
+          "质量与执行状态分维度"
+        ],
+        "benefit": "停止新动作并终结已接纳工作后冻结输入；覆盖、规则结果、证据缺口、技术异常、Gate 和资源释放分别报告。",
+        "current": {
+          "title": "探索终态 → Completion Gate",
+          "lines": [
+            "正式模式检查覆盖、规则与证据",
+            "独立探索不经过同一正式收口"
+          ],
+          "kind": "reuse",
+          "detail": "当前 Gate 已有多项完成条件；报告生成、浏览器关闭和任务资源释放都不等于正式通过。",
+          "ref": "src-evidence"
+        },
+        "proposed": {
+          "title": "冻结同 Run / Epoch 后分维度报告",
+          "lines": [
+            "Gate、质量、缺口和技术状态分开",
+            "资源释放单独结算"
+          ],
+          "kind": "enhance",
+          "detail": "正式完成权威仍由 Completion Gate 承担；新图、Frontier 与 Judge 不另造第二套完成真相。",
+          "ref": "point-07"
+        }
+      }
+    ]
+  },
+  "app": {
+    "comparison": true,
+    "key": "app",
+    "width": 1160,
+    "height": 2290,
+    "caption": "App 探索与质检 · 当前与优化方案逐阶段对照",
+    "note": "APP_READY、业务页到达、探索结束和正式质检完成仍是不同事实。",
+    "rows": [
+      {
+        "number": "01",
+        "stage": "任务目标与范围",
+        "change": "保留并统一",
+        "changeKind": "reuse",
+        "solve": [
+          "避免产品识别反向缩水",
+          "统一目标与适用性解释"
+        ],
+        "benefit": "原始必检分母、权限、账号、范围和预算有唯一来源；运行时观察只能调整优先级和解释，不能静默删除目标。",
+        "current": {
+          "title": "冻结 AppTargetProfile",
+          "lines": [
+            "产品声明 / 必检页型 / 包边界",
+            "提交后保持目标分母"
+          ],
+          "kind": "reuse",
+          "detail": "App 已有静态画像和提交目标快照；它不是看到入口真实界面后的运行时产品能力评估。",
+          "ref": "src-mode"
+        },
+        "proposed": {
+          "title": "保留静态目标，补运行时评估",
+          "lines": [
+            "包边界和必检目标继续冻结",
+            "观察只调整探索优先级"
+          ],
+          "kind": "reuse",
+          "detail": "被广告或登录阻断、预算不足和没有发现都不能自动转成“不适用”。",
+          "ref": "point-04"
+        }
+      },
+      {
+        "number": "02",
+        "stage": "会话与执行能力",
+        "change": "增强",
+        "changeKind": "enhance",
+        "solve": [
+          "执行器与控制面分离",
+          "杜绝任意 Shell 与双执行方"
+        ],
+        "benefit": "CLI / ADB 成为可替换 Provider，平台继续掌握会话、租约、权限、风险、预算与审计。",
+        "current": {
+          "title": "设备租约、安装与受管 Driver",
+          "lines": [
+            "目标包绑定 + 真实前台读取",
+            "设备动作属于当前任务"
+          ],
+          "kind": "reuse",
+          "detail": "现有运行时已经约束设备、安装包、包边界、前台和租约；ADB 不是绕过这些边界的捷径。",
+          "ref": "src-app"
+        },
+        "proposed": {
+          "title": "受控 ADB Provider + Skills",
+          "lines": [
+            "能力探测与有限 Shell 策略",
+            "单执行方、超时、审计、杀停"
+          ],
+          "kind": "enhance",
+          "detail": "ADB 命令必须归属单一 Runtime，限制包名、设备、命令类别、风险和预算；Skills 仅补充操作策略。",
+          "ref": "point-01"
+        }
+      },
+      {
+        "number": "03",
+        "stage": "入口观察与可见层",
+        "change": "增强",
+        "changeKind": "enhance",
+        "solve": [
+          "不再把遮挡底页当首页",
+          "区分弹窗目标和业务页面"
+        ],
+        "benefit": "先保存真实入口，再判断启动广告、权限、登录、升级、公告、充值等层级，业务页未可见时允许保持未知。",
+        "current": {
+          "title": "Bootstrap Capture 与 APP_READY",
+          "lines": [
+            "启动、前台和首屏采集",
+            "就绪合同 ≠ 稳定业务首页"
+          ],
+          "kind": "reuse",
+          "detail": "APP_READY 证明启动链路满足合同；当前首屏仍可能是启动广告、权限、登录或版本更新层。",
+          "ref": "src-app"
+        },
+        "proposed": {
+          "title": "首帧真实观察与阻断分层",
+          "lines": [
+            "截图 + 可得 UI Tree + 前台来源",
+            "业务底页不可见则保持未知"
+          ],
+          "kind": "enhance",
+          "detail": "将启动广告、阻断广告、登录、充值、升级、公告、支付、网址通知等按语义分别归类和取证。",
+          "ref": "point-07"
+        }
+      },
+      {
+        "number": "04",
+        "stage": "产品与页面识别",
+        "change": "增强",
+        "changeKind": "enhance",
+        "solve": [
+          "降低同页型漂移",
+          "补上产品能力前置评估"
+        ],
+        "benefit": "共享判别指南、描述、正反例和冲突出口；页型可修订，产品评估只分配优先级与规则语境。",
+        "current": {
+          "title": "截图理解 + UI Tree 候选融合",
+          "lines": [
+            "视觉页型代码与通用提示",
+            "结构可得时补充候选"
+          ],
+          "kind": "reuse",
+          "detail": "当前并非纯视觉；视觉和 UI Tree 按能力结合。但 App 页型提示的判别描述与产品前置评估仍弱于目标方案。",
+          "ref": "src-recognition"
+        },
+        "proposed": {
+          "title": "跨模态产品与页面判别",
+          "lines": [
+            "视觉为主、结构按可信度辅助",
+            "统一描述、反例和冲突出口"
+          ],
+          "kind": "enhance",
+          "detail": "Flutter / Canvas 自绘按视觉降级，结构可得时用语义和几何交叉验证；导航页与广告弹窗不合并。",
+          "ref": "point-04"
+        }
+      },
+      {
+        "number": "05",
+        "stage": "页面身份与状态",
+        "change": "新增共享事实",
+        "changeKind": "new",
+        "solve": [
+          "身份不再随页型漂移",
+          "为恢复提供可信路径"
+        ],
+        "benefit": "稳定页面身份与类型判断解耦；Tab、筛选、展开默认记录为状态，弹窗保留质检对象但不污染业务页面树。",
+        "current": {
+          "title": "核心身份 + 全局 Frontier",
+          "lines": [
+            "package / activity / page_type",
+            "候选指纹、来源与导航路径"
+          ],
+          "kind": "reuse",
+          "detail": "标题噪声已从 App 核心身份移除，但 page_type 仍参与核心身份，同型业务对象也可能需要更稳定区分。",
+          "ref": "src-identity"
+        },
+        "proposed": {
+          "title": "业务身份与状态图解耦",
+          "lines": [
+            "业务对象、地标、转场共同定锚",
+            "页型判断可修订"
+          ],
+          "kind": "new",
+          "detail": "Tab、筛选和展开态默认进入状态版本；弹窗是质检目标但通常不成为业务页面树节点。",
+          "ref": "point-02"
+        }
+      },
+      {
+        "number": "06",
+        "stage": "候选与规则规划",
+        "change": "增强",
+        "changeKind": "enhance",
+        "solve": [
+          "有限自由不等于漫游",
+          "规则范围按合同执行"
+        ],
+        "benefit": "必检目标、证据缺口、新发现价值、风险和成本共同排队；静态可复用与逐曝光、逐交互规则分别定义。",
+        "current": {
+          "title": "动态候选与必检覆盖评估",
+          "lines": [
+            "截图 / UI Tree 候选融合",
+            "目标、风险和预算参与选择"
+          ],
+          "kind": "reuse",
+          "detail": "App 已有动态探索与静态目标约束，不是固定脚本；证据缺口、规则频率与新发现价值仍需统一排队。",
+          "ref": "src-app"
+        },
+        "proposed": {
+          "title": "有限自由的联合调度",
+          "lines": [
+            "必检 / 缺证 / 新发现价值",
+            "风险、恢复和总预算共享"
+          ],
+          "kind": "enhance",
+          "detail": "保留显式必检分母，在剩余预算内自由发现；二维码、信息保存、支付等按规则合同决定采集范围。",
+          "ref": "point-01"
+        }
+      },
+      {
+        "number": "07",
+        "stage": "定位与分步执行",
+        "change": "增强",
+        "changeKind": "enhance",
+        "solve": [
+          "减少误点与旧坐标复用",
+          "控制外跳和高风险副作用"
+        ],
+        "benefit": "每步执行定位、门禁、操作、新观察和重绑定；滚动后不沿用旧坐标，未知结果先观察而不是重复点击。",
+        "current": {
+          "title": "来源、几何、风险与前台门禁",
+          "lines": [
+            "截图签名 / 尺寸方向 / 唯一性",
+            "包名 / Activity / 租约核对"
+          ],
+          "kind": "reuse",
+          "detail": "当前动作已具备多重保护，仍可能在滚动、重排、弹窗关闭和外跳场景中遇到目标失效或副作用。",
+          "ref": "src-action"
+        },
+        "proposed": {
+          "title": "分步动作与滚动后重绑定",
+          "lines": [
+            "目标可见 → 操作 → 新 Capture",
+            "不复用旧坐标串行点击"
+          ],
+          "kind": "enhance",
+          "detail": "坐标始终在本次帧、分辨率、方向和可见控件上下文中解释；高风险动作和外跳使用更严格门禁。",
+          "ref": "point-06"
+        }
+      },
+      {
+        "number": "08",
+        "stage": "动作后观察与就绪",
+        "change": "增强",
+        "changeKind": "enhance",
+        "solve": [
+          "避免未加载或错帧截图",
+          "网络信号不再被绝对化"
+        ],
+        "benefit": "按动作和目标组合内容、结构、稳定窗口、加载指示、媒体和可得网络信号；超时保留原因，不把网络不可见当作零请求。",
+        "current": {
+          "title": "动作后 Capture 与状态变化",
+          "lines": [
+            "保存新截图和实际前台",
+            "作为后续候选和覆盖输入"
+          ],
+          "kind": "reuse",
+          "detail": "现有 after Capture 是可靠基础；它尚未统一承担面向每个规则目标的就绪和层级证明。",
+          "ref": "src-app"
+        },
+        "proposed": {
+          "title": "App 就绪与动作效果证明",
+          "lines": [
+            "前台 / 对象 / 层级 / 内容稳定",
+            "网络仅在可观测时作为辅助"
+          ],
+          "kind": "enhance",
+          "detail": "ADB 本身不保证任意 App 网络在途可见；需按 instrumentation、代理或其他可得能力降级，并保留信号不可用。",
+          "ref": "point-05"
+        }
+      },
+      {
+        "number": "09",
+        "stage": "可信到达与继续探索",
+        "change": "增强",
+        "changeKind": "enhance",
+        "solve": [
+          "命令成功不再等于到达",
+          "外跳不再污染业务覆盖"
+        ],
+        "benefit": "窗口、对象、层级、动作效果与页面到达分别验证；只有可信业务到达更新图，外部落地页默认只留证。",
+        "current": {
+          "title": "评估到达、继续或有限恢复",
+          "lines": [
+            "更新候选、状态和覆盖材料",
+            "控件 / 锚点 / BACK / WARM_RESTORE"
+          ],
+          "kind": "reuse",
+          "detail": "局部恢复已有且使用新观察，不是简单旧坐标回放；但其路径还不是统一业务图上的生产补采规划。",
+          "ref": "src-app"
+        },
+        "proposed": {
+          "title": "可信到达后更新页面图",
+          "lines": [
+            "窗口 / 对象 / 层级 / 效果 / 页面",
+            "弹窗失败与业务页到达分开"
+          ],
+          "kind": "enhance",
+          "detail": "按钮消失、Activity 变化或命令成功均不能单独证明正确到达；外部落地只保留证据，不计 App 业务覆盖。",
+          "ref": "point-06"
+        }
+      },
+      {
+        "number": "10",
+        "stage": "证据与规则判断",
+        "change": "增强",
+        "changeKind": "enhance",
+        "solve": [
+          "治理错层、错对象和串证",
+          "区分失败证据与页面证据"
+        ],
+        "benefit": "所有 Writer 和消费者统一校验来源、对象、时间、可见层、用途和 Run / Epoch；合法失败序列不冒充稳定页面。",
+        "current": {
+          "title": "规则、证据与覆盖处理",
+          "lines": [
+            "探索结果进入正式质检链路",
+            "覆盖终态 ≠ Gate 通过"
+          ],
+          "kind": "reuse",
+          "detail": "当前完整模式有规则、证据、覆盖和 Gate 链路；普通截图或 Manifest 合格不能单独证明当前可见对象正确。",
+          "ref": "src-evidence"
+        },
+        "proposed": {
+          "title": "可见层优先的证据门禁",
+          "lines": [
+            "原图 / 长图 / 滚动序列用途分开",
+            "诊断影响沿全链传播"
+          ],
+          "kind": "enhance",
+          "detail": "Flutter 等结构不足场景不伪造 DOM；原始帧不可替换，派生长图需可追溯到组成帧和滚动过程。",
+          "ref": "point-07"
+        }
+      },
+      {
+        "number": "11",
+        "stage": "缺证处理与恢复",
+        "change": "正式新增",
+        "changeKind": "new",
+        "solve": [
+          "缺证不再依赖全量重跑",
+          "高风险场景保持从严"
+        ],
+        "benefit": "就地补采优先，再按已证路径逐边恢复；规则明确 exact、equivalent、fresh 或 manual，无法证明时保持不足。",
+        "current": {
+          "title": "正式精准补采尚未开放",
+          "lines": [
+            "已有局部恢复和等价 Gate 组件",
+            "生产 runtime_ready = false"
+          ],
+          "kind": "missing",
+          "detail": "现有组件并未形成正式生产闭环；当前 Probe 合并目标不变量的方式在启用前也必须修正。",
+          "ref": "src-supplement"
+        },
+        "proposed": {
+          "title": "按规则验证的图路径补采",
+          "lines": [
+            "就地 → 已证路径 → 新观察",
+            "高风险 exact 无法恢复则不足 / 人工"
+          ],
+          "kind": "new",
+          "detail": "支付、登录等从严场景不能用逻辑相似页面替代原状态；恢复和探索共享设备、动作入口与预算。",
+          "ref": "point-03"
+        }
+      },
+      {
+        "number": "12",
+        "stage": "完成门禁与报告",
+        "change": "保留并收紧",
+        "changeKind": "reuse",
+        "solve": [
+          "探索终态不再冒充通过",
+          "质量与执行状态分维度"
+        ],
+        "benefit": "停止新动作并终结已接纳工作后冻结输入；覆盖、规则结果、证据缺口、技术异常、Gate 和资源释放分别报告。",
+        "current": {
+          "title": "按任务模式继续正式收口",
+          "lines": [
+            "规则 / 证据 / Completion Gate",
+            "与设备释放分别判断"
+          ],
+          "kind": "reuse",
+          "detail": "设备释放、探索停止和覆盖元数据都不能替代 Gate；独立探索也不能借完整链路名义宣称质检完成。",
+          "ref": "src-evidence"
+        },
+        "proposed": {
+          "title": "停止动作、冻结输入、统一 Gate",
+          "lines": [
+            "同 Run / Epoch 的事实闭合",
+            "质量、缺口、故障和资源分维度"
+          ],
+          "kind": "enhance",
+          "detail": "完成权威保持单一，最终报告可明确哪些是产品问题、证据不足、技术异常或未执行。",
+          "ref": "point-07"
+        }
+      }
+    ]
+  },
+  "future": {
+    "width": 1160,
+    "height": 2320,
+    "caption": "优化后的有限自主探索 · 竖向主链与可信事实 / 缺证回路",
+    "nodes": [
+      {
+        "id": "f1",
+        "x": 160,
+        "y": 72,
+        "title": "01 冻结目标与规则边界",
+        "lines": [
+          "任务 / 账号 / 范围 / 预算",
+          "保持原始必检分母"
+        ],
+        "kind": "reuse",
+        "detail": "继续复用任务、租户、权限、规则和目标快照。产品能力评估可以调整优先级和解释适用性，不能静默删除用户明确要求的目标。",
+        "ref": "point-04",
+        "w": 520,
+        "h": 106
+      },
+      {
+        "id": "f2",
+        "x": 160,
+        "y": 220,
+        "title": "02 受管会话与能力探测",
+        "lines": [
+          "现有 Driver / CLI / ADB",
+          "同一受控动作入口"
+        ],
+        "kind": "enhance",
+        "detail": "CLI / ADB 只作为 Provider。探测实际能力并绑定会话、租约、域名或包名、风险和预算；不开放任意 Shell / eval。",
+        "ref": "point-01",
+        "w": 520,
+        "h": 106
+      },
+      {
+        "id": "f3",
+        "x": 160,
+        "y": 368,
+        "title": "03 保存入口真实观察",
+        "lines": [
+          "截图 + 可得结构 + 来源",
+          "不预设背后一定是首页"
+        ],
+        "kind": "enhance",
+        "detail": "初次观察即使是启动广告或加载页也应真实保存。业务页尚未可见可以标未知，不伪造首页到达。",
+        "ref": "point-07",
+        "w": 520,
+        "h": 106
+      },
+      {
+        "id": "f4",
+        "x": 160,
+        "y": 516,
+        "title": "04 层级识别与阻断处理",
+        "lines": [
+          "有弹窗：前态 → 安全处理",
+          "无阻断 / 处理后：验证可见层"
+        ],
+        "kind": "enhance",
+        "detail": "统一处理协议不等于都叫广告。广告、登录、充值、升级、公告、权限等分别理解风险。保存必要前态后可以安全清障，不必等待所有静态 Judge；验证可关闭仍需后态。",
+        "ref": "point-06",
+        "w": 520,
+        "h": 106
+      },
+      {
+        "id": "f5",
+        "x": 160,
+        "y": 664,
+        "title": "05 产品能力与业务页识别",
+        "lines": [
+          "统一判别指南与反例",
+          "允许未知、冲突和修订"
+        ],
+        "kind": "enhance",
+        "detail": "基于可见业务内容形成暂定产品能力，区分导航页、广告聚合和内容页。H5 / App 共享判别语义，按实际 DOM / UI Tree / 视觉能力采证。",
+        "ref": "point-04",
+        "w": 520,
+        "h": 106
+      },
+      {
+        "id": "f6",
+        "x": 160,
+        "y": 812,
+        "title": "06 页面身份与状态图",
+        "lines": [
+          "稳定身份与页型解耦",
+          "真实观察 / 转场 → 图事实"
+        ],
+        "kind": "new",
+        "detail": "页面类型可修订，身份不随模型标签变化。局部 Tab / 筛选为状态，弹窗为独立质检目标，外部落地不计业务覆盖。树仅为图的展示或恢复投影。",
+        "ref": "point-02",
+        "w": 520,
+        "h": 106
+      },
+      {
+        "id": "f7",
+        "x": 160,
+        "y": 960,
+        "title": "07 规则范围与候选分流",
+        "lines": [
+          "可用材料 → 证据侧",
+          "入口 / 缺口 → Frontier"
+        ],
+        "kind": "enhance",
+        "detail": "在现有规则匹配上明确目标、执行频率和复用边界。静态素材可按合同复用，广告位、曝光、关闭与交互仍保留相应范围。候选不等于已到达。",
+        "ref": "point-04",
+        "w": 520,
+        "h": 106
+      },
+      {
+        "id": "f8",
+        "x": 160,
+        "y": 1108,
+        "title": "08 有限自由探索调度",
+        "lines": [
+          "必检 / 缺证 / 新发现价值",
+          "成本、风险和恢复预算"
+        ],
+        "kind": "enhance",
+        "detail": "优先满足必检和证据缺口，再使用预算自由发现。补采复用同一调度和唯一 Runtime，不开第二个设备动作执行方。",
+        "ref": "point-01",
+        "w": 520,
+        "h": 106
+      },
+      {
+        "id": "f9",
+        "x": 160,
+        "y": 1256,
+        "title": "09 分步受控交互",
+        "lines": [
+          "定位 → 操作 → 新观察",
+          "滚动后重绑，检查风险"
+        ],
+        "kind": "enhance",
+        "detail": "每一步验证目标仍真实可见且可操作。检查适用的坐标转换、遮挡和副作用。未知动作结果先观察，重试写入不等于重试点击。",
+        "ref": "point-06",
+        "w": 520,
+        "h": 106
+      },
+      {
+        "id": "f10",
+        "x": 160,
+        "y": 1404,
+        "title": "10 后态与就绪证明",
+        "lines": [
+          "窗口 / 对象 / 层级 / 后置",
+          "内容稳定 + 可得网络信号"
+        ],
+        "kind": "enhance",
+        "detail": "命令成功、观察变化、预期效果和可信到达分开。网络安静只是辅助；动作后仍需验证目标和可见内容。外跳留证且有界回源，不扩展业务覆盖。",
+        "ref": "point-05",
+        "w": 520,
+        "h": 106
+      },
+      {
+        "id": "f11",
+        "x": 160,
+        "y": 1552,
+        "title": "11 证据门禁与输入封存",
+        "lines": [
+          "合法用途 / 对象 / 时间 / 层级",
+          "仅可信到达可追加业务图"
+        ],
+        "kind": "enhance",
+        "detail": "所有 Writer 与消费者执行一致约束。稳定到达证据和合法失败序列按不同用途接受；诊断影响持续传播。只有可信到达更新业务覆盖，阻断证据可供对应规则判断。",
+        "ref": "point-07",
+        "w": 520,
+        "h": 106
+      },
+      {
+        "id": "f12",
+        "x": 160,
+        "y": 1700,
+        "title": "12 Rule Judge",
+        "lines": [
+          "静态规则可并行消费",
+          "需要动作结果则等待后态"
+        ],
+        "kind": "reuse",
+        "detail": "Judge 仅消费封存材料，不操作设备。给出 pass / fail / evidence_insufficient / manual / technical 等清楚结果；材料质量通过不等于规则通过。",
+        "ref": "point-07",
+        "w": 520,
+        "h": 106
+      },
+      {
+        "id": "f13",
+        "x": 800,
+        "y": 1850,
+        "title": "13 图路径精准补采",
+        "lines": [
+          "就地优先 / 逐边恢复",
+          "按规则验原状态或等价"
+        ],
+        "kind": "new",
+        "detail": "缺口明确到目标、区域或前后态。恢复基于实际新观察验证，不用目标值自证。规则从严时无法恢复就不足或人工；新 fresh 结论不能消除旧 exact 缺口。所有恢复共享预算。",
+        "ref": "point-03",
+        "w": 306,
+        "h": 120
+      },
+      {
+        "id": "f14",
+        "x": 160,
+        "y": 2000,
+        "title": "14 同 Run / Epoch 收口",
+        "lines": [
+          "停新动作，处理剩余工作",
+          "冻结输入 → Completion Gate"
+        ],
+        "kind": "reuse",
+        "detail": "只有已接纳工作都终结且完成条件满足，才进入正式报告。取消、失败、技术异常也需有界清理。图、Frontier 与 Judge 不另造第二套完成权威。",
+        "ref": "src-evidence",
+        "w": 520,
+        "h": 106
+      },
+      {
+        "id": "f15",
+        "x": 160,
+        "y": 2148,
+        "title": "15 分维度报告与释放",
+        "lines": [
+          "覆盖 / 规则结果 / 缺口",
+          "技术异常与资源状态分开"
+        ],
+        "kind": "enhance",
+        "detail": "正式完成和产品质量结果分开；Gate 故障单独报告，不能以释放租约、报告文件生成或探索停止冒充通过。保留不可变历史与追溯链。",
+        "ref": "point-07",
+        "w": 520,
+        "h": 106
+      }
+    ],
+    "edges": [
+      {
+        "from": "f1",
+        "to": "f2"
+      },
+      {
+        "from": "f2",
+        "to": "f3"
+      },
+      {
+        "from": "f3",
+        "to": "f4"
+      },
+      {
+        "from": "f4",
+        "to": "f5"
+      },
+      {
+        "from": "f5",
+        "to": "f6"
+      },
+      {
+        "from": "f6",
+        "to": "f7"
+      },
+      {
+        "from": "f7",
+        "to": "f8"
+      },
+      {
+        "from": "f8",
+        "to": "f9"
+      },
+      {
+        "from": "f9",
+        "to": "f10"
+      },
+      {
+        "from": "f10",
+        "to": "f11"
+      },
+      {
+        "from": "f11",
+        "to": "f12"
+      },
+      {
+        "from": "f12",
+        "to": "f14",
+        "label": "无缺口或全部工作已终结",
+        "labelAt": [
+          420,
+          1902
+        ]
+      },
+      {
+        "from": "f14",
+        "to": "f15"
+      },
+      {
+        "from": "f12",
+        "to": "f13",
+        "style": "loop",
+        "label": "证据不足",
+        "labelAt": [
+          738,
+          1828
+        ]
+      },
+      {
+        "from": "f13",
+        "to": "f8",
+        "path": [
+          [
+            1106,
+            1910
+          ],
+          [
+            1136,
+            1910
+          ],
+          [
+            1136,
+            1161
+          ],
+          [
+            680,
+            1161
+          ]
+        ],
+        "style": "loop",
+        "label": "回到同一调度器逐边验证",
+        "labelAt": [
+          899,
+          1161
+        ]
+      },
+      {
+        "from": "f13",
+        "to": "f14",
+        "style": "loop",
+        "label": "终结 / 人工",
+        "labelAt": [
+          742,
+          1985
+        ]
+      },
+      {
+        "from": "f11",
+        "to": "f6",
+        "path": [
+          [
+            160,
+            1605
+          ],
+          [
+            74,
+            1605
+          ],
+          [
+            74,
+            865
+          ],
+          [
+            160,
+            865
+          ]
+        ],
+        "style": "feedback",
+        "label": "更新图",
+        "labelAt": [
+          74,
+          1235
+        ]
+      },
+      {
+        "from": "f4",
+        "to": "f11",
+        "path": [
+          [
+            680,
+            569
+          ],
+          [
+            742,
+            569
+          ],
+          [
+            742,
+            1605
+          ],
+          [
+            680,
+            1605
+          ]
+        ],
+        "style": "risk",
+        "label": "阻断证据",
+        "labelAt": [
+          742,
+          1087
+        ]
+      }
+    ],
+    "notes": [
+      {
+        "x": 42,
+        "y": 2292,
+        "text": "取消 / 超时 / 不可恢复：停止新动作、保留真实原因、终结已接纳工作；失败证据与稳定页面到达始终分开。"
+      }
+    ],
+    "headers": [
+      {
+        "x": 160,
+        "text": "纵向主链：任务 → 观察 → 探索 → 证据 → 收口"
+      },
+      {
+        "x": 800,
+        "text": "按需分支：规则缺证触发精准补采"
+      }
+    ]
+  },
+  "causes": {
+    "width": 1160,
+    "height": 870,
+    "caption": "核心问题关联 · 代码结构风险，不是本轮实测故障概率",
+    "headers": [
+      {
+        "x": 42,
+        "text": "结构性根因"
+      },
+      {
+        "x": 412,
+        "text": "可能的风险表现"
+      },
+      {
+        "x": 782,
+        "text": "对应治理机制"
+      }
+    ],
+    "nodes": [
+      {
+        "id": "r1",
+        "x": 42,
+        "y": 76,
+        "title": "身份与页型仍有耦合",
+        "lines": [
+          "App 核心身份包含 page_type",
+          "类型变化可能影响分组"
+        ],
+        "kind": "risk",
+        "detail": "标题已从核心身份移除，这是已有改进；但页型仍参与核心身份，同页改判与同型对象区分仍需更稳定的事实基础。",
+        "ref": "src-identity"
+      },
+      {
+        "id": "b1",
+        "x": 412,
+        "y": 76,
+        "title": "重复或错误合并",
+        "lines": [
+          "影响候选去重和恢复定位",
+          "展示分组不足以替代业务身份"
+        ],
+        "kind": "risk",
+        "detail": "这是从当前身份构成推导的风险，不代表每次都发生。候选指纹与展示分组能缓解部分情况，但并未形成完整业务图。",
+        "ref": "point-02"
+      },
+      {
+        "id": "s1",
+        "x": 782,
+        "y": 76,
+        "title": "02 + 04 身份与识别分离",
+        "lines": [
+          "稳定节点 / 状态版本",
+          "页型作为可修订判断"
+        ],
+        "kind": "enhance",
+        "detail": "图身份以可信业务位置、对象和地标支持；判别指南帮助识别，身份不随模型结论任意变更。",
+        "ref": "point-02"
+      },
+      {
+        "id": "r2",
+        "x": 42,
+        "y": 276,
+        "title": "目标与可见层证明分散",
+        "lines": [
+          "已有局部门禁和遮挡检查",
+          "跨入口需统一取证用途"
+        ],
+        "kind": "risk",
+        "detail": "系统已有保护，但材料齐全不能单独证明当前关注区域可见。目标、层级、时间与后置需要在生产和消费两端一致约束。",
+        "ref": "src-evidence"
+      },
+      {
+        "id": "b2",
+        "x": 412,
+        "y": 276,
+        "title": "错层、错帧或误触风险",
+        "lines": [
+          "截图是弹窗，判断却针对底页",
+          "控件消失未必是正确关闭"
+        ],
+        "kind": "risk",
+        "detail": "例如结构中有详情，不等于用户此刻看到详情；按钮消失也可能是跳转外部。格式、文件大小或命令退出码不能代替语义证明。",
+        "ref": "point-07"
+      },
+      {
+        "id": "s2",
+        "x": 782,
+        "y": 276,
+        "title": "05 + 06 + 07 统一证明",
+        "lines": [
+          "就绪 / 动作后置 / 层级",
+          "自然来源与规则充分性"
+        ],
+        "kind": "enhance",
+        "detail": "从采集前后身份、可见层和动作效果验证到正式输入封存，统一约束目标和用途；合法失败证据与稳定到达分开。",
+        "ref": "point-07"
+      },
+      {
+        "id": "r3",
+        "x": 42,
+        "y": 476,
+        "title": "正式补采闭环未开放",
+        "lines": [
+          "局部恢复和等价组件已有",
+          "生产 runtime_ready=False"
+        ],
+        "kind": "risk",
+        "detail": "这是当前明确边界，不应说没有任何恢复，也不能说正式精准补采已可用。要补齐缺口、路径、实际状态验证和终结链路。",
+        "ref": "src-supplement"
+      },
+      {
+        "id": "b3",
+        "x": 412,
+        "y": 476,
+        "title": "缺证可能依赖重复探索",
+        "lines": [
+          "已有路径成果难完整复用",
+          "回到同页型也未必补对"
+        ],
+        "kind": "risk",
+        "detail": "缺少规则相关状态恢复会放大重跑成本；但必须接受某些高风险原状态不可恢复，不能以降低标准换成功率。",
+        "ref": "point-03"
+      },
+      {
+        "id": "s3",
+        "x": 782,
+        "y": 476,
+        "title": "02 + 03 验证式恢复",
+        "lines": [
+          "就地 / 已证路径 / 新观察",
+          "按规则等价并追加结论"
+        ],
+        "kind": "enhance",
+        "detail": "恢复不是盲播录像。优先就地，再逐边验证；失败原因、预算与人工出口明确。新判断不覆盖旧失败或原缺口。",
+        "ref": "point-03"
+      },
+      {
+        "id": "r4",
+        "x": 42,
+        "y": 676,
+        "title": "专项适配跨层牵动",
+        "lines": [
+          "识别 / 候选 / 执行 / 恢复",
+          "修改职责尚需进一步收敛"
+        ],
+        "kind": "risk",
+        "detail": "新界面可能牵动多个专项分支。当前安全与审计能力应该保留，减少的是重复适配，不是解除必要约束。",
+        "ref": "point-01"
+      },
+      {
+        "id": "b4",
+        "x": 412,
+        "y": 676,
+        "title": "新产品回归范围扩大",
+        "lines": [
+          "局部改动需检查多条链路",
+          "维护成本容易叠加"
+        ],
+        "kind": "risk",
+        "detail": "这是架构耦合带来的维护风险，不以文件行数或伪精确百分比证明成本。七项实施共享模块，影响范围不能相加。",
+        "ref": "iteration"
+      },
+      {
+        "id": "s4",
+        "x": 782,
+        "y": 676,
+        "title": "01 + 04 共享能力与语义",
+        "lines": [
+          "受控 Provider 与判别指南",
+          "保留单一控制面"
+        ],
+        "kind": "enhance",
+        "detail": "将执行器选择、能力适配与业务判断分开；共享身份、观察和规则合同，让后续扩展集中在对应职责。",
+        "ref": "point-01"
+      }
+    ],
+    "edges": [
+      {
+        "from": "r1",
+        "to": "b1"
+      },
+      {
+        "from": "b1",
+        "to": "s1",
+        "style": "feedback"
+      },
+      {
+        "from": "r2",
+        "to": "b2"
+      },
+      {
+        "from": "b2",
+        "to": "s2",
+        "style": "feedback"
+      },
+      {
+        "from": "r3",
+        "to": "b3"
+      },
+      {
+        "from": "b3",
+        "to": "s3",
+        "style": "feedback"
+      },
+      {
+        "from": "r4",
+        "to": "b4"
+      },
+      {
+        "from": "b4",
+        "to": "s4",
+        "style": "feedback"
+      },
+      {
+        "from": "b1",
+        "to": "b2",
+        "style": "risk",
+        "label": "可能放大目标偏差",
+        "labelAt": [
+          570,
+          225
+        ]
+      },
+      {
+        "from": "b2",
+        "to": "b3",
+        "style": "risk",
+        "label": "可能形成材料缺口",
+        "labelAt": [
+          570,
+          425
+        ]
+      }
+    ],
+    "notes": [
+      {
+        "x": 42,
+        "y": 825,
+        "text": "治理目标：切断风险传播，让灵活探索转化为可信覆盖，而不是仅增加操作次数或放宽 Gate。"
+      }
+    ]
+  }
+}
+  </script>
+  <script id="flow-renderer">
+    /* 绘图核心独立于 DOM，便于在浏览器与离线 Canvas 中使用同一套布局。 */
+    (function (root) {
+      "use strict";
+      const palette = {
+        reuse:{fill:"#edf4fb",stroke:"#90b2d2",accent:"#275f93",label:"已实现 / 复用"},
+        enhance:{fill:"#edf7f2",stroke:"#94c4b1",accent:"#12695f",label:"增强 / 统一"},
+        new:{fill:"#f3effa",stroke:"#bca9d7",accent:"#6b559c",label:"新增机制"},
+        risk:{fill:"#fff5e7",stroke:"#dfbd88",accent:"#925514",label:"风险 / 待治理"},
+        missing:{fill:"#f4f5f7",stroke:"#aeb9c2",accent:"#697987",label:"当前未开放"}
+      };
+      const fonts = '"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif';
+      function rect(node) { return {x:node.x,y:node.y,w:node.w || 316,h:node.h || 100}; }
+      /* 对照图以阶段为维护源，统一计算两列坐标，避免左右节点逐步错位。 */
+      function prepare(source) {
+        if (!source.comparison) return source;
+        const graph=Object.assign({},source,{nodes:[],edges:[],rows:[],height:source.rows.length*178+150});
+        graph.headers=[{x:58,text:"当前代码 · 已有能力与明确缺口"},{x:506,text:"同阶段的变化"},{x:692,text:"优化方案 · 设计目标，尚未实施"}];
+        source.rows.forEach(function(row,index){
+          const y=100+index*178,leftId="current-"+row.number,rightId="proposed-"+row.number;
+          graph.rows.push(Object.assign({},row,{y:y,leftId:leftId,rightId:rightId}));
+          graph.nodes.push(Object.assign({},row.current,{id:leftId,x:58,y:y,w:410,h:120,title:row.number+" "+row.current.title,side:"current"}));
+          graph.nodes.push(Object.assign({},row.proposed,{id:rightId,x:692,y:y,w:410,h:120,title:row.number+" "+row.proposed.title,side:"proposed"}));
+        });
+        const byId=new Map(graph.nodes.map(function(node){return[node.id,node];}));
+        graph.rows.forEach(function(row,index){
+          const next=graph.rows[index+1];
+          if (!next) return;
+          if (row.current.kind!=="missing") {
+            const following=graph.rows.slice(index+1).find(function(item){return item.current.kind!=="missing";});
+            if (following) {
+              const edge={from:row.leftId,to:following.leftId};
+              if (following!==next) {
+                const a=rect(byId.get(row.leftId)),b=rect(byId.get(following.leftId)),x=a.x+a.w/2;
+                edge.path=[[x,a.y+a.h],[x,a.y+a.h+22],[28,a.y+a.h+22],[28,b.y-22],[x,b.y-22],[x,b.y]];
+                edge.label="未开放此步骤";edge.labelAt=[154,b.y-22];
+              }
+              graph.edges.push(edge);
+            }
+          }
+          const edge={from:row.rightId,to:next.rightId};
+          if (next.number==="11") {edge.style="loop";edge.label="若缺证";edge.labelAt=[897,row.y+149];}
+          if (row.number==="11") {edge.label="有终态时收口";edge.labelAt=[897,row.y+149];}
+          graph.edges.push(edge);
+          if (row.number==="10") {
+            const terminal=graph.rows.find(function(item){return item.number==="12";});
+            if (terminal) graph.edges.push({from:row.rightId,to:terminal.rightId,path:[[1102,row.y+60],[1134,row.y+60],[1134,terminal.y+60],[1102,terminal.y+60]],label:"无缺口",labelAt:[1134,row.y+144]});
+          }
+        });
+        graph.notes=[{x:40,y:graph.height-44,text:source.note},{x:40,y:graph.height-21,text:"阅读：同一横行用于比较，纵向箭头用于阶段推进；继续探索、恢复成功的回流与异常出口详见 C 闭环图。"}];
+        return graph;
+      }
+      function rounded(ctx,x,y,w,h,r) {
+        const radius = Math.min(r,w/2,h/2);
+        ctx.beginPath();ctx.moveTo(x+radius,y);ctx.lineTo(x+w-radius,y);ctx.quadraticCurveTo(x+w,y,x+w,y+radius);ctx.lineTo(x+w,y+h-radius);ctx.quadraticCurveTo(x+w,y+h,x+w-radius,y+h);ctx.lineTo(x+radius,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-radius);ctx.lineTo(x,y+radius);ctx.quadraticCurveTo(x,y,x+radius,y);ctx.closePath();
+      }
+      function wrap(ctx,value,maxWidth) {
+        const result=[];let line="";
+        for (const char of String(value)) {
+          if (char === "\n") {result.push(line);line="";continue;}
+          if (line && ctx.measureText(line+char).width > maxWidth) {result.push(line);line=char;} else {line+=char;}
+        }
+        if (line || !result.length) result.push(line);
+        return result;
+      }
+      function edgePoints(edge,byId) {
+        if (edge.path) return edge.path;
+        const a=rect(byId.get(edge.from)),b=rect(byId.get(edge.to));
+        const ax=a.x+a.w/2,ay=a.y+a.h/2,bx=b.x+b.w/2,by=b.y+b.h/2;
+        if (Math.abs(ay-by)<1) return ax<bx?[[a.x+a.w,ay],[b.x,by]]:[[a.x,ay],[b.x+b.w,by]];
+        if (Math.abs(ax-bx)<1) return ay<by?[[ax,a.y+a.h],[bx,b.y]]:[[ax,a.y],[bx,b.y+b.h]];
+        const mid=(a.y+a.h+b.y)/2;
+        return [[ax,a.y+a.h],[ax,mid],[bx,mid],[bx,b.y]];
+      }
+      function drawEdge(ctx,edge,points,dim) {
+        const colors={loop:"#8065ad",feedback:"#428878",risk:"#bb873c"};
+        const color=colors[edge.style] || "#738b98";
+        ctx.save();ctx.globalAlpha=dim ? 0.24 : 1;ctx.strokeStyle=color;ctx.fillStyle=color;ctx.lineWidth=edge.style?1.8:1.65;ctx.lineJoin="round";ctx.lineCap="round";
+        ctx.setLineDash(edge.style?[7,5]:[]);ctx.beginPath();ctx.moveTo(points[0][0],points[0][1]);
+        for (const point of points.slice(1)) ctx.lineTo(point[0],point[1]);
+        ctx.stroke();ctx.setLineDash([]);
+        const end=points[points.length-1],prev=points[points.length-2],angle=Math.atan2(end[1]-prev[1],end[0]-prev[0]);
+        ctx.beginPath();ctx.moveTo(end[0],end[1]);ctx.lineTo(end[0]-9*Math.cos(angle-.45),end[1]-9*Math.sin(angle-.45));ctx.lineTo(end[0]-9*Math.cos(angle+.45),end[1]-9*Math.sin(angle+.45));ctx.closePath();ctx.fill();
+        ctx.restore();
+      }
+      function drawLabel(ctx,edge,dim) {
+        if (!edge.label || !edge.labelAt) return;
+        ctx.save();ctx.globalAlpha=dim ? 0.36 : 1;ctx.font="12px "+fonts;ctx.textAlign="center";ctx.textBaseline="middle";
+        const width=ctx.measureText(edge.label).width+14,x=edge.labelAt[0],y=edge.labelAt[1];
+        rounded(ctx,x-width/2,y-11,width,22,5);ctx.fillStyle="#fbfcfd";ctx.fill();
+        ctx.fillStyle=edge.style==="risk"?"#895919":edge.style==="loop"?"#6b559c":"#47636f";ctx.fillText(edge.label,x,y);ctx.restore();
+      }
+      function drawNode(ctx,node,selected) {
+        const r=rect(node),color=palette[node.kind] || palette.reuse;
+        ctx.save();rounded(ctx,r.x,r.y,r.w,r.h,10);ctx.fillStyle=color.fill;ctx.fill();ctx.strokeStyle=selected?color.accent:color.stroke;ctx.lineWidth=selected?2.7:1;ctx.setLineDash(node.kind==="missing"?[6,4]:[]);ctx.stroke();ctx.setLineDash([]);
+        rounded(ctx,r.x+12,r.y+19,4,r.h-38,2);ctx.fillStyle=color.accent;ctx.fill();
+        ctx.fillStyle="#19313b";ctx.font="600 16px "+fonts;ctx.textAlign="left";ctx.textBaseline="alphabetic";
+        const titles=wrap(ctx,node.title,r.w-44);let top=r.y+29;
+        for (const title of titles) {ctx.fillText(title,r.x+26,top);top+=22;}
+        ctx.fillStyle="#45616e";ctx.font="13px "+fonts;top=Math.max(r.y+56,top+4);
+        for (const line of node.lines || []) for (const item of wrap(ctx,line,r.w-44)) {ctx.fillText(item,r.x+26,top);top+=21;}
+        if (selected) {ctx.beginPath();ctx.arc(r.x+r.w-13,r.y+13,3.5,0,Math.PI*2);ctx.fillStyle=color.accent;ctx.fill();}
+        ctx.restore();
+      }
+      function draw(ctx,graph,options) {
+        const selected=options && options.selected,byId=new Map(graph.nodes.map(function(n){return[n.id,n];}));
+        const selectedRow=(graph.rows || []).find(function(row){return row.leftId===selected || row.rightId===selected;});
+        const selectedIds=new Set(selectedRow?[selectedRow.leftId,selectedRow.rightId]:selected?[selected]:[]);
+        ctx.save();ctx.clearRect(0,0,graph.width,graph.height);ctx.fillStyle="#fbfcfd";ctx.fillRect(0,0,graph.width,graph.height);
+        ctx.fillStyle="#dce7ea";
+        for(let x=18;x<graph.width;x+=24) for(let y=18;y<graph.height;y+=24) {ctx.beginPath();ctx.arc(x,y,.6,0,Math.PI*2);ctx.fill();}
+        for (const [index,row] of (graph.rows || []).entries()) {
+          const active=selectedRow===row,color=palette[row.changeKind] || palette.enhance;
+          rounded(ctx,40,row.y-10,1080,144,11);ctx.fillStyle=active?"#e9f2f1":index%2?"#f0f4f7":"#f7f9fa";ctx.fill();
+          ctx.strokeStyle="#bacbd3";ctx.lineWidth=1;ctx.setLineDash([3,4]);ctx.beginPath();ctx.moveTo(468,row.y+60);ctx.lineTo(490,row.y+60);ctx.moveTo(666,row.y+60);ctx.lineTo(692,row.y+60);ctx.stroke();ctx.setLineDash([]);
+          ctx.textAlign="center";ctx.textBaseline="alphabetic";ctx.font="600 12px "+fonts;ctx.fillStyle="#4d6470";ctx.fillText(row.number+" / "+row.stage,580,row.y+16);
+          ctx.font="600 12px "+fonts;const badgeWidth=ctx.measureText(row.change).width+22;
+          rounded(ctx,580-badgeWidth/2,row.y+29,badgeWidth,24,5);ctx.fillStyle=color.fill;ctx.fill();ctx.strokeStyle=color.stroke;ctx.stroke();ctx.fillStyle=color.accent;ctx.fillText(row.change,580,row.y+46);
+          ctx.font="12px "+fonts;ctx.fillStyle="#526c77";
+          row.solve.forEach(function(line,lineIndex){ctx.fillText(line,580,row.y+82+lineIndex*21);});
+        }
+        ctx.textAlign="left";ctx.textBaseline="alphabetic";
+        for (const header of graph.headers || []) {ctx.fillStyle="#536b76";ctx.font="600 13px "+fonts;ctx.fillText(header.text,header.x,36);}
+        for (const edge of graph.edges) drawEdge(ctx,edge,edgePoints(edge,byId),Boolean(selectedIds.size && !selectedIds.has(edge.from) && !selectedIds.has(edge.to)));
+        for (const edge of graph.edges) drawLabel(ctx,edge,Boolean(selectedIds.size && !selectedIds.has(edge.from) && !selectedIds.has(edge.to)));
+        for (const node of graph.nodes) drawNode(ctx,node,selectedIds.has(node.id));
+        ctx.font="12px "+fonts;ctx.fillStyle="#536b76";
+        for (const note of graph.notes || []) ctx.fillText(note.text,note.x,note.y);
+        ctx.restore();
+      }
+      root.AliothFlowRenderer=Object.freeze({prepare:prepare,draw:draw,rect:rect,wrap:wrap,edgePoints:edgePoints,palette:palette,fonts:fonts});
+    })(globalThis);
+  </script>
+<script id="flow-interface">
+    /* 所有交互只改变文档阅读状态，不发网络请求、不执行任何业务或设备动作。 */
+    (function () {
+      "use strict";
+      const data=JSON.parse(document.getElementById("flow-data").textContent);
+      const renderer=globalThis.AliothFlowRenderer;
+      const states=[];
+      function badgeClass(kind) {return {reuse:"blue",enhance:"teal",new:"violet",risk:"amber",missing:""}[kind] || "blue";}
+      function addReference(container,ref,text) {
+        if (!ref) return;
+        const link=document.createElement("a");link.href="#"+ref;link.textContent=text;
+        link.addEventListener("click",function(){const target=document.getElementById(ref);if(target && target.tagName==="DETAILS")target.open=true;});
+        container.append(link);
+      }
+      function addNodeCard(container,node,label) {
+        const card=document.createElement("div"),heading=document.createElement("h4"),badge=document.createElement("span"),facts=document.createElement("p"),detail=document.createElement("p");
+        badge.className="pill "+badgeClass(node.kind);badge.textContent=label+" · "+renderer.palette[node.kind].label;
+        const title=document.createElement("span");title.textContent=node.title.replace(/^\d{2}\s+/,"");heading.append(badge,title);
+        facts.textContent=node.lines.join("；");detail.textContent=node.detail;
+        card.append(heading,facts,detail);addReference(card,node.ref,"查看依据 →");container.append(card);
+      }
+      for (const figure of document.querySelectorAll("[data-diagram]")) {
+        const source=data[figure.dataset.diagram],graph=renderer.prepare(source),canvas=figure.querySelector("canvas"),viewport=figure.querySelector(".canvas-viewport");
+        const ctx=canvas.getContext("2d"),picker=figure.querySelector("select"),output=figure.querySelector("output"),detail=figure.querySelector(".node-detail");
+        if (!ctx) {viewport.hidden=true;figure.querySelector(".diagram-hint").textContent="当前环境不支持 Canvas，请阅读下方文字流程。";continue;}
+        const state={figure:figure,source:source,graph:graph,canvas:canvas,viewport:viewport,ctx:ctx,scale:1,selection:null,userScaled:false,detail:detail};
+        states.push(state);
+        const overview=document.createElement("option");overview.value="";overview.textContent=graph.comparison?"全部 12 个阶段":"全部流程（点击节点看说明）";picker.append(overview);
+        if (graph.comparison) {
+          for (const row of graph.rows) {const option=document.createElement("option");option.value=row.leftId;option.textContent=row.number+" "+row.stage+" · 当前 ↔ 优化";picker.append(option);}
+        } else {
+          for (const node of graph.nodes) {const option=document.createElement("option");option.value=node.id;option.textContent=node.title;picker.append(option);}
+        }
+        function paint() {
+          const dpr=Math.min(window.devicePixelRatio || 1,2.5);
+          canvas.width=Math.round(graph.width*state.scale*dpr);canvas.height=Math.round(graph.height*state.scale*dpr);
+          canvas.style.width=(graph.width*state.scale)+"px";canvas.style.height=(graph.height*state.scale)+"px";
+          ctx.setTransform(dpr*state.scale,0,0,dpr*state.scale,0,0);renderer.draw(ctx,graph,{selected:state.selection});
+          output.textContent=Math.round(state.scale*100)+"%";
+          figure.querySelector("[data-zoom-out]").disabled=state.scale<=.3;
+          figure.querySelector("[data-zoom-in]").disabled=state.scale>=1.5;
+        }
+        function fit(initial) {
+          const available=Math.max(280,viewport.clientWidth);
+          state.scale=initial && available<680?1:Math.max(.3,Math.min(1,(available-1)/graph.width));
+          viewport.scrollLeft=0;viewport.scrollTop=0;paint();
+        }
+        function revealRow(row) {
+          if (!row) return;
+          viewport.scrollTop=Math.max(0,(row.y-26)*state.scale);
+        }
+        function selectNode(id,shouldReveal) {
+          const selected=graph.nodes.find(function(item){return item.id===id;});
+          const row=graph.comparison && selected?graph.rows.find(function(item){return item.leftId===selected.id || item.rightId===selected.id;}):null;
+          state.selection=row?row.leftId:(selected?selected.id:null);picker.value=row?row.leftId:(selected?selected.id:"");
+          if (!selected) {detail.hidden=true;detail.replaceChildren();paint();return;}
+          if (row) {
+            const heading=document.createElement("h4"),badge=document.createElement("span"),summary=document.createElement("p"),pair=document.createElement("div");
+            heading.textContent=row.number+" "+row.stage;
+            badge.className="pill "+badgeClass(row.changeKind);badge.textContent=row.change;heading.append(badge);
+            summary.textContent="解决："+row.solve.join("；")+"。提升："+row.benefit;
+            pair.className="node-pair-detail";
+            addNodeCard(pair,graph.nodes.find(function(node){return node.id===row.leftId;}),"当前");
+            addNodeCard(pair,graph.nodes.find(function(node){return node.id===row.rightId;}),"优化");
+            detail.replaceChildren(heading,summary,pair);
+          } else {
+            const heading=document.createElement("h4"),badge=document.createElement("span"),paragraph=document.createElement("p");
+            heading.textContent=selected.title;badge.className="pill "+badgeClass(selected.kind);badge.textContent=renderer.palette[selected.kind].label;heading.append(badge);
+            paragraph.textContent=selected.detail;detail.replaceChildren(heading,paragraph);addReference(detail,selected.ref,"查看对应说明与依据 →");
+          }
+          detail.hidden=false;paint();if(shouldReveal)revealRow(row);
+        }
+        function zoom(delta) {
+          state.userScaled=true;const old=state.scale;
+          const centerX=(viewport.scrollLeft+viewport.clientWidth/2)/old,centerY=(viewport.scrollTop+viewport.clientHeight/2)/old;
+          state.scale=Math.max(.3,Math.min(1.5,Math.round((state.scale+delta)*100)/100));paint();
+          viewport.scrollLeft=Math.max(0,centerX*state.scale-viewport.clientWidth/2);
+          viewport.scrollTop=Math.max(0,centerY*state.scale-viewport.clientHeight/2);
+        }
+        picker.addEventListener("change",function(){selectNode(picker.value,true);});
+        canvas.addEventListener("click",function(event){
+          const bounds=canvas.getBoundingClientRect(),x=(event.clientX-bounds.left)*graph.width/bounds.width,y=(event.clientY-bounds.top)*graph.height/bounds.height;
+          const hit=graph.nodes.find(function(node){const r=renderer.rect(node);return x>=r.x && x<=r.x+r.w && y>=r.y && y<=r.y+r.h;});
+          selectNode(hit?hit.id:"",false);
+        });
+        figure.querySelector("[data-zoom-out]").addEventListener("click",function(){zoom(-.1);});
+        figure.querySelector("[data-zoom-in]").addEventListener("click",function(){zoom(.1);});
+        figure.querySelector("[data-fit]").addEventListener("click",function(){state.userScaled=true;fit(false);});
+        figure.querySelector("[data-original]").addEventListener("click",function(){state.userScaled=true;state.scale=1;viewport.scrollLeft=0;viewport.scrollTop=0;paint();});
+        figure.querySelector(".diagram-toolbar").hidden=false;
+        figure.querySelector(".diagram-text").open=false;
+        state.paint=paint;state.fit=fit;fit(true);
+      }
+      function buildPrintSlices(state) {
+        if (!state.source.comparison) return;
+        const holder=state.figure.querySelector(".print-slices");holder.replaceChildren();
+        for(let offset=0;offset<state.source.rows.length;offset+=3) {
+          const rows=state.source.rows.slice(offset,offset+3),source=Object.assign({},state.source,{rows:rows,note:"分段只用于打印；完整回流和异常出口见 C 图及文字流程。"}),graph=renderer.prepare(source);
+          const section=document.createElement("section"),heading=document.createElement("h4"),canvas=document.createElement("canvas"),ctx=canvas.getContext("2d"),ratio=1.5;
+          section.className="print-slice";heading.textContent=state.source.caption+" · 阶段 "+rows[0].number+"–"+rows[rows.length-1].number;
+          canvas.width=Math.round(graph.width*ratio);canvas.height=Math.round(graph.height*ratio);canvas.style.width=graph.width+"px";canvas.style.height=graph.height+"px";
+          ctx.setTransform(ratio,0,0,ratio,0,0);renderer.draw(ctx,graph,{});section.append(heading,canvas);holder.append(section);
+        }
+        state.figure.dataset.printSlices="ready";
+      }
+      let resizeFrame=0;
+      window.addEventListener("resize",function(){cancelAnimationFrame(resizeFrame);resizeFrame=requestAnimationFrame(function(){for(const state of states)state.userScaled?state.paint():state.fit(true);});});
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(function(){for(const state of states)state.paint();});
+      const expand=document.querySelector("[data-expand-points]"),points=Array.from(document.querySelectorAll(".point"));
+      function updateExpand(){expand.textContent=points.every(function(point){return point.open;})?"收起全部专项":"展开全部专项";}
+      expand.hidden=false;expand.addEventListener("click",function(){const open=!points.every(function(point){return point.open;});for(const point of points)point.open=open;updateExpand();});
+      for (const point of points) point.addEventListener("toggle",updateExpand);
+      const printButton=document.querySelector("[data-print]");printButton.hidden=false;printButton.addEventListener("click",function(){window.print();});
+      let printState=[];
+      window.addEventListener("beforeprint",function(){
+        printState=Array.from(document.querySelectorAll("details")).map(function(item){return[item,item.open];});
+        for(const item of printState)item[0].open=true;
+        for(const state of states){state.printScale=state.scale;state.scale=1;state.paint();buildPrintSlices(state);}
+      });
+      window.addEventListener("afterprint",function(){
+        for(const item of printState)item[0].open=item[1];printState=[];
+        for(const state of states){state.scale=state.printScale || state.scale;state.paint();if(state.source.comparison){state.figure.querySelector(".print-slices").replaceChildren();delete state.figure.dataset.printSlices;}}
+      });
+      function revealHash(){const id=decodeURIComponent(location.hash.slice(1));const target=document.getElementById(id);if(target && target.tagName==="DETAILS")target.open=true;}
+      window.addEventListener("hashchange",revealHash);revealHash();
+      document.documentElement.dataset.canvasReady=String(states.length);
+    })();
+  </script>
+</body>
+</html>

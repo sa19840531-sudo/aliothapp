@@ -1,0 +1,61 @@
+{
+  "base_commit": "9021bd9a3fc5128cd09013f734fbe4eac5fb6d5d",
+  "files": [
+    {
+      "path": "app/workstation/src/modules/tasks/components/H5CheckpointPanel.vue",
+      "sha256": "64141a129ccec1c72ce9f7dabdfa8b5ed66d0b9608de927182c684c555570cc5"
+    },
+    {
+      "path": "app/workstation/src/modules/tasks/components/H5CheckpointPanel.test.ts",
+      "sha256": "b0d238e5231e71a76d74e9bed3da5659574b0f85dce460bba50410cb57d8d1b9"
+    },
+    {
+      "path": "app/workstation/src/modules/tasks/components/H5ShortflowRuleResults.vue",
+      "sha256": "57d57294ef01cfe296d729e73314f566926fce17696aa2f20b68c7bbe752facb"
+    },
+    {
+      "path": "app/workstation/src/modules/tasks/components/H5ShortflowRuleResults.test.ts",
+      "sha256": "357e6d31a4d980051b72c0138fcf7491aa867be93c06c9d231ab908bcb2215e0"
+    },
+    {
+      "path": "app/workstation/src/modules/tasks/components/h5ShortflowRuleResults.ts",
+      "sha256": "62787b8237ed8f4918d87be1a27272db0662f1fa314455414cf219144aa848f2"
+    },
+    {
+      "path": "app/workstation/src/services/h5-shortflows.api.ts",
+      "sha256": "03dfa807bc0cfced8cc7e62aac50cdc4f7bad1bea407e99bd91272f3db036722"
+    },
+    {
+      "path": "app/workstation/src/test/shortflowFixtures.ts",
+      "sha256": "4a1beac3e4acfab575402144e21ee3ebddc22bd5314bb3ff34c671b23f494ee9"
+    },
+    {
+      "path": "services/api/app/application/h5_shortflow_rule_results.py",
+      "sha256": "2ffd8f56b70660d0e7081b0df71ce0b9fd3c75355a3f93ccd9865a74cc3d34dc"
+    },
+    {
+      "path": "services/api/app/infrastructure/db/h5_shortflow_rule_results.py",
+      "sha256": "0428f34388904e52f4aa6bccdd0d607253e5ca47e1bc2029ea1f765479ac875d"
+    },
+    {
+      "path": "services/api/app/infrastructure/db/h5_shortflow_read_repository.py",
+      "sha256": "c1d413f3d60ded43aee47777e103afcff5267ea47dc493a902c1e12337aa3b03"
+    },
+    {
+      "path": "services/api/tests/test_h5_shortflow_rule_results_postgres.py",
+      "sha256": "cd1d8a195714ca53b8fa80499ba5413b5ac07eec83a2dc6d33eff89f395781f9"
+    },
+    {
+      "path": "services/api/tests/test_journey_cross_session_e2e_postgres.py",
+      "sha256": "a55e7bb080c771cc4c71a83d728decfbd67532e351e9be6f70f2e9e569fccf6b"
+    },
+    {
+      "path": "scripts/validation/checkpoint_rule_results_seed.py",
+      "sha256": "e6de40f7127c4bf3c0fdaebf698668a1ac729ea7e60c99287de8073a802dd481"
+    },
+    {
+      "path": "scripts/validation/checkpoint_rule_results_verify.py",
+      "sha256": "36c613da14fb176fbb33dd41659c7c0068da96f21826ad6c1bb13816cee64a40"
+    }
+  ]
+}

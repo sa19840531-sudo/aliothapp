@@ -1,0 +1,187 @@
+name: alioth
+
+x-app-environment: &app-environment
+  env_file:
+    - ${ALIOTH_APP_ENV_FILE:-/opt/alioth/config/alioth.env}
+
+x-python-security: &python-security
+  read_only: true
+  security_opt:
+    - no-new-privileges:true
+  tmpfs:
+    - /tmp:rw,nosuid,size=1g
+
+x-default-logging: &default-logging
+  logging:
+    driver: json-file
+    options:
+      max-size: "20m"
+      max-file: "5"
+
+services:
+  alioth-migrate:
+    image: ${CI_REGISTRY_IMAGE:?CI_REGISTRY_IMAGE is required}/api:${ALIOTH_IMAGE_TAG:?ALIOTH_IMAGE_TAG is required}
+    container_name: alioth-migrate
+    profiles:
+      - ops
+    restart: "no"
+    <<:
+      - *app-environment
+      - *python-security
+      - *default-logging
+    command:
+      - python
+      - -m
+      - alembic
+      - -c
+      - services/api/migrations/alembic.ini
+      - upgrade
+      - head
+    networks:
+      - data_services_net
+
+  alioth-initialize:
+    image: ${CI_REGISTRY_IMAGE:?CI_REGISTRY_IMAGE is required}/api:${ALIOTH_IMAGE_TAG:?ALIOTH_IMAGE_TAG is required}
+    container_name: alioth-initialize
+    profiles:
+      - ops
+    restart: "no"
+    <<:
+      - *app-environment
+      - *python-security
+      - *default-logging
+    command:
+      - /bin/sh
+      - -c
+      - >-
+        python scripts/seed_first_ruleset.py &&
+        python scripts/seed_products.py &&
+        python scripts/seed_page_nav_alias.py &&
+        python scripts/seed_journey_definitions.py &&
+        python scripts/backfill_rule_display_metadata.py &&
+        python scripts/sync_capability_registry.py
+    networks:
+      - data_services_net
+
+  alioth-api:
+    image: ${CI_REGISTRY_IMAGE:?CI_REGISTRY_IMAGE is required}/api:${ALIOTH_IMAGE_TAG:?ALIOTH_IMAGE_TAG is required}
+    container_name: alioth-api
+    init: true
+    restart: unless-stopped
+    <<:
+      - *app-environment
+      - *python-security
+      - *default-logging
+    environment:
+      ALIOTH_MOBILE_DEMO_TRUSTED_PROXY_ADDRESSES: ${ALIOTH_MOBILE_DEMO_TRUSTED_PROXY_ADDRESSES:?生产环境必须显式配置 Gateway/Ingress 地址}
+      ALIOTH_MOBILE_DEMO_TRUSTED_PROXY_NETWORKS: ${ALIOTH_MOBILE_DEMO_TRUSTED_PROXY_NETWORKS:-}
+    command:
+      - uvicorn
+      - services.api.app.main:app
+      - --host
+      - 0.0.0.0
+      - --port
+      - "8000"
+      - --workers
+      - "2"
+    expose:
+      - "8000"
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - >-
+          import urllib.request;
+          urllib.request.urlopen('http://127.0.0.1:8000/api/v1/readyz', timeout=3)
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    networks:
+      - alioth_app_net
+      - data_services_net
+      - minio_net
+
+  alioth-worker:
+    image: ${CI_REGISTRY_IMAGE:?CI_REGISTRY_IMAGE is required}/api:${ALIOTH_IMAGE_TAG:?ALIOTH_IMAGE_TAG is required}
+    container_name: alioth-worker
+    init: true
+    restart: unless-stopped
+    <<:
+      - *app-environment
+      - *python-security
+      - *default-logging
+    command:
+      - python
+      - -m
+      - services.api.app.worker
+    stop_grace_period: 660s
+    shm_size: 1gb
+    # 消费并发从应用环境读取，现场容量修改必须落到 ALIOTH_APP_ENV_FILE 并受控重建。
+    # 共享 Run 许可由应用配置限制，不能只按消费协程数量推算浏览器/设备占用。
+    networks:
+      - alioth_app_net
+      - data_services_net
+      - minio_net
+
+  alioth-workstation:
+    image: ${CI_REGISTRY_IMAGE:?CI_REGISTRY_IMAGE is required}/workstation:${ALIOTH_IMAGE_TAG:?ALIOTH_IMAGE_TAG is required}
+    container_name: alioth-workstation
+    restart: unless-stopped
+    <<: *default-logging
+    expose:
+      - "80"
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - wget --quiet --spider http://127.0.0.1/ || exit 1
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - alioth_app_net
+
+  alioth-gateway:
+    image: ${CI_REGISTRY_IMAGE:?CI_REGISTRY_IMAGE is required}/gateway:${ALIOTH_IMAGE_TAG:?ALIOTH_IMAGE_TAG is required}
+    container_name: alioth-gateway
+    restart: unless-stopped
+    <<: *default-logging
+    environment:
+      ALIOTH_GATEWAY_RADAR_DOMAIN: ${ALIOTH_GATEWAY_RADAR_DOMAIN:-xnwork.xyz}
+      ALIOTH_GATEWAY_RADAR_UPSTREAM: ${ALIOTH_GATEWAY_RADAR_UPSTREAM:-http://host.docker.internal:8787}
+      ALIOTH_GATEWAY_ACME_WEBROOT: /var/www/acme-challenge
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - ${ALIOTH_GATEWAY_HTTP_PORT:-80}:80
+      - ${ALIOTH_GATEWAY_HTTPS_PORT:-443}:443
+    volumes:
+      - ${ALIOTH_GATEWAY_TLS_HOST_PATH:-/etc/letsencrypt}:/etc/letsencrypt:ro
+      - ${ALIOTH_GATEWAY_ACME_WEBROOT_HOST_PATH:-/opt/alioth/config/acme-challenge}:/var/www/acme-challenge:ro
+    depends_on:
+      alioth-api:
+        condition: service_healthy
+      alioth-workstation:
+        condition: service_healthy
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - wget --quiet --spider http://127.0.0.1/api/v1/readyz || exit 1
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    networks:
+      - alioth_app_net
+
+networks:
+  alioth_app_net:
+    name: alioth_app_net
+  data_services_net:
+    external: true
+    name: ${DATA_SERVICES_NETWORK:-data_services_net}
+  minio_net:
+    external: true
+    name: ${MINIO_NETWORK:-minio_net}

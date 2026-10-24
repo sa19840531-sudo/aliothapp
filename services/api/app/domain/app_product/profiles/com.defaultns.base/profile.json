@@ -1,0 +1,40 @@
+{
+  "package_name": "com.defaultns.base",
+  "slug": "pzhan",
+  "display_name": "P站",
+  "resolution": [
+    1440,
+    3040
+  ],
+  "cloud_back_tap": [
+    1120,
+    2955
+  ],
+  "gesture_y_max": 2794,
+  "execution_policy": "agent_profile_only",
+  "popup_close_policy": "watcher_cascade",
+  "taps": {},
+  "timing_rules": [],
+  "exploration_curriculum": [
+    {
+      "phase": "popup",
+      "hint": "弹窗关闭 cloud_back（不找 ×）；关键落点随失败回写 taps"
+    }
+  ],
+  "popup_notes": {
+    "close_x": "弹窗仍在：点底部导航栏最右侧「<」（|||/Home/< 右边那个），不点弹窗圆 ×；禁止脚本 POPUP_CLOSE_*",
+    "policy": "watcher_cascade",
+    "target": "bottom_nav_right_back_chevron",
+    "startup": "semantic_skip_relative_top_right"
+  },
+  "deprecated_product_script": "app_pzhan_script.py / *_script_override 仍为产品编排主路径（无编排包才走 Agent）；关键落点回写本 Profile，关窗用云手机 back",
+  "popup_close_by_type": {
+    "startup_skip": {
+      "action": "vision_skip",
+      "control_role": "skip",
+      "expected_state_hint": "tap_skip",
+      "target_hint": "开屏/首屏：语义进入/跳过 + 右上相对区；禁止 back/ENTRY_TAP",
+      "popup_close_policy": "startup_semantic_relative"
+    }
+  }
+}

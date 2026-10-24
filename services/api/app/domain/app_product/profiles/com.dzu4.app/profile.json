@@ -1,0 +1,192 @@
+{
+  "package_name": "com.dzu4.app",
+  "slug": "mama",
+  "display_name": "MaMa短剧",
+  "resolution": [
+    1440,
+    3040
+  ],
+  "cloud_back_tap": [
+    1120,
+    2955
+  ],
+  "gesture_y_max": 2794,
+  "source_script": "C:/Users/show/AppData/Local/Temp/AirtestIDE/scripts/untitled.air/mama.air/mama.py",
+  "execution_policy": "agent_profile_only",
+  "taps": {
+    "first_left_video": [
+      240,
+      2282
+    ],
+    "promo_mid_button": [
+      729,
+      915
+    ],
+    "detail_page_back": [
+      99,
+      221
+    ],
+    "legacy_detail_page_back_miss": [
+      411,
+      150
+    ],
+    "bottom_tab_2": [
+      628,
+      2794
+    ],
+    "mid_button_2": [
+      719,
+      2313
+    ],
+    "mid_button_3": [
+      719,
+      1898
+    ],
+    "lower_button": [
+      994,
+      2662
+    ],
+    "bottom_tab_3": [
+      812,
+      2794
+    ],
+    "topic_tab_band": [
+      989,
+      2794
+    ],
+    "me_tab": [
+      1260,
+      2794
+    ],
+    "wallet_entry": [
+      719,
+      2503
+    ],
+    "wallet_upper": [
+      891,
+      800
+    ],
+    "coin_300": [
+      263,
+      1430
+    ],
+    "legacy_coin_300_miss": [
+      495,
+      1356
+    ],
+    "wallet_confirm": [
+      719,
+      2503
+    ],
+    "pay_bottom": [
+      726,
+      2794
+    ],
+    "wallet_page_back": [
+      79,
+      216
+    ],
+    "legacy_wallet_page_back_miss": [
+      403,
+      137
+    ]
+  },
+  "timing_rules": [
+    {
+      "id": "membership_intercept_double_cloud_back",
+      "when": "试看结束会员拦截页（开通会员/暂不开通）",
+      "action": "cloud_back_twice",
+      "forbid_between": [
+        "sleep",
+        "screenshot",
+        "capture_screen"
+      ],
+      "failure_signature": "shot07_still_in_player_or_789_loop"
+    },
+    {
+      "id": "payment_browser_single_cloud_back",
+      "when": "外跳浏览器/支付页完成后回到 App",
+      "action": "cloud_back",
+      "forbid_between": [],
+      "failure_signature": "still_in_browser_after_cloud_back"
+    }
+  ],
+  "exploration_curriculum": [
+    {
+      "phase": "splash_wait",
+      "hint": "启动后先截图，等待开屏/首页稳定（约 10s）再探索"
+    },
+    {
+      "phase": "open_first_drama",
+      "tap_key": "first_left_video",
+      "hint": "最新上架左边第一部"
+    },
+    {
+      "phase": "promo_or_play",
+      "tap_key": "promo_mid_button",
+      "hint": "播放页中部促销/播放控件"
+    },
+    {
+      "phase": "membership_intercept",
+      "action": "cloud_back_twice",
+      "hint": "试看结束会员拦截：连续两下云手机 back，中间禁止截图"
+    },
+    {
+      "phase": "detail_back",
+      "tap_key": "detail_page_back",
+      "hint": "详情左上角返回，勿用 (411,150)"
+    },
+    {
+      "phase": "bottom_nav_explore",
+      "hint": "底栏巡检；要去「我」必须 me_tab=(1260,2794)，勿用专题带 (989,2794)"
+    },
+    {
+      "phase": "wallet",
+      "tap_key": "wallet_entry",
+      "hint": "进入金币钱包相关入口"
+    },
+    {
+      "phase": "coin_300",
+      "tap_key": "coin_300",
+      "hint": "选「300/¥30」左上格，勿用缝隙点 (495,1356)"
+    },
+    {
+      "phase": "pay_jump",
+      "tap_key": "pay_bottom",
+      "hint": "触发支付后外跳浏览器，等稳再云手机 back"
+    },
+    {
+      "phase": "wallet_back",
+      "tap_key": "wallet_page_back",
+      "hint": "钱包页左上角返回 (79,216)，勿用 (403,137)"
+    }
+  ],
+  "popup_notes": {
+    "close_x": "弹窗仍在：点底部导航栏最右侧「<」（|||/Home/< 右边那个），不点弹窗圆 ×；禁止脚本 POPUP_CLOSE_*",
+    "paywall_grid": "支付页可能先盖九宫格导流，需先关遮罩再碰套餐",
+    "policy": "watcher_cascade",
+    "by_type": "先认 popup_type 再关；见表 popup_close_by_type",
+    "target": "bottom_nav_right_back_chevron",
+    "startup": "semantic_skip_relative_top_right"
+  },
+  "product_script": "mama.py / script_mama_override；Agent 只负责启动、截图留证与验证，不重判点位",
+  "popup_close_policy": "watcher_cascade",
+  "popup_close_by_type": {
+    "grid_ad_below_x": {
+      "target_hint": "弹窗：Watcher→A文案→B几何安全X→C蒙层→D连点两下底栏「<」；禁止开屏进入／keyevent4"
+    },
+    "paywall_grid_overlay": {
+      "target_hint": "弹窗：Watcher→A文案→B几何安全X→C蒙层→D连点两下底栏「<」；禁止开屏进入／keyevent4"
+    },
+    "membership_intercept": {
+      "target_hint": "弹窗：Watcher→A文案→B几何安全X→C蒙层→D连点两下底栏「<」；禁止开屏进入／keyevent4"
+    },
+    "startup_skip": {
+      "action": "vision_skip",
+      "control_role": "skip",
+      "expected_state_hint": "tap_skip",
+      "target_hint": "开屏/首屏：语义进入/跳过 + 右上相对区；禁止 back/ENTRY_TAP",
+      "popup_close_policy": "startup_semantic_relative"
+    }
+  }
+}

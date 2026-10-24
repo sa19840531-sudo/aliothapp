@@ -1,0 +1,10 @@
+{
+  "task_id": "3ad88563-0c8c-4449-97d6-68390c2fd7e6",
+  "run_id": "f55480fb-6520-4850-ad2a-608bee18f424",
+  "selection": "只读保存事实的最小复现字段；省略其他任务、票据及身份信息",
+  "task": {"status": "review", "finalization_state": "session_draining", "finalization_epoch": 0, "finalization_retry_at": "infinity", "execution_status": null},
+  "session": {"status": "lost", "closed_at": null, "lease_owner": null, "lease_token": null, "lease_expires_at": null},
+  "reason_codes": "[\"target_state_missing\", \"transition_proof_missing\", \"source_not_business_page\", \"error:POPUP_DISMISSAL_NOT_FOUND\"]",
+  "screenshot": {"artifact_id": "01a6506a-ed01-4d79-9046-2a8d85ff6dc2", "ticket_iat": 1792404180, "ticket_exp": 1792404240, "first_get_status": 200, "late_get_at": 1792404447, "late_get_status": 404},
+  "provenance": {"migration": "20261010_0132", "read_at": "2026-10-19 10:48:23.049441+00:00", "claims_unverified": true, "ticket_content_saved": false}
+}

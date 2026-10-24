@@ -1,0 +1,86 @@
+{
+  "package_name": "com.xhwj.jmtt",
+  "slug": "jmcomic",
+  "display_name": "禁漫天堂",
+  "resolution": [
+    1440,
+    3040
+  ],
+  "cloud_back_tap": [
+    1120,
+    2955
+  ],
+  "gesture_y_max": 2794,
+  "execution_policy": "agent_profile_only",
+  "popup_close_policy": "watcher_cascade",
+  "taps": {
+    "first_left_comic": [
+      273,
+      2401
+    ],
+    "detail_page_back": [
+      95,
+      251
+    ],
+    "page_back_2": [
+      95,
+      220
+    ],
+    "bottom_tab": [
+      639,
+      2794
+    ],
+    "bottom_tab_2": [
+      870,
+      2751
+    ],
+    "first_left_video": [
+      381,
+      2487
+    ],
+    "page_back_3": [
+      68,
+      240
+    ],
+    "me_tab": [
+      1206,
+      2769
+    ]
+  },
+  "timing_rules": [],
+  "exploration_curriculum": [
+    {
+      "phase": "comic",
+      "tap_key": "first_left_comic"
+    },
+    {
+      "phase": "detail_back",
+      "tap_key": "detail_page_back"
+    },
+    {
+      "phase": "me_tab",
+      "tap_key": "me_tab"
+    },
+    {
+      "phase": "popup",
+      "hint": "脚本曾有 POPUP_CLOSE_TAP*，Agent 禁止使用，改视觉关窗"
+    }
+  ],
+  "popup_notes": {
+    "policy": "watcher_cascade",
+    "close_x": "弹窗仍在：点底部导航栏最右侧「<」（|||/Home/< 右边那个），不点弹窗圆 ×；禁止脚本 POPUP_CLOSE_*",
+    "script_popup_close_reference_only": true,
+    "target": "bottom_nav_right_back_chevron",
+    "startup": "semantic_skip_relative_top_right"
+  },
+  "deprecated_product_script": "app_jmcomic_script.py / jmcomic.py 仍为产品编排主路径（无编排包才走 Agent）；关窗禁止脚本点",
+  "popup_close_by_type": {
+    "startup_skip": {
+      "action": "vision_skip",
+      "control_role": "skip",
+      "expected_state_hint": "tap_skip",
+      "target_hint": "开屏/首屏：语义进入/跳过 + 右上相对区；禁止 back/ENTRY_TAP",
+      "popup_close_policy": "startup_semantic_relative"
+    }
+  }
+}

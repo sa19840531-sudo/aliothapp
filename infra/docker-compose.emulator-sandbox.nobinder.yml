@@ -1,0 +1,55 @@
+services:
+  alioth-redroid:
+    image: ${ALIOTH_REDROID_IMAGE:-redroid/redroid:12.0.0_64only-latest}
+    container_name: alioth-redroid
+    restart: unless-stopped
+    privileged: true
+    profiles: ["emulator"]
+    ports:
+      - "${ALIOTH_REDROID_PORT:-5555}:5555"
+    volumes:
+      - alioth_redroid_sandbox_data:/data
+    command:
+      - androidboot.redroid_gpu_mode=${ALIOTH_REDROID_GPU_MODE:-guest}
+      - androidboot.use_memfd=true
+      - androidboot.redroid_width=${ALIOTH_REDROID_WIDTH:-1080}
+      - androidboot.redroid_height=${ALIOTH_REDROID_HEIGHT:-1920}
+      - androidboot.redroid_dpi=${ALIOTH_REDROID_DPI:-320}
+    devices:
+      - /dev/kvm
+    networks:
+      - alioth-sandbox
+
+  alioth-mobile-host:
+    build:
+      context: ..
+      dockerfile: infra/docker/mobile-host/Dockerfile
+    container_name: alioth-mobile-host
+    restart: unless-stopped
+    profiles: ["emulator"]
+    env_file:
+      - ./env/.env.cross-server.sandbox
+    environment:
+      ALIOTH_DEVICE_BACKEND: redroid
+      ALIOTH_REDROID_ADB: alioth-redroid:5555
+      ALIOTH_MOBILE_DEMO_FORCE_LOCAL: "1"
+      ALIOTH_MOBILE_DEMO_HOST_BIND: "0.0.0.0"
+      ALIOTH_MOBILE_DEMO_DATA_DIR: /workspace/.alioth-mobile-demo
+      ALIOTH_WORKSPACE_HOST: /workspace
+      ANDROID_HOME: /opt/android-sdk
+      ANDROID_SDK_ROOT: /opt/android-sdk
+    volumes:
+      - ..:/workspace
+    depends_on:
+      - alioth-redroid
+    ports:
+      - "${ALIOTH_MOBILE_HOST_BIND:-127.0.0.1}:${ALIOTH_MOBILE_HOST_PORT:-8765}:8765"
+    networks:
+      - alioth-sandbox
+
+networks:
+  alioth-sandbox:
+    name: alioth-sandbox
+
+volumes:
+  alioth_redroid_sandbox_data:
