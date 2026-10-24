@@ -44,6 +44,9 @@ def recover_phase_limit(state, reason):
         state.mark_stage("top_tabs", "blocked")
         state.top_tabs_status = "blocked"
         state.advance("top_tab_restore")
+    elif phase == "top_tab_restore":
+        state.mark_stage("top_tab_restore", "blocked")
+        state.advance("bottom_tabs")
     elif phase == "bottom_tabs" and state.pending_bottom_tabs:
         label = state.pending_bottom_tabs[0]
         state.blocked_bottom_tabs.append(label)

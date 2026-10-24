@@ -31,8 +31,8 @@ from services.api.app.domain.interaction import (
 )
 
 MAX_ROUNDS = 160
-MAX_PHASE_ROUNDS = 4
-MAX_PAYMENT_ROUNDS = 6
+MAX_PHASE_ROUNDS = 12
+MAX_PAYMENT_ROUNDS = 24
 MAX_PHASE_SECONDS = 600
 MAX_FLOW_SECONDS = 3600
 _ACTIONS = frozenset({
@@ -94,6 +94,16 @@ def decide_app_three_contracts(work, *, now=None, scripted=None):
         return cached
     now = now or datetime.now(UTC)
     state = read_tangguo_flow_state(work)
+    # 已识别为系统桌面时禁止继续消费 APP 的旧目标；恢复须由设备生命周期层负责。
+    if str(work.frontier.observation.page_type or "").casefold() in {
+        "launcher", "desktop", "system_home",
+    }:
+        state.mark_stage(state.phase, "blocked")
+        state.stop_reason = "app_left_foreground"
+        state.advance("done")
+        decision = flow_passive_decision(work, state)
+        object.__setattr__(work, "_three_contract_decision", decision)
+        return decision
     state.budgets.device_actions_max = min(state.budgets.device_actions_max, 100)
     state.ensure_started_at(now_iso=now.isoformat())
     runtime = state.contract_runtime

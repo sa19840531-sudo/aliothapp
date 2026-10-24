@@ -84,7 +84,7 @@ def test_local_tab_limit_marks_only_that_tab_and_continues_next():
     state = TangguoFlowState(
         phase="bottom_tabs", comic_flow_status="skipped",
         discovered_bottom_tabs=["剧库", "专题"], pending_bottom_tabs=["剧库", "专题"],
-        contract_runtime={"rounds_by_phase": {"bottom_tabs:剧库": 4}},
+        contract_runtime={"rounds_by_phase": {"bottom_tabs:剧库": 12}},
     )
     action = decide_app_three_contracts(work_for(state=state, candidates=(
         candidate("剧库", bottom_navigation_tab_seek=True),

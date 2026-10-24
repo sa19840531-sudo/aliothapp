@@ -99,7 +99,8 @@ def test_same_work_is_idempotent_and_next_frame_keeps_budget():
     (recognize_bottom_tab, "我的", {"wanted_label": "我的", "aliases": ("我的",)}),
 ])
 def test_stateless_tools_return_current_candidate_id_without_coordinates(tool, label, kwargs):
-    item = candidate(label)
+    item = candidate(label, **({"bottom_navigation_tab_seek": True}
+                              if tool is recognize_bottom_tab else {}))
     work = work_for(candidates=(item,))
     before = work.to_dict()
     result = tool(work, **kwargs)

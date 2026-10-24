@@ -564,14 +564,11 @@ def recognize_bottom_tab(
     wanted_label: str,
     aliases: Sequence[str],
 ) -> ConstrainedLocateResult:
-    from services.api.app.application.app_flow_navigation import tab_label
+    from services.api.app.application.app_flow_navigation import tab_label, visible_bottom_tabs
 
     markers = {tab_label(value).casefold() for value in (wanted_label, *aliases) if value}
-    # 优先采用当前帧明确标注的底栏；短标签「我」不得命中「我的收藏」等正文。
-    candidates = sorted(
-        _current_frame_candidates(work),
-        key=lambda item: item.metadata.get("bottom_navigation_tab_seek") is not True,
-    )
+    # 底栏缺失时返回未找到，不回退到正文或上方同名分类。
+    candidates = [candidate for _, _, candidate in visible_bottom_tabs(work)]
     for candidate in candidates:
         if candidate.action_type not in {
             InteractionOperation.CLICK,
@@ -778,6 +775,34 @@ def _tab_target_for_label(label: str) -> str:
         "darkweb": "tab_darkweb",
         "ai": "tab_ai",
         "community": "tab_community",
+        "comic": "tab_comic",
+        "novel": "tab_novel",
+        "video": "tab_video",
+        "benefits": "tab_benefits",
+        "actress": "tab_actress",
+        "acg": "tab_acg",
+        "audio_comic": "tab_audio_comic",
+        "ai_companion": "tab_ai_companion",
+        "square": "tab_square",
+        "featured": "tab_featured",
+        "restricted_zone": "tab_restricted_zone",
+        "ai_generation": "tab_ai_generation",
+        "apps": "tab_apps",
+        "adult_ai": "tab_adult_ai",
+        "douyin": "tab_douyin",
+        "haijiao": "tab_haijiao",
+        "gossip": "tab_gossip",
+        "play_icon": "tab_play_icon",
+        "island": "tab_island",
+        "qingse_ai": "tab_qingse_ai",
+        "moments": "tab_moments",
+        "private_room": "tab_private_room",
+        "messages": "tab_messages",
+        "live": "tab_live",
+        "ai_technology": "tab_ai_technology",
+        "circles": "tab_circles",
+        "recommend": "tab_recommend",
+        "ai_community": "tab_ai_community",
     }
     return mapping.get(tab_role(tab_label(label)), "tab_other")
 

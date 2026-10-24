@@ -1355,8 +1355,12 @@ def _block_payment(state: TangguoFlowState, code: str) -> None:
 
 def _phase_payment_back_home(work, state) -> ActionIntent | None:
     """支付分支退出后先恢复首页，不在收银台上判底栏缺失。"""
+    from services.api.app.application.app_flow_navigation import visible_bottom_tabs
+
     page_type, page_state = _page(work)
-    if page_type in _HOME_PAGES and content_ready(page_state):
+    if content_ready(page_state) and (
+        page_type in _HOME_PAGES or len(visible_bottom_tabs(work)) >= 2
+    ):
         state.mark_stage("payment_back_home", "passed")
         state.complete_payment_return()
         return None
@@ -1648,6 +1652,22 @@ def _tap_intent(
 def _back_intent(
     work: ExplorationWork, state: TangguoFlowState, *, purpose: str
 ) -> ActionIntent | None:
+    # 无首页文字的 APP 也可能已在根页，不能以系统返回试探导航层级。
+    from services.api.app.application.app_flow_navigation import visible_bottom_tabs
+
+    page_type, page_state = _page(work)
+    if content_ready(page_state) and (
+        page_type in _HOME_PAGES or len(visible_bottom_tabs(work)) >= 2
+    ):
+        state.mark_stage(state.phase, "blocked")
+        state.stop_reason = "app_root_back_forbidden"
+        state.advance("done")
+        return None
+    if page_type in {"launcher", "desktop", "system_home"}:
+        state.mark_stage(state.phase, "blocked")
+        state.stop_reason = "app_left_foreground"
+        state.advance("done")
+        return None
     if not state.consume_device_action():
         state.stop_reason = "budget_device_actions_exhausted"
         state.advance("done")

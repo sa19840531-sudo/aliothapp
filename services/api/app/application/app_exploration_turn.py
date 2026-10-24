@@ -884,6 +884,12 @@ class AppExplorationTurnRunner:
     ):
         if self._global_frontier is None:
             return proposed_terminal, None
+        if (
+            "tangguo_flow_state" in proposed_terminal.coverage_summary
+            or proposed_terminal.reason == "app_state_machine_decision_missing_or_invalid"
+        ):
+            # 状态机的结束／阻塞不能被全局候选改写成新动作，避免回首页后再次进片或 BACK。
+            return proposed_terminal, None
         if _is_goal_completion_terminal(proposed_terminal):
             return proposed_terminal, None
         from services.api.app.application.app_hjll_script import HJLL_SCRIPT_REASON_CODE

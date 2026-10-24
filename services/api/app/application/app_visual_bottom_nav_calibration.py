@@ -39,6 +39,28 @@ class PixelBottomNavTab:
     selected: bool = False
 
 
+def observed_bottom_nav_labels(analysis: AppVisualAnalysis) -> tuple[str, ...]:
+    """只从同帧已辨识的底栏读取名称，不把其他产品的课纲套到当前 APP。"""
+    from services.api.app.application.app_flow_navigation import tab_label
+
+    found = {}
+    for candidate in analysis.candidates:
+        bounds = candidate.normalized_bounds
+        name = candidate.semantic_name
+        if bounds is None or bounds.top < 0.80:
+            continue
+        if candidate.frontier_scope != "app" and tab_label(name) == name:
+            continue
+        if candidate.action_type not in {InteractionOperation.CLICK, InteractionOperation.TAP}:
+            continue
+        label = tab_label(name)
+        if label:
+            found.setdefault(label, (bounds.left + bounds.right) / 2)
+    if not _MIN_TABS <= len(found) <= _MAX_TABS:
+        return ()
+    return tuple(sorted(found, key=found.get))
+
+
 def calibrate_bottom_navigation_candidates(
     *,
     analysis: AppVisualAnalysis,
@@ -55,6 +77,9 @@ def calibrate_bottom_navigation_candidates(
         raise TypeError("analysis 必须为 AppVisualAnalysis")
     if not isinstance(screenshot_png, bytes) or not screenshot_png:
         raise ValueError("screenshot_png 必须为非空 bytes")
+
+    if ordered_labels is not None and not ordered_labels:
+        return analysis
 
     labels = _normalize_ordered_labels(ordered_labels)
     detected = detect_bottom_nav_tabs(

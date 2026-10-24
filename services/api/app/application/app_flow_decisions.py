@@ -3,7 +3,11 @@
 import hashlib
 import json
 
-from services.api.app.domain.exploration import ExplorationTerminal, ExplorationTerminalStatus
+from services.api.app.domain.exploration import (
+    AppExplorationOutcome,
+    ExplorationTerminal,
+    ExplorationTerminalStatus,
+)
 from services.api.app.domain.interaction import CaptureDirective, TimedObservationIntent
 
 
@@ -24,6 +28,11 @@ def flow_passive_decision(work, state):
             if failed
             else ExplorationTerminalStatus.COMPLETED,
             reason=state.stop_reason or "app_flow_finished",
+            outcome=(AppExplorationOutcome.EVIDENCE_INSUFFICIENT.value if failed
+                     else AppExplorationOutcome.EXPLORATION_COMPLETED.value),
+            reason_code=state.stop_reason or (
+                "app_flow_incomplete" if failed else "app_flow_completed"
+            ),
             coverage_summary={
                 "tangguo_flow_state": state.to_dict(),
                 "tangguo_flow_report": state.as_report(),

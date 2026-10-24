@@ -41,15 +41,13 @@ from services.api.app.application.app_surface_evidence import (
 )
 from services.api.app.application.app_visual_bottom_nav_calibration import (
     calibrate_bottom_navigation_candidates,
+    observed_bottom_nav_labels,
 )
 from services.api.app.application.app_visual_close_calibration import (
     calibrate_popup_close_candidates,
 )
 from services.api.app.application.app_visual_content_fingerprint import (
     compute_app_business_content_fingerprint,
-)
-from services.api.app.application.app_visual_home_top_category_calibration import (
-    calibrate_home_top_category_candidates,
 )
 from services.api.app.domain.exploration import (
     AppVisualAnalysis,
@@ -435,44 +433,15 @@ class AppScreenshotUnderstandingService:
         )
         _validate_analysis(analysis, request)
         # 底栏无障碍常空（WebView／自绘）：同帧像素槽位校正／补齐 Tab 落点。
-        from services.api.app.application.app_ui_tree_features import (
-            hjll_ordered_bottom_tab_labels,
-        )
-
         analysis = calibrate_bottom_navigation_candidates(
             analysis=analysis,
             screenshot_png=content,
-            ordered_labels=hjll_ordered_bottom_tab_labels(),
+            ordered_labels=observed_bottom_nav_labels(analysis),
             max_candidates=self._max_candidates,
         )
         _validate_analysis(analysis, request)
-        # 上方分类：与底栏同一套「同帧 PNG 像素槽位」校准，禁止只靠 JSON 插值。
-        from services.api.app.application.app_ui_tree_features import (
-            home_top_category_tabs_ui_tree_features,
-            ordered_home_top_category_clickable_slots,
-        )
-
-        top_slots = ordered_home_top_category_clickable_slots(
-            package_name=str(getattr(analysis, "package_name", "") or "") or None,
-        )
-        if top_slots:
-            top_spec = home_top_category_tabs_ui_tree_features(
-                package_name=str(getattr(analysis, "package_name", "") or "") or None,
-            )
-            layout = top_spec.get("layout") if isinstance(top_spec, Mapping) else None
-            slot_count = None
-            if isinstance(layout, Mapping):
-                raw_count = layout.get("slot_count")
-                if isinstance(raw_count, int) and not isinstance(raw_count, bool):
-                    slot_count = raw_count
-            analysis = calibrate_home_top_category_candidates(
-                analysis=analysis,
-                screenshot_png=content,
-                ordered_clickable=top_slots,
-                slot_count=slot_count,
-                max_candidates=self._max_candidates,
-            )
-            _validate_analysis(analysis, request)
+        # 上方分类保留同帧 Vision／无障碍名称与坐标。
+        # 旧产品像素模板会在其他 APP 上补造「漫画」等不存在的分类，禁止用于通用探索。
         # UI Tree 与 Vision 均已完成提取后再做同帧导航判定；否则候选已满时
         # 会漏掉可信底栏，也会让弱 Vision 页型先一步写入错误事实。
         analysis = _attach_trusted_visual_navigation_selection(

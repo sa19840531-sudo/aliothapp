@@ -141,6 +141,9 @@ class AppGlobalFrontierService:
         """过滤同一 Run 已终态的全局候选，并保留当前帧恢复锚点。"""
 
         registered_fingerprints = {item.candidate_fingerprint for item in registered}
+        state_machine_active = isinstance(
+            work.frontier.observation.metadata.get("tangguo_flow_state"), Mapping,
+        )
         page_identity = _source_page_identity(work)
         restoration_candidates = tuple(
             candidate.to_dict()
@@ -150,7 +153,17 @@ class AppGlobalFrontierService:
         candidates = tuple(
             candidate
             for candidate in work.frontier.candidates
-            if candidate.metadata.get("coverage_page_seek_contract") is None
+            if (state_machine_active and (
+                candidate.metadata.get("bottom_navigation_tab_seek") is True
+                or candidate.metadata.get("home_top_category_tab_seek") is True
+                or (
+                    candidate.metadata.get("business_navigation_entry") is True
+                    and candidate.risk_level is InteractionRiskLevel.LOW
+                    and candidate.metadata.get("source_capture_id") == work.source_capture_id
+                    and candidate.metadata.get("coverage_page_seek_contract") is None
+                    and candidate.metadata.get("expected_state_hint") in {"video_detail", "player"}
+                )
+            )) or (candidate.metadata.get("coverage_page_seek_contract") is None
             and (
                 not _is_global_candidate(candidate)
                 or build_app_frontier_candidate_fingerprint(
@@ -158,7 +171,7 @@ class AppGlobalFrontierService:
                     candidate=with_app_frontier_fingerprint_strategy(candidate),
                 )
                 in registered_fingerprints
-            )
+            ))
         )
         return replace(
             work,

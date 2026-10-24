@@ -1885,6 +1885,21 @@ class AppCandidateResolver:
                 "App 视觉观察不存在",
                 error_code="VISUAL_OBSERVATION_NOT_FOUND",
             )
+        facts = saved.analysis.surface_facts
+        controls = facts.get("trusted_accessibility_controls", {}) if isinstance(facts, Mapping) else {}
+        navigation = controls.get("bottom_navigation", ()) if isinstance(controls, Mapping) else ()
+        root_navigation_visible = isinstance(navigation, (list, tuple)) and len(navigation) >= 2
+        if (
+            intent.action_type is InteractionOperation.BACK
+            and (_normalized_visual_label(saved.analysis.visual_page_type) == "home"
+                 or root_navigation_visible)
+            and _normalized_visual_label(saved.analysis.page_state) in {"stable", "loaded", "ready"}
+            and not saved.analysis.overlay_signature
+        ):
+            raise AppInteractionRuntimeError(
+                "当前已在稳定首页，禁止系统 BACK 退出 APP；应由状态机继续分类及底栏",
+                error_code="APP_HOME_BACK_FORBIDDEN",
+            )
         candidate = next(
             (item for item in saved.analysis.candidates if item.candidate_id == candidate_id),
             None,

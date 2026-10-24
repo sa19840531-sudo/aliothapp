@@ -5928,6 +5928,17 @@ def _map_candidate(
         expected_page_type = _expected_candidate_page_type(item.expected_state_hint)
         if expected_page_type is not None:
             metadata["expected_next_page_type"] = expected_page_type
+    # 视觉底栏必须显式传给通用状态机，不能只保留名称而丢失导航身份。
+    # 同时要求应用级作用域与 tab 提示，不将正文同名按钮升级为底栏。
+    if (
+        item.frontier_scope == "app"
+        and str(item.expected_state_hint or "").startswith("tab:")
+        and item.control_role is None
+        and item.action_type in {InteractionOperation.CLICK, InteractionOperation.TAP}
+    ):
+        metadata["bottom_navigation_tab_seek"] = True
+        if item.normalized_bounds is not None:
+            metadata["normalized_bounds"] = item.normalized_bounds.to_dict()
     if (
         item.action_type is InteractionOperation.BACK
         and item.semantic_name == "系统返回键"
@@ -6212,6 +6223,12 @@ def _surface_phase_lineage(
             str,
         )
     lineage = _app_flow_action_lineage(prior_work, turn.decision)
+    if _needs_visual_revalidation(turn):
+        from services.api.app.application.app_flow_action_feedback import (
+            reconcile_unexecuted_flow_action,
+        )
+
+        reconcile_unexecuted_flow_action(lineage, parameters)
     if isinstance(phase_run_id, str) and phase_run_id.strip():
         lineage["surface_phase_run_id"] = phase_run_id
     if isinstance(phase_key, str) and phase_key.strip():
@@ -9162,7 +9179,10 @@ def _needs_visual_revalidation(turn: ExplorerTurnResult) -> bool:
         and interaction.status is InteractionResultStatus.FAILED
         and interaction.retryable
         and interaction.error_code
-        in {"STALE_VISUAL_CANDIDATE", "APP_CANDIDATE_REVALIDATION_REQUIRED"}
+        in {
+            "STALE_VISUAL_CANDIDATE", "APP_CANDIDATE_REVALIDATION_REQUIRED",
+            "POST_SCROLL_REBIND_REQUIRED",
+        }
     )
 
 
